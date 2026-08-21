@@ -1274,7 +1274,14 @@
   .modal-compact{
     max-height:calc(100vh - 32px); overflow-y:auto; padding:18px 20px;
   }
-  .modal-compact h2{ font-size:15px; margin:0 0 12px; position:sticky; top:-18px; background:var(--panel); padding:6px 0; z-index:2; }
+  /* تظليل — every screen's title/name gets a visibly distinct shaded band
+     (was the same flat --panel as the body, so the name blended into the
+     screen instead of standing out), applied here once so it reaches every
+     modal without exception — no per-screen edits, same "one generic rule"
+     approach as the rest of this title-bar system. Only the background
+     color changes here; sticky offsets/margins/padding are left exactly as
+     they were to avoid any layout regression. */
+  .modal-compact h2{ font-size:15px; margin:0 0 12px; position:sticky; top:-18px; background:var(--panel-2); padding:6px 0; z-index:2; }
   .modal-compact .due-item{ padding:7px 10px; margin-bottom:5px; }
   .modal-compact .due-item .who{ font-size:13px; }
   .modal-compact .due-item .what{ font-size:11px; }
@@ -1287,22 +1294,32 @@
      present on every single modal; its own buttons (e.g. "إغلاق") keep
      their normal pointer cursor and stay clickable, only the empty bar area
      starts a drag. */
-  .modal h2{ display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px; position:sticky; top:0; background:var(--panel); padding:4px 0 10px; z-index:3; cursor:move; -webkit-user-select:none; user-select:none; touch-action:none; }
+  /* تظليل: background is --panel-2 (a step darker than the modal's own
+     --panel body) instead of the old flat --panel — the title band now
+     reads as a distinct shaded bar instead of blending into the screen, on
+     every modal without exception (one rule, no per-screen edits). */
+  .modal h2{ display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px; position:sticky; top:0; background:var(--panel-2); padding:4px 0 10px; z-index:3; cursor:move; -webkit-user-select:none; user-select:none; touch-action:none; }
   .modal.dragging{ transition:none; }
   .modal.dragging h2{ cursor:grabbing; }
+  /* Maximizing disables dragging (matches a real OS: a maximized window
+     can't be dragged until restored) — see the "Maximize / restore" script
+     further down. */
+  .modal.maximized h2{ cursor:default; }
   /* h2's own children ("إغلاق" etc.) are usually wrapped so they sit at the
-     end of the bar together; the minimize button (injected generically —
-     see "Minimize / taskbar" further down) rides along in that same group so
-     it always lands directly beside close, not off on its own. */
+     end of the bar together; the maximize/minimize buttons (injected
+     generically — see "Maximize / restore" and "Minimize / taskbar" further
+     down) ride along in that same group so they always land directly beside
+     close, not off on their own. */
   .modal h2 > span:last-child, .modal h2 > div:last-child{ display:flex; align-items:center; gap:8px; }
-  .win-min-btn{
+  .win-min-btn, .win-max-btn{
     appearance:none; border:1.5px solid var(--line); background:var(--panel);
     color:var(--ink-dim); border-radius:6px; width:26px; height:24px; padding:0;
     font-size:15px; font-weight:900; line-height:1; cursor:pointer;
     display:inline-flex; align-items:center; justify-content:center;
     flex:0 0 auto;
   }
-  .win-min-btn:hover{ background:var(--panel-2); color:var(--ink); border-color:var(--teal-dim); }
+  .win-max-btn{ font-size:12px; }
+  .win-min-btn:hover, .win-max-btn:hover{ background:var(--panel-2); color:var(--ink); border-color:var(--teal-dim); }
 
   /* ===== Minimized-windows taskbar (real desktop taskbar equivalent) ===== */
   #minimizedWindowsBar{
@@ -1320,33 +1337,15 @@
   .min-taskbar-chip:hover{ background:var(--teal-tint); border-color:var(--teal-dim); }
   body.has-minimized-windows .app-shell{ height:calc(100vh - 44px); }
 
-  /* "🧾 إنشاء فاتورة" — a fixed, near-fullscreen 3-column layout (form /
-     appearance / live preview) instead of a tall single-column stack, so
-     the whole screen fits the viewport with no scrolling needed to reach
-     the rest of it. Each column scrolls internally on its own (min-height:0
-     is what lets a CSS-grid child actually shrink below its content size
-     instead of overflowing the fixed-height modal) purely as a safety net
-     for very small windows — on an ordinary desktop screen nothing inside
-     needs to scroll at all. */
-  #createInvoiceOverlay .modal{
-    max-width:min(1400px, calc(100vw - 32px)); width:min(1400px, calc(100vw - 32px));
-    height:calc(100vh - 32px); display:flex; flex-direction:column;
-  }
-  #createInvoiceOverlay .modal h2{ flex:0 0 auto; }
-  .invoice-studio{
-    display:grid; grid-template-columns:270px minmax(300px, 380px) 1fr;
-    gap:18px; flex:1 1 auto; min-height:0;
-  }
-  .invoice-studio > .is-col{ min-height:0; overflow-y:auto; padding-inline-end:4px; }
-  .invoice-studio .is-preview-col{ display:flex; flex-direction:column; }
-  .invoice-studio .is-preview-col iframe{ flex:1 1 auto; width:100%; min-height:0; border:1px solid var(--line); border-radius:10px; background:#fff; }
-  @media (max-width:1000px){
-    .invoice-studio{ grid-template-columns:1fr; }
-    .invoice-studio .is-preview-col iframe{ min-height:420px; }
-  }
-
-  /* Compact field rhythm — scoped to this screen only, so every other modal
-     in the program keeps its normal, roomier spacing. */
+  /* "🧾 إنشاء فاتورة" / "🎨 شكل الفاتورة" — per direct feedback ("خليه شاشة
+     عادية") the earlier merged 3-column layout (form + appearance + live
+     preview in one fixed near-fullscreen screen) is reverted back into two
+     separate, ordinary screens: a small "🧾 إنشاء فاتورة" form (recipient /
+     reason / amount / currency / which columns show) and its own "🎨 شكل
+     الفاتورة" screen for anything about how an invoice LOOKS (logo, colors,
+     sizes) — see #createInvoiceOverlay and #invoiceAppearanceOverlay below.
+     .invoice-studio now just carries the compact field rhythm that screen
+     always had; it is no longer a grid/columns layout. */
   .invoice-studio .field{ margin-bottom:8px; }
   .invoice-studio .field label{ margin-bottom:3px; font-size:11px; }
   .invoice-studio .field input, .invoice-studio .field select{ padding:8px 10px; font-size:12.5px; }
@@ -2048,6 +2047,7 @@ input:focus, select:focus, textarea:focus {
       <button type="button" class="btn-ghost sidebar-btn" id="checksRegisterSidebarBtn">🧾 سجل الشيكات</button>
       <button type="button" class="btn-ghost sidebar-btn" id="workLogSidebarBtn">📋 سجل الموظفين</button>
       <button type="button" class="btn-ghost sidebar-btn" id="createInvoiceSidebarBtn">🧾 إنشاء فاتورة</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="invoiceAppearanceSidebarBtn">🎨 شكل الفاتورة</button>
       <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
@@ -3760,139 +3760,135 @@ input:focus, select:focus, textarea:focus {
 
 <!-- Case edit history (per-case detailed change log, for printing to the doctor) -->
 <!-- Create invoice -->
-<!-- Create invoice — per direct feedback, this is now also the ONE place
-     that controls the invoice's whole appearance (logo, colors, sizes),
-     with a live preview alongside. Used to be split across two
-     disconnected screens: "🧾 إنشاء فاتورة" to actually make one, and a
-     separate "🧾 الفاتورة" tab buried inside ⚙ الإعدادات to control how it
-     looks — changing a color there gave no visual feedback until you
-     separately opened "👁 معاينة الفاتورة قبل الطباعة".
-
-     Redesigned again per further direct feedback ("بدي اعادة ترتيب للشاشة
-     احترافية وواضحة ... بدي الشاشة ع قد الشاشة بدون سحب لعرض باقي اجزائها"):
-     a fixed near-fullscreen 3-column layout (form / appearance / live
-     preview) sized to the viewport instead of a stack of fields taller than
-     any screen, and the color pickers are now small modern "swatch chips"
-     in one row instead of six stacked full-width labelled rows. See
-     updateCreateInvoiceLivePreview() for the live-refresh wiring, and the
-     ".invoice-studio" CSS block for the layout itself. -->
+<!-- Create invoice — reverted back to a plain, focused screen per direct
+     feedback ("ولما اكبس انشاء فاتورة خليه شاشة عادية يسالني لمين الفاتورة
+     وشو نوع العملة"): asks only who the invoice is for, its reason/amount,
+     which currency to use, and (per the same request) lets the columns/data
+     shown on an invoice be picked from right here too. This screen used to
+     also carry the whole appearance section (logo/colors/sizes) merged
+     together with a live preview — that merge is undone; appearance now
+     lives on its own screen, "🎨 شكل الفاتورة", reachable from its own
+     sidebar button (#invoiceAppearanceSidebarBtn) right below this one in
+     the sidebar — see #invoiceAppearanceOverlay just under this block. -->
 <div class="overlay" id="createInvoiceOverlay">
-  <div class="modal wide">
+  <div class="modal">
     <h2><span>🧾 إنشاء فاتورة</span><button type="button" class="btn-ghost btn-small" id="closeCreateInvoiceBtn">إغلاق</button></h2>
     <div class="invoice-studio">
-      <div class="is-col">
-        <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:13.5px;">📝 بيانات الفاتورة</h2></div>
-        <form id="createInvoiceForm">
-          <div class="field">
-            <label>الفاتورة لمين</label>
-            <select id="invRecipientType">
-              <option value="doctor">🦷 طبيب</option>
-              <option value="technician">🧑‍🔧 فني</option>
-              <option value="agent">🚗 مندوب</option>
-              <option value="lab">🧪 مختبر</option>
-              <option value="company">🏢 شركة</option>
-              <option value="other">✍️ أخرى</option>
-            </select>
-          </div>
-          <div class="field" id="invRecipientPickerWrap">
-            <label id="invRecipientPickerLabel">الطبيب</label>
-            <select id="invRecipientSelect" style="display:block;"></select>
-            <input type="text" id="invRecipientOtherInput" placeholder="اسم الجهة" style="display:none;">
-          </div>
-          <div class="field"><label>سبب الفاتورة</label><input type="text" id="invReason" maxlength="60" required></div>
-          <div class="field"><label>المبلغ</label><input type="number" step="0.01" id="invAmount" dir="ltr" required></div>
-          <div class="field">
-            <label>العملة</label>
-            <select id="invCurrency"></select>
-            <div id="invCurrencyHint" class="invoice-currency-hint">سيتم حفظ آخر عملة اخترتها تلقائيًا.</div>
-          </div>
-          <div class="modal-actions">
-            <button type="button" class="btn-ghost" id="cancelCreateInvoiceBtn">إلغاء</button>
-            <button type="submit" class="btn-primary">✔ إنشاء وطباعة</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="is-col" id="invoiceAppearanceCol">
-        <div class="section-head" style="margin-bottom:8px;"><h2 style="font-size:13.5px;">🎨 شكل الفاتورة</h2></div>
-        <div class="muted" style="margin-bottom:10px; line-height:1.7; font-size:11.5px;">بتتحكم بشكل كل فاتورة بتنشئها من هون — أي تعديل بيظهر مباشرة بالمعاينة الحية.</div>
-
+      <form id="createInvoiceForm">
         <div class="field">
-          <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
-          <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
+          <label>الفاتورة لمين</label>
+          <select id="invRecipientType">
+            <option value="doctor">🦷 طبيب</option>
+            <option value="technician">🧑‍🔧 فني</option>
+            <option value="agent">🚗 مندوب</option>
+            <option value="lab">🧪 مختبر</option>
+            <option value="company">🏢 شركة</option>
+            <option value="other">✍️ أخرى</option>
+          </select>
         </div>
+        <div class="field" id="invRecipientPickerWrap">
+          <label id="invRecipientPickerLabel">الطبيب</label>
+          <select id="invRecipientSelect" style="display:block;"></select>
+          <input type="text" id="invRecipientOtherInput" placeholder="اسم الجهة" style="display:none;">
+        </div>
+        <div class="field"><label>سبب الفاتورة</label><input type="text" id="invReason" maxlength="60" required></div>
+        <div class="field"><label>المبلغ</label><input type="number" step="0.01" id="invAmount" dir="ltr" required></div>
+        <div class="field">
+          <label>العملة</label>
+          <select id="invCurrency"></select>
+          <div id="invCurrencyHint" class="invoice-currency-hint">سيتم حفظ آخر عملة اخترتها تلقائيًا.</div>
+        </div>
+        <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="width:100%; margin-bottom:4px;">📋 اختيار البيانات/الأعمدة التي تظهر بالفاتورة</button>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="cancelCreateInvoiceBtn">إلغاء</button>
+          <button type="submit" class="btn-primary">✔ إنشاء وطباعة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-        <div class="invoice-logo-row">
-          <div class="invoice-logo-thumb">
-            <img id="invLogoPreview" src="" alt="">
-            <span class="muted" id="invLogoPreviewEmpty" style="font-size:9.5px; text-align:center;">لا يوجد لوغو</span>
-          </div>
-          <div style="flex:1; min-width:0;">
-            <input type="file" id="invLogoFileInput" accept="image/*" style="margin-bottom:6px;">
-            <button type="button" class="btn-ghost btn-small" id="invLogoRemoveBtn" style="width:100%;">🗑️ حذف اللوغو</button>
-          </div>
-        </div>
+<!-- Invoice appearance settings -->
+<!-- The other half of the item-#3 revert: everything about how an invoice
+     LOOKS — clinic name, logo, colors, sizes — lives here now, on its own
+     screen reached from its own sidebar button, exactly like the original
+     pre-merge design (previously this was a "🧾 الفاتورة" tab buried inside
+     ⚙ الإعدادات; it is a first-class sidebar screen now instead, per "بزر
+     جانبي"). No live preview is embedded here any more — press "👁 معاينة
+     قبل الطباعة" below to see the result, same as before the merge. -->
+<div class="overlay" id="invoiceAppearanceOverlay">
+  <div class="modal wide">
+    <h2><span>🎨 شكل الفاتورة</span><button type="button" class="btn-ghost btn-small" id="closeInvoiceAppearanceBtn">إغلاق</button></h2>
+    <div class="invoice-studio">
+      <div class="muted" style="margin-bottom:10px; line-height:1.7; font-size:11.5px;">بتتحكم بشكل كل فاتورة بتنشئها من هون — اضغط "👁 معاينة قبل الطباعة" لرؤية النتيجة.</div>
 
-        <div class="grid3">
-          <div class="field">
-            <label>حجم اللوغو (بكسل)</label>
-            <input type="number" id="invLogoWidthInput" dir="ltr" min="20" max="400" step="1">
-          </div>
-          <div class="field">
-            <label>موقع اللوغو</label>
-            <select id="invLogoAlignSelect">
-              <option value="right">يمين</option>
-              <option value="center">وسط</option>
-              <option value="left">يسار</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>إزاحته من الأعلى</label>
-            <input type="number" id="invLogoOffsetTopInput" dir="ltr" min="0" max="200" step="1">
-          </div>
-        </div>
-
-        <div class="grid3">
-          <div class="field">
-            <label>حجم خط الفاتورة</label>
-            <input type="number" id="invFontSizeInput" dir="ltr" min="10" max="28" step="1">
-          </div>
-          <div class="field">
-            <label>حجم خط اسم العيادة</label>
-            <input type="number" id="invClinicNameSizeInput" dir="ltr" min="10" max="48" step="1">
-          </div>
-          <div class="field">
-            <label>موقع اسم العيادة</label>
-            <select id="invClinicNameAlignSelect">
-              <option value="right">يمين</option>
-              <option value="center">وسط</option>
-              <option value="left">يسار</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="section-head" style="margin:14px 0 8px;"><h2 style="font-size:12.5px;">🎨 الألوان</h2></div>
-        <div class="color-chips-row">
-          <label class="color-chip"><input type="color" id="invHeaderColorInput"><span>الهيدر</span></label>
-          <label class="color-chip"><input type="color" id="invTotalBoxColorInput"><span>الإجمالي</span></label>
-          <label class="color-chip"><input type="color" id="invTableColorInput"><span>الجدول</span></label>
-          <label class="color-chip"><input type="color" id="invDataBoxColorInput"><span>البيانات</span></label>
-          <label class="color-chip"><input type="color" id="invClinicNameColorInput"><span>اسم العيادة</span></label>
-          <button type="button" class="color-chip-reset" id="invColorsResetBtn" title="استعادة الألوان الافتراضية">↺</button>
-        </div>
-
-        <div style="display:flex; gap:8px; margin-top:6px;">
-          <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="flex:1;">👁 معاينة قبل الطباعة</button>
-          <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="flex:1;">📋 الأعمدة</button>
-        </div>
-        <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
-        <div class="muted" id="invoiceSettingsStatusText" style="margin-top:8px; line-height:1.6; font-size:11.5px;"></div>
+      <div class="field">
+        <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
+        <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
       </div>
 
-      <div class="is-col is-preview-col">
-        <div class="muted" style="font-size:12px; font-weight:800; margin-bottom:8px; flex:0 0 auto;">👁 معاينة حية — بتتحدث فورًا مع كل تعديل</div>
-        <iframe id="createInvoiceLivePreviewFrame" title="معاينة الفاتورة الحية"></iframe>
+      <div class="invoice-logo-row">
+        <div class="invoice-logo-thumb">
+          <img id="invLogoPreview" src="" alt="">
+          <span class="muted" id="invLogoPreviewEmpty" style="font-size:9.5px; text-align:center;">لا يوجد لوغو</span>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <input type="file" id="invLogoFileInput" accept="image/*" style="margin-bottom:6px;">
+          <button type="button" class="btn-ghost btn-small" id="invLogoRemoveBtn" style="width:100%;">🗑️ حذف اللوغو</button>
+        </div>
       </div>
+
+      <div class="grid3">
+        <div class="field">
+          <label>حجم اللوغو (بكسل)</label>
+          <input type="number" id="invLogoWidthInput" dir="ltr" min="20" max="400" step="1">
+        </div>
+        <div class="field">
+          <label>موقع اللوغو</label>
+          <select id="invLogoAlignSelect">
+            <option value="right">يمين</option>
+            <option value="center">وسط</option>
+            <option value="left">يسار</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>إزاحته من الأعلى</label>
+          <input type="number" id="invLogoOffsetTopInput" dir="ltr" min="0" max="200" step="1">
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="field">
+          <label>حجم خط الفاتورة</label>
+          <input type="number" id="invFontSizeInput" dir="ltr" min="10" max="28" step="1">
+        </div>
+        <div class="field">
+          <label>حجم خط اسم العيادة</label>
+          <input type="number" id="invClinicNameSizeInput" dir="ltr" min="10" max="48" step="1">
+        </div>
+        <div class="field">
+          <label>موقع اسم العيادة</label>
+          <select id="invClinicNameAlignSelect">
+            <option value="right">يمين</option>
+            <option value="center">وسط</option>
+            <option value="left">يسار</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin:14px 0 8px;"><h2 style="font-size:12.5px;">🎨 الألوان</h2></div>
+      <div class="color-chips-row">
+        <label class="color-chip"><input type="color" id="invHeaderColorInput"><span>الهيدر</span></label>
+        <label class="color-chip"><input type="color" id="invTotalBoxColorInput"><span>الإجمالي</span></label>
+        <label class="color-chip"><input type="color" id="invTableColorInput"><span>الجدول</span></label>
+        <label class="color-chip"><input type="color" id="invDataBoxColorInput"><span>البيانات</span></label>
+        <label class="color-chip"><input type="color" id="invClinicNameColorInput"><span>اسم العيادة</span></label>
+        <button type="button" class="color-chip-reset" id="invColorsResetBtn" title="استعادة الألوان الافتراضية">↺</button>
+      </div>
+
+      <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="width:100%; margin-top:6px;">👁 معاينة قبل الطباعة</button>
+      <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
+      <div class="muted" id="invoiceSettingsStatusText" style="margin-top:8px; line-height:1.6; font-size:11.5px;"></div>
     </div>
   </div>
 </div>
@@ -4046,8 +4042,9 @@ input:focus, select:focus, textarea:focus {
     <h2><span id="settingsTitleText">⚙ الضبط والإعدادات</span><button type="button" class="btn-ghost btn-small" id="closeSettingsBtn">إغلاق</button></h2>
     <div class="settings-tabs" id="settingsTabsRow">
       <button type="button" class="settings-tab" data-tab="lock">🔒 كلمة المرور والحماية</button>
-      <!-- "🧾 الفاتورة" tab removed — invoice appearance settings now live inside
-           "🧾 إنشاء فاتورة" (createInvoiceOverlay) alongside the live preview. -->
+      <!-- "🧾 الفاتورة" tab removed — invoice appearance settings now live on
+           their own sidebar screen, #invoiceAppearanceOverlay, not inside
+           Settings at all (see that overlay's own comment). -->
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
@@ -4095,13 +4092,12 @@ input:focus, select:focus, textarea:focus {
       <div class="lang-note" id="langNote"></div>
       <div class="lang-list" id="langList"></div>
     </div>
-    <!-- Invoice appearance settings used to live in their own tab here — per
-         direct feedback they were moved wholesale into "🧾 إنشاء فاتورة"
-         (createInvoiceOverlay), alongside a live preview instead of the old
-         separate "معاينة قبل الطباعة" button. See that overlay's own
-         comment and updateCreateInvoiceLivePreview(). The "🧾 الفاتورة" tab
-         button above is gone too — everything invoice-related is one place
-         now, reachable from the sidebar's "🧾 إنشاء فاتورة" button. -->
+    <!-- Invoice appearance settings used to live in their own tab here, then
+         were briefly merged into "🧾 إنشاء فاتورة" with a live preview; per
+         further direct feedback that merge is undone — they now live on
+         their own sidebar screen, #invoiceAppearanceOverlay, reached from
+         the sidebar's own "🎨 شكل الفاتورة" button, not from inside Settings
+         and not merged with the create-invoice form. -->
 
     <div class="settings-panel" data-panel="storage" style="display:none;">
       <div class="field" style="background:var(--panel-2); border-radius:8px; padding:14px 16px;">
@@ -4449,7 +4445,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.1';
+const APP_VERSION = '10.2';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -7981,6 +7977,7 @@ function customPrompt(message, defaultValue, opts){
     if(!header || isInteractive(e.target)) return; // don't hijack clicks on "إغلاق" etc.
     const modal = header.closest('.modal');
     if(!modal) return;
+    if(modal.classList.contains('maximized')) return; // a maximized window can't be dragged, same as a real OS — restore it first
     const rect = modal.getBoundingClientRect();
     let baseX = 0, baseY = 0;
     const t = getComputedStyle(modal).transform;
@@ -8042,13 +8039,30 @@ function customPrompt(message, defaultValue, opts){
     for(const rec of records){
       const el = rec.target;
       if(!(el instanceof Element) || !el.classList || !el.classList.contains('overlay')) continue;
-      if(el.classList.contains('open')){
+      // BUG FIX (real, found while adding maximize — see below): checking
+      // only "is it open right now" reacts to EVERY class mutation on an
+      // already-open overlay, not just the moment it actually opened —
+      // including a mutation record for that SAME open action that is still
+      // queued when a maximize click (a separate, later class mutation) runs
+      // synchronously right after it. That queued record would then wipe the
+      // just-applied maximized state milliseconds later, since from this
+      // record's point of view the overlay simply "is open". Comparing
+      // against the mutation's own oldValue restricts the reset to a
+      // genuine closed→open transition, exactly once per real open.
+      const wasOpen = (rec.oldValue || '').split(/\s+/).includes('open');
+      const isOpen = el.classList.contains('open');
+      if(isOpen && !wasOpen){
         const modal = el.querySelector('.modal');
-        if(modal){ modal.style.transform = ''; modal.style.animation = ''; modal.classList.remove('dragging'); }
+        if(modal){
+          modal.style.transform = ''; modal.style.animation = ''; modal.classList.remove('dragging');
+          // Same "never reopen where it was left" rule applies to maximized
+          // state — a fresh open always starts at the normal centred size.
+          if(window.__clearMaximized) window.__clearMaximized(modal);
+        }
       }
     }
   });
-  resetOnOpen.observe(document.body, { attributes:true, attributeFilter:['class'], subtree:true });
+  resetOnOpen.observe(document.body, { attributes:true, attributeFilter:['class'], attributeOldValue:true, subtree:true });
 })();
 
 function uid(prefix){ return prefix+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,7); }
@@ -8264,6 +8278,119 @@ document.addEventListener('pointerdown', function(e){
     else h2.appendChild(btn);
   }
 
+  /* ================== Maximize / restore ==================
+     "بدي زر للتكبير... بحال كبرت شاشة تبلش من جانب القائمة الجانبية بدون
+     ما ينحجب منها شي... تنضب بشكل اتوماتيكي عهل الحجم، طبق هاد الشي بكل
+     الشاشات بدون استثناء" — every window also gets a maximize button
+     beside minimize/close (same generic injection as minimize above, no
+     per-screen wiring). Maximizing fills every bit of screen space EXCEPT
+     the sidebar's own on-screen area — computed from the sidebar's REAL
+     measured position every time (never a hardcoded width), so it is
+     correct regardless of which side the sidebar is on, whatever its actual
+     width is, and whatever banners/bars are currently pushing it around.
+     Re-applied on window resize and whenever anything shifts the sidebar
+     (update banner, save-problem bar, minimized-windows taskbar all push
+     .app-shell — see their own CSS) so an already-maximized window keeps
+     fitting exactly, automatically — never a stale/wrong size. */
+  function sidebarAvoidingBounds(){
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const sidebar = document.querySelector('.sidebar');
+    if(!sidebar) return { left:0, top:0, right:vw, bottom:vh };
+    const r = sidebar.getBoundingClientRect();
+    // Works for either writing direction: whichever half of the viewport the
+    // sidebar's centre falls in is the side it occupies, and the maximized
+    // area fills everything on the OTHER side of it, top to bottom.
+    const sidebarOnLeft = (r.left + r.right) / 2 < vw / 2;
+    return {
+      left: sidebarOnLeft ? r.right : 0,
+      right: sidebarOnLeft ? vw : r.left,
+      top: 0,
+      bottom: vh,
+    };
+  }
+  function applyMaximizedBounds(modal){
+    if(!modal || !modal.classList.contains('maximized')) return;
+    const b = sidebarAvoidingBounds();
+    // Same fix as the drag handler above: the modal's own entrance animation
+    // (modalPop, ~120ms) also animates `transform`, and while it's still
+    // running a CSS animation's keyframe value for that property beats an
+    // inline style on the same property — so maximizing a window in the
+    // instant right after opening it (a real, easy thing for someone to do)
+    // would silently keep a leftover scale/translate from the animation,
+    // landing the maximized edge a couple of pixels short of the sidebar
+    // instead of flush against it. Cancelling the animation here hands
+    // `transform` fully back to this code immediately; resetOnOpen() below
+    // clears the override so the pop animation replays normally next time.
+    modal.style.animation = 'none';
+    modal.style.position = 'fixed';
+    modal.style.margin = '0';
+    modal.style.transform = 'none';
+    modal.style.left = b.left + 'px';
+    modal.style.top = b.top + 'px';
+    modal.style.width = Math.max(0, b.right - b.left) + 'px';
+    modal.style.height = Math.max(0, b.bottom - b.top) + 'px';
+    modal.style.maxWidth = 'none';
+    modal.style.maxHeight = 'none';
+  }
+  function setMaxBtnState(modal, isMaximized){
+    const btn = modal && modal.querySelector('.win-max-btn');
+    if(!btn) return;
+    btn.textContent = isMaximized ? '❐' : '☐';
+    btn.title = isMaximized ? 'استعادة' : 'تكبير';
+    btn.setAttribute('aria-label', isMaximized ? 'استعادة' : 'تكبير');
+  }
+  function clearMaximized(modal){
+    if(!modal) return;
+    modal.classList.remove('maximized');
+    modal.style.position = '';
+    modal.style.margin = '';
+    modal.style.transform = ''; // applyMaximizedBounds() sets 'none' — clear it back to the CSS/drag-controlled default
+    modal.style.left = '';
+    modal.style.top = '';
+    modal.style.width = '';
+    modal.style.height = '';
+    modal.style.maxWidth = '';
+    modal.style.maxHeight = '';
+    setMaxBtnState(modal, false);
+  }
+  function toggleMaximized(modal){
+    if(!modal) return;
+    if(modal.classList.contains('maximized')){ clearMaximized(modal); return; }
+    modal.classList.add('maximized');
+    applyMaximizedBounds(modal);
+    setMaxBtnState(modal, true);
+  }
+  // Exposed for the drag-reset hook above and for tests.
+  window.__clearMaximized = clearMaximized;
+  window.__toggleMaximized = toggleMaximized;
+  function reapplyAllMaximized(){
+    document.querySelectorAll('.modal.maximized').forEach(applyMaximizedBounds);
+  }
+  window.addEventListener('resize', reapplyAllMaximized);
+  new MutationObserver(reapplyAllMaximized).observe(document.body, { attributes:true, attributeFilter:['class'] });
+
+  function ensureMaximizeButton(h2, overlay){
+    if(ALWAYS_TOP_OVERLAY_IDS.includes(overlay.id)) return;
+    if(h2.querySelector('.win-max-btn')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'win-max-btn';
+    btn.setAttribute('aria-label', 'تكبير');
+    btn.title = 'تكبير';
+    btn.textContent = '☐';
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      toggleMaximized(overlay.querySelector('.modal'));
+    });
+    // Right before the minimize button, so the group reads as one cluster —
+    // [maximize][minimize][close] — same anchor technique as
+    // ensureMinimizeButton above, just anchored on its result instead of
+    // "last button", so run order (minimize first, then maximize) matters.
+    const minBtn = h2.querySelector('.win-min-btn');
+    if(minBtn && minBtn.parentElement) minBtn.parentElement.insertBefore(btn, minBtn);
+    else h2.appendChild(btn);
+  }
+
   // confirmOverlay/promptOverlay have no <h2> title bar at all — give them a
   // minimal empty one so they too are draggable, per "بدون أي استثناء"
   // (without any exception), even though — unlike every other screen — they
@@ -8282,7 +8409,7 @@ document.addEventListener('pointerdown', function(e){
       return;
     }
     const h2 = overlay.querySelector('.modal h2');
-    if(h2) ensureMinimizeButton(h2, overlay);
+    if(h2){ ensureMinimizeButton(h2, overlay); ensureMaximizeButton(h2, overlay); }
   }
 
   // Auto-cleanup: if a window is closed while minimized (its 'open' class
@@ -10418,30 +10545,40 @@ document.getElementById('invCurrency').addEventListener('change', ()=>{
 /* ================== Invoices ================== */
 const createInvoiceOverlay = document.getElementById('createInvoiceOverlay');
 document.getElementById('createInvoiceSidebarBtn').addEventListener('click', ()=> openCreateInvoiceOverlay());
-// One entry point for the whole invoice screen (create form + appearance
-// settings + live preview) — used by the sidebar button above and by the
-// first-run "نضبط الفاتورة" flow (openInvoiceSetupDirect), so both land on
-// the exact same unified screen per direct feedback.
-function openCreateInvoiceOverlay(opts){
-  opts = opts || {};
+// The simple "🧾 إنشاء فاتورة" screen — per direct feedback this is back to
+// asking only who the invoice is for, its reason/amount, and which currency
+// to use (plus which columns/data show, via #invoiceColumnsBtn right here).
+// Anything about how the invoice LOOKS lives on the separate
+// #invoiceAppearanceOverlay screen — see openInvoiceAppearanceOverlay()
+// below — reached from its own sidebar button, not from in here.
+function openCreateInvoiceOverlay(){
   document.getElementById('purchaseOverlay').classList.remove('open');
   document.getElementById('createInvoiceForm').reset();
   document.getElementById('invRecipientType').value = 'doctor';
   renderInvoiceRecipientPicker();
   renderInvoiceCurrencyOptions();
-  renderInvoiceSettingsPanel();
   createInvoiceOverlay.classList.add('open');
-  updateCreateInvoiceLivePreview();
-  // The appearance column is always visible now (no collapsible section to
-  // expand any more) — for a first-run visitor specifically here to set it
-  // up, just put the cursor straight into its first field instead.
-  if(opts.openAppearance){
-    setTimeout(()=>{ const el = document.getElementById('invClinicNameInput'); if(el) el.focus(); }, 60);
-  }
 }
 document.getElementById('closeCreateInvoiceBtn').addEventListener('click', ()=> createInvoiceOverlay.classList.remove('open'));
 document.getElementById('cancelCreateInvoiceBtn').addEventListener('click', ()=> createInvoiceOverlay.classList.remove('open'));
 document.getElementById('invRecipientType').addEventListener('change', renderInvoiceRecipientPicker);
+
+/* The "🎨 شكل الفاتورة" screen — logo/colors/sizes, reached from its own
+   sidebar button (and from the first-run "🧾 افتح ضبط الفاتورة الآن" flow —
+   see openInvoiceSetupDirect() further down), fully separate from the
+   create-invoice form above. */
+const invoiceAppearanceOverlay = document.getElementById('invoiceAppearanceOverlay');
+document.getElementById('invoiceAppearanceSidebarBtn').addEventListener('click', ()=> openInvoiceAppearanceOverlay());
+function openInvoiceAppearanceOverlay(opts){
+  opts = opts || {};
+  document.getElementById('purchaseOverlay').classList.remove('open');
+  renderInvoiceSettingsPanel();
+  invoiceAppearanceOverlay.classList.add('open');
+  if(opts.focusFirstField){
+    setTimeout(()=>{ const el = document.getElementById('invClinicNameInput'); if(el) el.focus(); }, 60);
+  }
+}
+document.getElementById('closeInvoiceAppearanceBtn').addEventListener('click', ()=> invoiceAppearanceOverlay.classList.remove('open'));
 
 function renderInvoiceRecipientPicker(){
   const type = document.getElementById('invRecipientType').value;
@@ -16753,12 +16890,12 @@ document.getElementById('printSelectedAgentTxBtn').addEventListener('click', ()=
 
 /* ================== Settings modal / tabs ================== */
 const settingsOverlay = document.getElementById('settingsOverlay');
-/* The first-run "تعال نضبط الفاتورة سوا" card opens the same unified
-   "🧾 إنشاء فاتورة" screen everything invoice-related now lives in — form,
-   appearance settings and live preview together — with the appearance
-   section expanded, since setup is exactly what a first-run visitor needs. */
+/* The first-run "تعال نضبط الفاتورة سوا" card is specifically about setting
+   the invoice's appearance up (logo/colors/clinic name) — that now lives on
+   its own "🎨 شكل الفاتورة" screen, so this opens that screen directly
+   (cursor already in its first field) instead of the create-invoice form. */
 function openInvoiceSetupDirect(){
-  openCreateInvoiceOverlay({openAppearance:true});
+  openInvoiceAppearanceOverlay({focusFirstField:true});
 }
 
 function openSettingsOnTab(tab){
@@ -16863,7 +17000,6 @@ document.getElementById('invColorsResetBtn').addEventListener('click', ()=>{
   document.getElementById('invDataBoxColorInput').value = DEFAULT_INVOICE_SETTINGS.dataBoxColor;
   document.getElementById('invClinicNameColorInput').value = DEFAULT_INVOICE_SETTINGS.clinicNameColor;
   showToast('تمت استعادة الألوان الافتراضية — اضغط "حفظ إعدادات الفاتورة" لتثبيت ذلك.', 'success');
-  if(typeof updateCreateInvoiceLivePreview==='function') updateCreateInvoiceLivePreview();
 });
 function updateInvoiceLogoPreview(dataUrl){
   const img = document.getElementById('invLogoPreview');
@@ -16886,7 +17022,6 @@ document.getElementById('invLogoFileInput').addEventListener('change', (e)=>{
   reader.onload = ()=>{
     pendingInvoiceLogoDataUrl = reader.result;
     updateInvoiceLogoPreview(pendingInvoiceLogoDataUrl);
-    if(typeof updateCreateInvoiceLivePreview==='function') updateCreateInvoiceLivePreview();
   };
   reader.readAsDataURL(file);
 });
@@ -16894,7 +17029,6 @@ document.getElementById('invLogoRemoveBtn').addEventListener('click', ()=>{
   pendingInvoiceLogoDataUrl = null;
   document.getElementById('invLogoFileInput').value = '';
   updateInvoiceLogoPreview('');
-  if(typeof updateCreateInvoiceLivePreview==='function') updateCreateInvoiceLivePreview();
 });
 // `parseFloat(...) || fallback` silently replaces a genuinely-typed "0" with
 // the fallback (0 is falsy in JS), so someone trying to set the smallest
@@ -16991,62 +17125,6 @@ if(invoicePreviewButton) invoicePreviewButton.addEventListener('click', ()=>{
     previewOnly: true,
     settingsOverride: previewSettings,
     headerHtmlOverride: buildInvoiceHeaderHtml(previewSettings),
-  });
-});
-
-/* Embedded live preview inside "🧾 إنشاء فاتورة" itself — reflects both the
-   form's current recipient/reason/amount AND the appearance settings below
-   it, refreshed on every keystroke/change (see the listeners further down).
-   Falls back to sample text for whatever the user hasn't filled in yet, so
-   the preview is never blank while setting the invoice up. */
-function updateCreateInvoiceLivePreview(){
-  const frame = document.getElementById('createInvoiceLivePreviewFrame');
-  if(!frame) return;
-  const previewSettings = readInvoiceAppearanceFormValues();
-  const type = document.getElementById('invRecipientType').value || 'doctor';
-  const typeLabels = {doctor:tr('طبيب'), technician:tr('فني'), agent:tr('مندوب'), lab:tr('مختبر'), company:tr('شركة'), other:tr('أخرى')};
-  let recipientLabel = '';
-  if(type === 'other'){
-    recipientLabel = document.getElementById('invRecipientOtherInput').value.trim();
-  }else{
-    const sel = document.getElementById('invRecipientSelect');
-    const opt = sel && sel.selectedOptions && sel.selectedOptions[0];
-    recipientLabel = opt ? opt.textContent.trim() : '';
-  }
-  const reason = document.getElementById('invReason').value.trim();
-  const amountRaw = parseFloat(document.getElementById('invAmount').value);
-  const currencyCode = document.getElementById('invCurrency').value || (invoiceSettings && invoiceSettings.lastCurrency) || 'JOD';
-  const currency = INVOICE_CURRENCIES.find(c=> c.code === currencyCode) || INVOICE_CURRENCIES[0];
-  const now = new Date();
-  const sampleInvoice = {
-    serial: (invoiceCounter || 0) + 1,
-    code: 'INV-' + ((invoiceCounter || 0) + 1),
-    recipientType: type,
-    recipientLabel: recipientLabel || (typeLabels[type] + ' ' + tr('(نموذج)')),
-    reason: reason || tr('(سبب الفاتورة يظهر هنا)'),
-    amount: Number.isFinite(amountRaw) && amountRaw > 0 ? amountRaw : 100,
-    currencyCode: currency.code,
-    currencyName: currency.name,
-    currencyFrac: currency.frac,
-    date: localDateStr(now.getTime()),
-    time: localTimeStr(now.getTime()),
-  };
-  const html = printInvoice(sampleInvoice, {
-    previewOnly: true,
-    returnHtmlOnly: true,
-    settingsOverride: previewSettings,
-    headerHtmlOverride: buildInvoiceHeaderHtml(previewSettings),
-  });
-  frame.srcdoc = html;
-}
-// Refresh the live preview on every relevant field, both the create-invoice
-// form and the appearance settings — one delegated listener covers both
-// since they now share the same overlay.
-['input','change'].forEach(evt=>{
-  createInvoiceOverlay.addEventListener(evt, (e)=>{
-    if(e.target.closest('#createInvoiceForm') || e.target.closest('#invoiceAppearanceCol')){
-      updateCreateInvoiceLivePreview();
-    }
   });
 });
 

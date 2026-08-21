@@ -1288,28 +1288,44 @@
      their normal pointer cursor and stay clickable, only the empty bar area
      starts a drag. */
   .modal h2{ display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px; position:sticky; top:0; background:var(--panel); padding:4px 0 10px; z-index:3; cursor:move; -webkit-user-select:none; user-select:none; touch-action:none; }
-  /* === Modern title bars: every feature window reads as a real desktop window === */
+  /* === Dark, Windows-style title bars — tuned for both themes === */
   .modal > h2{
+    position:sticky; top:0; z-index:5;
     margin:0 -10px 18px;
     padding:9px 12px 10px;
-    min-height:42px;
-    border:1px solid var(--line);
-    border-radius:11px;
-    background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.45), 0 4px 12px rgba(18,38,45,.08);
+    min-height:44px;
+    border:1px solid rgba(7,42,52,.45);
+    border-radius:10px;
+    background:linear-gradient(180deg,#214954 0%,#173842 58%,#122f38 100%);
+    color:#f5fbfd;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 7px 18px rgba(8,29,36,.22);
   }
-  .modal > h2 > span:first-child{ display:inline-flex; align-items:center; gap:7px; }
-  .modal > h2::after{
-    content:'';
-    position:absolute;
-    inset-inline-start:12px;
-    bottom:4px;
-    width:42px;
-    height:3px;
-    border-radius:99px;
-    background:var(--accent-grad);
-    pointer-events:none;
+  :root[data-theme="dark"] .modal > h2{
+    border-color:rgba(115,190,208,.32);
+    background:linear-gradient(180deg,#1b3c46 0%,#122d36 58%,#0c2229 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 8px 20px rgba(0,0,0,.34);
   }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .modal > h2{
+      border-color:rgba(115,190,208,.32);
+      background:linear-gradient(180deg,#1b3c46 0%,#122d36 58%,#0c2229 100%);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 8px 20px rgba(0,0,0,.34);
+    }
+  }
+  .modal > h2 > span:first-child{display:inline-flex;align-items:center;gap:8px;color:#f5fbfd}
+  .modal > h2::after{content:'';position:absolute;inset-inline-start:12px;bottom:4px;width:52px;height:3px;border-radius:99px;background:linear-gradient(90deg,#73c8da,#d6eef3);pointer-events:none}
+  .modal > h2 button{border-color:rgba(255,255,255,.26)!important;background:rgba(255,255,255,.08)!important;color:#f5fbfd!important}
+  .modal > h2 button:hover{background:rgba(255,255,255,.16)!important;border-color:rgba(255,255,255,.42)!important;color:#fff!important}
+  .win-controls{display:flex!important;align-items:center;gap:5px!important;margin-inline-start:auto;direction:ltr}
+  .win-min-btn,.win-max-btn{width:34px!important;height:30px!important;border-radius:6px!important;border:1px solid rgba(255,255,255,.28)!important;background:rgba(255,255,255,.08)!important;color:#f5fbfd!important;font-family:"Segoe UI",Arial,sans-serif;font-size:16px!important;font-weight:900!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  .win-min-btn:hover,.win-max-btn:hover{background:rgba(255,255,255,.18)!important;border-color:rgba(255,255,255,.48)!important;color:#fff!important}
+  .win-min-btn:active,.win-max-btn:active{transform:translateY(1px)}
+  .win-close-btn{width:34px!important;min-width:34px;height:30px!important;padding:0!important;border-radius:6px!important}
+  #invoiceAppearanceOverlay .modal{width:min(980px,calc(100vw - 32px));max-width:980px}
+  #invoiceAppearanceOverlay .settings-panel{display:block!important;padding:0;max-height:calc(100vh - 120px);overflow:auto}
+  #invoiceAppearanceOverlay .invoice-appearance-shell{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}
+  #invoiceAppearanceOverlay .invoice-appearance-side{position:sticky;top:0;align-self:start;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:12px}
+  @media(max-width:900px){#invoiceAppearanceOverlay .invoice-appearance-shell{grid-template-columns:1fr}#invoiceAppearanceOverlay .invoice-appearance-side{position:static}}
   .modal.win-maximized{
     position:fixed !important;
     inset:10px !important;
@@ -1361,6 +1377,11 @@
   .min-taskbar-chip:hover{ background:var(--teal-tint); border-color:var(--teal-dim); }
   body.has-minimized-windows .app-shell{ height:calc(100vh - 44px); }
 
+  .sidebar-footer{display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px}
+  .sidebar-bottom-action{width:100%;min-height:42px;display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:9px 12px;border-radius:11px;font-weight:900;text-align:right}
+  .sidebar-icon-actions{display:flex;justify-content:center;gap:8px;padding-top:2px}
+  .sidebar-icon-actions .icon-round-btn{width:38px;height:38px}
+  .sidebar-bottom-action:hover{transform:translateY(-1px)}
   /* Invoice creation is intentionally simple: recipient first, settings elsewhere. */
   #createInvoiceOverlay .modal{
     max-width:min(760px, calc(100vw - 32px));
@@ -2110,11 +2131,13 @@ input:focus, select:focus, textarea:focus {
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
     <div class="sidebar-footer">
-      <button class="icon-round-btn" id="deliveryNotifBtn" title="حالات تسليمها خلال يومين">🔔<span class="notif-badge" id="deliveryNotifBadge">0</span></button>
-      <button class="icon-round-btn" id="openOrderSoftwareCard" title="اطلب أيضًا برنامج">🛒</button>
-      <button class="icon-round-btn" id="licenseDaysBtn" title="قفل البرنامج" aria-label="قفل البرنامج">🔒</button>
-      <button class="icon-round-btn" id="themeToggleBtn" title="تبديل الوضع الليلي" aria-label="تبديل الوضع الليلي">🌙</button>
-      <button class="icon-round-btn" id="settingsBtn" title="الضبط والإعدادات">⚙</button>
+      <button class="btn-ghost sidebar-btn sidebar-bottom-action" id="themeToggleBtn" title="تشغيل الوضع الليلي" aria-label="تشغيل الوضع الليلي">🌙 تشغيل الوضع الليلي</button>
+      <button class="btn-ghost sidebar-btn sidebar-bottom-action" id="settingsBtn" title="الضبط والإعدادات" aria-label="الضبط والإعدادات">⚙️ الضبط والإعدادات</button>
+      <div class="sidebar-icon-actions">
+        <button class="icon-round-btn" id="deliveryNotifBtn" title="حالات تسليمها خلال يومين">🔔<span class="notif-badge" id="deliveryNotifBadge">0</span></button>
+        <button class="icon-round-btn" id="openOrderSoftwareCard" title="اطلب أيضًا برنامج">🛒</button>
+        <button class="icon-round-btn" id="licenseDaysBtn" title="قفل البرنامج" aria-label="قفل البرنامج">🔒</button>
+      </div>
     </div>
   </div>
 
@@ -3827,7 +3850,6 @@ input:focus, select:focus, textarea:focus {
     <h2>
       <span>🧾 إنشاء فاتورة</span>
       <div style="display:flex;gap:7px;align-items:center;">
-        <button type="button" class="btn-primary btn-small" id="editInvoiceSettingsFromCreateBtn">⚙ تعديل وضبط بيانات الفاتورة</button>
         <button type="button" class="btn-ghost btn-small" id="closeCreateInvoiceBtn">إغلاق</button>
       </div>
     </h2>
@@ -3848,11 +3870,11 @@ input:focus, select:focus, textarea:focus {
         <input type="text" id="invRecipientOtherInput" style="display:none;" aria-hidden="true">
       </div>
       <div class="muted" style="padding:10px 12px;border:1px dashed var(--teal-dim);border-radius:12px;background:var(--teal-tint);line-height:1.8;font-size:12px;">
-        سيتم أخذ الحالات والبيانات المرتبطة بالجهة تلقائيًا. خيارات الأعمدة والألوان واللوغو والخطوط لا تظهر هنا؛ مكانها زر <b>⚙ تعديل وضبط بيانات الفاتورة</b> أعلاه.
+        بعد اختيار الجهة ستنتقل مباشرة إلى شاشة الطباعة. جميع الحالات والبيانات ستظهر مفصلة، ويمكنك من شاشة الطباعة تعديل <b>🎨 شكل الفاتورة</b> أو <b>📋 محتوياتها</b> دون الدخول إلى إعدادات البرنامج.
       </div>
       <div class="invoice-create-actions">
         <button type="button" class="btn-ghost" id="cancelCreateInvoiceBtn">إلغاء</button>
-        <button type="submit" form="createInvoiceForm" class="btn-primary">🖨 متابعة للطباعة</button>
+        <button type="submit" form="createInvoiceForm" class="btn-primary">➡️ متابعة</button>
       </div>
     </div>
     <form id="createInvoiceForm" style="display:none;">
@@ -3870,11 +3892,29 @@ input:focus, select:focus, textarea:focus {
     <div class="muted" id="directInvoicePartyText" style="line-height:1.7;">—</div>
     <label style="display:block;margin-top:12px;font-weight:900;font-size:12px;">نوع العملة</label>
     <select id="directInvoiceCurrency"></select>
-    <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+      <button type="button" class="btn-ghost btn-small" id="directInvoiceAppearanceBtn">🎨 شكل الفاتورة</button>
+      <button type="button" class="btn-ghost btn-small" id="directInvoiceColumnsBtn">📋 محتويات الفاتورة</button>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:12px;">
       <button type="button" class="btn-ghost btn-small" id="cancelDirectInvoicePrintBtn">إلغاء</button>
       <button type="button" class="btn-ghost btn-small" id="previewDirectInvoiceBtn">👁 معاينة</button>
       <button type="button" class="btn-primary btn-small" id="printDirectInvoiceBtn">🖨 طباعة</button>
     </div>
+  </div>
+</div>
+
+<!-- Dedicated invoice appearance: separate from global program settings -->
+<div class="overlay" id="invoiceAppearanceOverlay">
+  <div class="modal wide">
+    <h2>
+      <span>🎨 ضبط شكل الفاتورة</span>
+      <div class="win-controls">
+        <button type="button" class="btn-primary btn-small" id="invoiceAppearanceSaveTopBtn">💾 حفظ</button>
+        <button type="button" class="btn-ghost btn-small win-close-btn" id="closeInvoiceAppearanceBtn">إغلاق</button>
+      </div>
+    </h2>
+    <div id="invoiceAppearanceHost"></div>
   </div>
 </div>
 
@@ -4027,7 +4067,6 @@ input:focus, select:focus, textarea:focus {
     <h2><span id="settingsTitleText">⚙ الضبط والإعدادات</span><button type="button" class="btn-ghost btn-small" id="closeSettingsBtn">إغلاق</button></h2>
     <div class="settings-tabs" id="settingsTabsRow">
       <button type="button" class="settings-tab" data-tab="lock">🔒 كلمة المرور والحماية</button>
-      <button type="button" class="settings-tab" data-tab="invoice">🧾 ضبط الفاتورة</button>
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
@@ -4508,7 +4547,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '9.23';
+const APP_VERSION = '9.24';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -4559,8 +4598,8 @@ function applyTheme(){
   const btn = document.getElementById('themeToggleBtn');
   if(btn){
     const dark = effectiveTheme() === 'dark';
-    btn.textContent = dark ? '☀️' : '🌙';
-    btn.title = tr(dark ? 'التبديل إلى الوضع النهاري' : 'التبديل إلى الوضع الليلي');
+    btn.textContent = dark ? '☀️ إيقاف الوضع الليلي' : '🌙 تشغيل الوضع الليلي';
+    btn.title = tr(dark ? 'إيقاف الوضع الليلي' : 'تشغيل الوضع الليلي');
     btn.setAttribute('aria-label', btn.title);
   }
 }
@@ -10568,7 +10607,7 @@ function openDirectInvoicePrintDialog(type, entity){
   overlay.__party=entity;
   overlay.classList.add('open');
 }
-function directInvoicePrint(previewOnly){
+async function directInvoicePrint(previewOnly){
   const overlay=document.getElementById('directInvoicePrintOverlay');
   const entity=overlay && overlay.__party;
   if(!entity) return;
@@ -10577,19 +10616,21 @@ function directInvoicePrint(previewOnly){
   invoiceSettings.lastCurrency=currencyCode;
   const columns=typeof window.AL95GetInvoiceColumns==='function'
     ? window.AL95GetInvoiceColumns()
-    : {patient:true,caseId:true,doctor:false,teeth:true,work:true,qty:true,unit:true,total:true,date:false,notes:false};
-  printCasesInvoice(type, entity, {
-    currencyCode,
-    columnsOverride: columns,
-    title:'فاتورة حساب',
-    showSummary:true,
-    previewOnly:!!previewOnly
-  });
-  if(!previewOnly){
-    saveDatabase();
-    overlay.classList.remove('open');
+    : {patient:true,caseId:true,doctor:true,teeth:true,work:true,qty:true,unit:true,total:true,date:true,notes:true,history:true};
+  const buttons=[document.getElementById('previewDirectInvoiceBtn'),document.getElementById('printDirectInvoiceBtn')].filter(Boolean);
+  buttons.forEach(b=>{b.disabled=true;b.dataset.busyText=b.textContent;b.textContent='⏳ جارٍ التجهيز...';});
+  try{
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    printCasesInvoice(type,entity,{currencyCode,columnsOverride:columns,title:'فاتورة حساب',showSummary:true,previewOnly:!!previewOnly});
+    if(!previewOnly){saveDatabase();overlay.classList.remove('open');}
+  }catch(err){
+    console.error('direct invoice operation failed',err);
+    showToast('تعذّر تجهيز الفاتورة. لم يتم تغيير بياناتك.','error');
+  }finally{
+    buttons.forEach(b=>{b.disabled=false;b.textContent=b.dataset.busyText||b.textContent;});
   }
 }
+
 document.getElementById('directInvoiceCurrency')?.addEventListener('change', ()=>{
   const overlay=document.getElementById('directInvoicePrintOverlay');
   if(overlay && overlay.__party) invoiceSettings.lastCurrency=document.getElementById('directInvoiceCurrency').value;
@@ -12612,8 +12653,10 @@ function showDocumentPreview(html, title, opts){
   // This makes invoice preview independent from popup permissions and avoids
   // the blank-page race caused by about:blank + asynchronous document.write().
   try{
+    frame.setAttribute('sandbox','allow-modals allow-same-origin');
     frame.onload=null;
-    frame.srcdoc=String(html||'');
+    frame.srcdoc='';
+    requestAnimationFrame(()=>{ try{ frame.srcdoc=String(html||''); }catch(err){ console.error('invoice preview srcdoc failed',err); } });
   }catch(e){
     console.error('invoice preview srcdoc failed',e);
     if(err){
@@ -16873,7 +16916,6 @@ function openSettingsOnTab(tab){
   refreshLockTabInfo();
   document.querySelectorAll('.settings-tab').forEach(btn=> btn.classList.toggle('active', btn.getAttribute('data-tab')===tab));
   document.querySelectorAll('.settings-panel').forEach(panel=> panel.style.display = (panel.getAttribute('data-panel')===tab) ? 'block' : 'none');
-  if(tab === 'invoice') renderInvoiceSettingsPanel();
   if(tab === 'appearance') renderAppearancePanel();
   if(tab === 'language'){
     document.getElementById('langSearch').value = '';
@@ -16918,10 +16960,6 @@ document.getElementById('langList').addEventListener('click', (e)=>{
 applyAppearance();
 applyLanguage();
 document.getElementById('settingsBtn').addEventListener('click', ()=> openSettingsOnTab('lock'));
-document.getElementById('editInvoiceSettingsFromCreateBtn')?.addEventListener('click', ()=>{
-  createInvoiceOverlay.classList.remove('open');
-  openSettingsOnTab('invoice');
-});
 
 document.getElementById('closeSettingsBtn').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 // «موافق»: settings (font size, typeface, language, theme) apply live and are
@@ -16936,14 +16974,36 @@ document.querySelectorAll('.settings-tab').forEach(tabBtn=>{
     document.querySelectorAll('.settings-tab').forEach(b=> b.classList.toggle('active', b===tabBtn));
     const tab = tabBtn.getAttribute('data-tab');
     document.querySelectorAll('.settings-panel').forEach(panel=> panel.style.display = (panel.getAttribute('data-panel')===tab) ? 'block' : 'none');
-    if(tab === 'invoice') renderInvoiceSettingsPanel();
-    if(tab === 'appearance') renderAppearancePanel();
+      if(tab === 'appearance') renderAppearancePanel();
   if(tab === 'language'){
       document.getElementById('langSearch').value = '';
       renderLanguageList('');
     }
   });
 });
+
+/* ---- Dedicated invoice appearance settings (separate from global settings) ---- */
+(function relocateInvoiceAppearancePanel(){
+  const panel=document.querySelector('.settings-panel[data-panel="invoice"]');
+  const host=document.getElementById('invoiceAppearanceHost');
+  if(panel && host){ host.appendChild(panel); panel.style.display='block'; panel.classList.add('invoice-appearance-panel'); }
+})();
+function openInvoiceAppearanceOverlay(){
+  const ov=document.getElementById('invoiceAppearanceOverlay');
+  if(!ov) return;
+  renderInvoiceSettingsPanel();
+  ov.classList.add('open');
+}
+function closeInvoiceAppearanceOverlay(){
+  const ov=document.getElementById('invoiceAppearanceOverlay');
+  if(ov) ov.classList.remove('open');
+}
+document.getElementById('closeInvoiceAppearanceBtn')?.addEventListener('click',closeInvoiceAppearanceOverlay);
+document.getElementById('invoiceAppearanceSaveTopBtn')?.addEventListener('click',()=>{
+  document.getElementById('invoiceSettingsSaveBtn')?.click();
+  closeInvoiceAppearanceOverlay();
+});
+document.getElementById('directInvoiceAppearanceBtn')?.addEventListener('click',openInvoiceAppearanceOverlay);
 
 /* ---- Invoice appearance settings (logo + clinic name + manual size/position) ---- */
 let pendingInvoiceLogoDataUrl = undefined; // undefined = untouched this session, null = user removed it
@@ -17074,6 +17134,9 @@ function readInvoiceAppearanceFormValues(){
 }
 const invoiceColumnsButton = document.getElementById('invoiceColumnsBtn');
 if(invoiceColumnsButton) invoiceColumnsButton.addEventListener('click', ()=>{
+  if(typeof window.openInvoicePrintSettings==='function') window.openInvoicePrintSettings();
+});
+document.getElementById('directInvoiceColumnsBtn')?.addEventListener('click',()=>{
   if(typeof window.openInvoicePrintSettings==='function') window.openInvoicePrintSettings();
 });
 const invoicePreviewButton = document.getElementById('invoicePreviewBtn');
@@ -19018,15 +19081,15 @@ initAppFileHandle();
   const defaults=[
     ['patient','اسم المريض',true],
     ['caseId','رقم الحالة',true],
-    ['doctor','الطبيب',false],
+    ['doctor','الطبيب',true],
     ['teeth','الأسنان',true],
     ['work','نوع العمل / المادة',true],
     ['qty','العدد',true],
     ['unit','سعر الوحدة',true],
     ['total','المجموع',true],
-    ['date','التاريخ',false],
-    ['notes','التفاصيل / الملاحظات',false],
-    ['history','سجل التعديلات',false]
+    ['date','التاريخ',true],
+    ['notes','التفاصيل / الملاحظات',true],
+    ['history','سجل التعديلات',true]
   ];
   function load(){
     try{

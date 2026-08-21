@@ -274,7 +274,9 @@
     60%{ transform:translateX(-6px); }
     80%{ transform:translateX(6px); }
   }
-  @keyframes modalPop{ from{ opacity:0; transform:scale(.96); } to{ opacity:1; transform:scale(1); } }
+  /* Reduced-motion pass, per direct feedback: shorter duration, smaller
+     scale delta — a quick, subtle appearance instead of a springy "pop". */
+  @keyframes modalPop{ from{ opacity:0; transform:scale(.99); } to{ opacity:1; transform:scale(1); } }
   .brand-mark{
     width:46px;height:46px; background: var(--accent-grad); border-radius:11px;
     display:flex;align-items:center;justify-content:center; overflow:hidden;
@@ -1206,12 +1208,18 @@
   .overlay{
     display:none; position:fixed; inset:0; background:rgba(12,28,34,0.5); z-index:500;
     align-items:center; justify-content:center; padding:16px; overflow:hidden;
-    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    /* Per direct feedback: the blurred backdrop made every background screen
+       read as "غير واضح" (unclear/hazy) the instant any dialog opened,
+       which is especially disruptive over remote-desktop tools where a
+       blur means re-encoding a soft gradient across the whole frame. The
+       dimming stays (it's what marks the dialog as modal) but nothing
+       behind it is blurred anymore. */
+    backdrop-filter: none; -webkit-backdrop-filter: none;
   }
   .overlay.open{ display:flex; }
   .modal{
     background:var(--panel); border-radius:18px; box-shadow: var(--shadow-lg); width:100%; max-width:560px;
-    padding:26px 28px; animation: modalPop .2s cubic-bezier(.2,.9,.3,1.2);
+    padding:26px 28px; animation: modalPop .12s ease-out;
     /* A visible edge, not a white-on-white hairline: a window has to read as
        a window against the page behind it. */
     border:1.5px solid var(--line);
@@ -1470,7 +1478,7 @@
   }
   #toastContainer .toast{ pointer-events:auto; }
   /* Center-screen flash (e.g. "تم حفظ الحالة") — appears above everything, middle of screen */
-  #centerFlash{ position:fixed; inset:0; z-index:2000060; display:none; align-items:center; justify-content:center; pointer-events:none; backdrop-filter:blur(2px); background:rgba(8,20,25,0); transition:background .25s ease; }
+  #centerFlash{ position:fixed; inset:0; z-index:2000060; display:none; align-items:center; justify-content:center; pointer-events:none; background:rgba(8,20,25,0); transition:background .25s ease; }
   #centerFlash.show{ display:flex; background:rgba(8,20,25,0.12); }
   #centerFlash .flash-card{
     position:relative; overflow:hidden;
@@ -1543,8 +1551,13 @@
   .list-row, .directory-row, .stat, .case-card, .tool-card{
     border-width:1.5px;
   }
-  .overlay.open .modal{ animation: modalRise .26s cubic-bezier(.2,.9,.3,1.15); }
-  @keyframes modalRise{ from{ opacity:0; transform:translateY(16px) scale(.985); } to{ opacity:1; transform:translateY(0) scale(1); } }
+  /* Reduced-motion pass, per direct feedback ("قلل التغبيش والحركة"): this
+     rule wins over .modal's own modalPop animation above (equal
+     specificity, declared later) whenever the dialog is actually visible,
+     so it's the one that matters in practice — shortened and flattened
+     from a 16px springy rise to a small 6px settle. */
+  .overlay.open .modal{ animation: modalRise .14s ease-out; }
+  @keyframes modalRise{ from{ opacity:0; transform:translateY(6px) scale(.995); } to{ opacity:1; transform:translateY(0) scale(1); } }
 
   /* Buttons: springy press feedback everywhere */
   .btn-primary:active, .btn-ghost:active, .sidebar-btn:active,
@@ -1886,7 +1899,7 @@ input:focus, select:focus, textarea:focus {
       <button type="button" class="btn-ghost sidebar-btn" id="homeBtn">🏠 الرئيسية</button>
       <button type="button" class="btn-ghost sidebar-btn" id="addPatientCaseBtn">➕ إضافة حالة مرضية</button>
       <button type="button" class="btn-ghost sidebar-btn" id="incomingPaymentsBtn">💰 دفعة واردة</button>
-      <button type="button" class="btn-ghost sidebar-btn" id="expensePaymentsBtn">💳 إنشاء دفعة</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="expensePaymentsBtn" style="border-color:var(--green) !important; color:var(--green);">📤 إنشاء دفعة صادرة</button>
       <button type="button" class="btn-ghost sidebar-btn" id="cancelPaymentSidebarBtn">❌ إلغاء دفعة</button>
       <button type="button" class="btn-ghost sidebar-btn" id="accountStatementSidebarBtn">🧾 كشف حساب</button>
       <button type="button" class="btn-ghost sidebar-btn" id="collectDebtSidebarBtn">➕ إضافة دين</button>
@@ -2723,7 +2736,7 @@ input:focus, select:focus, textarea:focus {
 <div class="overlay" id="workTypeQuickPickOverlay">
   <div class="modal narrow">
     <h2><span>🦷 اختر نوع العمل</span><button type="button" class="btn-ghost btn-small" id="closeWorkTypeQuickPickBtn" style="color:var(--red); border-color:var(--red);">إغلاق</button></h2>
-    <div class="muted" style="margin-bottom:14px; font-size:12.5px;">هاد النوع رح يتكرر تلقائيًا على باقي الأسنان يلي رح تختارها لهاي الحالة.</div>
+    <div class="muted" id="workTypeQuickPickDesc" style="margin-bottom:14px; font-size:12.5px;">هاد النوع رح يتكرر تلقائيًا على باقي الأسنان يلي رح تختارها لهاي الحالة.</div>
     <div id="workTypeQuickPickList" style="max-height:360px; overflow:auto;"></div>
     <button type="button" class="btn-ghost btn-small" id="manageWorkTypesFromQuickPickBtn" style="width:100%; margin-top:10px;">⚙ إدارة أنواع العمل — إضافة / تعديل</button>
   </div>
@@ -3094,6 +3107,23 @@ input:focus, select:focus, textarea:focus {
     <form id="expensePaymentForm" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:6px; background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:14px;">
       <div class="field" style="flex:1; min-width:110px; margin:0;"><label>المبلغ</label><input type="number" step="0.01" id="epAmount" dir="ltr" required></div>
       <div class="field" style="flex:1; min-width:130px; margin:0;"><label>التاريخ</label><input type="date" id="epDate" dir="ltr" required></div>
+      <!-- Shown only for recipientType doctor/lab/company/agent — those are
+           the only categories with a "مبالغ مستحقة" balance concept at all
+           (see updateExpensePaymentPurposeVisibility()). Lets the user say
+           what this outgoing payment actually MEANS instead of it silently
+           always inflating what the recipient owes the clinic: count it
+           toward the aggregate balance as before (default, unchanged
+           behavior), file it as its own itemized debt instead (does not
+           touch the balance formula at all), or just log it as a plain
+           expense with zero financial effect anywhere else. -->
+      <div class="field" id="epPurposeWrap" style="display:none; flex:1; min-width:230px; margin:0;">
+        <label>الوجهة المحاسبية لهذه الدفعة</label>
+        <select id="epPurpose">
+          <option value="balance">💰 تُحتسب على المبالغ المستحقة (الافتراضي)</option>
+          <option value="debt">📇 تُسجَّل كدين مستقل عليه</option>
+          <option value="expense">📋 مصروف فقط — بدون أي تأثير على رصيده</option>
+        </select>
+      </div>
       <!-- Shown only for recipientType doctor/lab/company (see
            updateExpensePaymentCaseLinkVisibility()) — employee/agent/other
            have no cases/shipments to itemize against, matching exactly which
@@ -3134,11 +3164,38 @@ input:focus, select:focus, textarea:focus {
       <div class="field" style="flex:2; min-width:160px; margin:0;"><label>ملاحظة (25 حرفًا كحد أقصى)</label><input type="text" id="epNote" maxlength="25" placeholder="مثال: ثمن مواد زيركون"></div>
       <button type="submit" class="btn-primary btn-small">✔ تسجيل الدفعة</button>
     </form>
-    <input type="hidden" id="expensePaymentsLogPageText" style="display:none;">
-    <div id="expensePaymentsLogBody" style="display:none;"></div>
-    <div id="expensePaymentsLogEmpty" style="display:none;"></div>
-    <button type="button" id="expensePaymentsLogPrevBtn" style="display:none;"></button>
-    <button type="button" id="expensePaymentsLogNextBtn" style="display:none;"></button>
+    <!-- Per direct feedback: this box (where every outgoing/expense payment
+         is created) should double as its own detailed record of what's
+         been paid out, right here, instead of only being visible through a
+         separate report screen elsewhere in the app. Was previously five
+         placeholder elements stubbed at display:none with no table
+         structure at all — renderExpensePaymentsLog() was fully written
+         and already wired to these ids, it just had nothing real to render
+         into. -->
+    <div style="margin-top:16px; border-top:1px solid var(--line); padding-top:14px;">
+      <h3 style="margin:0 0 4px; font-size:14.5px;">📋 سجل تفصيلي لكل المدفوعات الصادرة</h3>
+      <div class="muted" style="font-size:11.5px; margin-bottom:10px;">يشمل كل دفعة صادرة من هذا الصندوق بصرف النظر عن جهتها — لأي فئة، وسواء احتُسبت على المبالغ المستحقة أو سُجّلت كدين مستقل أو كمصروف بلا نسبة لجهة.</div>
+      <div style="overflow-x:auto; border:1px solid var(--line); border-radius:10px;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <thead>
+            <tr style="background:var(--panel-2);">
+              <th style="padding:9px 12px; text-align:right; border-bottom:1px solid var(--line);">التاريخ</th>
+              <th style="padding:9px 12px; text-align:right; border-bottom:1px solid var(--line);">دفعت لمين</th>
+              <th style="padding:9px 12px; text-align:right; border-bottom:1px solid var(--line);">ملاحظة</th>
+              <th style="padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); color:var(--red);">المبلغ</th>
+              <th style="padding:9px 12px; border-bottom:1px solid var(--line);"></th>
+            </tr>
+          </thead>
+          <tbody id="expensePaymentsLogBody"></tbody>
+        </table>
+      </div>
+      <div class="muted" id="expensePaymentsLogEmpty" style="display:none; text-align:center; padding:20px 0;">لا توجد مدفوعات مسجَّلة بعد.</div>
+      <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-top:10px;">
+        <button type="button" class="btn-ghost btn-small" id="expensePaymentsLogPrevBtn" style="display:none;">◀ السابق</button>
+        <span class="muted" id="expensePaymentsLogPageText"></span>
+        <button type="button" class="btn-ghost btn-small" id="expensePaymentsLogNextBtn" style="display:none;">التالي ▶</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4235,7 +4292,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '9.18';
+const APP_VERSION = '9.19';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -4459,6 +4516,11 @@ const TRANSLATIONS = {
     '➕ إضافة حالة مرضية':'➕ Add case',
     '💰 دفعة واردة':'💰 Payment in',
     '💳 إنشاء دفعة':'💳 New payment',
+    '📤 إنشاء دفعة صادرة':'📤 New outgoing payment',
+    'الوجهة المحاسبية لهذه الدفعة':'Accounting purpose for this payment',
+    '💰 تُحتسب على المبالغ المستحقة (الافتراضي)':'💰 Counted toward amounts due (default)',
+    '📇 تُسجَّل كدين مستقل عليه':'📇 Filed as an independent debt',
+    '📋 مصروف فقط — بدون أي تأثير على رصيده':'📋 Expense only — no effect on their balance',
     '🧾 كشف حساب':'🧾 Statement',
     '📉 تسجيل دفعة مستحقة':'📉 Record due payment',
     '📋 سجل الديون':'📋 Debts log',
@@ -5102,6 +5164,11 @@ const TRANSLATIONS = {
     '➕ إضافة حالة مرضية':'➕ Casus toevoegen',
     '💰 دفعة واردة':'💰 Ontvangen betaling',
     '💳 إنشاء دفعة':'💳 Nieuwe betaling',
+    '📤 إنشاء دفعة صادرة':'📤 Nieuwe uitgaande betaling',
+    'الوجهة المحاسبية لهذه الدفعة':'Boekhoudkundig doel van deze betaling',
+    '💰 تُحتسب على المبالغ المستحقة (الافتراضي)':'💰 Telt mee voor openstaande bedragen (standaard)',
+    '📇 تُسجَّل كدين مستقل عليه':'📇 Geregistreerd als aparte schuld',
+    '📋 مصروف فقط — بدون أي تأثير على رصيده':'📋 Alleen uitgave — geen effect op saldo',
     '🧾 كشف حساب':'🧾 Rekeningoverzicht',
     '📉 تسجيل دفعة مستحقة':'📉 Vervallen betaling vastleggen',
     '📋 سجل الديون':'📋 Schuldenlogboek',
@@ -5176,6 +5243,11 @@ const TRANSLATIONS = {
     '➕ إضافة حالة مرضية':'➕ Fall hinzufügen',
     '💰 دفعة واردة':'💰 Zahlungseingang',
     '💳 إنشاء دفعة':'💳 Neue Zahlung',
+    '📤 إنشاء دفعة صادرة':'📤 Neue ausgehende Zahlung',
+    'الوجهة المحاسبية لهذه الدفعة':'Buchhalterischer Zweck dieser Zahlung',
+    '💰 تُحتسب على المبالغ المستحقة (الافتراضي)':'💰 Wird auf ausstehende Beträge angerechnet (Standard)',
+    '📇 تُسجَّل كدين مستقل عليه':'📇 Als eigenständige Schuld erfasst',
+    '📋 مصروف فقط — بدون أي تأثير على رصيده':'📋 Nur Ausgabe — keine Auswirkung auf den Saldo',
     '🧾 كشف حساب':'🧾 Kontoauszug',
     '📉 تسجيل دفعة مستحقة':'📉 Fällige Zahlung erfassen',
     '📋 سجل الديون':'📋 Forderungsprotokoll',
@@ -5250,6 +5322,11 @@ const TRANSLATIONS = {
 '➕ إضافة حالة مرضية':'➕ Vaka Ekle',
 '💰 دفعة واردة':'💰 Gelen Ödeme',
 '💳 إنشاء دفعة':'💳 Yeni Ödeme',
+'📤 إنشاء دفعة صادرة':'📤 Yeni giden ödeme',
+'الوجهة المحاسبية لهذه الدفعة':'Bu ödemenin muhasebe amacı',
+'💰 تُحتسب على المبالغ المستحقة (الافتراضي)':'💰 Vadesi gelen tutarlara sayılır (varsayılan)',
+'📇 تُسجَّل كدين مستقل عليه':'📇 Bağımsız bir borç olarak kaydedilir',
+'📋 مصروف فقط — بدون أي تأثير على رصيده':'📋 Sadece gider — bakiyesine etkisi yok',
 '🧾 كشف حساب':'🧾 Hesap Ekstresi',
 '📉 تسجيل دفعة مستحقة':'📉 Vadeli Ödeme Kaydet',
 '📋 سجل الديون':'📋 Borç Kayıtları',
@@ -5927,6 +6004,11 @@ const TRANSLATIONS = {
     '➕ إضافة حالة مرضية':'➕ הוספת מקרה',
     '💰 دفعة واردة':'💰 תשלום נכנס',
     '💳 إنشاء دفعة':'💳 תשלום חדש',
+    '📤 إنشاء دفعة صادرة':'📤 תשלום יוצא חדש',
+    'الوجهة المحاسبية لهذه الدفعة':'ייעוד חשבונאי לתשלום זה',
+    '💰 تُحتسب على المبالغ المستحقة (الافتراضي)':'💰 נספר לחשבון הסכומים המגיעים (ברירת מחדל)',
+    '📇 تُسجَّل كدين مستقل عليه':'📇 נרשם כחוב עצמאי',
+    '📋 مصروف فقط — بدون أي تأثير على رصيده':'📋 הוצאה בלבד — ללא השפעה על היתרה',
     '🧾 كشف حساب':'🧾 דף חשבון',
     '📉 تسجيل دفعة مستحقة':'📉 רישום תשלום מגיע',
     '📋 سجل الديون':'📋 יומן חובות',
@@ -8080,8 +8162,12 @@ async function deletePaymentRecordById(id){
 }
 
 function outgoingToTotal(recipientType, recipientId){
+  // purpose 'debt'/'expense' payments were deliberately routed OUT of this
+  // entity's running balance at entry time (see expensePaymentForm's submit
+  // handler) — count only 'balance' (and legacy records with no purpose
+  // field at all, which predate this feature and always meant 'balance').
   return expensePayments
-    .filter(e=> e.recipientType===recipientType && e.recipientId===recipientId)
+    .filter(e=> e.recipientType===recipientType && e.recipientId===recipientId && e.purpose !== 'debt' && e.purpose !== 'expense')
     .reduce((s,e)=> s + (Number(e.amount)||0), 0);
 }
 
@@ -8138,7 +8224,7 @@ function agentPaidTotal(a){
   // recorded against a.payments (see the incoming-payment form). Before this
   // fix, only the outgoing side was counted, so recording an incoming
   // payment from an agent never reduced what the clinic owed them.
-  const out = expensePayments.filter(exp=> exp.recipientType==='agent' && exp.recipientId===a.id).reduce((s,p)=> s + (Number(p.amount)||0), 0);
+  const out = expensePayments.filter(exp=> exp.recipientType==='agent' && exp.recipientId===a.id && exp.purpose !== 'debt' && exp.purpose !== 'expense').reduce((s,p)=> s + (Number(p.amount)||0), 0);
   const inn = (a.payments||[]).reduce((s,p)=> s + (Number(p.amount)||0), 0);
   return out + inn;
 }
@@ -13502,6 +13588,12 @@ function renderExpenseRecipientPicker(){
     sel.style.display = 'none';
     otherInput.style.display = 'block';
     document.getElementById('expenseRecipientBalance').textContent = '';
+    // BUG FIX: this early return used to skip updateExpensePaymentPurposeVisibility()
+    // entirely, so switching straight from a doctor/lab/company/agent recipient
+    // to "أخرى" left the purpose selector visibly showing (a stale leftover from
+    // the previous type) even though "أخرى" has no balance concept at all and
+    // the submit handler always treats it as purpose:'balance' regardless.
+    updateExpensePaymentPurposeVisibility();
     return;
   }
   sel.style.display = 'block';
@@ -13533,12 +13625,33 @@ function renderExpenseRecipientPicker(){
   sel.value = currentVal;
   updateExpenseRecipientBalance();
   updateExpensePaymentCaseLinkVisibility();
+  updateExpensePaymentPurposeVisibility();
 }
 document.getElementById('expenseRecipientType').addEventListener('change', renderExpenseRecipientPicker);
 document.getElementById('expenseRecipientSelect').addEventListener('change', ()=>{
   updateExpenseRecipientBalance();
   updateExpensePaymentCaseLinkVisibility();
+  updateExpensePaymentPurposeVisibility();
 });
+
+/* Lets the user say what an outgoing payment actually MEANS for the
+   recipient's balance instead of it always silently counting as an advance
+   against what they owe (see the epPurposeWrap HTML comment for the full
+   rationale). Only doctor/lab/company/agent have any "مبالغ مستحقة" balance
+   concept at all — COLLECT_DEBT_META lists exactly these same four, which
+   is also what a purpose:'debt' payment here files itself under. Resets to
+   the default 'balance' option whenever the recipient type/selection
+   changes, so switching from e.g. a company back to an employee never
+   leaves a stale non-default choice sitting invisibly in the form. */
+function updateExpensePaymentPurposeVisibility(){
+  const wrap = document.getElementById('epPurposeWrap');
+  const sel = document.getElementById('epPurpose');
+  if(!wrap || !sel) return;
+  const type = document.getElementById('expenseRecipientType').value;
+  const applies = (type === 'doctor' || type === 'lab' || type === 'company' || type === 'agent');
+  wrap.style.display = applies ? '' : 'none';
+  if(!applies) sel.value = 'balance';
+}
 
 /* Outgoing side of the same per-case allocation feature the incoming form
    has — see the big comment above renderCaseAllocationInputs(). Only
@@ -13630,6 +13743,9 @@ function openExpensePaymentScreen(prefillType, prefillId, prefillAmount){
   if(amtInput){ amtInput.value = (prefillAmount != null && isFinite(prefillAmount) && Number(prefillAmount) > 0) ? prefillAmount : ''; }
   document.getElementById('epCaseLinkToggle').checked = false;
   updateExpensePaymentCaseLinkVisibility();
+  const epPurposeEl = document.getElementById('epPurpose');
+  if(epPurposeEl) epPurposeEl.value = 'balance';
+  updateExpensePaymentPurposeVisibility();
   renderExpensePaymentsLog();
   expensePaymentOverlay.classList.add('open');
 }
@@ -13662,6 +13778,19 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   let recipientLabel = '';
   let linkedAdvanceId = '';
   let linkedCompanyPaymentId = '';
+  // purposeEntity is the actual doctor/lab/company/agent record (when one
+  // applies) so the 'debt' branch below can push onto its own .debts[]
+  // without re-looking it up. purpose itself decides how this payment
+  // affects that entity's balance — per the user's explicit request, an
+  // outgoing payment no longer silently reduces "المبالغ المستحقة" by
+  // default; the epPurpose picker (see updateExpensePaymentPurposeVisibility)
+  // makes that an explicit choice: count against the running balance
+  // (unchanged legacy behavior), file as an independent debt entry, or log
+  // as a plain expense with zero effect on the entity's balance.
+  let purposeEntity = null;
+  const purposeApplies = (type === 'doctor' || type === 'lab' || type === 'company' || type === 'agent');
+  const epPurposeEl = document.getElementById('epPurpose');
+  const purpose = purposeApplies ? ((epPurposeEl && epPurposeEl.value) || 'balance') : 'balance';
 
   if(type === 'other'){
     recipientLabel = document.getElementById('expenseRecipientOtherInput').value.trim();
@@ -13681,42 +13810,63 @@ expensePaymentForm.addEventListener('submit', (e)=>{
       const d = doctors.find(x=>x.id===recipientId);
       if(!d) return;
       recipientLabel = d.name;
+      purposeEntity = d;
       // No mirror list to write: doctorBalance() reads outgoing payments
-      // straight out of expensePayments.
+      // straight out of expensePayments (filtered by purpose — see
+      // outgoingToTotal()).
     }else if(type === 'lab'){
       // This branch did not exist at all, so a payment to a lab was filed
       // with an empty recipient name and appeared in no lab's records.
       const l = labs.find(x=>x.id===recipientId);
       if(!l) return;
       recipientLabel = l.name;
+      purposeEntity = l;
     }else if(type === 'company'){
       const c = companies.find(x=>x.id===recipientId);
       if(!c) return;
       recipientLabel = c.name;
-      if(!c.payments) c.payments = [];
-      linkedCompanyPaymentId = uid('pay');
-      // viaExpense marks this as a MIRROR of an outgoing expense payment (the
-      // clinic paying the company), not a payment the company handed the
-      // clinic — collectAllChecks() relies on this flag so a check the
-      // clinic wrote out doesn't get filed as an incoming check.
-      // caseAllocations is copied into the mirror too (not just the
-      // expensePayments record below) because computeCaseAllocationTotals()
-      // reads company allocations from c.payments — that's the array
-      // openDueReasonDetail() actually scans for a company's shipments, same
-      // as every other company balance figure.
-      c.payments.push({ id: linkedCompanyPaymentId, amount, date, note: note || 'دفعة عبر المصاريف', caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'', viaExpense: true });
-      saveCompanies();
+      purposeEntity = c;
+      // The viaExpense mirror is what makes this payment count against the
+      // company's running balance (companyBalance() sums ALL of
+      // c.payments), so it's only written when purpose === 'balance' — a
+      // 'debt' or 'expense' purpose must NOT touch the balance at all.
+      if(purpose === 'balance'){
+        if(!c.payments) c.payments = [];
+        linkedCompanyPaymentId = uid('pay');
+        // viaExpense marks this as a MIRROR of an outgoing expense payment (the
+        // clinic paying the company), not a payment the company handed the
+        // clinic — collectAllChecks() relies on this flag so a check the
+        // clinic wrote out doesn't get filed as an incoming check.
+        // caseAllocations is copied into the mirror too (not just the
+        // expensePayments record below) because computeCaseAllocationTotals()
+        // reads company allocations from c.payments — that's the array
+        // openDueReasonDetail() actually scans for a company's shipments, same
+        // as every other company balance figure.
+        c.payments.push({ id: linkedCompanyPaymentId, amount, date, note: note || 'دفعة عبر المصاريف', caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'', viaExpense: true });
+        saveCompanies();
+      }
     }else if(type === 'agent'){
       const a = agents.find(x=>x.id===recipientId);
       if(!a) return;
       recipientLabel = a.name;
+      purposeEntity = a;
     }
   }
 
   expensePayments.push({
-    id: uid('exp'), recipientType: type, recipientId, recipientLabel, amount, date, note, linkedAdvanceId, linkedCompanyPaymentId, caseAllocations,
+    id: uid('exp'), recipientType: type, recipientId, recipientLabel, amount, date, note, linkedAdvanceId, linkedCompanyPaymentId, caseAllocations, purpose,
     paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||''
   });
+  // purpose === 'debt': file this as its own independent debt entry (same
+  // shape debtEntryForm's handler writes) rather than letting it touch the
+  // entity's running balance at all — outgoingToTotal()/agentPaidTotal()
+  // both exclude purpose 'debt' and 'expense' entries from their sums.
+  if(purpose === 'debt' && purposeEntity){
+    if(!purposeEntity.debts) purposeEntity.debts = [];
+    purposeEntity.debts.push({ id: uid('debt'), amount, dueDate: date, note: note || 'دين ناتج عن دفعة صادرة', settled:false, createdAt: new Date(getTrustedNow()).toISOString() });
+    logEdit(`تسجيل دين ${fmtMoney(amount)} على ${EXPENSE_RECIPIENT_LABELS[type]||''} ${recipientLabel} (عبر دفعة صادرة) — استحقاق ${date}`);
+    saveDebtEntityType(type);
+  }
   const expenseCtx = type === 'employee' ? {type:'technician', techId: recipientId}
     : type === 'doctor' ? {type:'doctor', doctorId: recipientId}
     : type === 'company' ? {type:'company', companyId: recipientId}
@@ -13731,6 +13881,8 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   document.getElementById('epCheckDetails').querySelectorAll('input,select').forEach(el=>{el.required=false; el.value='';});
   document.getElementById('epCaseLinkToggle').checked = false;
   updateExpensePaymentCaseLinkVisibility();
+  if(epPurposeEl) epPurposeEl.value = 'balance';
+  updateExpensePaymentPurposeVisibility();
   renderExpensePaymentsLog();
   renderHomeDashboard();
   // Same lightweight full-screen success card as the incoming-payment flow —
@@ -13739,6 +13891,13 @@ expensePaymentForm.addEventListener('submit', (e)=>{
     ? `تم تأكيد الدفعة بنجاح — وخُصمت من راتب ${recipientLabel}`
     : `تم تأكيد الدفعة بنجاح — لـ ${recipientLabel}`;
   showCenterFlash(doneMsg, '💸', 2000);
+  // purpose 'debt'/'expense' both deliberately leave the balance untouched —
+  // an extra toast spells that out so it doesn't read as a silent bug.
+  if(purpose === 'expense'){
+    showToast(`لم تُنسب هذه الدفعة لسبب محدد، فسُجّلت في سجل المصاريف فقط ولن تُحتسب على رصيد ${recipientLabel}.`, 'info');
+  }else if(purpose === 'debt'){
+    showToast(`سُجّلت هذه الدفعة كدين مستقل على ${recipientLabel} — لن تُحتسب ضمن المبالغ المستحقة.`, 'info');
+  }
 });
 
 let expensePaymentsLogPage = 0;
@@ -14544,7 +14703,15 @@ function promptWorkTypeQuickPick(){
     const overlay = document.getElementById('workTypeQuickPickOverlay');
     const list = document.getElementById('workTypeQuickPickList');
     const closeBtn = document.getElementById('closeWorkTypeQuickPickBtn');
+    const descEl = document.getElementById('workTypeQuickPickDesc');
     list.innerHTML = '';
+    // BUG FIX: the "this type will repeat automatically on the other teeth
+    // you pick" hint above the list is only true when there IS a type to
+    // pick — with an empty workTypes list it just confusingly sat above the
+    // "no work types added yet" message, talking about a selection that
+    // isn't possible yet. Hide it in that case; the empty message alone
+    // (already saying to go add one) is the only thing that should show.
+    if(descEl) descEl.style.display = workTypes.length ? '' : 'none';
     if(!workTypes.length){
       list.innerHTML = '<div class="muted" style="text-align:center; padding:14px 0;">لا توجد أنواع عمل مُضافة بعد — أضِفها من "🦷 أنواع العمل" بالقائمة الجانبية.</div>';
     }
@@ -15272,7 +15439,18 @@ document.getElementById('addWorkTypeForm').addEventListener('submit',(e)=>{
   const val=input.value.trim(); if(!val)return;
   if(draft.some(w=>w.name===val)){showToast('هذا النوع مضاف مسبقًا.','error');return;}
   draft.push({id:uid('wt'),name:val,costPerTooth:Number.parseFloat(costInput.value)||0});
-  workTypesDirty=true; input.value=''; costInput.value=''; renderWorkTypeList();
+  workTypesDirty=true; input.value=''; costInput.value='';
+  // BUG FIX: adding a new work type used to only touch the in-memory draft
+  // — it stayed unsaved until the separate "✔ موافق — تطبيق التغييرات"
+  // button was clicked, so closing this screen right after clicking
+  // "➕ إضافة" (a natural, complete-feeling action on its own) silently
+  // discarded the newly typed work type with no warning at all. Clicking
+  // "إضافة" is now itself a complete, immediately-saved action — applying
+  // the draft here also correctly picks up any cost/rename edits already
+  // made in this same visit, which only reduces the chance of losing work,
+  // never adds one. Rename/cost-edit/delete of EXISTING types are
+  // unaffected and still require the explicit Apply button, as before.
+  applyWorkTypesDraft();
 });
 document.getElementById('workTypeListBody').addEventListener('input',(e)=>{
   const id=e.target.getAttribute('data-cost-work'); if(!id)return;
@@ -17520,11 +17698,26 @@ async function initDatabase(){
         await offerBackupRestore();
       }
     }else if(res.status === 'empty' || res.status === 'no-dir'){
+      // BUG FIX: this DATA_STORAGE_CONFIGURED_KEY gate exists only for the
+      // BROWSER build's own storage-location picker (#databaseScreen) — this
+      // whole function's header comment says desktop needs "no pickers, no
+      // banners", yet this check was mistakenly ALSO reachable inside the
+      // IS_DESKTOP branch. status:'empty' is simply "no data saved yet",
+      // true of literally every brand-new install's very first launch (see
+      // lib/datastore.js's readDatabase() — a missing db file/dir always
+      // reports 'empty', never an error). Before this fix, that first-ever
+      // read hit this early return and skipped finishDatabaseLoad() entirely
+      // — so #databaseScreen never received its '.ready' class for the rest
+      // of that session. Harmless while #lockScreen (higher z-index) stayed
+      // on top of it, but the moment the lock screen hid — e.g. right after
+      // first-run account creation, via "🧾 افتح ضبط الفاتورة الآن" — the
+      // still-not-ready #databaseScreen became the topmost visible screen,
+      // reading exactly like the browser-only "📍 أين تريد حفظ بياناتك؟"
+      // picker popping up again, on a build that never shows it by design.
+      // Desktop always has its own writable data directory
+      // (app.getPath('userData')) with zero user choice required, so an
+      // empty desktop database just needs its payload applied — no prompt.
       applyDatabasePayload(hasLegacyBrowserData() ? readLegacyBrowserData() : {});
-      if(!localStorage.getItem(DATA_STORAGE_CONFIGURED_KEY)){
-        setDatabaseSetupStatus('اختر مكانًا ثابتًا لبيانات البرنامج أولًا.');
-        return;
-      }
     }else if(res.status === 'dir-missing'){
       applyDatabasePayload({});
       blockSavingAfterFailedLoad(

@@ -1,6 +1,6 @@
 {
-    "version":  "9.22",
-    "notes":  "",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-    "sha256":  "a9c1cf3cbb9f4c58a93be8a1b5d9cbea949563251d5f96088fdf871e428cf153"
+  "version": "9.27.0",
+  "notes": "9.27: مزامنة رقم الإصدار بين البرنامج وملف GitHub، إصلاح مسار فحص التحديث بحيث يرى الإصدار الجديد فعليًا، تحديث بصمة SHA-256، وتحسين سكربتات تجهيز ورفع GitHub والبناء.",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
+  "sha256": "af9a54b085ae9384b51cd700e139ad8d3f1641d749a0a670c4048f468b67d134"
 }

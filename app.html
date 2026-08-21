@@ -650,6 +650,17 @@
   #saveProblemBar button:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
   /* Pull the whole app down so the bar never covers the sidebar or a toolbar. */
   body.has-save-problem .app-shell{ height:calc(100vh - 46px); margin-top:46px; }
+  /* BUG FIX: #updateBanner is position:fixed;top:0;z-index:3000000 (see its
+     own rule above) with NOTHING to push the rest of the page down when
+     shown — unlike #saveProblemBar just above, which has always had this
+     exact compensation. The banner therefore rendered directly on top of
+     .sidebar-head's #brandName/#appVersionBadge (both sit at the very top of
+     the sidebar with no offset of their own), hiding the program name and
+     version number for as long as the banner stayed up. --update-banner-h is
+     set from JS to the banner's REAL measured height (not hardcoded) because
+     its text can wrap to two lines on a narrow window, and a fixed guess
+     would either leave a gap or under-push and still clip the sidebar. */
+  body.has-update-banner .app-shell{ height:calc(100vh - var(--update-banner-h, 42px)); margin-top:var(--update-banner-h, 42px); }
 
   /* ===== Layout ===== */
   .app-shell{ display:flex; height:100vh; overflow:hidden; }
@@ -2499,6 +2510,8 @@ input:focus, select:focus, textarea:focus {
             <th style="padding:9px 12px; text-align:right; border-bottom:1px solid var(--line);">البند</th>
             <th style="padding:9px 12px; text-align:right; border-bottom:1px solid var(--line);">التاريخ</th>
             <th style="padding:9px 12px; text-align:left; border-bottom:1px solid var(--line);">المبلغ</th>
+            <th style="padding:9px 12px; text-align:left; border-bottom:1px solid var(--line);">المدفوع من هذا البند</th>
+            <th style="padding:9px 12px; text-align:left; border-bottom:1px solid var(--line);">المتبقي من هذا البند</th>
           </tr>
         </thead>
         <tbody id="dueReasonCasesBody"></tbody>
@@ -3018,8 +3031,10 @@ input:focus, select:focus, textarea:focus {
            agents and "other" never get this option. -->
       <div class="field" id="ipCaseLinkWrap" style="display:none; margin:0; flex-basis:100%; width:100%;">
         <label id="ipCaseLinkLabel">اختر الحالات المرتبطة بهذه الدفعة</label>
+        <div class="muted" style="font-size:11.5px; margin-bottom:6px;">اكتب أمام كل حالة/بضاعة كم من مبلغ هذه الدفعة يخصّها — مش شرط توزّع كل المبلغ.</div>
         <div id="ipCaseLinkList" style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:8px 10px;"></div>
         <div class="muted" id="ipCaseLinkEmpty" style="display:none; font-size:12px; padding:6px 2px;">لا توجد حالات/بضاعة مسجّلة لهذه الجهة بعد.</div>
+        <div id="ipCaseLinkRemaining" style="font-size:12.5px; font-weight:800; margin-top:6px;"></div>
       </div>
       <div class="field" style="flex:1; min-width:130px; margin:0;">
         <label>طريقة الدفع</label>
@@ -3079,6 +3094,23 @@ input:focus, select:focus, textarea:focus {
     <form id="expensePaymentForm" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:6px; background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:14px;">
       <div class="field" style="flex:1; min-width:110px; margin:0;"><label>المبلغ</label><input type="number" step="0.01" id="epAmount" dir="ltr" required></div>
       <div class="field" style="flex:1; min-width:130px; margin:0;"><label>التاريخ</label><input type="date" id="epDate" dir="ltr" required></div>
+      <!-- Shown only for recipientType doctor/lab/company (see
+           updateExpensePaymentCaseLinkVisibility()) — employee/agent/other
+           have no cases/shipments to itemize against, matching exactly which
+           types the incoming form's own case-link block supports. -->
+      <div class="field" id="epCaseLinkToggleWrap" style="display:none; margin:0; flex-basis:100%; width:100%;">
+        <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
+          <input type="checkbox" id="epCaseLinkToggle">
+          <span>🔗 خصّص هذه الدفعة على حالات/بضاعة محددة (اختياري)</span>
+        </label>
+      </div>
+      <div class="field" id="epCaseLinkWrap" style="display:none; margin:0; flex-basis:100%; width:100%;">
+        <label id="epCaseLinkLabel">اختر الحالات المرتبطة بهذه الدفعة</label>
+        <div class="muted" style="font-size:11.5px; margin-bottom:6px;">اكتب أمام كل حالة/بضاعة كم من مبلغ هذه الدفعة يخصّها — مش شرط توزّع كل المبلغ.</div>
+        <div id="epCaseLinkList" style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:8px 10px;"></div>
+        <div class="muted" id="epCaseLinkEmpty" style="display:none; font-size:12px; padding:6px 2px;">لا توجد حالات/بضاعة مسجّلة لهذه الجهة بعد.</div>
+        <div id="epCaseLinkRemaining" style="font-size:12.5px; font-weight:800; margin-top:6px;"></div>
+      </div>
       <div class="field" style="flex:1; min-width:130px; margin:0;">
         <label>طريقة الدفع</label>
         <select id="epPaymentMethod">
@@ -3824,6 +3856,38 @@ input:focus, select:focus, textarea:focus {
         </div>
       </div>
 
+      <div class="section-head" style="margin:18px 0 12px;"><h2 style="font-size:14px;">🎨 ألوان الفاتورة</h2></div>
+      <div class="muted" style="margin-bottom:12px; line-height:1.8; font-size:12.5px;">لون منفصل لكل صندوق بالفاتورة، بالإضافة للون اسم العيادة — كل تغيير بيظهر مباشرة بمعاينة الطباعة.</div>
+      <div class="grid2">
+        <div class="field">
+          <label>لون الهيدر (الشريط العلوي)</label>
+          <input type="color" id="invHeaderColorInput">
+        </div>
+        <div class="field">
+          <label>لون صندوق الإجمالي (المبلغ الكلي)</label>
+          <input type="color" id="invTotalBoxColorInput">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>لون الجدول (رأس/تذييل جدول البنود)</label>
+          <input type="color" id="invTableColorInput">
+        </div>
+        <div class="field">
+          <label>لون صندوق البيانات (بيانات العميل والمبلغ كتابةً)</label>
+          <input type="color" id="invDataBoxColorInput">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>لون اسم العيادة</label>
+          <input type="color" id="invClinicNameColorInput">
+        </div>
+        <div class="field" style="display:flex; align-items:flex-end;">
+          <button type="button" class="btn-ghost btn-small" id="invColorsResetBtn" style="width:100%;">↺ استعادة الألوان الافتراضية</button>
+        </div>
+      </div>
+
       <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="width:100%; margin-top:8px;">👁 معاينة الفاتورة قبل الطباعة</button>
       <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="width:100%; margin-top:8px;">📋 الأعمدة والبيانات التي ستظهر في الفاتورة</button>
       <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
@@ -4171,7 +4235,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '9.17';
+const APP_VERSION = '9.18';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -5026,6 +5090,11 @@ const TRANSLATIONS = {
     'من الشركة':'From the company',
     'من المندوب':'From the rep',
     'سعر مثبّت لهذا السن':'Fixed price for this tooth',
+
+    /* ---- payment-to-case allocation system (per-case amount split for
+       incoming and outgoing payments) ---- */
+    'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Allocated exceeds the payment amount by',
+    'المتبقي غير مُخصَّص لحالة معيّنة':'Remaining not allocated to a specific case',
   },
 
   nl: {
@@ -5098,6 +5167,8 @@ const TRANSLATIONS = {
     '📦 الحالات الواردة':'📦 Ontvangen casussen',
     '📦 البضاعة الواردة':'📦 Ontvangen goederen',
     '💳 إجمالي المدفوع له':'💳 Totaal aan hen betaald',
+    'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Toegewezen overschrijdt het betalingsbedrag met',
+    'المتبقي غير مُخصَّص لحالة معيّنة':'Resterend niet aan een bepaalde casus toegewezen',
   },
 
   de: {
@@ -5170,6 +5241,8 @@ const TRANSLATIONS = {
     '📦 الحالات الواردة':'📦 Erhaltene Fälle',
     '📦 البضاعة الواردة':'📦 Erhaltene Ware',
     '💳 إجمالي المدفوع له':'💳 Insgesamt an ihn gezahlt',
+    'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Zugewiesen übersteigt den Zahlungsbetrag um',
+    'المتبقي غير مُخصَّص لحالة معيّنة':'Rest keinem bestimmten Fall zugewiesen',
   },
 
   tr: {
@@ -5845,6 +5918,8 @@ const TRANSLATIONS = {
 'من الشركة':'Şirketten',
 'من المندوب':'Temsilciden',
 'سعر مثبّت لهذا السن':'Bu diş için sabit fiyat',
+'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Tahsis edilen tutar ödeme tutarını şu kadar aşıyor',
+'المتبقي غير مُخصَّص لحالة معيّنة':'Kalan, belirli bir vakaya tahsis edilmedi',
   },
 
   he: {
@@ -6520,6 +6595,8 @@ const TRANSLATIONS = {
     'من الشركة':'מהחברה',
     'من المندوب':'מהסוכן',
     'سعر مثبّت لهذا السن':'מחיר קבוע לשן זו',
+    'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'הסכום שהוקצה גבוה מסכום התשלום ב-',
+    'المتبقي غير مُخصَّص لحالة معيّنة':'היתרה לא הוקצתה למקרה מסוים',
   },
 };
 
@@ -6753,16 +6830,19 @@ function showToast(message, type){
 }
 function alert(message){ showToast(String(message), 'warning'); }
 
-/* Center-of-screen flash that sits above every window. */
+/* Center-of-screen flash that sits above every window. durationMs defaults
+   to 1600 (unchanged for every pre-existing caller — account creation/reset,
+   case-edit); the payment-success screens pass 2000 explicitly per the
+   user's request for exactly a 2-second display. */
 let _centerFlashTimer = null;
-function showCenterFlash(message, icon){
+function showCenterFlash(message, icon, durationMs){
   const wrap = document.getElementById('centerFlash');
   if(!wrap){ /* fallback: DOM not ready */ return; }
   document.getElementById('centerFlashText').textContent = message || 'تم الحفظ';
   wrap.querySelector('.flash-icon').textContent = icon || '✅';
   wrap.classList.add('show');
   clearTimeout(_centerFlashTimer);
-  _centerFlashTimer = setTimeout(()=> wrap.classList.remove('show'), 1600);
+  _centerFlashTimer = setTimeout(()=> wrap.classList.remove('show'), Number.isFinite(durationMs) ? durationMs : 1600);
 }
 
 /* ================== Device activation (prevents unauthorized copies) ================== */
@@ -7678,6 +7758,22 @@ function escapeHtml(str){
   if(str === undefined || str === null) return '';
   return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 }
+// Used by the invoice color-customization feature: a user-chosen box color is
+// unconstrained (they might pick something dark for a box whose text was
+// always assumed light-on-dark, like the total-amount box, or vice versa),
+// so text color on top of a user color is computed from perceived luminance
+// (ITU-R BT.601) instead of ever being hardcoded — this is what keeps an
+// unusual color choice from ever producing invisible/unreadable invoice text.
+function contrastTextColor(hex){
+  try{
+    let h = String(hex||'').trim().replace('#','');
+    if(h.length === 3) h = h.split('').map(c=> c+c).join('');
+    if(!/^[0-9a-fA-F]{6}$/.test(h)) return '#1c2b33';
+    const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+    const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return lum > 0.6 ? '#1c2b33' : '#ffffff';
+  }catch(e){ return '#1c2b33'; }
+}
 function fmtMoney(n){
   const v = Number(n)||0;
   return v.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
@@ -8071,6 +8167,17 @@ const DEFAULT_INVOICE_SETTINGS = {
   clinicNameSize: 16,
   clinicNameAlign: 'right',
   lastCurrency: 'JOD',
+  // Invoice color customization — every value here matches the hex literal
+  // that was hardcoded directly in printInvoice()'s <style> block / in
+  // buildInvoiceHeaderHtml() before this feature existed, so an existing
+  // installation that has never opened this settings tab prints an
+  // absolutely identical invoice to before — nothing changes until the user
+  // actually picks a different color and saves.
+  headerColor: '#0e7c9e',     // .inv-header border-bottom (top bar under the logo/clinic name)
+  totalBoxColor: '#0e7c9e',   // .inv-amount background (the big total-due box)
+  tableColor: '#e7f1f5',      // .inv-table header row background + derived footer tint
+  dataBoxColor: '#f6fafb',    // .inv-party (billed-to / invoice-info) + .inv-words (amount in words) boxes
+  clinicNameColor: '#0e7c9e', // clinic name text color in buildInvoiceHeaderHtml()
 };
 let invoiceSettings = Object.assign({}, DEFAULT_INVOICE_SETTINGS);
 let appNotesList = [];
@@ -8329,10 +8436,25 @@ function renderIncomingPaymentsReportPage(){
   // report's own list silently under-counted "سجل الدفعات الواردة" and a
   // company's or agent's incoming payment could never be found (let alone
   // deleted) from here, only from that party's own statement.
+  //
+  // BUG FIX (deep financial audit): company payments with viaExpense:true are
+  // a MIRROR of a real OUTGOING record that already lives in expensePayments
+  // (see expensePaymentForm's 'company' branch and the identical comment in
+  // collectAllChecks() above). This list used to include them as ordinary
+  // incoming rows — deleting one here only stripped the c.payments mirror via
+  // deletePaymentRecordById()'s generic 'company'/incoming branch, WITHOUT
+  // reversing the real expensePayments entry, so companyBalance() jumped back
+  // up as if the money was never paid while the expense record (and every
+  // expense report/total) still showed it as paid — reproduced live: pay a
+  // company 500 via the expense screen, delete the 500 mirror from here,
+  // companyBalance goes from 500 back to 1000 with the expense still on file.
+  // Excluded here exactly like collectAllChecks() already excludes them —
+  // they remain fully visible/cancellable from the expense log and the
+  // company's own statement, which both reverse BOTH halves correctly.
   const flat = [];
   doctors.forEach(d=> (d.payments||[]).forEach(p=> flat.push({...p, sourceLabel: 'د. '+d.name})));
   labs.forEach(l=> (l.payments||[]).forEach(p=> flat.push({...p, sourceLabel: 'مختبر '+l.name})));
-  companies.forEach(c=> (c.payments||[]).forEach(p=> flat.push({...p, sourceLabel: 'شركة '+c.name})));
+  companies.forEach(c=> (c.payments||[]).forEach(p=> { if(!p.viaExpense) flat.push({...p, sourceLabel: 'شركة '+c.name}); }));
   agents.forEach(a=> (a.payments||[]).forEach(p=> flat.push({...p, sourceLabel: 'المندوب '+a.name})));
   otherPayments.forEach(p=> flat.push({...p, sourceLabel: p.sourceName}));
   flat.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
@@ -8389,10 +8511,18 @@ document.querySelectorAll('.cancel-payment-filter').forEach(btn=>{
   });
 });
 function collectAllPaymentsForCancel(){
+  // BUG FIX (deep financial audit): a company payment with viaExpense:true is
+  // a MIRROR of the real outgoing record already listed below via
+  // expensePayments (see renderIncomingPaymentsReportPage()'s identical fix
+  // for the full explanation). Without this filter the same payment appeared
+  // TWICE here — once correctly tagged 'outgoing' (reverses both halves
+  // correctly on cancel), once wrongly tagged 'incoming' via the mirror
+  // (cancelling THAT copy only stripped the mirror and left the real expense
+  // + companyBalance() out of sync — reproduced live).
   const flat = [];
   doctors.forEach(d=> (d.payments||[]).forEach(p=> flat.push({...p, dir:'incoming', partyLabel: 'د. '+d.name})));
   labs.forEach(l=> (l.payments||[]).forEach(p=> flat.push({...p, dir:'incoming', partyLabel: 'مختبر '+l.name})));
-  companies.forEach(c=> (c.payments||[]).forEach(p=> flat.push({...p, dir:'incoming', partyLabel: 'شركة '+c.name})));
+  companies.forEach(c=> (c.payments||[]).forEach(p=> { if(!p.viaExpense) flat.push({...p, dir:'incoming', partyLabel: 'شركة '+c.name}); }));
   agents.forEach(a=> (a.payments||[]).forEach(p=> flat.push({...p, dir:'incoming', partyLabel: 'المندوب '+a.name})));
   otherPayments.forEach(p=> flat.push({...p, dir:'incoming', partyLabel: p.sourceName}));
   expensePayments.forEach(p=> flat.push({...p, dir:'outgoing', partyLabel: (EXPENSE_RECIPIENT_LABELS[p.recipientType]||'') + ' ' + (p.recipientLabel||'')}));
@@ -8548,6 +8678,11 @@ function openDueReasonDetail(type, id){
   let items = [];
   let itemsLabel = 'تفاصيل البنود المكوّنة لهذا المبلغ:';
   let balance = 0;
+  // Per-case/shipment allocation breakdown — see computeCaseAllocationTotals()
+  // and the huge comment above renderCaseAllocationInputs(). null for agents
+  // (they have no itemizable cost array at all — see the agent branch below).
+  const allocMap = (type === 'doctor' || type === 'lab' || type === 'company')
+    ? computeCaseAllocationTotals(type, ent.id, ent) : null;
 
   if(type === 'doctor' || type === 'lab'){
     const costTotal = type==='doctor' ? doctorCostTotal(ent) : labCostTotal(ent);
@@ -8559,9 +8694,9 @@ function openDueReasonDetail(type, id){
     summaryRows.push({ label: 'إجمالي الدفعات المستلمة', value: paidTotal, sign:'−' });
     if(opening) summaryRows.push({ label:'رصيد سابق', value: opening, sign: opening>=0?'+':'−' });
     if(outgoing) summaryRows.push({ label:'مبالغ صادرة له (مصاريف)', value: outgoing, sign:'+' });
-    items = (ent.cases||[]).map(c=> ({ label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'}`, date:c.receivedDate||'—', amount:Number(c.cost)||0 }));
+    items = (ent.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'}`, date:c.receivedDate||'—', amount:Number(c.cost)||0 }));
     if(type === 'lab'){
-      items = items.concat((ent.shipments||[]).map(sh=> ({ label: sh.description||'بضاعة واردة', date: sh.date||'—', amount:Number(sh.cost)||0 })));
+      items = items.concat((ent.shipments||[]).map(sh=> ({ id:sh.id, label: sh.description||'بضاعة واردة', date: sh.date||'—', amount:Number(sh.cost)||0 })));
       itemsLabel = 'تفاصيل الحالات/البضاعة المكوّنة لهذا المبلغ:';
     }else{
       itemsLabel = 'تفاصيل الحالات المكوّنة لهذا المبلغ:';
@@ -8575,7 +8710,7 @@ function openDueReasonDetail(type, id){
     summaryRows.push({ label:'إجمالي قيمة البضاعة', value: costTotal, sign:'+' });
     summaryRows.push({ label:'إجمالي المدفوع', value: paidTotal, sign:'−' });
     if(opening) summaryRows.push({ label:'رصيد سابق', value: opening, sign: opening>=0?'+':'−' });
-    items = (ent.shipments||[]).slice().sort((a,b)=> String(b.date||'').localeCompare(String(a.date||''))).map(sh=> ({ label: sh.description||'بضاعة واردة', date: sh.date||'—', amount:Number(sh.cost)||0 }));
+    items = (ent.shipments||[]).slice().sort((a,b)=> String(b.date||'').localeCompare(String(a.date||''))).map(sh=> ({ id:sh.id, label: sh.description||'بضاعة واردة', date: sh.date||'—', amount:Number(sh.cost)||0 }));
     itemsLabel = 'تفاصيل البضاعة المكوّنة لهذا المبلغ:';
   }else if(type === 'agent'){
     // Agents have no itemized cost array — agentBalance() is just
@@ -8606,15 +8741,31 @@ function openDueReasonDetail(type, id){
   const tbody = document.getElementById('dueReasonCasesBody');
   tbody.innerHTML = '';
   document.getElementById('dueReasonCasesEmpty').style.display = items.length ? 'none' : 'block';
+  // Precomputed OUTSIDE the forEach below: the loop variable there is
+  // (pre-existingly) itself named `tr`, which shadows the tr() translation
+  // function for the whole body of that loop — calling tr(...) from inside
+  // it would silently call the DOM element instead and throw. Not a new
+  // problem introduced here, just something this addition has to route
+  // around rather than fix (renaming that loop variable is out of scope).
+  const naText = '—';
   items.forEach(it=>{
-    const tr = document.createElement('tr');
-    tr.style.borderBottom = '1px solid var(--line)';
-    tr.innerHTML = `
+    const rowEl = document.createElement('tr');
+    rowEl.style.borderBottom = '1px solid var(--line)';
+    let paidCell = naText, remainingCell = naText;
+    if(allocMap && it.id){
+      const paid = allocMap[it.id] || 0;
+      const remaining = Math.round((it.amount - paid) * 100) / 100;
+      paidCell = paid ? fmtMoney(paid) : naText;
+      remainingCell = `<span style="color:${remaining > 0.004 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(remaining)}</span>`;
+    }
+    rowEl.innerHTML = `
       <td style="padding:8px 12px;">${escapeHtml(it.label)}</td>
       <td style="padding:8px 12px;">${escapeHtml(it.date||'—')}</td>
       <td style="padding:8px 12px; text-align:left;" dir="ltr">${fmtMoney(it.amount)}</td>
+      <td style="padding:8px 12px; text-align:left;" dir="ltr">${paidCell}</td>
+      <td style="padding:8px 12px; text-align:left;" dir="ltr">${remainingCell}</td>
     `;
-    tbody.appendChild(tr);
+    tbody.appendChild(rowEl);
   });
 
   document.getElementById('dueReasonOverlay').classList.add('open');
@@ -9832,6 +9983,16 @@ function printInvoice(invoice, opts){
   const s = opts.settingsOverride || invoiceSettings || {};
   const fontSize = s.fontSize || 15;
   const headerHtml = opts.headerHtmlOverride !== undefined ? opts.headerHtmlOverride : buildInvoiceHeaderHtml();
+  // Invoice color customization: every value here falls back to the exact
+  // hex literal that used to be hardcoded, so an installation that never
+  // opens the new "🎨 ألوان الفاتورة" settings section prints byte-for-byte
+  // the same invoice as before this feature existed.
+  const cHeader = s.headerColor || DEFAULT_INVOICE_SETTINGS.headerColor;
+  const cTotal = s.totalBoxColor || DEFAULT_INVOICE_SETTINGS.totalBoxColor;
+  const cTable = s.tableColor || DEFAULT_INVOICE_SETTINGS.tableColor;
+  const cData = s.dataBoxColor || DEFAULT_INVOICE_SETTINGS.dataBoxColor;
+  const cTotalText = contrastTextColor(cTotal);
+  const cTableText = contrastTextColor(cTable);
   const rf = getReceiptInvoiceFields();
   const html = `
     <!DOCTYPE html>
@@ -9841,8 +10002,8 @@ function printInvoice(invoice, opts){
       @page{ size:A4; margin:14mm 12mm; }
       @media print{ body{ padding:0 !important; } }
       body{font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif; background:#ffffff; font-weight:700; padding:40px; color:#1c2b33; font-size:${fontSize}px; font-variant-numeric:lining-nums tabular-nums; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
-      .inv-header{display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid #0e7c9e; padding-bottom:14px; margin-bottom:20px;}
-      .inv-title{font-size:${fontSize + 12}px; font-weight:900; color:#0e7c9e; line-height:1.1;}
+      .inv-header{display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid ${cHeader}; padding-bottom:14px; margin-bottom:20px;}
+      .inv-title{font-size:${fontSize + 12}px; font-weight:900; color:${cHeader}; line-height:1.1;}
       .inv-sub{font-size:${Math.max(9, fontSize - 5)}px; font-weight:600; color:#9aa8ae; letter-spacing:1.4px; direction:ltr; margin-top:3px;}
       .inv-serial{text-align:left;}
       .inv-serial-no{font-size:${fontSize + 6}px; font-weight:900; color:#12262d; font-family:'Segoe UI',Arial,sans-serif;}
@@ -9851,7 +10012,7 @@ function printInvoice(invoice, opts){
       /* Who it is for, and the document's own particulars, side by side —
          the layout every commercial invoice uses. */
       .inv-parties{display:flex; gap:14px; margin-bottom:18px;}
-      .inv-party{flex:1; background:#f6fafb; border:1px solid #dfeaef; border-radius:9px; padding:11px 14px;}
+      .inv-party{flex:1; background:${cData}; border:1px solid #dfeaef; border-radius:9px; padding:11px 14px;}
       .inv-party-label{font-size:${Math.max(9, fontSize - 5)}px; font-weight:800; color:#8b9aa2; letter-spacing:.3px; margin-bottom:4px;}
       .inv-party-name{font-size:${fontSize + 2}px; font-weight:900; color:#12262d;}
       .inv-party-meta{font-size:${Math.max(10, fontSize - 3)}px; color:#5a707a; margin-top:2px;}
@@ -9860,16 +10021,16 @@ function printInvoice(invoice, opts){
       .inv-mono{font-family:'Segoe UI',Arial,sans-serif; font-weight:800;}
 
       .inv-table{width:100%; border-collapse:collapse; font-size:${Math.max(11, fontSize - 1)}px;}
-      .inv-table th{background:#e7f1f5; text-align:right; font-weight:900; padding:9px 11px; border:1px solid #b9d3dd;}
+      .inv-table th{background:${cTable}; color:${cTableText}; text-align:right; font-weight:900; padding:9px 11px; border:1px solid #b9d3dd;}
       .inv-table td{padding:11px; border:1px solid #dce7ec;}
       .inv-table .c{text-align:center; width:38px; color:#5a707a;}
       .inv-table .n{text-align:left; width:140px; font-family:'Segoe UI',Arial,sans-serif; font-weight:800; white-space:nowrap;}
-      .inv-table tfoot td{background:#eef5f8; font-weight:900; border-top:2px solid #7fa9b8; font-size:${fontSize}px;}
+      .inv-table tfoot td{background:${cTable}; color:${cTableText}; font-weight:900; border-top:2px solid #7fa9b8; font-size:${fontSize}px;}
 
       .inv-settle{display:flex; gap:14px; align-items:stretch; margin-top:18px;}
-      .inv-words{flex:1; background:#f6fafb; border:1px solid #dfeaef; border-radius:9px; padding:11px 14px;}
+      .inv-words{flex:1; background:${cData}; border:1px solid #dfeaef; border-radius:9px; padding:11px 14px;}
       .inv-words-text{font-size:${Math.max(11, fontSize - 2)}px; font-weight:800; color:#12262d; line-height:1.7;}
-      .inv-amount{min-width:210px; background:#0e7c9e; color:#fff; border-radius:9px; padding:13px 18px; text-align:center; display:flex; flex-direction:column; justify-content:center;}
+      .inv-amount{min-width:210px; background:${cTotal}; color:${cTotalText}; border-radius:9px; padding:13px 18px; text-align:center; display:flex; flex-direction:column; justify-content:center;}
       .inv-amount-label{font-size:${Math.max(9, fontSize - 5)}px; font-weight:700; opacity:.85; letter-spacing:.3px;}
       .inv-amount-value{font-size:${fontSize + 10}px; font-weight:900; font-family:'Segoe UI',Arial,sans-serif; margin-top:3px;}
 
@@ -12391,6 +12552,96 @@ function getIncomingPaymentCaseLinkSource(type, id){
   }
   return null;
 }
+/* ================== Shared per-case payment allocation ==================
+   Both the incoming-payment form and the outgoing (expense) payment form let
+   the user optionally break ONE payment amount down across several of the
+   entity's cases/shipments, with a DIFFERENT amount against each — not just
+   a flat "this payment relates to case X, Y" tag (that was the OLD
+   linkedCaseIds-only behavior, kept below for backward compatibility but no
+   longer the only thing recorded). This is purely additive/informational
+   exactly like linkedCaseIds always was: it is NEVER read by
+   doctorBalance()/labBalance()/companyBalance()/agentBalance(), which stay
+   the aggregate (cost total − paid total) they always were. The only reader
+   is openDueReasonDetail(), which uses it to show, per case/shipment, how
+   much of ITS cost has actually been paid against so far — see
+   computeCaseAllocationTotals() below. Because nothing here feeds any
+   balance formula, deleting a payment (any of the existing delete paths)
+   automatically and correctly "reverses" its allocations too: they simply
+   vanish along with the rest of the payment object, with nothing extra to
+   reconcile — unlike applyPaymentToDebts()'s ent.debts[] mutation, this
+   needed no special-case reversal logic anywhere. */
+function renderCaseAllocationInputs(cfg){
+  // cfg: { listEl, emptyEl, remainingEl, amountInputEl, items, inputClass }
+  cfg.listEl.innerHTML = '';
+  cfg.emptyEl.style.display = cfg.items.length ? 'none' : 'block';
+  cfg.items.forEach(it=>{
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; align-items:center; gap:8px; font-weight:600; font-size:12.5px;';
+    row.innerHTML = `<span style="flex:1;">${escapeHtml(it.label)}</span><input type="number" step="0.01" min="0" dir="ltr" placeholder="0" data-case-id="${escapeHtml(it.id)}" class="${cfg.inputClass}" style="width:100px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--panel); font-weight:800;">`;
+    cfg.listEl.appendChild(row);
+  });
+  const update = ()=> updateCaseAllocationRemaining(cfg);
+  cfg.listEl.querySelectorAll('.' + cfg.inputClass).forEach(inp=> inp.addEventListener('input', update));
+  update();
+}
+function updateCaseAllocationRemaining(cfg){
+  if(!cfg.remainingEl) return;
+  const total = parseFloat(cfg.amountInputEl.value) || 0;
+  let allocated = 0;
+  cfg.listEl.querySelectorAll('.' + cfg.inputClass).forEach(inp=> { allocated += parseFloat(inp.value) || 0; });
+  const remaining = Math.round((total - allocated) * 100) / 100;
+  if(!total && !allocated){ cfg.remainingEl.textContent = ''; return; }
+  if(remaining < -0.004){
+    cfg.remainingEl.textContent = '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtMoney(Math.abs(remaining));
+    cfg.remainingEl.style.color = 'var(--red)';
+  }else{
+    cfg.remainingEl.textContent = tr('المتبقي غير مُخصَّص لحالة معيّنة') + ': ' + fmtMoney(remaining);
+    cfg.remainingEl.style.color = remaining > 0.004 ? 'var(--ink-dim)' : 'var(--green)';
+  }
+}
+// Returns [] if nothing was allocated (never null) — every caller treats an
+// empty array as "no per-case breakdown", same as the old linkedCaseIds default.
+function readCaseAllocations(listEl, inputClass){
+  const out = [];
+  listEl.querySelectorAll('.' + inputClass).forEach(inp=>{
+    const amt = Math.round((parseFloat(inp.value)||0) * 100) / 100;
+    if(amt > 0) out.push({ caseId: inp.getAttribute('data-case-id'), amount: amt });
+  });
+  return out;
+}
+function caseAllocationsSum(allocs){
+  return (allocs||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
+}
+/* Net amount already accounted for against every case/shipment id, across
+   BOTH directions of money movement for that entity — see the balance
+   formulas this mirrors: an INCOMING payment's allocation reduces what's
+   left on that item (money received against it); for doctor/lab, an
+   OUTGOING payment's allocation (an advance/refund attributed to a specific
+   case, recorded via the expense form) INCREASES it, exactly matching how
+   outgoingToTotal() adds to — rather than subtracts from —
+   doctorBalance()/labBalance(). For company, ALL of c.payments already
+   includes both directions merged (see the viaExpense mirror), so no
+   direction split is needed there — every allocation in c.payments simply
+   reduces the shipment's remaining, matching companyBalance()'s own
+   cost−paid formula exactly. */
+function computeCaseAllocationTotals(type, id, ent){
+  const map = {};
+  const add = (allocs, sign)=>{
+    (allocs||[]).forEach(a=>{
+      if(!a || !a.caseId) return;
+      map[a.caseId] = (map[a.caseId]||0) + (Number(a.amount)||0) * sign;
+    });
+  };
+  if(type === 'company'){
+    (ent.payments||[]).forEach(p=> add(p.caseAllocations, +1));
+  }else if(type === 'doctor' || type === 'lab'){
+    (ent.payments||[]).forEach(p=> add(p.caseAllocations, +1));
+    expensePayments.filter(exp=> exp.recipientType===type && exp.recipientId===id)
+      .forEach(exp=> add(exp.caseAllocations, -1));
+  }
+  return map;
+}
+
 function updateIncomingPaymentCaseLinkVisibility(){
   const wrap = document.getElementById('ipCaseLinkWrap');
   if(!wrap) return;
@@ -12408,17 +12659,21 @@ function updateIncomingPaymentCaseLinkVisibility(){
   // whichever variant happened to be set first (see the dueReasonTitle
   // comment above for the general failure mode this avoids).
   setI18nText(document.getElementById('ipCaseLinkLabel'), src.kind === 'shipment' ? 'اختر البضاعة المرتبطة بهذه الدفعة' : 'اختر الحالات المرتبطة بهذه الدفعة');
-  const listEl = document.getElementById('ipCaseLinkList');
-  const emptyEl = document.getElementById('ipCaseLinkEmpty');
-  listEl.innerHTML = '';
-  emptyEl.style.display = src.items.length ? 'none' : 'block';
-  src.items.forEach(it=>{
-    const lbl = document.createElement('label');
-    lbl.style.cssText = 'display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; cursor:pointer;';
-    lbl.innerHTML = `<input type="checkbox" value="${escapeHtml(it.id)}" class="ip-case-link-cb"><span>${escapeHtml(it.label)}</span>`;
-    listEl.appendChild(lbl);
+  renderCaseAllocationInputs({
+    listEl: document.getElementById('ipCaseLinkList'),
+    emptyEl: document.getElementById('ipCaseLinkEmpty'),
+    remainingEl: document.getElementById('ipCaseLinkRemaining'),
+    amountInputEl: document.getElementById('ipAmount'),
+    items: src.items,
+    inputClass: 'ip-case-link-amt',
   });
 }
+document.getElementById('ipAmount').addEventListener('input', ()=>{
+  const listEl = document.getElementById('ipCaseLinkList');
+  if(listEl && listEl.style.display !== 'none' && document.getElementById('ipCaseLinkWrap').style.display !== 'none'){
+    updateCaseAllocationRemaining({ listEl, remainingEl: document.getElementById('ipCaseLinkRemaining'), amountInputEl: document.getElementById('ipAmount'), inputClass: 'ip-case-link-amt' });
+  }
+});
 
 function renderIncomingPaymentSourcePicker(){
   const type = document.getElementById('incomingPaymentSourceType').value;
@@ -12533,7 +12788,20 @@ function updateCheckRecordStatus(id,direction,status){
   if(!p) for(const a of agents){p=find(a.payments||[]);if(p)break;}
   if(!p) p=find(otherPayments)||find(expensePayments);
   if(!p) return;
+  // Audit finding: marking an INCOMING check "مرتجع" (returned/bounced) only
+  // ever changed this status label — nothing anywhere reverses the balance
+  // reduction that recording the payment already applied, so the payer still
+  // shows as having paid even though the money never actually arrived. This
+  // is left as a manual/deliberate step (auto-reversing here could itself be
+  // wrong — the same check might be redeposited, or the party might settle
+  // in cash instead) but the user must be told explicitly, since the status
+  // label's own wording ("مرتجع") strongly implies the money is gone, which
+  // silently contradicts the untouched balance otherwise.
+  const wasReturned = p.checkStatus === 'returned';
   p.checkStatus=status; logEdit(`تعديل حالة الشيك #${p.checkNumber||'—'} إلى ${checkStatusLabel(status)}`); saveDatabase(); renderChecksRegister();
+  if(direction === 'incoming' && status === 'returned' && !wasReturned){
+    showToast('⚠️ الشيك مؤشَّر كمرتجع، لكن رصيد الجهة لم يتغيّر تلقائيًا — إذا لم تُحصَّل هذه الدفعة فعليًا، اذهب إلى "❌ إلغاء دفعة" وألغِها يدويًا لتعود للرصيد المستحق.', 'error');
+  }
 }
 document.getElementById('checksRegisterSidebarBtn').addEventListener('click',()=>{renderChecksRegister();document.getElementById('checksRegisterOverlay').classList.add('open');});
 document.getElementById('closeChecksRegisterBtn').addEventListener('click',()=>document.getElementById('checksRegisterOverlay').classList.remove('open'));
@@ -12678,9 +12946,19 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
   // aggregate (cost total − paid total) they always were. It only lets the
   // "💰 المبالغ المستحقة" reason screen show, next to a payment, which
   // case(s) the user meant it for.
-  const linkedCaseIds = (purpose === 'case')
-    ? Array.from(document.querySelectorAll('.ip-case-link-cb:checked')).map(cb=> cb.value)
+  // caseAllocations: [{caseId, amount}] — the new per-case breakdown (each
+  // item can carry its OWN amount, need not sum to the full payment).
+  // linkedCaseIds is kept, derived from the same list, purely so nothing
+  // that might still read the old flat-array shape (none currently does,
+  // per the audit, but it costs nothing to keep it in sync) ever regresses.
+  const caseAllocations = (purpose === 'case')
+    ? readCaseAllocations(document.getElementById('ipCaseLinkList'), 'ip-case-link-amt')
     : [];
+  if(caseAllocations.length && caseAllocationsSum(caseAllocations) > amount + 0.004){
+    showToast('المبلغ المخصَّص للحالات/البضاعة أكبر من مبلغ الدفعة نفسه — صحّح المبالغ قبل الحفظ.', 'error');
+    return;
+  }
+  const linkedCaseIds = caseAllocations.map(a=> a.caseId);
   let sourceLabel = '';
 
   if(type === 'doctor'){
@@ -12688,7 +12966,7 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     const d = doctors.find(x=>x.id===id);
     if(!d){ showToast('الرجاء اختيار الطبيب أولًا.', 'error'); return; }
     if(!d.payments) d.payments = [];
-    d.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, dueDate: '', paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
+    d.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, dueDate: '', paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     if(purpose === 'debt') applyPaymentToDebts(d, amount);
     sourceLabel = 'د. ' + d.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من د. ${d.name}`, {type:'doctor', doctorId: d.id});
@@ -12700,7 +12978,7 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     const l = labs.find(x=>x.id===id);
     if(!l){ showToast('الرجاء اختيار المختبر أولًا.', 'error'); return; }
     if(!l.payments) l.payments = [];
-    l.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
+    l.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     if(purpose === 'debt') applyPaymentToDebts(l, amount);
     sourceLabel = 'مختبر ' + l.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من مختبر ${l.name}`, {type:'lab', labId: l.id});
@@ -12716,7 +12994,7 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     // went down. Recording it in c.payments (exactly like a doctor/lab
     // payment) is what companyPaidTotal() actually sums.
     if(!c.payments) c.payments = [];
-    c.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
+    c.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     if(purpose === 'debt') applyPaymentToDebts(c, amount);
     sourceLabel = 'شركة ' + c.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من شركة ${c.name}`, {type:'company', companyId: c.id});
@@ -12753,14 +13031,27 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
   renderIncomingPaymentsLog();
   renderHomeDashboard();
   updateNotifBadges();
-  showToast(`✅ تم تأكيد الدفعة بنجاح — من ${sourceLabel}.`, 'success');
+  // Replaced the small corner toast with the same full-screen backdrop-blur
+  // card used elsewhere (account creation/reset, case-edit) — the user found
+  // the previous confirmation "heavy" and asked for something smoother that
+  // stays visible for exactly 2 seconds; showCenterFlash's own CSS is a
+  // single lightweight scale/opacity animation (~420ms), not "heavy" at all,
+  // it just wasn't wired to payments before now.
+  showCenterFlash(`تم تأكيد الدفعة بنجاح — من ${sourceLabel}`, '💰', 2000);
 });
 
 function renderIncomingPaymentsLog(){
+  // BUG FIX (deep financial audit): same viaExpense-mirror issue as
+  // renderIncomingPaymentsReportPage()/collectAllPaymentsForCancel() — this
+  // screen has its OWN delete handler below (not deletePaymentRecordById),
+  // which for 'company' only ever filtered c.payments and never reversed the
+  // real expensePayments entry, so deleting a company's mirrored payment from
+  // here silently restored its balance to "unpaid" while the real expense
+  // record (and every expense report) still showed it as paid.
   const flat = [];
   doctors.forEach(d=> (d.payments||[]).forEach(p=> flat.push({...p, sourceType:'doctor', sourceId: d.id, sourceLabel: 'د. '+d.name})));
   labs.forEach(l=> (l.payments||[]).forEach(p=> flat.push({...p, sourceType:'lab', sourceId: l.id, sourceLabel: 'مختبر '+l.name})));
-  companies.forEach(c=> (c.payments||[]).forEach(p=> flat.push({...p, sourceType:'company', sourceId: c.id, sourceLabel: 'شركة '+c.name})));
+  companies.forEach(c=> (c.payments||[]).forEach(p=> { if(!p.viaExpense) flat.push({...p, sourceType:'company', sourceId: c.id, sourceLabel: 'شركة '+c.name}); }));
   agents.forEach(a=> (a.payments||[]).forEach(p=> flat.push({...p, sourceType:'agent', sourceId: a.id, sourceLabel: 'المندوب '+a.name})));
   otherPayments.forEach(p=> flat.push({...p, sourceType:'other', sourceId: p.id, sourceLabel: p.sourceName}));
   flat.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
@@ -13241,9 +13532,56 @@ function renderExpenseRecipientPicker(){
   }
   sel.value = currentVal;
   updateExpenseRecipientBalance();
+  updateExpensePaymentCaseLinkVisibility();
 }
 document.getElementById('expenseRecipientType').addEventListener('change', renderExpenseRecipientPicker);
-document.getElementById('expenseRecipientSelect').addEventListener('change', updateExpenseRecipientBalance);
+document.getElementById('expenseRecipientSelect').addEventListener('change', ()=>{
+  updateExpenseRecipientBalance();
+  updateExpensePaymentCaseLinkVisibility();
+});
+
+/* Outgoing side of the same per-case allocation feature the incoming form
+   has — see the big comment above renderCaseAllocationInputs(). Only
+   doctor/lab/company have anything itemizable (getIncomingPaymentCaseLinkSource
+   is reused as-is: it is generic by type+id, nothing incoming-specific about
+   it). Gated behind an explicit checkbox rather than always shown, since
+   "who is this payment for" already fully answers the form for
+   employee/agent/other and for most doctor/lab/company payments too — this
+   is genuinely optional detail, not a required field. */
+function updateExpensePaymentCaseLinkVisibility(){
+  const toggleWrap = document.getElementById('epCaseLinkToggleWrap');
+  const wrap = document.getElementById('epCaseLinkWrap');
+  const toggle = document.getElementById('epCaseLinkToggle');
+  if(!toggleWrap || !wrap || !toggle) return;
+  const type = document.getElementById('expenseRecipientType').value;
+  const id = document.getElementById('expenseRecipientSelect').value;
+  const src = getIncomingPaymentCaseLinkSource(type, id);
+  if(!src){
+    toggleWrap.style.display = 'none';
+    wrap.style.display = 'none';
+    toggle.checked = false;
+    return;
+  }
+  toggleWrap.style.display = 'block';
+  if(!toggle.checked){ wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  setI18nText(document.getElementById('epCaseLinkLabel'), src.kind === 'shipment' ? 'اختر البضاعة المرتبطة بهذه الدفعة' : 'اختر الحالات المرتبطة بهذه الدفعة');
+  renderCaseAllocationInputs({
+    listEl: document.getElementById('epCaseLinkList'),
+    emptyEl: document.getElementById('epCaseLinkEmpty'),
+    remainingEl: document.getElementById('epCaseLinkRemaining'),
+    amountInputEl: document.getElementById('epAmount'),
+    items: src.items,
+    inputClass: 'ep-case-link-amt',
+  });
+}
+document.getElementById('epCaseLinkToggle').addEventListener('change', updateExpensePaymentCaseLinkVisibility);
+document.getElementById('epAmount').addEventListener('input', ()=>{
+  const listEl = document.getElementById('epCaseLinkList');
+  if(listEl && document.getElementById('epCaseLinkWrap').style.display !== 'none'){
+    updateCaseAllocationRemaining({ listEl, remainingEl: document.getElementById('epCaseLinkRemaining'), amountInputEl: document.getElementById('epAmount'), inputClass: 'ep-case-link-amt' });
+  }
+});
 
 function updateExpenseRecipientBalance(){
   const type = document.getElementById('expenseRecipientType').value;
@@ -13290,6 +13628,8 @@ function openExpensePaymentScreen(prefillType, prefillId, prefillAmount){
   document.getElementById('epDate').value = localDateStr();
   const amtInput = document.getElementById('epAmount');
   if(amtInput){ amtInput.value = (prefillAmount != null && isFinite(prefillAmount) && Number(prefillAmount) > 0) ? prefillAmount : ''; }
+  document.getElementById('epCaseLinkToggle').checked = false;
+  updateExpensePaymentCaseLinkVisibility();
   renderExpensePaymentsLog();
   expensePaymentOverlay.classList.add('open');
 }
@@ -13305,6 +13645,18 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   const note = document.getElementById('epNote').value.trim();
   const paymentInfo = readPaymentMethod('ep');
   if(!paymentInfo) return;
+
+  // Same per-case allocation feature as the incoming form — see
+  // renderCaseAllocationInputs()'s comment. Only read/validated when the
+  // "🔗 خصّص هذه الدفعة..." checkbox is actually on; otherwise this is
+  // exactly the pre-existing behavior (no allocations at all).
+  const caseAllocations = (document.getElementById('epCaseLinkToggle').checked && document.getElementById('epCaseLinkWrap').style.display !== 'none')
+    ? readCaseAllocations(document.getElementById('epCaseLinkList'), 'ep-case-link-amt')
+    : [];
+  if(caseAllocations.length && caseAllocationsSum(caseAllocations) > amount + 0.004){
+    showToast('المبلغ المخصَّص للحالات/البضاعة أكبر من مبلغ الدفعة نفسه — صحّح المبالغ قبل الحفظ.', 'error');
+    return;
+  }
 
   let recipientId = '';
   let recipientLabel = '';
@@ -13347,7 +13699,12 @@ expensePaymentForm.addEventListener('submit', (e)=>{
       // clinic paying the company), not a payment the company handed the
       // clinic — collectAllChecks() relies on this flag so a check the
       // clinic wrote out doesn't get filed as an incoming check.
-      c.payments.push({ id: linkedCompanyPaymentId, amount, date, note: note || 'دفعة عبر المصاريف', paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'', viaExpense: true });
+      // caseAllocations is copied into the mirror too (not just the
+      // expensePayments record below) because computeCaseAllocationTotals()
+      // reads company allocations from c.payments — that's the array
+      // openDueReasonDetail() actually scans for a company's shipments, same
+      // as every other company balance figure.
+      c.payments.push({ id: linkedCompanyPaymentId, amount, date, note: note || 'دفعة عبر المصاريف', caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'', viaExpense: true });
       saveCompanies();
     }else if(type === 'agent'){
       const a = agents.find(x=>x.id===recipientId);
@@ -13357,7 +13714,7 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   }
 
   expensePayments.push({
-    id: uid('exp'), recipientType: type, recipientId, recipientLabel, amount, date, note, linkedAdvanceId, linkedCompanyPaymentId,
+    id: uid('exp'), recipientType: type, recipientId, recipientLabel, amount, date, note, linkedAdvanceId, linkedCompanyPaymentId, caseAllocations,
     paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||''
   });
   const expenseCtx = type === 'employee' ? {type:'technician', techId: recipientId}
@@ -13372,12 +13729,16 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   document.getElementById('epPaymentMethod').value = 'cash';
   document.getElementById('epCheckDetails').style.display = 'none';
   document.getElementById('epCheckDetails').querySelectorAll('input,select').forEach(el=>{el.required=false; el.value='';});
+  document.getElementById('epCaseLinkToggle').checked = false;
+  updateExpensePaymentCaseLinkVisibility();
   renderExpensePaymentsLog();
   renderHomeDashboard();
+  // Same lightweight full-screen success card as the incoming-payment flow —
+  // see its comment above for why this replaced the toast.
   const doneMsg = type === 'employee'
-    ? `✅ تم تأكيد الدفعة بنجاح — وخُصمت من راتب ${recipientLabel}.`
-    : `✅ تم تأكيد الدفعة بنجاح — لـ ${recipientLabel}.`;
-  showToast(doneMsg, 'success');
+    ? `تم تأكيد الدفعة بنجاح — وخُصمت من راتب ${recipientLabel}`
+    : `تم تأكيد الدفعة بنجاح — لـ ${recipientLabel}`;
+  showCenterFlash(doneMsg, '💸', 2000);
 });
 
 let expensePaymentsLogPage = 0;
@@ -15736,9 +16097,22 @@ function renderInvoiceSettingsPanel(){
   document.getElementById('invFontSizeInput').value = invoiceSettings.fontSize || 15;
   document.getElementById('invClinicNameSizeInput').value = invoiceSettings.clinicNameSize || 16;
   document.getElementById('invClinicNameAlignSelect').value = invoiceSettings.clinicNameAlign || 'right';
+  document.getElementById('invHeaderColorInput').value = invoiceSettings.headerColor || DEFAULT_INVOICE_SETTINGS.headerColor;
+  document.getElementById('invTotalBoxColorInput').value = invoiceSettings.totalBoxColor || DEFAULT_INVOICE_SETTINGS.totalBoxColor;
+  document.getElementById('invTableColorInput').value = invoiceSettings.tableColor || DEFAULT_INVOICE_SETTINGS.tableColor;
+  document.getElementById('invDataBoxColorInput').value = invoiceSettings.dataBoxColor || DEFAULT_INVOICE_SETTINGS.dataBoxColor;
+  document.getElementById('invClinicNameColorInput').value = invoiceSettings.clinicNameColor || DEFAULT_INVOICE_SETTINGS.clinicNameColor;
   updateInvoiceLogoPreview(invoiceSettings.logoDataUrl || '');
   document.getElementById('invoiceSettingsStatusText').textContent = '';
 }
+document.getElementById('invColorsResetBtn').addEventListener('click', ()=>{
+  document.getElementById('invHeaderColorInput').value = DEFAULT_INVOICE_SETTINGS.headerColor;
+  document.getElementById('invTotalBoxColorInput').value = DEFAULT_INVOICE_SETTINGS.totalBoxColor;
+  document.getElementById('invTableColorInput').value = DEFAULT_INVOICE_SETTINGS.tableColor;
+  document.getElementById('invDataBoxColorInput').value = DEFAULT_INVOICE_SETTINGS.dataBoxColor;
+  document.getElementById('invClinicNameColorInput').value = DEFAULT_INVOICE_SETTINGS.clinicNameColor;
+  showToast('تمت استعادة الألوان الافتراضية — اضغط "حفظ إعدادات الفاتورة" لتثبيت ذلك.', 'success');
+});
 function updateInvoiceLogoPreview(dataUrl){
   const img = document.getElementById('invLogoPreview');
   const emptyEl = document.getElementById('invLogoPreviewEmpty');
@@ -15784,6 +16158,11 @@ document.getElementById('invoiceSettingsSaveBtn').addEventListener('click', ()=>
   invoiceSettings.fontSize = Math.max(10, parsedSettingOrDefault('invFontSizeInput', 15));
   invoiceSettings.clinicNameSize = Math.max(10, parsedSettingOrDefault('invClinicNameSizeInput', 16));
   invoiceSettings.clinicNameAlign = document.getElementById('invClinicNameAlignSelect').value || 'right';
+  invoiceSettings.headerColor = document.getElementById('invHeaderColorInput').value || DEFAULT_INVOICE_SETTINGS.headerColor;
+  invoiceSettings.totalBoxColor = document.getElementById('invTotalBoxColorInput').value || DEFAULT_INVOICE_SETTINGS.totalBoxColor;
+  invoiceSettings.tableColor = document.getElementById('invTableColorInput').value || DEFAULT_INVOICE_SETTINGS.tableColor;
+  invoiceSettings.dataBoxColor = document.getElementById('invDataBoxColorInput').value || DEFAULT_INVOICE_SETTINGS.dataBoxColor;
+  invoiceSettings.clinicNameColor = document.getElementById('invClinicNameColorInput').value || DEFAULT_INVOICE_SETTINGS.clinicNameColor;
   if(pendingInvoiceLogoDataUrl !== undefined){
     invoiceSettings.logoDataUrl = pendingInvoiceLogoDataUrl || '';
   }
@@ -15804,8 +16183,9 @@ function buildInvoiceHeaderHtml(overrideSettings){
     ? `<div style="display:flex; justify-content:${logoJustify}; margin-top:${s.logoOffsetTop||0}px;"><img src="${s.logoDataUrl}" style="width:${s.logoWidth||90}px; height:auto; display:block;"></div>`
     : '';
   const nameTextAlign = { right:'right', center:'center', left:'left' }[s.clinicNameAlign] || 'right';
+  const nameColor = s.clinicNameColor || DEFAULT_INVOICE_SETTINGS.clinicNameColor;
   const nameHtml = s.clinicName
-    ? `<div style="font-size:${s.clinicNameSize||16}px; font-weight:900; color:#0e7c9e; margin-top:6px; text-align:${nameTextAlign};">${escapeHtml(s.clinicName)}</div>`
+    ? `<div style="font-size:${s.clinicNameSize||16}px; font-weight:900; color:${escapeHtml(nameColor)}; margin-top:6px; text-align:${nameTextAlign};">${escapeHtml(s.clinicName)}</div>`
     : '';
   if(!logoHtml && !nameHtml) return '';
   return `<div style="margin-bottom:14px;">${logoHtml}${nameHtml}</div>`;
@@ -15828,6 +16208,11 @@ if(invoicePreviewButton) invoicePreviewButton.addEventListener('click', ()=>{
     clinicNameSize: Math.max(10, parsedSettingOrDefault('invClinicNameSizeInput', 16)),
     clinicNameAlign: document.getElementById('invClinicNameAlignSelect').value || 'right',
     logoDataUrl: (pendingInvoiceLogoDataUrl !== undefined) ? (pendingInvoiceLogoDataUrl || '') : (invoiceSettings.logoDataUrl || ''),
+    headerColor: document.getElementById('invHeaderColorInput').value || DEFAULT_INVOICE_SETTINGS.headerColor,
+    totalBoxColor: document.getElementById('invTotalBoxColorInput').value || DEFAULT_INVOICE_SETTINGS.totalBoxColor,
+    tableColor: document.getElementById('invTableColorInput').value || DEFAULT_INVOICE_SETTINGS.tableColor,
+    dataBoxColor: document.getElementById('invDataBoxColorInput').value || DEFAULT_INVOICE_SETTINGS.dataBoxColor,
+    clinicNameColor: document.getElementById('invClinicNameColorInput').value || DEFAULT_INVOICE_SETTINGS.clinicNameColor,
   };
   // The preview shows the invoice people actually receive: the itemised table
   // with a line per patient, a serial number and its barcode. A sample of a
@@ -17360,13 +17745,36 @@ initAppFileHandle();
     try{ return new Intl.DateTimeFormat(lang, {weekday:'long'}).format(d); }
     catch(e){ return weekdays[d.getDay()]; }
   }
+  // Was a per-second tick (setInterval(tick,1000)) updating this text node
+  // continuously for as long as the app stays open, on every screen (this
+  // widget is position:fixed, not scoped to the home screen). Reported
+  // symptom: screens appear to "flicker" only when viewed remotely through
+  // AnyDesk/UltraViewer, while confirmed rock-stable on the actual client
+  // machine — i.e. a remote-desktop-viewer video-encoding artifact, not a
+  // rendering bug in the app itself (nothing here was ever broken locally).
+  // A remote-desktop codec re-encodes/transmits whatever screen region
+  // changed on every tick; the size of each individual change here was
+  // already minimal (a couple of characters), so the only real lever to
+  // reduce that artifact is HOW OFTEN anything changes at all, not making
+  // each change smaller. Dropping the seconds digit and updating once a
+  // minute instead of once a second cuts this specific persistent, running
+  // source of screen changes by 60×, which is the most impactful mitigation
+  // available without removing the clock/date feature entirely. Full
+  // elimination isn't possible from the app's side either way — some
+  // remote-viewer-side flicker on a continuously updating element is
+  // inherent to how that class of software encodes video, no matter how
+  // infrequently it updates.
   function tick(){
     var now = new Date();
-    timeEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+    timeEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
     dateEl.textContent = weekdayName(now) + ' — ' + pad(now.getDate()) + '/' + pad(now.getMonth()+1) + '/' + now.getFullYear();
   }
   tick();
-  setInterval(tick, 1000);
+  // Aligns the first tick to the start of the next real minute (instead of a
+  // flat 60000ms from whenever the app happened to launch), so the displayed
+  // minute never drifts up to 59s stale before its first update.
+  var msToNextMinute = 60000 - (Date.now() % 60000);
+  setTimeout(function(){ tick(); setInterval(tick, 60000); }, msToNextMinute);
 })();
 </script>
 <div id="updateBanner">
@@ -17402,10 +17810,18 @@ initAppFileHandle();
     text.textContent = '🎉 يتوفر إصدار جديد v' + info.version + ' من البرنامج';
     link.href = info.downloadUrl || '#';
     banner.classList.add('show');
+    // BUG FIX: push the sidebar (brand name + version badge) down below the
+    // now-visible fixed banner instead of letting it render underneath/behind
+    // it — see the body.has-update-banner CSS rule for the full explanation.
+    document.body.classList.add('has-update-banner');
+    requestAnimationFrame(function(){
+      document.documentElement.style.setProperty('--update-banner-h', banner.offsetHeight + 'px');
+    });
   }
 
   document.getElementById('updateBannerClose').addEventListener('click', function(){
     document.getElementById('updateBanner').classList.remove('show');
+    document.body.classList.remove('has-update-banner');
   });
 
   fetch(VERSION_CHECK_URL + '?t=' + Date.now())

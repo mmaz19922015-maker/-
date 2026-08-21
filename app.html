@@ -1253,7 +1253,75 @@
   .modal-compact .due-item .what{ font-size:11px; }
   .modal-compact .due-item .amt{ font-size:13px; }
   .modal.narrow{ max-width:380px; }
-  .modal h2{ display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px; position:sticky; top:0; background:var(--panel); padding:4px 0 10px; z-index:3; }
+  /* Windows-style draggable screens: per direct feedback, every dialog now
+     behaves like a real desktop window — grab its title bar and move it
+     anywhere. See the drag-handling script further down (search "Draggable
+     windows"). The title bar is the natural handle since it's already
+     present on every single modal; its own buttons (e.g. "إغلاق") keep
+     their normal pointer cursor and stay clickable, only the empty bar area
+     starts a drag. */
+  .modal h2{ display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px; position:sticky; top:0; background:var(--panel); padding:4px 0 10px; z-index:3; cursor:move; -webkit-user-select:none; user-select:none; touch-action:none; }
+  .modal.dragging{ transition:none; }
+  .modal.dragging h2{ cursor:grabbing; }
+
+  /* "🧾 إنشاء فاتورة" — a fixed, near-fullscreen 3-column layout (form /
+     appearance / live preview) instead of a tall single-column stack, so
+     the whole screen fits the viewport with no scrolling needed to reach
+     the rest of it. Each column scrolls internally on its own (min-height:0
+     is what lets a CSS-grid child actually shrink below its content size
+     instead of overflowing the fixed-height modal) purely as a safety net
+     for very small windows — on an ordinary desktop screen nothing inside
+     needs to scroll at all. */
+  #createInvoiceOverlay .modal{
+    max-width:min(1400px, calc(100vw - 32px)); width:min(1400px, calc(100vw - 32px));
+    height:calc(100vh - 32px); display:flex; flex-direction:column;
+  }
+  #createInvoiceOverlay .modal h2{ flex:0 0 auto; }
+  .invoice-studio{
+    display:grid; grid-template-columns:270px minmax(300px, 380px) 1fr;
+    gap:18px; flex:1 1 auto; min-height:0;
+  }
+  .invoice-studio > .is-col{ min-height:0; overflow-y:auto; padding-inline-end:4px; }
+  .invoice-studio .is-preview-col{ display:flex; flex-direction:column; }
+  .invoice-studio .is-preview-col iframe{ flex:1 1 auto; width:100%; min-height:0; border:1px solid var(--line); border-radius:10px; background:#fff; }
+  @media (max-width:1000px){
+    .invoice-studio{ grid-template-columns:1fr; }
+    .invoice-studio .is-preview-col iframe{ min-height:420px; }
+  }
+
+  /* Compact field rhythm — scoped to this screen only, so every other modal
+     in the program keeps its normal, roomier spacing. */
+  .invoice-studio .field{ margin-bottom:8px; }
+  .invoice-studio .field label{ margin-bottom:3px; font-size:11px; }
+  .invoice-studio .field input, .invoice-studio .field select{ padding:8px 10px; font-size:12.5px; }
+  .invoice-studio .grid3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px 8px; }
+
+  /* Colors as small modern swatch "chips" in one wrapping row, instead of
+     six stacked full-width labelled rows — per direct feedback asking for a
+     more modern, organized color-picking layout. */
+  .color-chips-row{ display:flex; flex-wrap:wrap; gap:8px; align-items:flex-start; margin-bottom:8px; }
+  .color-chip{ display:flex; flex-direction:column; align-items:center; gap:4px; width:52px; cursor:pointer; }
+  .color-chip input[type=color]{
+    width:40px; height:40px; padding:0; border:1.5px solid var(--line); border-radius:11px;
+    cursor:pointer; background:var(--panel-2);
+  }
+  .color-chip span{ font-size:9.5px; color:var(--ink-dim); font-weight:700; text-align:center; line-height:1.2; }
+  .color-chip-reset{
+    width:40px; height:40px; margin-top:0; border-radius:11px; border:1.5px dashed var(--line);
+    background:var(--panel-2); cursor:pointer; font-size:15px; color:var(--ink-dim);
+    display:flex; align-items:center; justify-content:center; transition: transform .13s ease, border-color .18s ease;
+  }
+  .color-chip-reset:hover{ border-color:var(--teal-dim); transform:rotate(-40deg); }
+
+  /* Logo: file picker + thumbnail + remove, one compact row instead of a
+     tall stack of three separate blocks. */
+  .invoice-logo-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .invoice-logo-thumb{
+    border:1px dashed var(--line); border-radius:9px; background:var(--panel-2);
+    width:56px; height:56px; display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  .invoice-logo-thumb img{ max-width:52px; max-height:48px; display:none; }
+
   .field{ margin-bottom:11px; }
   .field label{ display:block; font-size:12.5px; color:var(--ink-dim); margin-bottom:6px; font-weight:700; }
   .field input, .field select, .field textarea{
@@ -3061,7 +3129,7 @@ input:focus, select:focus, textarea:focus {
            agents and "other" never get this option. -->
       <div class="field" id="ipCaseLinkWrap" style="display:none; margin:0; flex-basis:100%; width:100%;">
         <label id="ipCaseLinkLabel">اختر الحالات المرتبطة بهذه الدفعة</label>
-        <div class="muted" style="font-size:11.5px; margin-bottom:6px;">اكتب أمام كل حالة/بضاعة كم من مبلغ هذه الدفعة يخصّها — مش شرط توزّع كل المبلغ.</div>
+        <div class="muted" style="font-size:11.5px; margin-bottom:6px;">علّم ✔ على كل حالة/بضاعة تخص هذه الدفعة. إذا حبيت حدّد مبلغًا معيّنًا لحالة، اكتبه قدّامها — وإلا رح يتوزّع باقي المبلغ بالتساوي على الحالات المُعلَّمة بلا مبلغ محدد.</div>
         <div id="ipCaseLinkList" style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:8px 10px;"></div>
         <div class="muted" id="ipCaseLinkEmpty" style="display:none; font-size:12px; padding:6px 2px;">لا توجد حالات/بضاعة مسجّلة لهذه الجهة بعد.</div>
         <div id="ipCaseLinkRemaining" style="font-size:12.5px; font-weight:800; margin-top:6px;"></div>
@@ -3153,7 +3221,7 @@ input:focus, select:focus, textarea:focus {
       </div>
       <div class="field" id="epCaseLinkWrap" style="display:none; margin:0; flex-basis:100%; width:100%;">
         <label id="epCaseLinkLabel">اختر الحالات المرتبطة بهذه الدفعة</label>
-        <div class="muted" style="font-size:11.5px; margin-bottom:6px;">اكتب أمام كل حالة/بضاعة كم من مبلغ هذه الدفعة يخصّها — مش شرط توزّع كل المبلغ.</div>
+        <div class="muted" style="font-size:11.5px; margin-bottom:6px;">علّم ✔ على كل حالة/بضاعة تخص هذه الدفعة. إذا حبيت حدّد مبلغًا معيّنًا لحالة، اكتبه قدّامها — وإلا رح يتوزّع باقي المبلغ بالتساوي على الحالات المُعلَّمة بلا مبلغ محدد.</div>
         <div id="epCaseLinkList" style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:8px 10px;"></div>
         <div class="muted" id="epCaseLinkEmpty" style="display:none; font-size:12px; padding:6px 2px;">لا توجد حالات/بضاعة مسجّلة لهذه الجهة بعد.</div>
         <div id="epCaseLinkRemaining" style="font-size:12.5px; font-weight:800; margin-top:6px;"></div>
@@ -3642,13 +3710,22 @@ input:focus, select:focus, textarea:focus {
      disconnected screens: "🧾 إنشاء فاتورة" to actually make one, and a
      separate "🧾 الفاتورة" tab buried inside ⚙ الإعدادات to control how it
      looks — changing a color there gave no visual feedback until you
-     separately opened "👁 معاينة الفاتورة قبل الطباعة". See
-     updateCreateInvoiceLivePreview() for the live-refresh wiring. -->
+     separately opened "👁 معاينة الفاتورة قبل الطباعة".
+
+     Redesigned again per further direct feedback ("بدي اعادة ترتيب للشاشة
+     احترافية وواضحة ... بدي الشاشة ع قد الشاشة بدون سحب لعرض باقي اجزائها"):
+     a fixed near-fullscreen 3-column layout (form / appearance / live
+     preview) sized to the viewport instead of a stack of fields taller than
+     any screen, and the color pickers are now small modern "swatch chips"
+     in one row instead of six stacked full-width labelled rows. See
+     updateCreateInvoiceLivePreview() for the live-refresh wiring, and the
+     ".invoice-studio" CSS block for the layout itself. -->
 <div class="overlay" id="createInvoiceOverlay">
-  <div class="modal wide" style="max-width:1180px;">
+  <div class="modal wide">
     <h2><span>🧾 إنشاء فاتورة</span><button type="button" class="btn-ghost btn-small" id="closeCreateInvoiceBtn">إغلاق</button></h2>
-    <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
-      <div style="flex:1 1 360px; min-width:320px;">
+    <div class="invoice-studio">
+      <div class="is-col">
+        <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:13.5px;">📝 بيانات الفاتورة</h2></div>
         <form id="createInvoiceForm">
           <div class="field">
             <label>الفاتورة لمين</label>
@@ -3678,113 +3755,87 @@ input:focus, select:focus, textarea:focus {
             <button type="submit" class="btn-primary">✔ إنشاء وطباعة</button>
           </div>
         </form>
-
-        <details id="invoiceAppearanceDetails" open style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
-          <summary style="cursor:pointer; font-weight:800; font-size:14px;">🎨 تخصيص شكل الفاتورة (الشعار، الألوان، الحجم)</summary>
-          <div style="margin-top:14px;">
-      <div class="muted" style="margin-bottom:16px; line-height:1.8;">هاد الإعدادات بتتحكم بشكل كل فاتورة بتنشئها من هون. أي تعديل بيظهر مباشرة بالمعاينة الحية جنبها.</div>
-
-      <div class="field">
-        <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
-        <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
       </div>
 
-      <div class="field">
-        <label>شعار العيادة (لوغو)</label>
-        <input type="file" id="invLogoFileInput" accept="image/*">
-      </div>
-      <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
-        <div style="border:1px dashed var(--line); border-radius:9px; padding:10px; background:var(--panel-2); min-width:100px; min-height:60px; display:flex; align-items:center; justify-content:center;">
-          <img id="invLogoPreview" src="" alt="" style="max-width:100px; max-height:80px; display:none;">
-          <span class="muted" id="invLogoPreviewEmpty" style="font-size:12px;">لا يوجد لوغو</span>
-        </div>
-        <button type="button" class="btn-ghost btn-small" id="invLogoRemoveBtn">🗑️ حذف اللوغو</button>
-      </div>
+      <div class="is-col" id="invoiceAppearanceCol">
+        <div class="section-head" style="margin-bottom:8px;"><h2 style="font-size:13.5px;">🎨 شكل الفاتورة</h2></div>
+        <div class="muted" style="margin-bottom:10px; line-height:1.7; font-size:11.5px;">بتتحكم بشكل كل فاتورة بتنشئها من هون — أي تعديل بيظهر مباشرة بالمعاينة الحية.</div>
 
-      <div class="grid2">
         <div class="field">
-          <label>حجم اللوغو (عرضه بالبكسل)</label>
-          <input type="number" id="invLogoWidthInput" dir="ltr" min="20" max="400" step="1">
+          <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
+          <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
         </div>
-        <div class="field">
-          <label>موقع اللوغو</label>
-          <select id="invLogoAlignSelect">
-            <option value="right">يمين</option>
-            <option value="center">وسط</option>
-            <option value="left">يسار</option>
-          </select>
-        </div>
-      </div>
 
-      <div class="grid2">
-        <div class="field">
-          <label>إزاحة اللوغو من الأعلى (بكسل)</label>
-          <input type="number" id="invLogoOffsetTopInput" dir="ltr" min="0" max="200" step="1">
-        </div>
-        <div class="field">
-          <label>حجم خط الفاتورة (بكسل)</label>
-          <input type="number" id="invFontSizeInput" dir="ltr" min="10" max="28" step="1">
-        </div>
-      </div>
-
-      <div class="grid2">
-        <div class="field">
-          <label>حجم خط اسم العيادة (بكسل)</label>
-          <input type="number" id="invClinicNameSizeInput" dir="ltr" min="10" max="48" step="1">
-        </div>
-        <div class="field">
-          <label>موقع اسم العيادة</label>
-          <select id="invClinicNameAlignSelect">
-            <option value="right">يمين</option>
-            <option value="center">وسط</option>
-            <option value="left">يسار</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="section-head" style="margin:18px 0 12px;"><h2 style="font-size:14px;">🎨 ألوان الفاتورة</h2></div>
-      <div class="muted" style="margin-bottom:12px; line-height:1.8; font-size:12.5px;">لون منفصل لكل صندوق بالفاتورة، بالإضافة للون اسم العيادة — كل تغيير بيظهر مباشرة بالمعاينة الحية.</div>
-      <div class="grid2">
-        <div class="field">
-          <label>لون الهيدر (الشريط العلوي)</label>
-          <input type="color" id="invHeaderColorInput">
-        </div>
-        <div class="field">
-          <label>لون صندوق الإجمالي (المبلغ الكلي)</label>
-          <input type="color" id="invTotalBoxColorInput">
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field">
-          <label>لون الجدول (رأس/تذييل جدول البنود)</label>
-          <input type="color" id="invTableColorInput">
-        </div>
-        <div class="field">
-          <label>لون صندوق البيانات (بيانات العميل والمبلغ كتابةً)</label>
-          <input type="color" id="invDataBoxColorInput">
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field">
-          <label>لون اسم العيادة</label>
-          <input type="color" id="invClinicNameColorInput">
-        </div>
-        <div class="field" style="display:flex; align-items:flex-end;">
-          <button type="button" class="btn-ghost btn-small" id="invColorsResetBtn" style="width:100%;">↺ استعادة الألوان الافتراضية</button>
-        </div>
-      </div>
-
-      <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="width:100%; margin-top:8px;">👁 معاينة الفاتورة قبل الطباعة</button>
-      <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="width:100%; margin-top:8px;">📋 الأعمدة والبيانات التي ستظهر في الفاتورة</button>
-      <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
-      <div class="muted" id="invoiceSettingsStatusText" style="margin-top:10px; line-height:1.7;"></div>
+        <div class="invoice-logo-row">
+          <div class="invoice-logo-thumb">
+            <img id="invLogoPreview" src="" alt="">
+            <span class="muted" id="invLogoPreviewEmpty" style="font-size:9.5px; text-align:center;">لا يوجد لوغو</span>
           </div>
-        </details>
+          <div style="flex:1; min-width:0;">
+            <input type="file" id="invLogoFileInput" accept="image/*" style="margin-bottom:6px;">
+            <button type="button" class="btn-ghost btn-small" id="invLogoRemoveBtn" style="width:100%;">🗑️ حذف اللوغو</button>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="field">
+            <label>حجم اللوغو (بكسل)</label>
+            <input type="number" id="invLogoWidthInput" dir="ltr" min="20" max="400" step="1">
+          </div>
+          <div class="field">
+            <label>موقع اللوغو</label>
+            <select id="invLogoAlignSelect">
+              <option value="right">يمين</option>
+              <option value="center">وسط</option>
+              <option value="left">يسار</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>إزاحته من الأعلى</label>
+            <input type="number" id="invLogoOffsetTopInput" dir="ltr" min="0" max="200" step="1">
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="field">
+            <label>حجم خط الفاتورة</label>
+            <input type="number" id="invFontSizeInput" dir="ltr" min="10" max="28" step="1">
+          </div>
+          <div class="field">
+            <label>حجم خط اسم العيادة</label>
+            <input type="number" id="invClinicNameSizeInput" dir="ltr" min="10" max="48" step="1">
+          </div>
+          <div class="field">
+            <label>موقع اسم العيادة</label>
+            <select id="invClinicNameAlignSelect">
+              <option value="right">يمين</option>
+              <option value="center">وسط</option>
+              <option value="left">يسار</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin:14px 0 8px;"><h2 style="font-size:12.5px;">🎨 الألوان</h2></div>
+        <div class="color-chips-row">
+          <label class="color-chip"><input type="color" id="invHeaderColorInput"><span>الهيدر</span></label>
+          <label class="color-chip"><input type="color" id="invTotalBoxColorInput"><span>الإجمالي</span></label>
+          <label class="color-chip"><input type="color" id="invTableColorInput"><span>الجدول</span></label>
+          <label class="color-chip"><input type="color" id="invDataBoxColorInput"><span>البيانات</span></label>
+          <label class="color-chip"><input type="color" id="invClinicNameColorInput"><span>اسم العيادة</span></label>
+          <button type="button" class="color-chip-reset" id="invColorsResetBtn" title="استعادة الألوان الافتراضية">↺</button>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="flex:1;">👁 معاينة قبل الطباعة</button>
+          <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="flex:1;">📋 الأعمدة</button>
+        </div>
+        <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
+        <div class="muted" id="invoiceSettingsStatusText" style="margin-top:8px; line-height:1.6; font-size:11.5px;"></div>
       </div>
 
-      <div style="flex:1 1 360px; min-width:320px; position:sticky; top:0;">
-        <div class="muted" style="font-size:12px; font-weight:800; margin-bottom:8px;">👁 معاينة حية — بتتحدث فورًا مع كل تعديل</div>
-        <iframe id="createInvoiceLivePreviewFrame" title="معاينة الفاتورة الحية" style="width:100%; height:560px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
+      <div class="is-col is-preview-col">
+        <div class="muted" style="font-size:12px; font-weight:800; margin-bottom:8px; flex:0 0 auto;">👁 معاينة حية — بتتحدث فورًا مع كل تعديل</div>
+        <iframe id="createInvoiceLivePreviewFrame" title="معاينة الفاتورة الحية"></iframe>
       </div>
     </div>
   </div>
@@ -4337,7 +4388,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '9.20';
+const APP_VERSION = '9.21';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -5205,6 +5256,11 @@ const TRANSLATIONS = {
        incoming and outgoing payments) ---- */
     'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Allocated exceeds the payment amount by',
     'المتبقي غير مُخصَّص لحالة معيّنة':'Remaining not allocated to a specific case',
+    'تلقائي':'Auto',
+    'حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها':'case(s) checked with no set amount — will be split across them:',
+    'بالتساوي':'evenly',
+    'لكل حالة':'per case',
+    'تم تخصيص كامل المبلغ على الحالات المُعلَّمة':'The full amount has been allocated across the checked cases',
   },
 
   nl: {
@@ -5284,6 +5340,11 @@ const TRANSLATIONS = {
     '💳 إجمالي المدفوع له':'💳 Totaal aan hen betaald',
     'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Toegewezen overschrijdt het betalingsbedrag met',
     'المتبقي غير مُخصَّص لحالة معيّنة':'Resterend niet aan een bepaalde casus toegewezen',
+    'تلقائي':'Automatisch',
+    'حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها':'geval(len) aangevinkt zonder vast bedrag — wordt verdeeld:',
+    'بالتساوي':'gelijk',
+    'لكل حالة':'per geval',
+    'تم تخصيص كامل المبلغ على الحالات المُعلَّمة':'Het volledige bedrag is verdeeld over de aangevinkte gevallen',
   },
 
   de: {
@@ -5363,6 +5424,11 @@ const TRANSLATIONS = {
     '💳 إجمالي المدفوع له':'💳 Insgesamt an ihn gezahlt',
     'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Zugewiesen übersteigt den Zahlungsbetrag um',
     'المتبقي غير مُخصَّص لحالة معيّنة':'Rest keinem bestimmten Fall zugewiesen',
+    'تلقائي':'Automatisch',
+    'حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها':'Fall/Fälle ohne festen Betrag markiert — wird verteilt:',
+    'بالتساوي':'gleichmäßig',
+    'لكل حالة':'pro Fall',
+    'تم تخصيص كامل المبلغ على الحالات المُعلَّمة':'Der volle Betrag wurde auf die markierten Fälle verteilt',
   },
 
   tr: {
@@ -6048,6 +6114,11 @@ const TRANSLATIONS = {
 'سعر مثبّت لهذا السن':'Bu diş için sabit fiyat',
 'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'Tahsis edilen tutar ödeme tutarını şu kadar aşıyor',
 'المتبقي غير مُخصَّص لحالة معيّنة':'Kalan, belirli bir vakaya tahsis edilmedi',
+'تلقائي':'Otomatik',
+'حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها':'tutar belirtilmeden işaretlenen vaka(lar) — şu tutar aralarında paylaştırılacak:',
+'بالتساوي':'eşit olarak',
+'لكل حالة':'vaka başına',
+'تم تخصيص كامل المبلغ على الحالات المُعلَّمة':'Tüm tutar işaretlenen vakalara dağıtıldı',
   },
 
   he: {
@@ -6733,6 +6804,11 @@ const TRANSLATIONS = {
     'سعر مثبّت لهذا السن':'מחיר קבוע לשן זו',
     'المُخصَّص أكبر من مبلغ الدفعة بمقدار':'הסכום שהוקצה גבוה מסכום התשלום ב-',
     'المتبقي غير مُخصَّص لحالة معيّنة':'היתרה לא הוקצתה למקרה מסוים',
+    'تلقائي':'אוטומטי',
+    'حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها':'מקרה/מקרים מסומנים ללא סכום קבוע — יחולק ביניהם:',
+    'بالتساوي':'בשווה',
+    'لكل حالة':'לכל מקרה',
+    'تم تخصيص كامل المبلغ على الحالات المُعلَّمة':'הסכום המלא הוקצה למקרים המסומנים',
   },
 };
 
@@ -7730,10 +7806,24 @@ document.getElementById('runFinancialAuditBtn').addEventListener('click', ()=>{
 });
 
 /* ================== Custom confirm dialog ================== */
+// BUG FIX: both dialogs reuse ONE static overlay element (#confirmOverlay /
+// #promptOverlay) — if a call happened while an EARLIER call on the same
+// overlay was still pending (e.g. an automatic background check's dialog
+// still sitting open when the user triggers a manual one), the old code
+// simply added a SECOND set of OK/Cancel/Escape listeners on top of the
+// first without ever removing them. A single click then fired BOTH
+// handlers, resolving two different Promises from one click — confusing,
+// and easy to read as "nothing happens" or "the same dialog keeps coming
+// back" since the visible dialog is one shared element showing whichever
+// call's text was written last. Each function now auto-resolves (as
+// cancelled) and fully cleans up any earlier pending call on the same
+// overlay before opening a fresh one, so there is always at most one live
+// listener set and one pending Promise per overlay.
 function customConfirm(message, opts){
   opts = opts || {};
   return new Promise((resolve)=>{
     const overlay = document.getElementById('confirmOverlay');
+    if(overlay._pendingCleanup) overlay._pendingCleanup(false);
     const msgEl = document.getElementById('confirmMessage');
     const iconEl = document.getElementById('confirmIcon');
     const okBtn = document.getElementById('confirmOkBtn');
@@ -7749,6 +7839,7 @@ function customConfirm(message, opts){
       cancelBtn.removeEventListener('click', onCancel);
       overlay.removeEventListener('click', onOverlay);
       document.removeEventListener('keydown', onKey);
+      if(overlay._pendingCleanup === cleanup) overlay._pendingCleanup = null;
       resolve(result);
     }
     function onOk(){ cleanup(true); }
@@ -7758,6 +7849,7 @@ function customConfirm(message, opts){
       if(e.key==='Escape'){ cleanup(false); }
       if(e.key==='Enter'){ cleanup(true); }
     }
+    overlay._pendingCleanup = cleanup;
     okBtn.addEventListener('click', onOk);
     cancelBtn.addEventListener('click', onCancel);
     overlay.addEventListener('click', onOverlay);
@@ -7770,6 +7862,7 @@ function customPrompt(message, defaultValue, opts){
   opts = opts || {};
   return new Promise((resolve)=>{
     const overlay = document.getElementById('promptOverlay');
+    if(overlay._pendingCleanup) overlay._pendingCleanup(null);
     const msgEl = document.getElementById('promptMessage');
     const iconEl = document.getElementById('promptIcon');
     const inputEl = document.getElementById('promptInput');
@@ -7785,6 +7878,7 @@ function customPrompt(message, defaultValue, opts){
       cancelBtn.removeEventListener('click', onCancel);
       overlay.removeEventListener('click', onOverlay);
       inputEl.removeEventListener('keydown', onKey);
+      if(overlay._pendingCleanup === cleanup) overlay._pendingCleanup = null;
       resolve(result);
     }
     function onOk(){ cleanup(inputEl.value); }
@@ -7794,6 +7888,7 @@ function customPrompt(message, defaultValue, opts){
       if(e.key==='Enter'){ e.preventDefault(); cleanup(inputEl.value); }
       if(e.key==='Escape'){ cleanup(null); }
     }
+    overlay._pendingCleanup = cleanup;
     okBtn.addEventListener('click', onOk);
     cancelBtn.addEventListener('click', onCancel);
     overlay.addEventListener('click', onOverlay);
@@ -7802,6 +7897,98 @@ function customPrompt(message, defaultValue, opts){
     setTimeout(()=>{ inputEl.focus(); inputEl.select(); }, 30);
   });
 }
+
+/* ================== Draggable windows — every screen behaves like a real
+   desktop window, per direct feedback ("بدي تغيير نوع الشاشات انو يصير متل
+   شاشات ويندز اقدر حركها بالماوس"). One delegated pointer-drag handler
+   covers EVERY .modal in the program (settings, create-invoice, reports,
+   everything) via its title bar (.modal h2) — no per-screen wiring needed,
+   including modals created dynamically after page load. ================== */
+(function(){
+  // How much of the modal must stay reachable on screen — small enough to
+  // let it be tucked mostly out of the way, never so small it gets lost.
+  const H_MARGIN = 80, V_MARGIN = 48;
+  let dragging = null;
+
+  function isInteractive(el){
+    return el.closest('button, a, input, select, textarea, label, [contenteditable="true"]');
+  }
+
+  document.addEventListener('pointerdown', function(e){
+    if(e.button !== 0 && e.pointerType === 'mouse') return; // primary mouse button only; any touch/pen point is fine
+    const header = e.target.closest('.modal h2');
+    if(!header || isInteractive(e.target)) return; // don't hijack clicks on "إغلاق" etc.
+    const modal = header.closest('.modal');
+    if(!modal) return;
+    const rect = modal.getBoundingClientRect();
+    let baseX = 0, baseY = 0;
+    const t = getComputedStyle(modal).transform;
+    if(t && t !== 'none'){
+      try{ const m = new DOMMatrixReadOnly(t); baseX = m.m41; baseY = m.m42; }catch(err){}
+    }
+    dragging = {
+      modal, header, pointerId: e.pointerId,
+      startX: e.clientX, startY: e.clientY, baseX, baseY,
+      rectLeft: rect.left, rectTop: rect.top, rectWidth: rect.width, rectHeight: rect.height,
+    };
+    modal.classList.add('dragging');
+    // The modal's own entrance animation (modalPop, ~120ms) also animates
+    // `transform` — while it's still running, the CSS animation's keyframe
+    // value for that property wins over an inline style on the very same
+    // property, so a drag started in that brief window would silently do
+    // nothing. Cancelling it here (harmless — it has already served its
+    // purpose of a quick fade/scale-in) hands `transform` fully back to this
+    // drag; resetOnOpen() below clears the override so it replays normally
+    // next time the screen opens.
+    modal.style.animation = 'none';
+    try{ header.setPointerCapture(e.pointerId); }catch(err){}
+    e.preventDefault();
+  });
+
+  document.addEventListener('pointermove', function(e){
+    if(!dragging || e.pointerId !== dragging.pointerId) return;
+    const dx = e.clientX - dragging.startX;
+    const dy = e.clientY - dragging.startY;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let newLeft = dragging.rectLeft + dx;
+    let newTop = dragging.rectTop + dy;
+    // Clamp in VIEWPORT space so the window can never be dragged fully
+    // off-screen and become unreachable, in either direction.
+    newLeft = Math.max(H_MARGIN - dragging.rectWidth, Math.min(newLeft, vw - H_MARGIN));
+    newTop = Math.max(V_MARGIN - dragging.rectHeight, Math.min(newTop, vh - V_MARGIN));
+    const usedDx = newLeft - dragging.rectLeft;
+    const usedDy = newTop - dragging.rectTop;
+    dragging.modal.style.transform = 'translate(' + (dragging.baseX + usedDx) + 'px, ' + (dragging.baseY + usedDy) + 'px)';
+  });
+
+  function endDrag(e){
+    if(!dragging) return;
+    if(e && e.pointerId !== undefined && e.pointerId !== dragging.pointerId) return;
+    dragging.modal.classList.remove('dragging');
+    try{ dragging.header.releasePointerCapture(dragging.pointerId); }catch(err){}
+    dragging = null;
+  }
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+
+  // Reset a modal back to centred every time its overlay is (re)opened —
+  // otherwise the NEXT time you open e.g. "الإعدادات" it would reappear
+  // wherever it was last dragged to instead of centred, which reads as
+  // broken rather than a remembered position. One delegated observer on
+  // <body> covers every .overlay, including ones a screen only creates the
+  // first time it's used (e.g. showDocumentPreview()'s #docPreviewOverlay).
+  const resetOnOpen = new MutationObserver(function(records){
+    for(const rec of records){
+      const el = rec.target;
+      if(!(el instanceof Element) || !el.classList || !el.classList.contains('overlay')) continue;
+      if(el.classList.contains('open')){
+        const modal = el.querySelector('.modal');
+        if(modal){ modal.style.transform = ''; modal.style.animation = ''; modal.classList.remove('dragging'); }
+      }
+    }
+  });
+  resetOnOpen.observe(document.body, { attributes:true, attributeFilter:['class'], subtree:true });
+})();
 
 function uid(prefix){ return prefix+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,7); }
 
@@ -9992,10 +10179,14 @@ function openCreateInvoiceOverlay(opts){
   renderInvoiceRecipientPicker();
   renderInvoiceCurrencyOptions();
   renderInvoiceSettingsPanel();
-  const details = document.getElementById('invoiceAppearanceDetails');
-  if(details) details.open = !!opts.openAppearance || details.open;
   createInvoiceOverlay.classList.add('open');
   updateCreateInvoiceLivePreview();
+  // The appearance column is always visible now (no collapsible section to
+  // expand any more) — for a first-run visitor specifically here to set it
+  // up, just put the cursor straight into its first field instead.
+  if(opts.openAppearance){
+    setTimeout(()=>{ const el = document.getElementById('invClinicNameInput'); if(el) el.focus(); }, 60);
+  }
 }
 document.getElementById('closeCreateInvoiceBtn').addEventListener('click', ()=> createInvoiceOverlay.classList.remove('open'));
 document.getElementById('cancelCreateInvoiceBtn').addEventListener('click', ()=> createInvoiceOverlay.classList.remove('open'));
@@ -12725,44 +12916,111 @@ function getIncomingPaymentCaseLinkSource(type, id){
    vanish along with the rest of the payment object, with nothing extra to
    reconcile — unlike applyPaymentToDebts()'s ent.debts[] mutation, this
    needed no special-case reversal logic anywhere. */
+// BUG FIX / feature request (direct feedback): the old design required
+// TYPING an amount for a case to count as linked at all — someone who just
+// wanted to say "this payment is for these two patients" without splitting
+// exact numbers had no way to do that; leaving a box at 0 meant that case
+// simply wasn't recorded. Every case/shipment row is now led by a checkbox
+// — checking it is what marks the case as belonging to this payment, full
+// stop. Its amount field is optional and only enabled once checked: type a
+// specific figure to pin that case's share, or leave it blank and
+// readCaseAllocations() below automatically splits whatever of the payment
+// wasn't explicitly assigned evenly across every checked-but-blank case.
 function renderCaseAllocationInputs(cfg){
   // cfg: { listEl, emptyEl, remainingEl, amountInputEl, items, inputClass }
   cfg.listEl.innerHTML = '';
   cfg.emptyEl.style.display = cfg.items.length ? 'none' : 'block';
   cfg.items.forEach(it=>{
     const row = document.createElement('div');
+    row.className = 'case-alloc-row';
     row.style.cssText = 'display:flex; align-items:center; gap:8px; font-weight:600; font-size:12.5px;';
-    row.innerHTML = `<span style="flex:1;">${escapeHtml(it.label)}</span><input type="number" step="0.01" min="0" dir="ltr" placeholder="0" data-case-id="${escapeHtml(it.id)}" class="${cfg.inputClass}" style="width:100px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--panel); font-weight:800;">`;
+    const chkId = 'calc_' + cfg.inputClass + '_' + it.id;
+    row.innerHTML = `<input type="checkbox" id="${chkId}" class="${cfg.inputClass}-chk" data-case-id="${escapeHtml(it.id)}" style="cursor:pointer; width:auto; flex:0 0 auto; margin:0;">` +
+      `<label for="${chkId}" style="flex:1; margin:0; cursor:pointer; font-weight:600;">${escapeHtml(it.label)}</label>` +
+      `<input type="number" step="0.01" min="0" dir="ltr" placeholder="${escapeHtml(tr('تلقائي'))}" data-case-id="${escapeHtml(it.id)}" class="${cfg.inputClass}" disabled style="width:90px; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--panel); font-weight:800;">`;
     cfg.listEl.appendChild(row);
   });
   const update = ()=> updateCaseAllocationRemaining(cfg);
+  cfg.listEl.querySelectorAll('.' + cfg.inputClass + '-chk').forEach(chk=>{
+    chk.addEventListener('change', ()=>{
+      const amtInput = chk.closest('.case-alloc-row').querySelector('.' + cfg.inputClass);
+      if(amtInput){
+        amtInput.disabled = !chk.checked;
+        if(!chk.checked) amtInput.value = '';
+        else amtInput.focus();
+      }
+      update();
+    });
+  });
   cfg.listEl.querySelectorAll('.' + cfg.inputClass).forEach(inp=> inp.addEventListener('input', update));
   update();
 }
 function updateCaseAllocationRemaining(cfg){
   if(!cfg.remainingEl) return;
   const total = parseFloat(cfg.amountInputEl.value) || 0;
-  let allocated = 0;
-  cfg.listEl.querySelectorAll('.' + cfg.inputClass).forEach(inp=> { allocated += parseFloat(inp.value) || 0; });
-  const remaining = Math.round((total - allocated) * 100) / 100;
-  if(!total && !allocated){ cfg.remainingEl.textContent = ''; return; }
-  if(remaining < -0.004){
-    cfg.remainingEl.textContent = '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtMoney(Math.abs(remaining));
+  const checked = Array.from(cfg.listEl.querySelectorAll('.' + cfg.inputClass + '-chk')).filter(chk=> chk.checked);
+  let explicitSum = 0, autoCount = 0;
+  checked.forEach(chk=>{
+    const row = chk.closest('.case-alloc-row');
+    const amtInput = row ? row.querySelector('.' + cfg.inputClass) : null;
+    const raw = amtInput ? parseFloat(amtInput.value) : NaN;
+    if(Number.isFinite(raw) && raw > 0) explicitSum += raw; else autoCount++;
+  });
+  explicitSum = Math.round(explicitSum * 100) / 100;
+  if(!checked.length){ cfg.remainingEl.textContent = ''; return; }
+  if(explicitSum > total + 0.004){
+    cfg.remainingEl.textContent = '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtMoney(explicitSum - total);
     cfg.remainingEl.style.color = 'var(--red)';
-  }else{
+    return;
+  }
+  const remaining = Math.round((total - explicitSum) * 100) / 100;
+  if(autoCount > 0){
+    const share = Math.round((remaining / autoCount) * 100) / 100;
+    cfg.remainingEl.textContent = '✅ ' + autoCount + ' ' + tr('حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها') + ' ' + fmtMoney(Math.max(0, remaining)) + ' ' + tr('بالتساوي') + ' (' + fmtMoney(share) + ' ' + tr('لكل حالة') + ')';
+    cfg.remainingEl.style.color = 'var(--green)';
+  }else if(remaining > 0.004){
     cfg.remainingEl.textContent = tr('المتبقي غير مُخصَّص لحالة معيّنة') + ': ' + fmtMoney(remaining);
-    cfg.remainingEl.style.color = remaining > 0.004 ? 'var(--ink-dim)' : 'var(--green)';
+    cfg.remainingEl.style.color = 'var(--ink-dim)';
+  }else{
+    cfg.remainingEl.textContent = '✅ ' + tr('تم تخصيص كامل المبلغ على الحالات المُعلَّمة');
+    cfg.remainingEl.style.color = 'var(--green)';
   }
 }
-// Returns [] if nothing was allocated (never null) — every caller treats an
-// empty array as "no per-case breakdown", same as the old linkedCaseIds default.
-function readCaseAllocations(listEl, inputClass){
-  const out = [];
-  listEl.querySelectorAll('.' + inputClass).forEach(inp=>{
-    const amt = Math.round((parseFloat(inp.value)||0) * 100) / 100;
-    if(amt > 0) out.push({ caseId: inp.getAttribute('data-case-id'), amount: amt });
+// Returns [] if nothing is checked (never null) — every caller treats an
+// empty array as "no per-case breakdown", same as the old linkedCaseIds
+// default. totalAmount (the payment's own total) drives the even-split of
+// whatever wasn't explicitly typed against a checked-but-blank case — see
+// the big comment above renderCaseAllocationInputs().
+function readCaseAllocations(listEl, inputClass, totalAmount){
+  const checked = Array.from(listEl.querySelectorAll('.' + inputClass + '-chk')).filter(chk=> chk.checked);
+  if(!checked.length) return [];
+  const explicit = [];
+  const autoCaseIds = [];
+  checked.forEach(chk=>{
+    const caseId = chk.getAttribute('data-case-id');
+    const row = chk.closest('.case-alloc-row');
+    const amtInput = row ? row.querySelector('.' + inputClass) : null;
+    const raw = amtInput ? parseFloat(amtInput.value) : NaN;
+    if(Number.isFinite(raw) && raw > 0){
+      explicit.push({ caseId, amount: Math.round(raw * 100) / 100 });
+    }else{
+      autoCaseIds.push(caseId);
+    }
   });
-  return out;
+  const explicitSum = explicit.reduce((s,a)=> s + a.amount, 0);
+  const remaining = Math.max(0, Math.round(((Number(totalAmount) || 0) - explicitSum) * 100) / 100);
+  if(!autoCaseIds.length) return explicit;
+  // Split in integer cents so nothing is lost or invented to floating-point
+  // rounding — any leftover single cents land on the first few cases.
+  const totalCents = Math.round(remaining * 100);
+  const baseCents = Math.floor(totalCents / autoCaseIds.length);
+  let extraCents = totalCents - baseCents * autoCaseIds.length;
+  const autoAllocs = autoCaseIds.map(caseId=>{
+    const cents = baseCents + (extraCents > 0 ? 1 : 0);
+    if(extraCents > 0) extraCents--;
+    return { caseId, amount: Math.round(cents) / 100 };
+  });
+  return explicit.concat(autoAllocs);
 }
 function caseAllocationsSum(allocs){
   return (allocs||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
@@ -13107,7 +13365,7 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
   // that might still read the old flat-array shape (none currently does,
   // per the audit, but it costs nothing to keep it in sync) ever regresses.
   const caseAllocations = (purpose === 'case')
-    ? readCaseAllocations(document.getElementById('ipCaseLinkList'), 'ip-case-link-amt')
+    ? readCaseAllocations(document.getElementById('ipCaseLinkList'), 'ip-case-link-amt', amount)
     : [];
   if(caseAllocations.length && caseAllocationsSum(caseAllocations) > amount + 0.004){
     showToast('المبلغ المخصَّص للحالات/البضاعة أكبر من مبلغ الدفعة نفسه — صحّح المبالغ قبل الحفظ.', 'error');
@@ -13836,7 +14094,7 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   // "🔗 خصّص هذه الدفعة..." checkbox is actually on; otherwise this is
   // exactly the pre-existing behavior (no allocations at all).
   const caseAllocations = (document.getElementById('epCaseLinkToggle').checked && document.getElementById('epCaseLinkWrap').style.display !== 'none')
-    ? readCaseAllocations(document.getElementById('epCaseLinkList'), 'ep-case-link-amt')
+    ? readCaseAllocations(document.getElementById('epCaseLinkList'), 'ep-case-link-amt', amount)
     : [];
   if(caseAllocations.length && caseAllocationsSum(caseAllocations) > amount + 0.004){
     showToast('المبلغ المخصَّص للحالات/البضاعة أكبر من مبلغ الدفعة نفسه — صحّح المبالغ قبل الحفظ.', 'error');
@@ -16535,7 +16793,7 @@ function updateCreateInvoiceLivePreview(){
 // since they now share the same overlay.
 ['input','change'].forEach(evt=>{
   createInvoiceOverlay.addEventListener(evt, (e)=>{
-    if(e.target.closest('#createInvoiceForm') || e.target.closest('#invoiceAppearanceDetails')){
+    if(e.target.closest('#createInvoiceForm') || e.target.closest('#invoiceAppearanceCol')){
       updateCreateInvoiceLivePreview();
     }
   });
@@ -17963,6 +18221,28 @@ async function checkForUpdates(manual){
       }
       if(info.available){
         setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
+        // BUG FIX: this used to pop the confirm dialog on EVERY automatic
+        // startup check too (manual=false, fired 8s after every launch,
+        // unconditionally) — not just when the user actually clicked "🌐 فحص
+        // التحديثات الآن" themselves. That meant a confirm() could silently
+        // open behind #lockScreen before the user even logs in (lockScreen's
+        // z-index sits above the dialog's on purpose, so it's not visible),
+        // then pop into view the moment they unlock — unprompted, disconnected
+        // from anything they clicked. Worse, customConfirm() reuses ONE static
+        // #confirmOverlay: a second call (e.g. the user manually clicking
+        // "check now" afterwards) stacks a second set of OK/Cancel listeners
+        // on the same buttons instead of replacing the first, so a single
+        // click could resolve two pending confirmations at once — this is
+        // very likely the real cause behind "بيعطي نفس المسج كل مرة": the
+        // user was really seeing the SAME still-open, silently-reopened
+        // dialog from the automatic check, not a fresh one from their click.
+        // A silent/automatic check now only ever updates the status text —
+        // the existing "🎉 يتوفر إصدار جديد" banner (which fetches and shows
+        // itself independently, see the IIFE further down) already covers
+        // unprompted notification without a modal. Only an explicit manual
+        // click opens the confirm dialog now, and always as a single fresh
+        // one (see the customConfirm() dedup fix below).
+        if(!manual) return;
         const ok = await customConfirm(
           'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
           (info.notes ? '\n' + info.notes + '\n' : '') +
@@ -18003,6 +18283,10 @@ async function checkForUpdates(manual){
     try{ localStorage.setItem(LAST_UPDATE_CHECK_KEY, String(getTrustedNow())); }catch(e){}
     if(info && info.version && isNewerVersion(info.version, APP_VERSION)){
       setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
+      // Same fix as the desktop branch above: only an explicit manual click
+      // opens the confirm dialog — a silent/automatic check just updates the
+      // status text (the banner already covers unprompted notification).
+      if(!manual) return;
       const ok = await customConfirm(
         'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
         (info.notes ? '\n' + info.notes + '\n' : '') +

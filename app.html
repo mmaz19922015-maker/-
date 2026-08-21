@@ -4449,7 +4449,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.0';
+const APP_VERSION = '10.1';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -18396,6 +18396,31 @@ function isNewerVersion(remote, local){
   return false;
 }
 
+// DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
+// is meant to be a short changelog line, but nothing ever enforced that —
+// and a real production bug in prepare-github-upload.ps1 (fixed separately)
+// once wrote it out corrupted into thousands of characters of mojibake
+// garbage. customConfirm()'s dialog has no cap on message length, so that
+// text filled the ENTIRE screen and pushed the OK/Cancel buttons below the
+// visible viewport (the modal scrolls as one block — see .modal's
+// max-height/overflow-y — with no separate scroll region for just the
+// message), making a perfectly running program look completely frozen to
+// the user, with no visible way forward except the undiscoverable Esc key.
+// Capping the notes shown here can never again let ANY future content
+// (corrupted, mistakenly huge, or just a very long real changelog entry)
+// grow the confirm dialog past a sane, always-clickable size — independent
+// of whatever caused this specific incident.
+const UPDATE_NOTES_MAX_CHARS = 400;
+function formatUpdateNotesForDialog(notes){
+  if(!notes) return '';
+  const s = String(notes).trim();
+  if(!s) return '';
+  const clipped = s.length > UPDATE_NOTES_MAX_CHARS
+    ? s.slice(0, UPDATE_NOTES_MAX_CHARS).trim() + '…'
+    : s;
+  return '\n' + clipped + '\n';
+}
+
 async function checkForUpdates(manual){
   const statusEl = document.getElementById('onlineUpdateStatusText');
   const setStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
@@ -18439,7 +18464,7 @@ async function checkForUpdates(manual){
         if(!manual) return;
         const ok = await customConfirm(
           'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
-          (info.notes ? '\n' + info.notes + '\n' : '') +
+          formatUpdateNotesForDialog(info.notes) +
           '\nهل تريد تحديث البرنامج الآن؟ سيتم التحميل والتثبيت وإعادة فتح البرنامج تلقائيًا.'
         );
         if(ok){
@@ -18483,7 +18508,7 @@ async function checkForUpdates(manual){
       if(!manual) return;
       const ok = await customConfirm(
         'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
-        (info.notes ? '\n' + info.notes + '\n' : '') +
+        formatUpdateNotesForDialog(info.notes) +
         '\nهل تريد فتح صفحة التحديث الآن؟'
       );
       const link = info.url || info.downloadUrl;

@@ -299,38 +299,69 @@
      buttons in the corner it happened to land on. It also has to be display
      :flex here — it was only ever styled as flex, and a stray display:none
      from an older build left it invisible on some machines. */
-  /* Corner stack: the mini clock (unchanged) plus, above it, the lock
-     control — moved here per direct feedback ("مربع قفل البرنامج حوله ايقونة
-     حطو فوق الساعه ويكون مدور ع شكل قفل كبير وواضح وشيل من القائمة الجانبية
-     الزر تبع القفل"): the sidebar-footer icon is gone, and the home-screen
+  /* Corner: the mini clock (unchanged) plus, above it, the lock control —
+     moved here per direct feedback ("مربع قفل البرنامج حوله ايقونة حطو فوق
+     الساعه ويكون مدور ع شكل قفل كبير وواضح وشيل من القائمة الجانبية الزر
+     تبع القفل"): the sidebar-footer icon is gone, and the home-screen
      tool-card is gone too — this single floating round icon, always visible
-     in the same corner as the clock, replaces both. Unlike the clock (which
-     stays at z-index:5, deliberately UNDER every window so it never clutters
-     an open screen — it's a passive readout, nothing to click), the lock
-     button is a real action control and must stay clickable no matter what
-     else is open, the same guarantee the old sidebar icon had. Its z-index
-     sits above every regular window and the minimized-taskbar (550000) but
-     below the true blocking dialogs (confirm/prompt/storage-setup, 600000)
-     so it never fights a "you must decide" dialog for attention. */
-  #miniCornerStack{
-    position:fixed; inset-inline-end:18px; bottom:14px; z-index:5;
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-  }
+     above the clock, replaces both. Unlike the clock (which stays
+     passive/UNDER every window so it never clutters an open screen — it's a
+     readout, nothing to click), the lock button is a real action control and
+     must stay clickable no matter what else is open, the same guarantee the
+     old sidebar icon had.
+     BUG FIX (real, confirmed defect — reported directly: "زر القفل ...
+     هومو مو شغال"), TWO WRONG ATTEMPTS THEN THE ACTUAL FIX: the two controls
+     used to share one `#miniCornerStack` flex wrapper. Attempt 1 gave that
+     wrapper only `z-index:5` — too low, it lost to #mainArea (z-index:10)
+     and to any overlay. Attempt 2 removed the wrapper's z-index entirely,
+     reasoning that an explicit z-index was somehow "trapping" the button —
+     wrong: a `position:fixed` box with NO z-index of its own (`auto`) does
+     not create a stacking context, but is still painted as a single atomic
+     unit at the "z-index:auto positioned content" layer, which comes BEFORE
+     (underneath) every sibling with an actual positive z-index such as
+     #mainArea, regardless of how high a z-index something INSIDE that
+     auto-layer box carries (proved with a minimal, app-free reproduction: a
+     position:fixed box with no z-index, containing a child at
+     z-index:560000, still rendered under a plain sibling div with
+     z-index:10). Giving the WHOLE wrapper z-index:560000 would fix the
+     button but wrongly drags the clock up above overlays too, breaking its
+     documented "always passive/under" behavior. The actual fix: the two
+     controls are no longer siblings inside one positioned wrapper at all —
+     each is its own independent `position:fixed` element. #miniClockWidget
+     keeps no z-index (unchanged passive behavior). #miniLockBtn gets its
+     own `position:fixed; z-index:560000` directly, so it needs no shared
+     parent to beat every overlay. Since there's no flexbox wrapper anymore
+     to stack them vertically, #miniLockBtn's `bottom` offset is computed in
+     JS from the clock's measured height (see positionMiniLockBtn()). */
   #miniLockBtn{
-    position:relative; z-index:560000; pointer-events:auto;
-    width:52px; height:52px; border-radius:50%;
+    position:fixed; inset-inline-end:18px; z-index:560000; pointer-events:auto;
+    width:56px; height:56px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(155deg,#2c4a58 0%,#1f3742 100%);
-    border:1.5px solid rgba(255,255,255,0.16); box-shadow:var(--shadow);
-    color:#3ec6df; cursor:pointer; padding:0;
+    background:linear-gradient(155deg,#12b5d6 0%,#0e7c9e 55%,#0a5f7a 100%);
+    border:2.5px solid #fff; box-shadow:0 4px 16px rgba(14,124,158,0.55), var(--shadow);
+    color:#ffffff; cursor:pointer; padding:0;
     transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
-  #miniLockBtn svg{ width:26px; height:26px; }
-  #miniLockBtn:hover{ transform:translateY(-2px) scale(1.04); box-shadow:0 8px 20px rgba(0,0,0,0.28); background:linear-gradient(155deg,#355e6f 0%,#264753 100%); }
-  #miniLockBtn:active{ transform:translateY(0) scale(0.97); }
+  #miniLockBtn svg{ width:28px; height:28px; }
+  #miniLockBtn:hover{ transform:translateY(-2px) scale(1.06); box-shadow:0 8px 22px rgba(14,124,158,0.7), var(--shadow); background:linear-gradient(155deg,#1ccbef 0%,#0e7c9e 55%,#0a5f7a 100%); }
+  #miniLockBtn:active{ transform:translateY(0) scale(0.96); }
+  /* A slow, subtle pulsing ring — makes the control read as "a distinct,
+     always-available action" (direct feedback: "اعطيه ايقونة مميزة") rather
+     than blending in with the rest of the corner. */
+  #miniLockBtn::after{
+    content:''; position:absolute; inset:-5px; border-radius:50%;
+    border:2px solid #12b5d6; opacity:0; pointer-events:none;
+    animation: miniLockPulse 2.6s ease-out infinite;
+  }
+  @keyframes miniLockPulse{
+    0%{ opacity:.55; transform:scale(0.92); }
+    70%{ opacity:0; transform:scale(1.28); }
+    100%{ opacity:0; transform:scale(1.28); }
+  }
   #miniClockWidget{
     /* Slate rather than near-black, so it reads as part of the program in
        both themes instead of a hole punched in the corner. */
+    position:fixed; inset-inline-end:18px; bottom:14px;
     background:linear-gradient(155deg,#2c4a58 0%,#1f3742 100%);
     border:1px solid rgba(255,255,255,0.14); border-radius:var(--r-md);
     padding:9px 17px; box-shadow:var(--shadow);
@@ -346,7 +377,7 @@
     font-family:'Tajawal', sans-serif; font-weight:700;
     font-size:11px; color:#8fc7da; line-height:1.1; margin-top:3px;
   }
-  @media (max-width: 720px){ #miniCornerStack{ display:none; } }
+  @media (max-width: 720px){ #miniLockBtn, #miniClockWidget{ display:none; } }
 
   /* ===== Update-available banner ===== */
   #updateBanner{
@@ -745,9 +776,31 @@
   /* Down to a single icon now that 🛒 اطلب أيضًا برنامج moved inside "حول
      البرنامج" (per direct feedback — see aboutOverlay) — a centered flex row
      instead of the old 3-column grid built for more icons than are left. */
-  /* Roles (أدمن/موظف) — an admin-only sidebar button simply disappears for
-     an employee session; see applyRolePermissions()/ADMIN_ONLY_BTN_IDS. */
+  /* Roles (أدمن/مشرف/موظف) — an admin/supervisor-only sidebar button (or a
+     permission-gated one) simply disappears for a restricted employee
+     session; see applyRolePermissions()/ALWAYS_ADMIN_BTN_IDS/
+     PERMISSION_GATED_BTN_IDS. */
   .role-hidden{ display:none !important; }
+  .manage-user-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 14px; border:1.5px solid var(--line); border-radius:9px; background:var(--panel-2);
+    flex-wrap:wrap;
+  }
+  .manage-user-info{ display:flex; align-items:center; gap:9px; font-weight:800; }
+  .manage-user-name{ font-size:13.5px; }
+  .manage-user-actions{ display:flex; align-items:center; gap:8px; }
+  .role-badge{
+    display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:800;
+    padding:3px 9px; border-radius:var(--r-pill); border:1px solid transparent;
+  }
+  .role-badge-supervisor{ background:#fff3d6; color:#8a6d00; border-color:#ffd54f; }
+  .role-badge-employee{ background:var(--teal-tint); color:var(--teal); border-color:var(--teal-dim); }
+  .employee-permission-row{
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    border:1.5px solid var(--line); border-radius:9px; background:var(--panel-2);
+    cursor:pointer; font-size:12.5px; font-weight:700;
+  }
+  .employee-permission-row input[type="checkbox"]{ width:17px; height:17px; flex:0 0 auto; }
   .sidebar-footer{
     padding:var(--sp-3) var(--sp-4); border-top:1px solid var(--line);
     display:flex; justify-content:center; align-items:center;
@@ -4078,7 +4131,7 @@ input:focus, select:focus, textarea:focus {
      جانبي"). No live preview is embedded here any more — press "👁 معاينة
      قبل الطباعة" below to see the result, same as before the merge. -->
 <div class="overlay" id="invoiceAppearanceOverlay">
-  <div class="modal wide" style="max-width:1180px;">
+  <div class="modal wide" style="max-width:1380px;">
     <h2><span>🎨 مظهر الفاتورة</span><button type="button" class="btn-ghost btn-small" id="closeInvoiceAppearanceBtn">إغلاق</button></h2>
     <!-- Live preview added per direct feedback ("خلي فيه معاينة حية
          للتغيرات") — same two-column pattern as the invoice columns/data
@@ -4160,7 +4213,7 @@ input:focus, select:focus, textarea:focus {
       </div>
       <div class="invoice-columns-preview-wrap">
         <div class="invoice-columns-preview-label">👁 معاينة حية</div>
-        <iframe id="invoiceAppearancePreviewFrame" title="معاينة مظهر الفاتورة" style="width:100%; height:62vh; min-height:460px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
+        <iframe id="invoiceAppearancePreviewFrame" title="معاينة مظهر الفاتورة" style="width:100%; height:72vh; min-height:560px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
       </div>
     </div>
   </div>
@@ -4186,7 +4239,7 @@ input:focus, select:focus, textarea:focus {
      text field renames the column's printed label, and the slider below
      controls the table text size specifically. -->
 <div class="overlay" id="invoiceColumnsOverlay">
-  <div class="modal wide" style="max-width:1180px;">
+  <div class="modal wide" style="max-width:1380px;">
     <h2><span>🎨 تصميم الفاتورة — الأعمدة والمحتوى</span><button type="button" class="btn-ghost btn-small" id="closeInvoiceColumnsBtn">إغلاق</button></h2>
     <div class="muted" style="margin:-6px 0 14px; font-size:12px; line-height:1.7;">
       رتّب الأعمدة (▲▼)، حدد الظاهر منها، وعدّل اسم كل عمود إن أردت، وحجم خط الجدول أدناه — كل تغيير يظهر مباشرة بالمعاينة المجاورة، قبل ما تطبع أي شي فعليًا.
@@ -4202,7 +4255,7 @@ input:focus, select:focus, textarea:focus {
       </div>
       <div class="invoice-columns-preview-wrap">
         <div class="invoice-columns-preview-label">👁 معاينة حية</div>
-        <iframe id="invoiceColumnsPreviewFrame" title="معاينة الفاتورة" style="width:100%; height:58vh; min-height:420px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
+        <iframe id="invoiceColumnsPreviewFrame" title="معاينة الفاتورة" style="width:100%; height:72vh; min-height:560px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
       </div>
     </div>
     <div class="modal-actions" style="justify-content:space-between;">
@@ -4600,20 +4653,39 @@ input:focus, select:focus, textarea:focus {
      username/password stay exactly where they always were, in ⚙ الضبط ←
      كلمة المرور والحماية, untouched by this screen. -->
 <div class="overlay" id="manageUsersOverlay">
-  <div class="modal" style="max-width:620px;">
+  <div class="modal" style="max-width:680px;">
     <h2><span>👤 المستخدمون والصلاحيات</span><button type="button" class="btn-ghost btn-small" id="closeManageUsersBtn">إغلاق</button></h2>
     <div class="muted" style="margin:-6px 0 14px; font-size:12px; line-height:1.8;">
-      الأدمن (أنت) يشوف ويتحكم بكل شيء بالبرنامج. أي حساب "موظف" تضيفه هون ممنوع من: الإعدادات، مظهر/تصميم الفاتورة، التقارير المالية والحسابات، إدارة الموظفين والمستخدمين، وأي عملية حذف — ويقدر يشتغل بالحالات والفواتير العادية بس.
+      الأدمن (أنت) يشوف ويتحكم بكل شيء بالبرنامج. أي حساب تضيفه هون إما <b>👑 مشرف</b> (نفس صلاحيات الأدمن بالكامل) أو <b>👷 موظف</b> — الموظف افتراضيًا يقدر بس يسجل حالات ودفعات واردة، وتقدر تفتح له/تفتح لها صلاحيات إضافية من زر "🔧 الصلاحيات" جنب اسمه.
     </div>
     <div id="manageUsersList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
     <div class="muted" id="manageUsersEmpty" style="display:none; text-align:center; padding:16px 0;">لا يوجد حسابات موظفين بعد.</div>
     <form id="addEmployeeAccountForm" style="border-top:1px solid var(--line); padding-top:14px; display:flex; flex-direction:column; gap:10px;">
-      <div class="field" style="margin-bottom:0;"><label>➕ إضافة حساب موظف جديد</label></div>
+      <div class="field" style="margin-bottom:0;"><label>➕ إضافة حساب جديد</label></div>
       <input type="text" id="newEmployeeUsername" autocomplete="off" placeholder="اسم المستخدم">
       <input type="password" id="newEmployeePassword" autocomplete="new-password" placeholder="كلمة السر (4 أحرف على الأقل)">
+      <label class="employee-permission-row" style="border-style:dashed;">
+        <input type="checkbox" id="newEmployeeIsSupervisor">
+        <span>👑 إضافة كمسؤول (صلاحيات كاملة مثل الأدمن)</span>
+      </label>
       <div id="addEmployeeAccountError" class="muted" style="display:none; color:var(--red); font-size:12px;"></div>
       <button type="submit" class="btn-primary btn-small">➕ إضافة الحساب</button>
     </form>
+  </div>
+</div>
+
+<!-- 🔧 لوحة صلاحيات موظف واحد — direct feedback: "حط لي لوحة تحكم بشكل جميل
+     وسهل للصلاحيات بالنسبة لليوزر يلي ضفتو انا ... ضيف كل شي بلوحة تحكم بشكل
+     واضح". Opened from the "🔧 الصلاحيات" button next to a non-supervisor
+     account in #manageUsersList — see openEmployeePermissionsPanel(). -->
+<div class="overlay" id="employeePermissionsOverlay">
+  <div class="modal" style="max-width:480px;">
+    <h2><span>🔧 صلاحيات <span id="employeePermissionsUserLabel"></span></span><button type="button" class="btn-ghost btn-small" id="closeEmployeePermissionsBtn">إغلاق</button></h2>
+    <div class="muted" style="margin:-6px 0 14px; font-size:12px; line-height:1.7;">
+      فعّل أو أطفئ أي صلاحية لهذا الموظف تحديدًا — كل شي مطفي افتراضيًا ما عدا تسجيل الحالات والدفعات الواردة.
+    </div>
+    <div id="employeePermissionsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
+    <button type="button" class="btn-primary btn-small" id="saveEmployeePermissionsBtn" style="width:100%;">💾 حفظ الصلاحيات</button>
   </div>
 </div>
 
@@ -4831,7 +4903,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.5';
+const APP_VERSION = '10.6';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -5049,6 +5121,7 @@ const TRANSLATIONS = {
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Password must be at least 4 characters.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'This username is already in use.',
     'تمت إضافة حساب الموظف.':'The employee account was added.',
+    'تم حفظ صلاحيات الموظف.':'The employee\'s permissions were saved.',
     '✕ تجاهل':'✕ Dismiss', '▶️ متابعة':'▶️ Continue',
     '— اختر —':'— choose —', '— اختر الطبيب —':'— choose a doctor —',
     'حركة':'movement', 'معاينة —':'Preview —',
@@ -5742,6 +5815,7 @@ const TRANSLATIONS = {
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Wachtwoord moet minstens 4 tekens bevatten.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'Deze gebruikersnaam is al in gebruik.',
     'تمت إضافة حساب الموظف.':'Het medewerkersaccount is toegevoegd.',
+    'تم حفظ صلاحيات الموظف.':'De rechten van de medewerker zijn opgeslagen.',
     '◀ السابق':'◀ Vorige',
     'التالي ▶':'Volgende ▶',
     '✕ تجاهل':'✕ Negeren',
@@ -6444,6 +6518,7 @@ const TRANSLATIONS = {
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Das Passwort muss mindestens 4 Zeichen lang sein.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'Dieser Benutzername wird bereits verwendet.',
     'تمت إضافة حساب الموظف.':'Das Mitarbeiterkonto wurde hinzugefügt.',
+    'تم حفظ صلاحيات الموظف.':'Die Berechtigungen des Mitarbeiters wurden gespeichert.',
     '◀ السابق':'◀ Vorherige',
     'التالي ▶':'Weiter ▶',
     '✕ تجاهل':'✕ Verwerfen',
@@ -7146,6 +7221,7 @@ const TRANSLATIONS = {
 'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Şifre en az 4 karakter olmalıdır.',
 'اسم المستخدم هذا مستخدم مسبقًا.':'Bu kullanıcı adı zaten kullanılıyor.',
 'تمت إضافة حساب الموظف.':'Personel hesabı eklendi.',
+'تم حفظ صلاحيات الموظف.':'Personel yetkileri kaydedildi.',
 '◀ السابق':'◀ Önceki',
 'التالي ▶':'Sonraki ▶',
 '✕ تجاهل':'✕ Kapat',
@@ -7851,6 +7927,7 @@ const TRANSLATIONS = {
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'הסיסמה חייבת להכיל 4 תווים לפחות.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'שם המשתמש הזה כבר בשימוש.',
     'تمت إضافة حساب الموظف.':'חשבון העובד נוסף.',
+    'تم حفظ صلاحيات الموظف.':'ההרשאות של העובד נשמרו.',
     '◀ السابق':'◀ הקודם',
     'التالي ▶':'הבא ▶',
     '✕ تجاهل':'✕ התעלמות',
@@ -8556,6 +8633,7 @@ const TRANSLATIONS = {
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Hasło musi mieć co najmniej 4 znaki.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'Ta nazwa użytkownika jest już zajęta.',
     'تمت إضافة حساب الموظف.':'Konto pracownika zostało dodane.',
+    'تم حفظ صلاحيات الموظف.':'Uprawnienia pracownika zostały zapisane.',
     '◀ السابق':'◀ Poprzedni',
     'التالي ▶':'Dalej ▶',
     '✕ تجاهل':'✕ Odrzuć',
@@ -9886,21 +9964,56 @@ function verifyUsername(u){
   return (u||'').trim().toLowerCase() === requiredUsername().trim().toLowerCase();
 }
 
-/* ================== Users & permissions (أدمن / موظف) ==================
-   Direct feedback: "بدي اعمل نظام المستخدمين ادمن يتحكم بكل شي ونظام موظف
-   يكون ليه قيود". The ORIGINAL single username+password above is untouched
-   and stays the one and only admin account — zero behaviour change for any
-   installation that never opens the new "👤 المستخدمون" screen. Employee
-   accounts are a purely ADDITIVE second list, checked only when the admin
-   password does not match, so the existing admin login path can never be
-   broken by this. Default scope (no explicit spec given, stated openly to
-   the user): admin sees/does everything; an employee is blocked from
-   الإعدادات، مظهر/تصميم الفاتورة، التقارير المالية والحسابات، إدارة
-   الموظفين/المستخدمين، وأي عملية حذف — day-to-day case/invoice work stays
-   open. */
+/* ================== Users & permissions (أدمن / مشرف / موظف) ==================
+   Direct feedback (first cut): "بدي اعمل نظام المستخدمين ادمن يتحكم بكل شي
+   ونظام موظف يكون ليه قيود". The ORIGINAL single username+password above is
+   untouched and stays the one and only admin account — zero behaviour
+   change for any installation that never opens the new "👤 المستخدمون"
+   screen. Employee accounts are a purely ADDITIVE second list, checked only
+   when the admin password does not match, so the existing admin login path
+   can never be broken by this.
+
+   Follow-up request — a real overhaul, three roles now instead of two
+   ("بدي يصير عندي نظام موظف وادمن ... لما افتح البرنامج اول مرة وضيف موظف
+   بدي يكون في زر كمان معناه انو ضيفتو كمسؤول وحط له كلمة مرور ... يعني
+   يصير نظام دخول متعدد ... وزر صلاحيات الموظف انا بحدد شو يقدر يتحكم"):
+     - admin      — the one hardcoded account above, always full access.
+     - supervisor — an employee-list account the admin flagged "مسؤول" when
+                    adding it: functionally identical to admin (full
+                    access), just its own separate login/password.
+     - employee   — an employee-list account NOT flagged supervisor:
+                    restricted to DEFAULT_EMPLOYEE_PERMISSIONS unless the
+                    admin turned specific permissions on for that person
+                    from the new per-employee "🔧 الصلاحيات" panel. New
+                    default, tighter than the first cut above and stated
+                    explicitly this time: "الموظف فقط يضيف حالات ودفعات
+                    بدون الاطلاع ع الارصدة او الديون او الارباح ولا اي شي" —
+                    out of the box an employee can ONLY add cases and
+                    record incoming payments. */
 const EMPLOYEE_ACCOUNTS_KEY = 'dental_lab_employee_accounts_v1';
 const CURRENT_ROLE_KEY = 'dental_lab_current_role_v1';
-let currentUserRole = 'admin'; // safe default: never silently locks the admin out
+const CURRENT_USERNAME_KEY = 'dental_lab_current_username_v1';
+let currentUserRole = 'admin'; // 'admin' | 'supervisor' | 'employee' — safe default: never silently locks the admin out
+let currentUserName = '';      // the logged-in employee/supervisor's username; stays '' for the admin account itself
+
+const DEFAULT_EMPLOYEE_PERMISSIONS = {
+  addCases: true,        // تسجيل حالات مرضية جديدة
+  addPayments: true,     // تسجيل دفعات واردة
+  addExpenses: false,    // تسجيل دفعات/مصاريف صادرة
+  createInvoices: false, // إنشاء فواتير
+  editRecords: false,    // تعديل بيانات الأطباء/المختبرات/الشركات/المناديب/الموظفين
+  viewFinance: false,    // الاطلاع على الأرصدة/الديون/الأرباح والتقارير المالية
+  canDelete: false,      // أي عملية حذف
+};
+const PERMISSION_LABELS = {
+  addCases: 'تسجيل حالات مرضية جديدة',
+  addPayments: 'تسجيل دفعات واردة',
+  addExpenses: 'تسجيل دفعات / مصاريف صادرة',
+  createInvoices: 'إنشاء فواتير',
+  editRecords: 'تعديل البيانات (أطباء / مختبرات / شركات / مناديب / موظفين)',
+  viewFinance: 'الاطلاع على الأرصدة والديون والأرباح والتقارير المالية',
+  canDelete: 'الحذف (أي شاشة)',
+};
 function loadEmployeeAccounts(){
   try{
     const x = JSON.parse(localStorage.getItem(EMPLOYEE_ACCOUNTS_KEY) || 'null');
@@ -9908,11 +10021,32 @@ function loadEmployeeAccounts(){
   }catch(e){ return []; }
 }
 function saveEmployeeAccounts(list){ localStorage.setItem(EMPLOYEE_ACCOUNTS_KEY, JSON.stringify(list)); }
+// admin OR supervisor => full access; only a plain "employee" account is restricted.
 function isAdmin(){ return currentUserRole !== 'employee'; }
+function isSupervisorAccount(){ return currentUserRole === 'supervisor'; }
 function getCurrentUserRole(){ return currentUserRole; }
-function setCurrentUserRole(role){
-  currentUserRole = (role === 'employee') ? 'employee' : 'admin';
+/* Empty for the admin account itself, by design — the attribution feature
+   (logEdit(), further below) only ever needs to mark EMPLOYEE-entered data
+   ("وضع علامة انو الموظف هذا يلي دخل البيانات"), so the admin's own entries
+   stay exactly as unmarked as they always were. */
+function currentUserAttributionName(){ return isAdmin() ? '' : (currentUserName || ''); }
+function getCurrentEmployeePermissions(){
+  if(isAdmin()) return null;
+  const acc = loadEmployeeAccounts().find(u=> u.username.trim().toLowerCase() === currentUserName.trim().toLowerCase());
+  return Object.assign({}, DEFAULT_EMPLOYEE_PERMISSIONS, (acc && acc.permissions) || {});
+}
+// true for admin/supervisor unconditionally; for a plain employee, true only
+// when that specific permission was turned on for them.
+function hasPermission(key){
+  if(isAdmin()) return true;
+  const perms = getCurrentEmployeePermissions();
+  return !!(perms && perms[key]);
+}
+function setCurrentUserRole(role, username){
+  currentUserRole = (role === 'employee' || role === 'supervisor') ? role : 'admin';
+  currentUserName = (currentUserRole === 'admin') ? '' : (username || '');
   localStorage.setItem(CURRENT_ROLE_KEY, currentUserRole);
+  localStorage.setItem(CURRENT_USERNAME_KEY, currentUserName);
   try{ if(typeof applyRolePermissions === 'function') applyRolePermissions(); }catch(e){}
 }
 /* Tries the entered username+password against the employee accounts list
@@ -9925,29 +10059,74 @@ async function verifyEmployeeLogin(username, password){
   const hash = await sha256Hex(password);
   return list.find(u=> u.username.trim().toLowerCase() === uname && u.passwordHash === hash) || null;
 }
-/* Hides/blocks the admin-only entry points for an employee session. Safe to
+/* Hides/blocks entry points an employee session shouldn't reach. Safe to
    call repeatedly (e.g. after saveDatabase()/applyLanguage() re-render a
    sidebar button) — it only ever toggles a "role-hidden" class, never
-   removes/recreates anything. */
-const ADMIN_ONLY_BTN_IDS = [
-  'settingsBtn','invoiceAppearanceSidebarBtn','workLogSidebarBtn','debtsLogSidebarBtn',
-  'accountStatementSidebarBtn','checksRegisterSidebarBtn','cancelPaymentSidebarBtn',
-  'expensePaymentsBtn','collectDebtSidebarBtn','manageUsersSidebarBtn','invoiceColumnsBtn',
+   removes/recreates anything. Three tiers:
+     - ALWAYS_ADMIN_BTN_IDS: inherently administrative, hidden from every
+       non-admin/supervisor employee regardless of any granular permission
+       (settings, invoice design, user management itself).
+     - PERMISSION_GATED_BTN_IDS / PERMISSION_GATED_HOME_CARD_IDS: shown only
+       when that specific permission is on for the current employee.
+     - EDIT_ENTITY_BTN_IDS: gated on the single editRecords permission. */
+const ALWAYS_ADMIN_BTN_IDS = [
+  'settingsBtn','invoiceAppearanceSidebarBtn','manageUsersSidebarBtn','invoiceColumnsBtn',
+];
+const PERMISSION_GATED_BTN_IDS = {
+  addCases: ['addPatientCaseBtn'],
+  addPayments: ['incomingPaymentsBtn'],
+  addExpenses: ['expensePaymentsBtn'],
+  createInvoices: ['createInvoiceSidebarBtn'],
+  viewFinance: [
+    'cancelPaymentSidebarBtn','accountStatementSidebarBtn','collectDebtSidebarBtn',
+    'debtsLogSidebarBtn','checksRegisterSidebarBtn','workLogSidebarBtn',
+  ],
+};
+const PERMISSION_GATED_HOME_CARD_IDS = {
+  viewFinance: ['homeIncomeCard','homeDuesCard','homeExpensesCard','homeDebtsCard','homeEditLogCard'],
+};
+const EDIT_ENTITY_BTN_IDS = [
+  'editDoctorBtn','editDoctorFromDetailsBtn','editDoctorFromStatementBtn',
+  'editLabInfoBtn','editLabFromDetailsBtn','editCompanyFromDetailsBtn',
+  'editAgentInfoBtn','editAgentFromDetailsBtn','editStaffFromDetailsBtn','caseIdCardEditBtn',
 ];
 function applyRolePermissions(){
-  const employeeMode = !isAdmin();
-  ADMIN_ONLY_BTN_IDS.forEach(function(id){
+  const admin = isAdmin();
+  const employeeMode = !admin;
+  const perms = employeeMode ? getCurrentEmployeePermissions() : null;
+
+  ALWAYS_ADMIN_BTN_IDS.forEach(function(id){
     const el = document.getElementById(id);
-    if(!el) return;
-    el.classList.toggle('role-hidden', employeeMode);
+    if(el) el.classList.toggle('role-hidden', employeeMode);
   });
+  Object.keys(PERMISSION_GATED_BTN_IDS).forEach(function(key){
+    const allowed = admin || (perms && perms[key]);
+    PERMISSION_GATED_BTN_IDS[key].forEach(function(id){
+      const el = document.getElementById(id);
+      if(el) el.classList.toggle('role-hidden', !allowed);
+    });
+  });
+  Object.keys(PERMISSION_GATED_HOME_CARD_IDS).forEach(function(key){
+    const allowed = admin || (perms && perms[key]);
+    PERMISSION_GATED_HOME_CARD_IDS[key].forEach(function(id){
+      const el = document.getElementById(id);
+      if(el) el.classList.toggle('role-hidden', !allowed);
+    });
+  });
+  const editAllowed = admin || (perms && perms.editRecords);
+  EDIT_ENTITY_BTN_IDS.forEach(function(id){
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('role-hidden', !editAllowed);
+  });
+
   document.body.classList.toggle('role-employee', employeeMode);
 }
-/* Generic "no deletions for employees" gate — every delete action in this
-   app already follows one of these conventions consistently (a "danger"/
-   "btn-danger-solid" class, an id containing "Delete", or a 🗑 prefix on the
-   button's own label), so one capture-phase listener covers every delete
-   button in the program without editing each one's own handler individually. */
+/* Generic "no deletions unless explicitly permitted" gate — every delete
+   action in this app already follows one of these conventions consistently
+   (a "danger"/"btn-danger-solid" class, an id containing "Delete", or a 🗑
+   prefix on the button's own label), so one capture-phase listener covers
+   every delete button in the program without editing each one's own handler
+   individually. */
 function isDangerActionEl(el){
   if(!el) return false;
   if(el.classList && (el.classList.contains('danger') || el.classList.contains('btn-danger-solid'))) return true;
@@ -9957,7 +10136,7 @@ function isDangerActionEl(el){
   return false;
 }
 document.addEventListener('click', function(e){
-  if(isAdmin()) return;
+  if(hasPermission('canDelete')) return;
   const btn = e.target.closest('button, a');
   if(!btn || !isDangerActionEl(btn)) return;
   e.preventDefault();
@@ -9975,13 +10154,66 @@ function renderManageUsersList(){
   empty.style.display = list.length ? 'none' : 'block';
   list.forEach(function(u){
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border:1.5px solid var(--line); border-radius:9px; background:var(--panel-2);';
+    row.className = 'manage-user-row';
+    // Direct feedback: "وانا بحط اشارة جنب الصلاحيات لكل موظف انا ضفتو
+    // كمشرف بالبرنامج" — a clear badge next to every account showing
+    // whether it's a full supervisor or a restricted employee.
+    const badge = u.isSupervisor
+      ? '<span class="role-badge role-badge-supervisor">👑 مشرف</span>'
+      : '<span class="role-badge role-badge-employee">👷 موظف</span>';
     row.innerHTML =
-      '<span style="font-weight:800;">👷 ' + escapeHtml(u.username) + '</span>' +
-      '<button type="button" class="btn-ghost btn-small danger" data-del-user="' + escapeHtml(u.id) + '" style="color:var(--red); border-color:var(--red);">🗑 حذف</button>';
+      '<div class="manage-user-info">' +
+        '<span class="manage-user-name">' + escapeHtml(u.username) + '</span>' + badge +
+      '</div>' +
+      '<div class="manage-user-actions">' +
+        (u.isSupervisor ? '' : '<button type="button" class="btn-ghost btn-small" data-perm-user="' + escapeHtml(u.id) + '">🔧 الصلاحيات</button>') +
+        '<button type="button" class="btn-ghost btn-small danger" data-del-user="' + escapeHtml(u.id) + '" style="color:var(--red); border-color:var(--red);">🗑 حذف</button>' +
+      '</div>';
     wrap.appendChild(row);
   });
 }
+/* 🔧 لوحة صلاحيات موظف واحد — a small, clear on/off panel per employee
+   (direct feedback: "حط لي لوحة تحكم بشكل جميل وسهل للصلاحيات ... ضيف كل
+   شي بلوحة تحكم بشكل واضح"). Built generically from PERMISSION_LABELS so
+   adding a new permission later only means adding one entry there. */
+let currentPermissionsEditUserId = null;
+function openEmployeePermissionsPanel(userId){
+  const acc = loadEmployeeAccounts().find(u=> u.id === userId);
+  if(!acc) return;
+  currentPermissionsEditUserId = userId;
+  const perms = Object.assign({}, DEFAULT_EMPLOYEE_PERMISSIONS, acc.permissions || {});
+  document.getElementById('employeePermissionsUserLabel').textContent = '👷 ' + acc.username;
+  const wrap = document.getElementById('employeePermissionsList');
+  wrap.innerHTML = '';
+  Object.keys(PERMISSION_LABELS).forEach(function(key){
+    const row = document.createElement('label');
+    row.className = 'employee-permission-row';
+    row.innerHTML =
+      '<input type="checkbox" data-perm-key="' + key + '" ' + (perms[key] ? 'checked' : '') + '>' +
+      '<span>' + escapeHtml(PERMISSION_LABELS[key]) + '</span>';
+    wrap.appendChild(row);
+  });
+  document.getElementById('employeePermissionsOverlay').classList.add('open');
+}
+const closeEmployeePermissionsBtnEl = document.getElementById('closeEmployeePermissionsBtn');
+if(closeEmployeePermissionsBtnEl) closeEmployeePermissionsBtnEl.addEventListener('click', ()=>{
+  document.getElementById('employeePermissionsOverlay').classList.remove('open');
+});
+const saveEmployeePermissionsBtnEl = document.getElementById('saveEmployeePermissionsBtn');
+if(saveEmployeePermissionsBtnEl) saveEmployeePermissionsBtnEl.addEventListener('click', ()=>{
+  if(!currentPermissionsEditUserId) return;
+  const list = loadEmployeeAccounts();
+  const acc = list.find(u=> u.id === currentPermissionsEditUserId);
+  if(!acc){ document.getElementById('employeePermissionsOverlay').classList.remove('open'); return; }
+  const newPerms = {};
+  document.querySelectorAll('#employeePermissionsList input[data-perm-key]').forEach(function(cb){
+    newPerms[cb.getAttribute('data-perm-key')] = cb.checked;
+  });
+  acc.permissions = newPerms;
+  saveEmployeeAccounts(list);
+  document.getElementById('employeePermissionsOverlay').classList.remove('open');
+  showToast(tr('تم حفظ صلاحيات الموظف.'), 'success');
+});
 const manageUsersOverlayEl = document.getElementById('manageUsersOverlay');
 const manageUsersSidebarBtnEl = document.getElementById('manageUsersSidebarBtn');
 if(manageUsersSidebarBtnEl) manageUsersSidebarBtnEl.addEventListener('click', ()=>{
@@ -9992,6 +10224,8 @@ const closeManageUsersBtnEl = document.getElementById('closeManageUsersBtn');
 if(closeManageUsersBtnEl) closeManageUsersBtnEl.addEventListener('click', ()=> manageUsersOverlayEl.classList.remove('open'));
 const manageUsersListEl = document.getElementById('manageUsersList');
 if(manageUsersListEl) manageUsersListEl.addEventListener('click', async (e)=>{
+  const permId = e.target.getAttribute && e.target.getAttribute('data-perm-user');
+  if(permId){ openEmployeePermissionsPanel(permId); return; }
   const id = e.target.getAttribute && e.target.getAttribute('data-del-user');
   if(!id) return;
   if(!(await customConfirm(tr('سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟'), {danger:true, okText:tr('حذف الحساب')}))) return;
@@ -10004,6 +10238,7 @@ if(addEmployeeAccountFormEl) addEmployeeAccountFormEl.addEventListener('submit',
   e.preventDefault();
   const uInput = document.getElementById('newEmployeeUsername');
   const pInput = document.getElementById('newEmployeePassword');
+  const supervisorInput = document.getElementById('newEmployeeIsSupervisor');
   const err = document.getElementById('addEmployeeAccountError');
   const u = uInput.value.trim();
   const p = pInput.value;
@@ -10016,7 +10251,12 @@ if(addEmployeeAccountFormEl) addEmployeeAccountFormEl.addEventListener('submit',
     err.textContent = tr('اسم المستخدم هذا مستخدم مسبقًا.'); err.style.display='block'; return;
   }
   const hash = await sha256Hex(p);
-  list.push({ id: uid('emp'), username: u, passwordHash: hash });
+  // Direct feedback: "بدي يكون في زر كمان يكون معناه انو ضيفتو كمسؤول" —
+  // a supervisor account gets full access (isAdmin() treats it like the
+  // admin itself), so its own `permissions` object is never even consulted;
+  // still saved with the defaults so nothing breaks if it's ever demoted.
+  const isSupervisor = !!(supervisorInput && supervisorInput.checked);
+  list.push({ id: uid('emp'), username: u, passwordHash: hash, isSupervisor, permissions: Object.assign({}, DEFAULT_EMPLOYEE_PERMISSIONS) });
   saveEmployeeAccounts(list);
   addEmployeeAccountFormEl.reset();
   renderManageUsersList();
@@ -10049,7 +10289,7 @@ function initLockFlow(){
     // "Remember me" keeps the user unlocked between sessions — and, per the
     // new roles feature, keeps whichever role last logged in too, so a
     // remembered employee session does not silently come back as admin.
-    setCurrentUserRole(localStorage.getItem(CURRENT_ROLE_KEY) || 'admin');
+    setCurrentUserRole(localStorage.getItem(CURRENT_ROLE_KEY) || 'admin', localStorage.getItem(CURRENT_USERNAME_KEY) || '');
     if(localStorage.getItem(REMEMBER_LOGIN_KEY) === 'true'){
       lockScreenEl.classList.add('unlocked');
     }
@@ -10110,10 +10350,15 @@ lockForm.addEventListener('submit', async (e)=>{
   // ليه قيود").
   let ok = await verifyPassword(pw);
   let loggedInRole = 'admin';
+  let loggedInUsername = '';
   if(!ok){
     const uname = document.getElementById('lockUsernameInput').value;
     const emp = await verifyEmployeeLogin(uname, pw);
-    if(emp){ ok = true; loggedInRole = 'employee'; }
+    if(emp){
+      ok = true;
+      loggedInRole = emp.isSupervisor ? 'supervisor' : 'employee';
+      loggedInUsername = emp.username;
+    }
   }
   if(ok){
     if(document.getElementById('rememberLoginCheck').checked){
@@ -10121,7 +10366,7 @@ lockForm.addEventListener('submit', async (e)=>{
     }else{
       localStorage.removeItem(REMEMBER_LOGIN_KEY);
     }
-    setCurrentUserRole(loggedInRole);
+    setCurrentUserRole(loggedInRole, loggedInUsername);
     localStorage.setItem(LOCK_UNLOCKED_KEY, 'true');
     lockScreenEl.classList.add('unlocked');
     lockErrorText.style.display = 'none';
@@ -10848,7 +11093,25 @@ document.addEventListener('pointerdown', function(e){
      Re-applied on window resize and whenever anything shifts the sidebar
      (update banner, save-problem bar, minimized-windows taskbar all push
      .app-shell — see their own CSS) so an already-maximized window keeps
-     fitting exactly, automatically — never a stale/wrong size. */
+     fitting exactly, automatically — never a stale/wrong size.
+
+     Follow-up request ("لما كبر الشاشات احصر حجمها بالفراغ يلي بالشاشة
+     الرئيسة تبلش من عند القائمة الرئيسة ومن تحت المربعات"): a maximized
+     window's TOP edge should also stop short of the home screen's own top
+     rows (the big stat-count boxes + the calculator/lock/notes tool-card
+     row) instead of touching y=0, so that "desktop" strip stays visible
+     even with something maximized — same spirit as leaving the sidebar
+     alone. This only applies while #homeView is actually the screen behind
+     everything (its rows only occupy real space when it isn't display:none);
+     on any other main-area view there is nothing to protect, so maximize
+     still reaches all the way to the top exactly as before. */
+  function homeScreenTopGuard(){
+    const homeView = document.getElementById('homeView');
+    if(!homeView || homeView.style.display === 'none') return 0;
+    const ref = homeView.querySelector('.tools-row') || homeView.querySelector('.stats-home');
+    if(!ref) return 0;
+    return Math.max(0, ref.getBoundingClientRect().bottom);
+  }
   function sidebarAvoidingBounds(){
     const vw = window.innerWidth, vh = window.innerHeight;
     const sidebar = document.querySelector('.sidebar');
@@ -10861,7 +11124,7 @@ document.addEventListener('pointerdown', function(e){
     return {
       left: sidebarOnLeft ? r.right : 0,
       right: sidebarOnLeft ? vw : r.left,
-      top: 0,
+      top: homeScreenTopGuard(),
       bottom: vh,
     };
   }
@@ -11444,6 +11707,13 @@ const DEFAULT_INVOICE_SETTINGS = {
 };
 let invoiceSettings = Object.assign({}, DEFAULT_INVOICE_SETTINGS);
 let appNotesList = [];
+/* Direct feedback: "مع وضع علامة انو الموظف هذا يلي دخل البيانات" — every
+   action already funnels through this one shared function (case/payment/
+   entity creation and edits, across the whole program), so tagging WHO did
+   it here covers all of them in one place instead of touching every single
+   call site. Empty for the admin's own actions on purpose (see
+   currentUserAttributionName()) — only employee/supervisor-entered data
+   needs the mark. */
 function logEdit(description, context){
   editLog.unshift({
     id: uid('log'),
@@ -11451,6 +11721,7 @@ function logEdit(description, context){
     time: localTimeStr(getTrustedNow()),
     description,
     context: context || null,
+    enteredBy: (typeof currentUserAttributionName === 'function') ? currentUserAttributionName() : '',
   });
   if(editLog.length > 200) editLog = editLog.slice(0, 200);
   saveDatabase();
@@ -13454,7 +13725,7 @@ function printInvoice(invoice, opts){
       <div class="inv-sign"><div class="inv-sign-line">${escapeHtml(tr('توقيع المحاسب'))}</div></div>
     </div>` : ''}
     <!-- No promotional/device footer on customer invoices. -->
-    
+    ${(opts.returnHtmlOnly && opts.previewOnly) ? scaleToFitPreviewScript() : ''}
 
 
 
@@ -13660,7 +13931,7 @@ function renderEditLogPage(){
     row.innerHTML = `
       <div>
         <div class="who">${escapeHtml(entry.description)}</div>
-        <div class="what">${escapeHtml(entry.date||'-')} — ${escapeHtml(entry.time||'-')}</div>
+        <div class="what">${escapeHtml(entry.date||'-')} — ${escapeHtml(entry.time||'-')}${entry.enteredBy ? ' — 👤 ' + escapeHtml(entry.enteredBy) : ''}</div>
       </div>
       ${clickable ? '<span class="d-match-tag">فتح العملية ▶</span>' : ''}
     `;
@@ -13685,8 +13956,8 @@ function printEditLogReport(){
   // produced nothing while telling the user to "allow popups" — a message
   // that could never be acted on. See openPrintWindow()'s own comment.
   const rows = (Array.isArray(editLog) ? editLog : []).slice();
-  const htmlRows = rows.map((e,i)=>'<tr><td>'+ (i+1) +'</td><td>'+escapeHtml(e.date||'—') + ' ' + escapeHtml(e.time||'') +'</td><td>'+escapeHtml(e.description||'')+'</td><td>'+escapeHtml(e.context && e.context.type ? e.context.type : '—')+'</td></tr>').join('');
-  const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>سجل تعديلات AL EKHLAS</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px;margin:0 0 6px}p{color:#60757d}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:9px;text-align:right}th{background:#eef4f6}td:first-child{width:55px;text-align:center}</style></head><body><h1>📝 سجل تعديلات البرنامج</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — عدد السجلات: '+rows.length+'</p><table><thead><tr><th>#</th><th>التاريخ والوقت</th><th>التعديل</th><th>المرجع</th></tr></thead><tbody>'+htmlRows+'</tbody></table></body></html>';
+  const htmlRows = rows.map((e,i)=>'<tr><td>'+ (i+1) +'</td><td>'+escapeHtml(e.date||'—') + ' ' + escapeHtml(e.time||'') +'</td><td>'+escapeHtml(e.description||'')+'</td><td>'+escapeHtml(e.context && e.context.type ? e.context.type : '—')+'</td><td>'+escapeHtml(e.enteredBy || '—')+'</td></tr>').join('');
+  const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>سجل تعديلات AL EKHLAS</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px;margin:0 0 6px}p{color:#60757d}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:9px;text-align:right}th{background:#eef4f6}td:first-child{width:55px;text-align:center}</style></head><body><h1>📝 سجل تعديلات البرنامج</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — عدد السجلات: '+rows.length+'</p><table><thead><tr><th>#</th><th>التاريخ والوقت</th><th>التعديل</th><th>المرجع</th><th>أدخلها</th></tr></thead><tbody>'+htmlRows+'</tbody></table></body></html>';
   openPrintWindow(html, 'تعذّر فتح نافذة الطباعة.');
 }
 document.getElementById('printEditLogBtn').addEventListener('click', printEditLogReport);
@@ -15132,6 +15403,41 @@ function printDocumentName(parts){
   return parts.filter(Boolean).map(x=> String(x).replace(/[\/:*?"<>|]/g, ' ').trim()).join(' - ');
 }
 
+/* Follow-up request on the invoice appearance/design screens ("خلي الفاتورة
+   تبين كاملة بالمعاينة"): the small embedded live-preview iframe has a fixed
+   pixel height, while a real invoice's printed length varies (more rows,
+   a longer note, a taller logo) — once the content is taller than the
+   iframe, the bottom of the invoice (often the totals) was only reachable
+   by scrolling inside it, so "the whole invoice" was never actually visible
+   in one glance. This shrinks the whole document down (via CSS transform,
+   never touching layout/print CSS itself) just enough that its full height
+   fits the iframe's own viewport with no scrolling, recomputed on resize.
+   Only ever injected into the SMALL embedded preview (returnHtmlOnly +
+   previewOnly together) — the full-window preview and real printing keep
+   their true 1:1 size untouched. */
+function scaleToFitPreviewScript(){
+  return `
+<script>
+(function(){
+  function fit(){
+    var body = document.body;
+    if(!body) return;
+    body.style.transform = '';
+    body.style.width = '';
+    var contentH = body.scrollHeight;
+    var viewH = window.innerHeight;
+    if(!contentH || contentH <= viewH) return;
+    var scale = Math.max(0.3, viewH / contentH);
+    body.style.transformOrigin = 'top center';
+    body.style.width = (100/scale) + '%';
+    body.style.transform = 'scale(' + scale + ')';
+  }
+  if(document.readyState === 'complete') fit();
+  else window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
+})();
+<\/script>`;
+}
 function buildPrintDocument(opts){
   const o = opts || {};
   const printedAt = localDateStr(getTrustedNow()) + ' — ' + localTimeStr(getTrustedNow());
@@ -15682,7 +15988,14 @@ function printCasesInvoice(type, entity, opts){
   // Same convention as printInvoice()'s own returnHtmlOnly — lets a caller (the
   // live column-picker preview, see openInvoicePrintSettings()) get the exact
   // HTML that would print, without opening any preview overlay or print window.
-  if(opts.returnHtmlOnly) return doc;
+  // previewOnly together with returnHtmlOnly means this is specifically the
+  // SMALL embedded iframe (design screen's live preview) — see
+  // scaleToFitPreviewScript()'s own comment for why only that one case gets
+  // the shrink-to-fit script injected (the full-window preview/real printing
+  // via buildPrintDocument for every OTHER document type must stay untouched).
+  if(opts.returnHtmlOnly){
+    return (opts.previewOnly) ? doc.replace('</body>', scaleToFitPreviewScript() + '</body>') : doc;
+  }
   if(opts.previewOnly){
     showDocumentPreview(doc, tr('👁 معاينة الفاتورة'));
     return;
@@ -21367,25 +21680,36 @@ initBackupHandle();
 initAppFileHandle();
 
 </script>
-<div id="miniCornerStack">
-  <button type="button" id="miniLockBtn" title="قفل البرنامج" aria-label="قفل البرنامج">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round">
-      <rect x="4.5" y="10.5" width="15" height="10.5" rx="2.4"/>
-      <path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/>
-      <path d="M12 14.6v3"/>
-    </svg>
-  </button>
-  <div id="miniClockWidget">
-    <div id="miniClockTime">--:--:--</div>
-    <div id="miniClockDate">----/--/--</div>
-  </div>
+<button type="button" id="miniLockBtn" title="قفل البرنامج" aria-label="قفل البرنامج">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.5" y="10.5" width="15" height="10.5" rx="2.4"/>
+    <path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/>
+    <path d="M12 14.6v3"/>
+  </svg>
+</button>
+<div id="miniClockWidget">
+  <div id="miniClockTime">--:--:--</div>
+  <div id="miniClockDate">----/--/--</div>
 </div>
 <script>
 /* قفل البرنامج — جوار الساعة: the button's own HTML sits right above (see
    #miniLockBtn), so its listener is wired here too, guaranteed to run after
    the element actually exists in the DOM. */
 document.getElementById('miniLockBtn').addEventListener('click', lockProgramNow);
+/* #miniLockBtn and #miniClockWidget are now two independent position:fixed
+   elements (no shared flex wrapper — see the CSS comment above
+   #miniLockBtn for why), so the button's vertical offset above the clock
+   has to be computed here instead of via flexbox gap. */
+function positionMiniLockBtn(){
+  var clock = document.getElementById('miniClockWidget');
+  var btn = document.getElementById('miniLockBtn');
+  if(!clock || !btn) return;
+  var h = clock.offsetHeight || 0;
+  btn.style.bottom = (14 + h + 10) + 'px';
+}
+positionMiniLockBtn();
+window.addEventListener('resize', positionMiniLockBtn);
 (function(){
   var timeEl = document.getElementById('miniClockTime');
   var dateEl = document.getElementById('miniClockDate');

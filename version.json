@@ -1,6 +1,6 @@
 {
-  "version": "9.25",
-  "notes": "9.25: تعميق تظليل عناوين النوافذ مع تكيف كامل للوضع الليلي، تحسين أزرار Windows للتصغير والتكبير والإغلاق، فصل إعداد محتويات الفاتورة عن الطباعة، شاشة مستقلة لمحتويات الفاتورة مع زر جانبي منفصل للون واللوغو والشكل، جعل شاشة الطباعة تسأل عن العملة فقط، وتحسين أمان التحديث وحفظ البيانات قبل التحديث.",
-  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-  "sha256": "16e3d24cb7d58ef6d3e0ef3737375cefc32041936cbee92b095906085bf749cf"
+    "version":  "9.22",
+    "notes":  "",
+    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
+    "sha256":  "a9c1cf3cbb9f4c58a93be8a1b5d9cbea949563251d5f96088fdf871e428cf153"
 }

@@ -1288,77 +1288,6 @@
      their normal pointer cursor and stay clickable, only the empty bar area
      starts a drag. */
   .modal h2{ display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px; position:sticky; top:0; background:var(--panel); padding:4px 0 10px; z-index:3; cursor:move; -webkit-user-select:none; user-select:none; touch-action:none; }
-  /* === Dark, Windows-style title bars — tuned for both themes === */
-  .modal > h2{
-    position:sticky; top:0; z-index:5;
-    margin:0 -10px 18px;
-    padding:9px 12px 10px;
-    min-height:44px;
-    border:1px solid rgba(7,42,52,.45);
-    border-radius:10px;
-    background:linear-gradient(180deg,#173640 0%,#0f2831 56%,#091d24 100%);
-    color:#f5fbfd;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px rgba(4,18,24,.38),0 2px 0 rgba(0,0,0,.22);
-  }
-  :root[data-theme="dark"] .modal > h2{
-    border-color:rgba(115,190,208,.32);
-    background:linear-gradient(180deg,#15333c 0%,#0d252d 56%,#07181e 100%);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 26px rgba(0,0,0,.48),0 2px 0 rgba(0,0,0,.32);
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]) .modal > h2{
-      border-color:rgba(115,190,208,.32);
-      background:linear-gradient(180deg,#15333c 0%,#0d252d 56%,#07181e 100%);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 26px rgba(0,0,0,.48),0 2px 0 rgba(0,0,0,.32);
-    }
-  }
-  .modal > h2{
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 11px 28px rgba(4,18,24,.42),0 2px 0 rgba(0,0,0,.24);
-  }
-  .modal > h2 > span:first-child{display:inline-flex;align-items:center;gap:8px;color:#f5fbfd;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .modal > h2 > span:last-child,.modal > h2 > div:last-child{margin-inline-start:auto;direction:ltr;display:flex;align-items:center;gap:6px;flex:0 0 auto}
-  .win-controls{margin-inline-start:auto!important;direction:ltr}
-  .win-min-btn,.win-max-btn,.win-close-btn{width:32px!important;min-width:32px!important;height:28px!important;padding:0!important;border-radius:5px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-family:"Segoe UI",Arial,sans-serif!important;font-weight:900!important;line-height:1!important}
-  .win-min-btn{font-size:16px!important}
-  .win-max-btn{font-size:15px!important}
-  .win-close-btn{font-size:13px!important}
-  .win-min-btn:hover,.win-max-btn:hover{background:rgba(255,255,255,.18)!important;border-color:rgba(255,255,255,.55)!important;transform:none!important}
-  .win-close-btn:hover{background:#b4232c!important;border-color:#e05a61!important;color:#fff!important}
-  :root[data-theme="dark"] .modal > h2, :root[data-theme="dark"] .section-head h2{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 28px rgba(0,0,0,.52),0 2px 0 rgba(0,0,0,.35)}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .modal > h2{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 28px rgba(0,0,0,.52),0 2px 0 rgba(0,0,0,.35)}}
-  .modal > h2 > span:first-child{display:inline-flex;align-items:center;gap:8px;color:#f5fbfd}
-  .modal > h2::after{content:'';position:absolute;inset-inline-start:12px;bottom:4px;width:52px;height:3px;border-radius:99px;background:linear-gradient(90deg,#73c8da,#d6eef3);pointer-events:none}
-  .modal > h2 button{border-color:rgba(255,255,255,.26)!important;background:rgba(255,255,255,.08)!important;color:#f5fbfd!important}
-  .modal > h2 button:hover{background:rgba(255,255,255,.16)!important;border-color:rgba(255,255,255,.42)!important;color:#fff!important}
-  .win-controls{display:flex!important;align-items:center;gap:5px!important;margin-inline-start:auto;direction:ltr}
-  .win-min-btn,.win-max-btn{width:34px!important;height:30px!important;border-radius:6px!important;border:1px solid rgba(255,255,255,.28)!important;background:rgba(255,255,255,.08)!important;color:#f5fbfd!important;font-family:"Segoe UI",Arial,sans-serif;font-size:16px!important;font-weight:900!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-  .win-min-btn:hover,.win-max-btn:hover{background:rgba(255,255,255,.18)!important;border-color:rgba(255,255,255,.48)!important;color:#fff!important}
-  .win-min-btn:active,.win-max-btn:active{transform:translateY(1px)}
-  .win-close-btn{width:34px!important;min-width:34px;height:30px!important;padding:0!important;border-radius:6px!important}
-  #invoiceAppearanceOverlay .modal{width:min(980px,calc(100vw - 32px));max-width:980px}
-  #invoiceAppearanceOverlay .settings-panel{display:block!important;padding:0;max-height:calc(100vh - 120px);overflow:auto}
-  #invoiceAppearanceOverlay .invoice-appearance-shell{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}
-  #invoiceAppearanceOverlay .invoice-appearance-side{position:sticky;top:0;align-self:start;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:12px}
-  @media(max-width:900px){#invoiceAppearanceOverlay .invoice-appearance-shell{grid-template-columns:1fr}#invoiceAppearanceOverlay .invoice-appearance-side{position:static}}
-  .modal.win-maximized{
-    position:fixed !important;
-    inset:10px !important;
-    width:auto !important;
-    max-width:none !important;
-    height:calc(100vh - 20px) !important;
-    max-height:none !important;
-    border-radius:14px !important;
-    z-index:600000 !important;
-  }
-  .modal.win-maximized h2{ cursor:default; }
-  .win-max-btn{
-    appearance:none; border:1.5px solid var(--line); background:var(--panel);
-    color:var(--ink-dim); border-radius:6px; width:26px; height:24px; padding:0;
-    font-size:13px; font-weight:900; line-height:1; cursor:pointer;
-    display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto;
-  }
-  .win-max-btn:hover{ background:var(--teal-tint); color:var(--teal); border-color:var(--teal-dim); }
-
   .modal.dragging{ transition:none; }
   .modal.dragging h2{ cursor:grabbing; }
   /* h2's own children ("إغلاق" etc.) are usually wrapped so they sit at the
@@ -1391,50 +1320,31 @@
   .min-taskbar-chip:hover{ background:var(--teal-tint); border-color:var(--teal-dim); }
   body.has-minimized-windows .app-shell{ height:calc(100vh - 44px); }
 
-  .sidebar-footer{display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px}
-  .sidebar-bottom-action{width:100%;min-height:42px;display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:9px 12px;border-radius:11px;font-weight:900;text-align:right}
-  .sidebar-icon-actions{display:flex;justify-content:center;gap:8px;padding-top:2px}
-  .sidebar-icon-actions .icon-round-btn{width:38px;height:38px}
-  .sidebar-bottom-action:hover{transform:translateY(-1px)}
-  #invoiceBuilderOverlay .modal{width:min(1040px,calc(100vw - 32px));max-width:1040px}
-  .invoice-builder-grid{display:grid;grid-template-columns:minmax(0,1fr) 255px;gap:16px;align-items:start}
-  .invoice-builder-main,.invoice-builder-side{border:1px solid var(--line);border-radius:16px;background:var(--panel-2);padding:15px}
-  .invoice-builder-side{position:sticky;top:0}
-  .invoice-builder-side .side-title{font-weight:950;font-size:13px;margin-bottom:10px}
-  .invoice-builder-side button{width:100%;margin-bottom:8px;min-height:42px;text-align:right}
-  .invoice-builder-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:14px}
-  .invoice-builder-stat{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel);min-width:0}
-  .invoice-builder-stat b{display:block;font-size:11px;color:var(--ink-dim);margin-bottom:4px}
-  .invoice-builder-stat span{font-weight:950;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .invoice-builder-note{padding:11px 13px;border:1px dashed var(--teal-dim);border-radius:12px;background:var(--teal-tint);line-height:1.8;font-size:12px;margin-bottom:12px}
-  .invoice-content-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .invoice-content-check{display:flex;align-items:center;gap:8px;padding:10px 11px;border:1px solid var(--line);border-radius:11px;background:var(--panel);font-size:12px;font-weight:800}
-  .invoice-content-check input{width:18px;height:18px;accent-color:var(--teal)}
-  @media(max-width:850px){.invoice-builder-grid{grid-template-columns:1fr}.invoice-builder-side{position:static}.invoice-builder-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  /* Invoice creation is intentionally simple: recipient first, settings elsewhere. */
+  /* "🧾 إنشاء فاتورة" — a fixed, near-fullscreen 3-column layout (form /
+     appearance / live preview) instead of a tall single-column stack, so
+     the whole screen fits the viewport with no scrolling needed to reach
+     the rest of it. Each column scrolls internally on its own (min-height:0
+     is what lets a CSS-grid child actually shrink below its content size
+     instead of overflowing the fixed-height modal) purely as a safety net
+     for very small windows — on an ordinary desktop screen nothing inside
+     needs to scroll at all. */
   #createInvoiceOverlay .modal{
-    max-width:min(760px, calc(100vw - 32px));
-    width:min(760px, calc(100vw - 32px));
+    max-width:min(1400px, calc(100vw - 32px)); width:min(1400px, calc(100vw - 32px));
+    height:calc(100vh - 32px); display:flex; flex-direction:column;
   }
-  .invoice-create-card{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:14px;
-    max-width:620px;
-    margin:0 auto;
+  #createInvoiceOverlay .modal h2{ flex:0 0 auto; }
+  .invoice-studio{
+    display:grid; grid-template-columns:270px minmax(300px, 380px) 1fr;
+    gap:18px; flex:1 1 auto; min-height:0;
   }
-  .invoice-create-card .field{
-    padding:16px;
-    border:1px solid var(--line);
-    border-radius:14px;
-    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  .invoice-studio > .is-col{ min-height:0; overflow-y:auto; padding-inline-end:4px; }
+  .invoice-studio .is-preview-col{ display:flex; flex-direction:column; }
+  .invoice-studio .is-preview-col iframe{ flex:1 1 auto; width:100%; min-height:0; border:1px solid var(--line); border-radius:10px; background:#fff; }
+  @media (max-width:1000px){
+    .invoice-studio{ grid-template-columns:1fr; }
+    .invoice-studio .is-preview-col iframe{ min-height:420px; }
   }
-  .invoice-create-card .field label{font-size:12px;font-weight:900;margin-bottom:7px}
-  .invoice-create-card .field select{min-height:46px;font-size:14px}
-  .invoice-create-actions{
-    display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;
-    margin-top:8px;padding-top:14px;border-top:1px solid var(--line);
-  }
+
   /* Compact field rhythm — scoped to this screen only, so every other modal
      in the program keeps its normal, roomier spacing. */
   .invoice-studio .field{ margin-bottom:8px; }
@@ -1865,24 +1775,6 @@ input:focus, select:focus, textarea:focus {
 @media (max-width: 760px){
   .modal, .panel, .card, .section-card { border-radius: var(--r-md) !important; }
 }
-
-  .invoice-currency-card{width:min(480px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-lg)}
-  .invoice-currency-card h3{margin:0 0 8px;font-size:18px}
-  .invoice-currency-card select{width:100%;min-height:44px;margin:12px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--ink);padding:8px 10px}
-
-  /* Main screens use the same title treatment as floating windows. */
-  .main-area > [id] > .section-head h2,
-  .doctor-header h2,
-  .case-form-page-header h2{
-    display:inline-flex;
-    align-items:center;
-    min-height:38px;
-    padding:7px 13px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    box-shadow:0 4px 12px rgba(18,38,45,.07);
-  }
 </style>
 
 <style id="v86-correction">
@@ -2160,8 +2052,8 @@ input:focus, select:focus, textarea:focus {
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
     <div class="sidebar-footer">
-      <button class="btn-ghost sidebar-btn sidebar-bottom-action" id="themeToggleBtn" title="تشغيل الوضع الليلي" aria-label="تشغيل الوضع الليلي">🌙 تشغيل الوضع الليلي</button>
-      <button class="btn-ghost sidebar-btn sidebar-bottom-action" id="settingsBtn" title="الضبط والإعدادات" aria-label="الضبط والإعدادات">⚙️ الضبط والإعدادات</button>
+      <button type="button" class="btn-ghost sidebar-btn sidebar-bottom-action" id="themeToggleBtn" title="تشغيل الوضع الليلي" aria-label="تشغيل الوضع الليلي">🌙 تشغيل الوضع الليلي</button>
+      <button type="button" class="btn-ghost sidebar-btn sidebar-bottom-action" id="settingsBtn" title="الضبط والإعدادات" aria-label="الضبط والإعدادات">⚙️ الضبط والإعدادات</button>
       <div class="sidebar-icon-actions">
         <button class="icon-round-btn" id="deliveryNotifBtn" title="حالات تسليمها خلال يومين">🔔<span class="notif-badge" id="deliveryNotifBadge">0</span></button>
         <button class="icon-round-btn" id="openOrderSoftwareCard" title="اطلب أيضًا برنامج">🛒</button>
@@ -3870,111 +3762,140 @@ input:focus, select:focus, textarea:focus {
 
 <!-- Case edit history (per-case detailed change log, for printing to the doctor) -->
 <!-- Create invoice -->
-<!-- Create invoice: focused recipient-first workflow. Invoice appearance,
-     logo, colors, columns and print-layout settings live in the dedicated
-     ⚙ invoice settings screen. Printing is a separate step that asks only
-     for the currency. -->
+<!-- Create invoice — per direct feedback, this is now also the ONE place
+     that controls the invoice's whole appearance (logo, colors, sizes),
+     with a live preview alongside. Used to be split across two
+     disconnected screens: "🧾 إنشاء فاتورة" to actually make one, and a
+     separate "🧾 الفاتورة" tab buried inside ⚙ الإعدادات to control how it
+     looks — changing a color there gave no visual feedback until you
+     separately opened "👁 معاينة الفاتورة قبل الطباعة".
+
+     Redesigned again per further direct feedback ("بدي اعادة ترتيب للشاشة
+     احترافية وواضحة ... بدي الشاشة ع قد الشاشة بدون سحب لعرض باقي اجزائها"):
+     a fixed near-fullscreen 3-column layout (form / appearance / live
+     preview) sized to the viewport instead of a stack of fields taller than
+     any screen, and the color pickers are now small modern "swatch chips"
+     in one row instead of six stacked full-width labelled rows. See
+     updateCreateInvoiceLivePreview() for the live-refresh wiring, and the
+     ".invoice-studio" CSS block for the layout itself. -->
 <div class="overlay" id="createInvoiceOverlay">
   <div class="modal wide">
-    <h2>
-      <span>🧾 إنشاء فاتورة</span>
-      <div class="win-controls">
-        <button type="button" class="btn-ghost btn-small" id="editInvoiceAppearanceFromCreateBtn">🎨 تعديل وضبط بيانات الفاتورة</button>
-        <button type="button" class="btn-ghost btn-small win-close-btn" id="closeCreateInvoiceBtn">إغلاق</button>
+    <h2><span>🧾 إنشاء فاتورة</span><button type="button" class="btn-ghost btn-small" id="closeCreateInvoiceBtn">إغلاق</button></h2>
+    <div class="invoice-studio">
+      <div class="is-col">
+        <div class="section-head" style="margin-bottom:10px;"><h2 style="font-size:13.5px;">📝 بيانات الفاتورة</h2></div>
+        <form id="createInvoiceForm">
+          <div class="field">
+            <label>الفاتورة لمين</label>
+            <select id="invRecipientType">
+              <option value="doctor">🦷 طبيب</option>
+              <option value="technician">🧑‍🔧 فني</option>
+              <option value="agent">🚗 مندوب</option>
+              <option value="lab">🧪 مختبر</option>
+              <option value="company">🏢 شركة</option>
+              <option value="other">✍️ أخرى</option>
+            </select>
+          </div>
+          <div class="field" id="invRecipientPickerWrap">
+            <label id="invRecipientPickerLabel">الطبيب</label>
+            <select id="invRecipientSelect" style="display:block;"></select>
+            <input type="text" id="invRecipientOtherInput" placeholder="اسم الجهة" style="display:none;">
+          </div>
+          <div class="field"><label>سبب الفاتورة</label><input type="text" id="invReason" maxlength="60" required></div>
+          <div class="field"><label>المبلغ</label><input type="number" step="0.01" id="invAmount" dir="ltr" required></div>
+          <div class="field">
+            <label>العملة</label>
+            <select id="invCurrency"></select>
+            <div id="invCurrencyHint" class="invoice-currency-hint">سيتم حفظ آخر عملة اخترتها تلقائيًا.</div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-ghost" id="cancelCreateInvoiceBtn">إلغاء</button>
+            <button type="submit" class="btn-primary">✔ إنشاء وطباعة</button>
+          </div>
+        </form>
       </div>
-    </h2>
-    <div class="invoice-create-card">
-      <div class="field">
-        <label>لمن تريد إنشاء الفاتورة؟</label>
-        <select id="invRecipientType">
-          <option value="doctor">🦷 طبيب</option>
-          <option value="technician">🧑‍🔧 فني</option>
-          <option value="agent">🚗 مندوب</option>
-          <option value="lab">🧪 مختبر</option>
-          <option value="company">🏢 شركة</option>
-        </select>
-      </div>
-      <div class="field" id="invRecipientPickerWrap">
-        <label id="invRecipientPickerLabel">الطبيب</label>
-        <select id="invRecipientSelect"></select>
-        <input type="text" id="invRecipientOtherInput" style="display:none;" aria-hidden="true">
-      </div>
-      <div class="muted" style="padding:10px 12px;border:1px dashed var(--teal-dim);border-radius:12px;background:var(--teal-tint);line-height:1.8;font-size:12px;">
-        بعد اختيار الجهة ستنتقل مباشرة إلى شاشة الطباعة. جميع الحالات والبيانات ستظهر مفصلة، ويمكنك من شاشة الطباعة تعديل <b>🎨 شكل الفاتورة</b> أو <b>📋 محتوياتها</b> دون الدخول إلى إعدادات البرنامج.
-      </div>
-      <div class="invoice-create-actions">
-        <button type="button" class="btn-ghost" id="cancelCreateInvoiceBtn">إلغاء</button>
-        <button type="submit" form="createInvoiceForm" class="btn-primary">➡️ متابعة</button>
-      </div>
-    </div>
-    <form id="createInvoiceForm" style="display:none;">
-      <input type="hidden" id="invReason" value="فاتورة حساب">
-      <input type="hidden" id="invAmount" value="1">
-      <input type="hidden" id="invCurrency" value="JOD">
-    </form>
-  </div>
-</div>
 
+      <div class="is-col" id="invoiceAppearanceCol">
+        <div class="section-head" style="margin-bottom:8px;"><h2 style="font-size:13.5px;">🎨 شكل الفاتورة</h2></div>
+        <div class="muted" style="margin-bottom:10px; line-height:1.7; font-size:11.5px;">بتتحكم بشكل كل فاتورة بتنشئها من هون — أي تعديل بيظهر مباشرة بالمعاينة الحية.</div>
 
-<div class="overlay" id="invoiceBuilderOverlay">
-  <div class="modal wide">
-    <h2>
-      <span>🧾 إعداد محتويات الفاتورة</span>
-      <div class="win-controls">
-        <button type="button" class="btn-ghost btn-small win-close-btn" id="closeInvoiceBuilderBtn">إغلاق</button>
-      </div>
-    </h2>
-    <div class="invoice-builder-grid">
-      <div class="invoice-builder-main">
-        <div class="invoice-builder-summary">
-          <div class="invoice-builder-stat"><b>الجهة</b><span id="invoiceBuilderParty">—</span></div>
-          <div class="invoice-builder-stat"><b>عدد الحالات</b><span id="invoiceBuilderCasesCount">0</span></div>
-          <div class="invoice-builder-stat"><b>الإجمالي التقديري</b><span id="invoiceBuilderTotal">—</span></div>
-          <div class="invoice-builder-stat"><b>الحالة</b><span id="invoiceBuilderStatus">مفصلة</span></div>
+        <div class="field">
+          <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
+          <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
         </div>
-        <div class="invoice-builder-note">اختر ما تريد ظهوره داخل الفاتورة. الافتراضي هو <b>الفاتورة المفصلة الكاملة</b>. هذه الخيارات تخص محتوى الفاتورة فقط، أما اللون واللوغو والحجم والشكل فلها زر مستقل على الجانب.</div>
-        <div class="section-head" style="margin:0 0 9px;"><h2 style="font-size:14px;">📋 محتويات الفاتورة</h2></div>
-        <div class="invoice-content-checks" id="invoiceBuilderColumns"></div>
-        <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);">
-          <button type="button" class="btn-ghost btn-small" id="invoiceBuilderDefaultBtn">↺ استعادة الفاتورة المفصلة</button>
-          <button type="button" class="btn-primary btn-small" id="invoiceBuilderContinueBtn">➡️ متابعة إلى الطباعة</button>
+
+        <div class="invoice-logo-row">
+          <div class="invoice-logo-thumb">
+            <img id="invLogoPreview" src="" alt="">
+            <span class="muted" id="invLogoPreviewEmpty" style="font-size:9.5px; text-align:center;">لا يوجد لوغو</span>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <input type="file" id="invLogoFileInput" accept="image/*" style="margin-bottom:6px;">
+            <button type="button" class="btn-ghost btn-small" id="invLogoRemoveBtn" style="width:100%;">🗑️ حذف اللوغو</button>
+          </div>
         </div>
-      </div>
-      <aside class="invoice-builder-side">
-        <div class="side-title">🎨 تخصيص الفاتورة</div>
-        <button type="button" class="btn-primary btn-small" id="invoiceBuilderAppearanceBtn">🎨 اللون واللوغو والشكل</button>
-        <button type="button" class="btn-ghost btn-small" id="invoiceBuilderColumnsBtn">📋 ضبط الأعمدة</button>
-        <div class="muted" style="font-size:11px;line-height:1.8;margin-top:8px;">إعدادات الشكل محفوظة بشكل مستقل عن إعدادات البرنامج، ويمكن تعديلها في أي وقت من داخل الفاتورة.</div>
-      </aside>
-    </div>
-  </div>
-</div>
 
-<div class="overlay" id="directInvoicePrintOverlay">
-  <div class="invoice-currency-card">
-    <h3>🖨 طباعة الفاتورة</h3>
-    <div class="muted" id="directInvoicePartyText" style="line-height:1.7;">—</div>
-    <label style="display:block;margin-top:12px;font-weight:900;font-size:12px;">نوع العملة</label>
-    <select id="directInvoiceCurrency"></select>
-    <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:12px;">
-      <button type="button" class="btn-ghost btn-small" id="cancelDirectInvoicePrintBtn">إلغاء</button>
-      <button type="button" class="btn-ghost btn-small" id="previewDirectInvoiceBtn">👁 معاينة</button>
-      <button type="button" class="btn-primary btn-small" id="printDirectInvoiceBtn">🖨 طباعة</button>
-    </div>
-  </div>
-</div>
+        <div class="grid3">
+          <div class="field">
+            <label>حجم اللوغو (بكسل)</label>
+            <input type="number" id="invLogoWidthInput" dir="ltr" min="20" max="400" step="1">
+          </div>
+          <div class="field">
+            <label>موقع اللوغو</label>
+            <select id="invLogoAlignSelect">
+              <option value="right">يمين</option>
+              <option value="center">وسط</option>
+              <option value="left">يسار</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>إزاحته من الأعلى</label>
+            <input type="number" id="invLogoOffsetTopInput" dir="ltr" min="0" max="200" step="1">
+          </div>
+        </div>
 
-<!-- Dedicated invoice appearance: separate from global program settings -->
-<div class="overlay" id="invoiceAppearanceOverlay">
-  <div class="modal wide">
-    <h2>
-      <span>🎨 ضبط شكل الفاتورة</span>
-      <div class="win-controls">
-        <button type="button" class="btn-primary btn-small" id="invoiceAppearanceSaveTopBtn">💾 حفظ</button>
-        <button type="button" class="btn-ghost btn-small win-close-btn" id="closeInvoiceAppearanceBtn">إغلاق</button>
+        <div class="grid3">
+          <div class="field">
+            <label>حجم خط الفاتورة</label>
+            <input type="number" id="invFontSizeInput" dir="ltr" min="10" max="28" step="1">
+          </div>
+          <div class="field">
+            <label>حجم خط اسم العيادة</label>
+            <input type="number" id="invClinicNameSizeInput" dir="ltr" min="10" max="48" step="1">
+          </div>
+          <div class="field">
+            <label>موقع اسم العيادة</label>
+            <select id="invClinicNameAlignSelect">
+              <option value="right">يمين</option>
+              <option value="center">وسط</option>
+              <option value="left">يسار</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin:14px 0 8px;"><h2 style="font-size:12.5px;">🎨 الألوان</h2></div>
+        <div class="color-chips-row">
+          <label class="color-chip"><input type="color" id="invHeaderColorInput"><span>الهيدر</span></label>
+          <label class="color-chip"><input type="color" id="invTotalBoxColorInput"><span>الإجمالي</span></label>
+          <label class="color-chip"><input type="color" id="invTableColorInput"><span>الجدول</span></label>
+          <label class="color-chip"><input type="color" id="invDataBoxColorInput"><span>البيانات</span></label>
+          <label class="color-chip"><input type="color" id="invClinicNameColorInput"><span>اسم العيادة</span></label>
+          <button type="button" class="color-chip-reset" id="invColorsResetBtn" title="استعادة الألوان الافتراضية">↺</button>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="flex:1;">👁 معاينة قبل الطباعة</button>
+          <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="flex:1;">📋 الأعمدة</button>
+        </div>
+        <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
+        <div class="muted" id="invoiceSettingsStatusText" style="margin-top:8px; line-height:1.6; font-size:11.5px;"></div>
       </div>
-    </h2>
-    <div id="invoiceAppearanceHost"></div>
+
+      <div class="is-col is-preview-col">
+        <div class="muted" style="font-size:12px; font-weight:800; margin-bottom:8px; flex:0 0 auto;">👁 معاينة حية — بتتحدث فورًا مع كل تعديل</div>
+        <iframe id="createInvoiceLivePreviewFrame" title="معاينة الفاتورة الحية"></iframe>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4127,6 +4048,8 @@ input:focus, select:focus, textarea:focus {
     <h2><span id="settingsTitleText">⚙ الضبط والإعدادات</span><button type="button" class="btn-ghost btn-small" id="closeSettingsBtn">إغلاق</button></h2>
     <div class="settings-tabs" id="settingsTabsRow">
       <button type="button" class="settings-tab" data-tab="lock">🔒 كلمة المرور والحماية</button>
+      <!-- "🧾 الفاتورة" tab removed — invoice appearance settings now live inside
+           "🧾 إنشاء فاتورة" (createInvoiceOverlay) alongside the live preview. -->
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
@@ -4167,85 +4090,6 @@ input:focus, select:focus, textarea:focus {
     <div class="cs-actions">
       <button type="button" class="btn-ghost btn-small" id="apResetBtn">استعادة الافتراضي</button>
     </div>
-    </div>
-    <div class="settings-panel" data-panel="invoice" style="display:none;">
-      <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">🧾 ضبط بيانات وشكل الفاتورة</h2></div>
-      <div class="muted" style="margin-bottom:12px;line-height:1.8;font-size:12px;">كل ما يخص شكل الفاتورة، اللوغو، الألوان، الخطوط والأعمدة موجود هنا فقط. الطباعة نفسها منفصلة ولا تغيّر هذه الإعدادات.</div>
-
-        <div class="section-head" style="margin-bottom:8px;"><h2 style="font-size:13.5px;">🎨 شكل الفاتورة</h2></div>
-        <div class="muted" style="margin-bottom:10px; line-height:1.7; font-size:11.5px;">بتتحكم بشكل كل فاتورة بتنشئها من هون — أي تعديل بيظهر مباشرة بالمعاينة الحية.</div>
-
-        <div class="field">
-          <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
-          <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
-        </div>
-
-        <div class="invoice-logo-row">
-          <div class="invoice-logo-thumb">
-            <img id="invLogoPreview" src="" alt="">
-            <span class="muted" id="invLogoPreviewEmpty" style="font-size:9.5px; text-align:center;">لا يوجد لوغو</span>
-          </div>
-          <div style="flex:1; min-width:0;">
-            <input type="file" id="invLogoFileInput" accept="image/*" style="margin-bottom:6px;">
-            <button type="button" class="btn-ghost btn-small" id="invLogoRemoveBtn" style="width:100%;">🗑️ حذف اللوغو</button>
-          </div>
-        </div>
-
-        <div class="grid3">
-          <div class="field">
-            <label>حجم اللوغو (بكسل)</label>
-            <input type="number" id="invLogoWidthInput" dir="ltr" min="20" max="400" step="1">
-          </div>
-          <div class="field">
-            <label>موقع اللوغو</label>
-            <select id="invLogoAlignSelect">
-              <option value="right">يمين</option>
-              <option value="center">وسط</option>
-              <option value="left">يسار</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>إزاحته من الأعلى</label>
-            <input type="number" id="invLogoOffsetTopInput" dir="ltr" min="0" max="200" step="1">
-          </div>
-        </div>
-
-        <div class="grid3">
-          <div class="field">
-            <label>حجم خط الفاتورة</label>
-            <input type="number" id="invFontSizeInput" dir="ltr" min="10" max="28" step="1">
-          </div>
-          <div class="field">
-            <label>حجم خط اسم العيادة</label>
-            <input type="number" id="invClinicNameSizeInput" dir="ltr" min="10" max="48" step="1">
-          </div>
-          <div class="field">
-            <label>موقع اسم العيادة</label>
-            <select id="invClinicNameAlignSelect">
-              <option value="right">يمين</option>
-              <option value="center">وسط</option>
-              <option value="left">يسار</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="section-head" style="margin:14px 0 8px;"><h2 style="font-size:12.5px;">🎨 الألوان</h2></div>
-        <div class="color-chips-row">
-          <label class="color-chip"><input type="color" id="invHeaderColorInput"><span>الهيدر</span></label>
-          <label class="color-chip"><input type="color" id="invTotalBoxColorInput"><span>الإجمالي</span></label>
-          <label class="color-chip"><input type="color" id="invTableColorInput"><span>الجدول</span></label>
-          <label class="color-chip"><input type="color" id="invDataBoxColorInput"><span>البيانات</span></label>
-          <label class="color-chip"><input type="color" id="invClinicNameColorInput"><span>اسم العيادة</span></label>
-          <button type="button" class="color-chip-reset" id="invColorsResetBtn" title="استعادة الألوان الافتراضية">↺</button>
-        </div>
-
-        <div style="display:flex; gap:8px; margin-top:6px;">
-          <button type="button" class="btn-ghost btn-small" id="invoicePreviewBtn" style="flex:1;">👁 معاينة قبل الطباعة</button>
-          <button type="button" class="btn-ghost btn-small" id="invoiceColumnsBtn" style="flex:1;">📋 الأعمدة</button>
-        </div>
-        <button type="button" class="btn-primary btn-small" id="invoiceSettingsSaveBtn" style="width:100%; margin-top:8px;">💾 حفظ إعدادات الفاتورة</button>
-        <div class="muted" id="invoiceSettingsStatusText" style="margin-top:8px; line-height:1.6; font-size:11.5px;"></div>
-
     </div>
     <div class="settings-panel" data-panel="language" style="display:none;">
       <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">🌐 لغة البرنامج</h2></div>
@@ -4607,7 +4451,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '9.25';
+const APP_VERSION = '9.22';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -8138,7 +7982,7 @@ function customPrompt(message, defaultValue, opts){
     const header = e.target.closest('.modal h2');
     if(!header || isInteractive(e.target)) return; // don't hijack clicks on "إغلاق" etc.
     const modal = header.closest('.modal');
-    if(!modal || modal.classList.contains('win-maximized')) return;
+    if(!modal) return;
     const rect = modal.getBoundingClientRect();
     let baseX = 0, baseY = 0;
     const t = getComputedStyle(modal).transform;
@@ -8202,7 +8046,7 @@ function customPrompt(message, defaultValue, opts){
       if(!(el instanceof Element) || !el.classList || !el.classList.contains('overlay')) continue;
       if(el.classList.contains('open')){
         const modal = el.querySelector('.modal');
-        if(modal){ modal.style.transform = ''; modal.style.animation = ''; modal.classList.remove('dragging','win-maximized'); const mb=modal.querySelector('.win-max-btn'); if(mb){mb.textContent='□';mb.title='تكبير';mb.setAttribute('aria-label','تكبير');} }
+        if(modal){ modal.style.transform = ''; modal.style.animation = ''; modal.classList.remove('dragging'); }
       }
     }
   });
@@ -8422,33 +8266,6 @@ document.addEventListener('pointerdown', function(e){
     else h2.appendChild(btn);
   }
 
-  function ensureMaximizeButton(h2, overlay){
-    if(ALWAYS_TOP_OVERLAY_IDS.includes(overlay.id)) return;
-    if(h2.querySelector('.win-max-btn')) return;
-    const modal=overlay.querySelector('.modal');
-    if(!modal) return;
-    const btn=document.createElement('button');
-    btn.type='button'; btn.className='win-max-btn';
-    btn.setAttribute('aria-label','تكبير'); btn.title='تكبير';
-    btn.textContent='□';
-    btn.addEventListener('click',function(e){
-      e.stopPropagation();
-      const maximized=modal.classList.toggle('win-maximized');
-      btn.textContent=maximized?'❐':'□';
-      btn.title=maximized?'استعادة الحجم':'تكبير';
-      btn.setAttribute('aria-label',maximized?'استعادة الحجم':'تكبير');
-      if(maximized){
-        modal.dataset.restoreLeft=modal.style.left||'';
-        modal.dataset.restoreTop=modal.style.top||'';
-        modal.style.left=''; modal.style.top='';
-      }
-    });
-    const buttons=h2.querySelectorAll('button');
-    const last=buttons[buttons.length-1];
-    if(last && last.parentElement) last.parentElement.insertBefore(btn,last);
-    else h2.appendChild(btn);
-  }
-
   // confirmOverlay/promptOverlay have no <h2> title bar at all — give them a
   // minimal empty one so they too are draggable, per "بدون أي استثناء"
   // (without any exception), even though — unlike every other screen — they
@@ -8467,7 +8284,7 @@ document.addEventListener('pointerdown', function(e){
       return;
     }
     const h2 = overlay.querySelector('.modal h2');
-    if(h2){ ensureMinimizeButton(h2, overlay); ensureMaximizeButton(h2, overlay); }
+    if(h2) ensureMinimizeButton(h2, overlay);
   }
 
   // Auto-cleanup: if a window is closed while minimized (its 'open' class
@@ -10614,10 +10431,17 @@ function openCreateInvoiceOverlay(opts){
   document.getElementById('invRecipientType').value = 'doctor';
   renderInvoiceRecipientPicker();
   renderInvoiceCurrencyOptions();
+  renderInvoiceSettingsPanel();
   createInvoiceOverlay.classList.add('open');
+  updateCreateInvoiceLivePreview();
+  // The appearance column is always visible now (no collapsible section to
+  // expand any more) — for a first-run visitor specifically here to set it
+  // up, just put the cursor straight into its first field instead.
+  if(opts.openAppearance){
+    setTimeout(()=>{ const el = document.getElementById('invClinicNameInput'); if(el) el.focus(); }, 60);
+  }
 }
 document.getElementById('closeCreateInvoiceBtn').addEventListener('click', ()=> createInvoiceOverlay.classList.remove('open'));
-document.getElementById('editInvoiceAppearanceFromCreateBtn')?.addEventListener('click', ()=> openInvoiceAppearanceOverlay());
 document.getElementById('cancelCreateInvoiceBtn').addEventListener('click', ()=> createInvoiceOverlay.classList.remove('open'));
 document.getElementById('invRecipientType').addEventListener('change', renderInvoiceRecipientPicker);
 
@@ -10645,130 +10469,56 @@ function renderInvoiceRecipientPicker(){
   sel.innerHTML = '<option value="">' + escapeHtml(tr('— اختر —')) + '</option>' + sorted.map(x=> `<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('');
 }
 
-function invoicePartyLabel(type){
-  return type==='lab'?'مختبر: ':type==='doctor'?'طبيب: ':type==='technician'?'فني: ':type==='agent'?'مندوب: ':'شركة: ';
-}
-function getInvoiceColumnsSnapshot(){
-  return typeof window.AL95GetInvoiceColumns==='function' ? window.AL95GetInvoiceColumns() : {patient:true,caseId:true,doctor:true,teeth:true,work:true,qty:true,unit:true,total:true,date:true,notes:true,history:true};
-}
-function renderInvoiceBuilder(entity){
-  const host=document.getElementById('invoiceBuilderColumns');
-  if(!host) return;
-  const defs=window.AL95InvoiceColumnDefaults || [
-    ['patient','اسم المريض',true],['caseId','رقم الحالة',true],['doctor','الطبيب',true],['teeth','الأسنان',true],['work','نوع العمل / المادة',true],['qty','العدد',true],['unit','سعر الوحدة',true],['total','المجموع',true],['date','التاريخ',true],['notes','التفاصيل / الملاحظات',true],['history','سجل التعديلات',true]
-  ];
-  const cols=getInvoiceColumnsSnapshot();
-  host.innerHTML='';
-  defs.forEach(([id,label])=>{
-    const l=document.createElement('label'); l.className='invoice-content-check';
-    l.innerHTML=`<input type="checkbox" data-invoice-builder-col="${id}" ${cols[id]!==false?'checked':''}><span>${escapeHtml(label)}</span>`;
-    host.appendChild(l);
-  });
-  const cases=Array.isArray(entity.cases)?entity.cases:[];
-  let total=0; cases.forEach(c=>{ total += Number(caseUnitBreakdown(c).total)||0; });
-  document.getElementById('invoiceBuilderParty').textContent=invoicePartyLabel(pendingInvoiceBuilder.type)+ (entity.name||'—');
-  document.getElementById('invoiceBuilderCasesCount').textContent=String(cases.length);
-  document.getElementById('invoiceBuilderTotal').textContent=fmtMoney(total);
-  document.getElementById('invoiceBuilderStatus').textContent='مفصلة كاملة';
-}
-function collectInvoiceBuilderColumns(){
-  const out={};
-  document.querySelectorAll('#invoiceBuilderColumns [data-invoice-builder-col]').forEach(cb=> out[cb.getAttribute('data-invoice-builder-col')]=!!cb.checked);
-  if(!Object.values(out).some(Boolean)){ out.patient=true; out.total=true; }
-  return out;
-}
-function saveInvoiceBuilderColumns(cols){
-  try{
-    const defs=window.AL95InvoiceColumnDefaults || [];
-    const data=defs.map(([id,label,def])=>[id,label,cols[id]!==false]);
-    localStorage.setItem('al95_invoice_columns',JSON.stringify(data));
-  }catch(e){ console.error('invoice columns save failed',e); }
-}
-let pendingInvoiceBuilder = null;
-function openInvoiceBuilder(type, entity){
-  if(!entity) return;
-  const cases=Array.isArray(entity.cases)?entity.cases:[];
-  if(!cases.length){ showToast('لا توجد حالات مسجّلة لهذه الجهة لإنشاء فاتورة حالات.','warning'); return; }
-  pendingInvoiceBuilder={type,entity};
-  renderInvoiceBuilder(entity);
-  document.getElementById('createInvoiceOverlay').classList.remove('open');
-  document.getElementById('invoiceBuilderOverlay').classList.add('open');
-}
-function openDirectInvoicePrintDialog(type, entity, columnsOverride){
-  if(!entity) return;
-  const cases=Array.isArray(entity.cases)?entity.cases:[];
-  if(!cases.length){ showToast('لا توجد حالات مسجّلة لهذه الجهة لإنشاء فاتورة حالات.','warning'); return; }
-  const overlay=document.getElementById('directInvoicePrintOverlay');
-  const party=document.getElementById('directInvoicePartyText');
-  const currency=document.getElementById('directInvoiceCurrency');
-  if(!overlay||!currency) return;
-  party.textContent=invoicePartyLabel(type)+(entity.name||'—')+' — الفاتورة جاهزة للطباعة.';
-  currency.innerHTML=INVOICE_CURRENCIES.map(c=>`<option value="${escapeHtml(c.code)}">${escapeHtml(c.country)} — ${escapeHtml(c.name)} (${escapeHtml(c.code)})</option>`).join('');
-  const remembered=(invoiceSettings&&invoiceSettings.lastCurrency)||'JOD';
-  currency.value=INVOICE_CURRENCIES.some(c=>c.code===remembered)?remembered:'JOD';
-  overlay.dataset.partyType=type; overlay.dataset.partyId=entity.id||''; overlay.__party=entity;
-  overlay.__columns=columnsOverride || getInvoiceColumnsSnapshot();
-  overlay.classList.add('open');
-}
-async function directInvoicePrint(previewOnly){
-  const overlay=document.getElementById('directInvoicePrintOverlay');
-  const entity=overlay && overlay.__party;
-  if(!entity) return;
-  const type=overlay.dataset.partyType||'doctor';
-  const currencyCode=document.getElementById('directInvoiceCurrency').value||'JOD';
-  const columns=overlay.__columns || getInvoiceColumnsSnapshot();
-  const buttons=[document.getElementById('previewDirectInvoiceBtn'),document.getElementById('printDirectInvoiceBtn')].filter(Boolean);
-  buttons.forEach(b=>{b.disabled=true;b.dataset.busyText=b.textContent;b.textContent='⏳ جارٍ التجهيز...';});
-  try{
-    invoiceSettings.lastCurrency=currencyCode;
-    saveDatabase();
-    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-    printCasesInvoice(type,entity,{currencyCode,columnsOverride:columns,title:'فاتورة حساب',showSummary:true,previewOnly:!!previewOnly});
-    if(!previewOnly) overlay.classList.remove('open');
-  }catch(err){
-    console.error('direct invoice operation failed',err);
-    showToast('تعذّر تجهيز الفاتورة. لم يتم تغيير بياناتك.','error');
-  }finally{
-    buttons.forEach(b=>{b.disabled=false;b.textContent=b.dataset.busyText||b.textContent;});
-  }
-}
-
-document.getElementById('directInvoiceCurrency')?.addEventListener('change',()=>{
-  const overlay=document.getElementById('directInvoicePrintOverlay');
-  if(overlay && overlay.__party) invoiceSettings.lastCurrency=document.getElementById('directInvoiceCurrency').value;
-});
-document.getElementById('cancelDirectInvoicePrintBtn')?.addEventListener('click',()=>document.getElementById('directInvoicePrintOverlay').classList.remove('open'));
-document.getElementById('previewDirectInvoiceBtn')?.addEventListener('click',()=>directInvoicePrint(true));
-document.getElementById('printDirectInvoiceBtn')?.addEventListener('click',()=>directInvoicePrint(false));
-document.getElementById('closeInvoiceBuilderBtn')?.addEventListener('click',()=>document.getElementById('invoiceBuilderOverlay').classList.remove('open'));
-document.getElementById('invoiceBuilderAppearanceBtn')?.addEventListener('click',()=>openInvoiceAppearanceOverlay());
-document.getElementById('invoiceBuilderColumnsBtn')?.addEventListener('click',()=>{
-  if(typeof window.openInvoicePrintSettings==='function') window.openInvoicePrintSettings();
-});
-document.getElementById('invoiceBuilderDefaultBtn')?.addEventListener('click',()=>{
-  const defs=window.AL95InvoiceColumnDefaults||[];
-  document.querySelectorAll('#invoiceBuilderColumns [data-invoice-builder-col]').forEach(cb=>{ cb.checked=true; });
-  saveInvoiceBuilderColumns(Object.fromEntries(defs.map(x=>[x[0],true])));
-  renderInvoiceBuilder(pendingInvoiceBuilder.entity);
-  showToast('تمت استعادة الفاتورة المفصلة الكاملة.','success');
-});
-document.getElementById('invoiceBuilderContinueBtn')?.addEventListener('click',()=>{
-  if(!pendingInvoiceBuilder) return;
-  const cols=collectInvoiceBuilderColumns();
-  saveInvoiceBuilderColumns(cols);
-  document.getElementById('invoiceBuilderOverlay').classList.remove('open');
-  openDirectInvoicePrintDialog(pendingInvoiceBuilder.type,pendingInvoiceBuilder.entity,cols);
-});
-
-document.getElementById('createInvoiceForm').addEventListener('submit',(e)=>{
+document.getElementById('createInvoiceForm').addEventListener('submit', (e)=>{
   e.preventDefault();
-  const type=document.getElementById('invRecipientType').value;
-  const id=document.getElementById('invRecipientSelect').value;
-  if(!id){ showToast('الرجاء اختيار الجهة أولًا.','warning'); return; }
-  const list=type==='doctor'?doctors:type==='technician'?technicians:type==='agent'?agents:type==='lab'?labs:companies;
-  const found=list.find(x=>x.id===id);
-  if(!found){ showToast('تعذر العثور على الجهة المحددة.','error'); return; }
-  openInvoiceBuilder(type,found);
+  const type = document.getElementById('invRecipientType').value;
+  const reason = document.getElementById('invReason').value.trim();
+  const amount = parseFloat(document.getElementById('invAmount').value)||0;
+  if(amount <= 0){ showToast('أدخل مبلغًا صحيحًا أكبر من صفر.', 'error'); return; }
+  let recipientLabel = '';
+  if(type === 'other'){
+    recipientLabel = document.getElementById('invRecipientOtherInput').value.trim();
+    if(!recipientLabel){ showToast('الرجاء إدخال اسم الجهة.', 'error'); return; }
+  }else{
+    const id = document.getElementById('invRecipientSelect').value;
+    if(!id){ showToast('الرجاء اختيار الجهة أولًا.', 'error'); return; }
+    const list = type==='doctor'?doctors : type==='technician'?technicians : type==='agent'?agents : type==='lab'?labs : companies;
+    const found = list.find(x=>x.id===id);
+    if(!found) return;
+    recipientLabel = found.name;
+  }
+  const currencyCode = document.getElementById('invCurrency').value || 'JOD';
+  const currency = INVOICE_CURRENCIES.find(c=> c.code === currencyCode) || INVOICE_CURRENCIES[0];
+  invoiceSettings.lastCurrency = currency.code; // remembered for the next invoice
+  invoiceCounter += 1;
+  // Simple sequential ID starting from 1.
+  const invoiceCode = 'INV-' + invoiceCounter;
+  const invoice = {
+    id: uid('inv'),
+    serial: invoiceCounter,
+    code: invoiceCode,
+    recipientType: type,
+    recipientLabel,
+    reason,
+    amount,
+    currencyCode: currency.code,
+    currencyName: currency.name,
+    currencyFrac: currency.frac,
+    // Stamped from the same ratcheted clock as the edit log, so an invoice
+    // cannot be back-dated by winding the system clock back, and its date and
+    // time always come from one instant instead of two different ones.
+    date: localDateStr(getTrustedNow()),
+    time: localTimeStr(getTrustedNow()),
+  };
+  invoices.unshift(invoice);
+  logEdit(`إنشاء فاتورة رقم ${invoice.serial} لـ ${recipientLabel} بمبلغ ${fmtMoney(amount)}`);
+  saveDatabase();
+  createInvoiceOverlay.classList.remove('open');
+  renderHomeDashboard();
+  // Preview first — same pattern as every other invoice/report in the app —
+  // so a typo in the amount or reason is caught before anything is printed.
+  // The preview window's own "🖨 طباعة" button prints it.
+  printInvoice(invoice, {previewOnly:true});
 });
 
 /* Which optional fields show on the simple receipt-style invoice (printInvoice
@@ -10954,6 +10704,9 @@ function printInvoice(invoice, opts){
     </div>` : ''}
     <!-- No promotional/device footer on customer invoices. -->
     
+
+
+
 
 
 
@@ -11185,7 +10938,10 @@ function printEditLogReport(){
   // that could never be acted on. See openPrintWindow()'s own comment.
   const rows = (Array.isArray(editLog) ? editLog : []).slice();
   const htmlRows = rows.map((e,i)=>'<tr><td>'+ (i+1) +'</td><td>'+escapeHtml(e.date||'—') + ' ' + escapeHtml(e.time||'') +'</td><td>'+escapeHtml(e.description||'')+'</td><td>'+escapeHtml(e.context && e.context.type ? e.context.type : '—')+'</td></tr>').join('');
-  const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>سجل تعديلات AL EKHLAS</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px;margin:0 0 6px}p{color:#60757d}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:9px;text-align:right}th{background:#eef4f6}td:first-child{width:55px;text-align:center}</style></head><body><h1>📝 سجل تعديلات البرنامج</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — عدد السجلات: '+rows.length+'</p><table><thead><tr><th>#</th><th>التاريخ والوقت</th><th>التعديل</th><th>المرجع</th></tr></thead><tbody>'+htmlRows+'</tbody></table></body></html>';
+  const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>سجل تعديلات AL EKHLAS</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px;margin:0 0 6px}p{color:#60757d}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:9px;text-align:right}th{background:#eef4f6}td:first-child{width:55px;text-align:center}</style></head><body><h1>📝 سجل تعديلات البرنامج</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — عدد السجلات: '+rows.length+'</p><table><thead><tr><th>#</th><th>التاريخ والوقت</th><th>التعديل</th><th>المرجع</th></tr></thead><tbody>'+htmlRows+'</tbody></table>
+
+
+</body></html>';
   openPrintWindow(html, 'تعذّر فتح نافذة الطباعة.');
 }
 document.getElementById('printEditLogBtn').addEventListener('click', printEditLogReport);
@@ -11196,7 +10952,10 @@ function printSimpleRecordTable(title, columns, rows){
   // the desktop shell always denies window.open().
   const head=columns.map(c=>'<th>'+escapeHtml(c)+'</th>').join('');
   const body=rows.map(r=>'<tr>'+r.map(v=>'<td>'+escapeHtml(v==null?'—':String(v))+'</td>').join('')+'</tr>').join('');
-  const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>'+escapeHtml(title)+'</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:8px;text-align:right}th{background:#eef4f6}</style></head><body><h1>'+escapeHtml(title)+'</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — '+new Date().toLocaleString('ar-EG')+'</p><table><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></body></html>';
+  const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>'+escapeHtml(title)+'</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:8px;text-align:right}th{background:#eef4f6}</style></head><body><h1>'+escapeHtml(title)+'</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — '+new Date().toLocaleString('ar-EG')+'</p><table><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table>
+
+
+</body></html>';
   openPrintWindow(html, 'تعذّر فتح نافذة الطباعة.');
 }
 
@@ -12662,6 +12421,9 @@ ${PRINT_FONT_LINK}
     ${o.hideSignature ? '' : '<div class="sign"><div class="line">' + escapeHtml(tr('التوقيع')) + '</div></div>'}
   </div>
   <!-- Activation footer removed: no promotional/device code is printed on invoices. -->
+
+
+
 </body>
 </html>`;
 }
@@ -12773,10 +12535,8 @@ function showDocumentPreview(html, title, opts){
   // This makes invoice preview independent from popup permissions and avoids
   // the blank-page race caused by about:blank + asynchronous document.write().
   try{
-    frame.setAttribute('sandbox','allow-modals allow-same-origin');
     frame.onload=null;
-    frame.srcdoc='';
-    requestAnimationFrame(()=>{ try{ frame.srcdoc=String(html||''); }catch(err){ console.error('invoice preview srcdoc failed',err); } });
+    frame.srcdoc=String(html||'');
   }catch(e){
     console.error('invoice preview srcdoc failed',e);
     if(err){
@@ -13053,15 +12813,11 @@ function printCasesInvoice(type, entity, opts){
     </tr>` : '');
   }).join('');
 
-  const partyLabel = tr({
-    doctor:'الطبيب', lab:'المختبر', technician:'الفني',
-    agent:'المندوب', company:'الشركة'
-  }[type] || 'الجهة');
-  const infoLines = type === 'lab' || type === 'company'
-    ? [`<b>${escapeHtml(tr('العنوان'))}:</b> ${escapeHtml(entity.address || '—')}`,
-       `<b>${escapeHtml(tr('رقم الهاتف'))}:</b> ${escapeHtml(entity.phone || '—')}`]
+  const partyLabel = tr(type === 'lab' ? 'المختبر' : 'الطبيب');
+  const infoLines = type === 'lab'
+    ? [`<b>${escapeHtml(tr('العنوان'))}:</b> ${escapeHtml(entity.address || '—')}`]
     : [`<b>${escapeHtml(tr('رقم الهاتف'))}:</b> ${escapeHtml(entity.phone || '—')}`,
-       `<b>${escapeHtml(tr('العيادة / العنوان'))}:</b> ${escapeHtml(entity.clinic || entity.address || '—')}`];
+       `<b>${escapeHtml(tr('العيادة / العنوان'))}:</b> ${escapeHtml(entity.clinic || '—')}`];
 
   const doc = buildPrintDocument({
     headerHtmlOverride: opts.headerHtmlOverride,
@@ -13075,7 +12831,7 @@ function printCasesInvoice(type, entity, opts){
         background:#f4f9fb; border:1px solid #d8e6ec; border-radius:9px;
         padding:10px 14px; margin-bottom:14px;
       }
-      .inv-serial-no{ font-family:'Segoe UI',Arial,sans-serif; font-size:28px; line-height:1.1; font-weight:950; letter-spacing:.5px; direction:ltr; }
+      .inv-serial-no{ font-family:'Segoe UI',Arial,sans-serif; font-size:18px; font-weight:900; direction:ltr; }
       .inv-serial-cap{ font-size:11.5px; color:#5a707a; font-weight:700; }
       .inv-barcode{ text-align:center; }
       .inv-barcode-text{
@@ -13086,14 +12842,6 @@ function printCasesInvoice(type, entity, opts){
         background:#fafcfd; color:#5a707a; font-size:10.5px; line-height:1.65;
         border-top:0; padding:6px 10px 9px;
       }
-      table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #d9e5ea;border-radius:12px}
-      table thead th{background:#eef6f8;color:#17323c;font-weight:900;padding:10px 9px;border-bottom:2px solid #c9dce3;white-space:nowrap}
-      table tbody td{padding:9px;border-bottom:1px solid #e5edf0;vertical-align:middle}
-      table tbody tr:nth-child(even) td{background:#f9fbfc}
-      table tbody tr:last-child td{border-bottom:0}
-      table tfoot td{padding:12px;background:#edf7f8;border-top:2px solid #b9d8df;font-weight:950;text-align:center}
-      .inv-serial-block{border:1.5px solid #b8d8e0!important;background:linear-gradient(135deg,#f4fbfc,#eaf5f7)!important}
-
     `,
     body:
       `<div class="inv-serial-block">
@@ -17024,7 +16772,7 @@ const settingsOverlay = document.getElementById('settingsOverlay');
    appearance settings and live preview together — with the appearance
    section expanded, since setup is exactly what a first-run visitor needs. */
 function openInvoiceSetupDirect(){
-  openInvoiceAppearanceOverlay();
+  openCreateInvoiceOverlay({openAppearance:true});
 }
 
 function openSettingsOnTab(tab){
@@ -17036,6 +16784,7 @@ function openSettingsOnTab(tab){
   refreshLockTabInfo();
   document.querySelectorAll('.settings-tab').forEach(btn=> btn.classList.toggle('active', btn.getAttribute('data-tab')===tab));
   document.querySelectorAll('.settings-panel').forEach(panel=> panel.style.display = (panel.getAttribute('data-panel')===tab) ? 'block' : 'none');
+  if(tab === 'invoice') renderInvoiceSettingsPanel();
   if(tab === 'appearance') renderAppearancePanel();
   if(tab === 'language'){
     document.getElementById('langSearch').value = '';
@@ -17080,7 +16829,6 @@ document.getElementById('langList').addEventListener('click', (e)=>{
 applyAppearance();
 applyLanguage();
 document.getElementById('settingsBtn').addEventListener('click', ()=> openSettingsOnTab('lock'));
-
 document.getElementById('closeSettingsBtn').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 // «موافق»: settings (font size, typeface, language, theme) apply live and are
 // stored the moment they change — this button confirms and closes the screen.
@@ -17094,34 +16842,13 @@ document.querySelectorAll('.settings-tab').forEach(tabBtn=>{
     document.querySelectorAll('.settings-tab').forEach(b=> b.classList.toggle('active', b===tabBtn));
     const tab = tabBtn.getAttribute('data-tab');
     document.querySelectorAll('.settings-panel').forEach(panel=> panel.style.display = (panel.getAttribute('data-panel')===tab) ? 'block' : 'none');
-      if(tab === 'appearance') renderAppearancePanel();
+    if(tab === 'invoice') renderInvoiceSettingsPanel();
+    if(tab === 'appearance') renderAppearancePanel();
   if(tab === 'language'){
       document.getElementById('langSearch').value = '';
       renderLanguageList('');
     }
   });
-});
-
-/* ---- Dedicated invoice appearance settings (separate from global settings) ---- */
-(function relocateInvoiceAppearancePanel(){
-  const panel=document.querySelector('.settings-panel[data-panel="invoice"]');
-  const host=document.getElementById('invoiceAppearanceHost');
-  if(panel && host){ host.appendChild(panel); panel.style.display='block'; panel.classList.add('invoice-appearance-panel'); }
-})();
-function openInvoiceAppearanceOverlay(){
-  const ov=document.getElementById('invoiceAppearanceOverlay');
-  if(!ov) return;
-  renderInvoiceSettingsPanel();
-  ov.classList.add('open');
-}
-function closeInvoiceAppearanceOverlay(){
-  const ov=document.getElementById('invoiceAppearanceOverlay');
-  if(ov) ov.classList.remove('open');
-}
-document.getElementById('closeInvoiceAppearanceBtn')?.addEventListener('click',closeInvoiceAppearanceOverlay);
-document.getElementById('invoiceAppearanceSaveTopBtn')?.addEventListener('click',()=>{
-  document.getElementById('invoiceSettingsSaveBtn')?.click();
-  closeInvoiceAppearanceOverlay();
 });
 
 /* ---- Invoice appearance settings (logo + clinic name + manual size/position) ---- */
@@ -17329,6 +17056,13 @@ function updateCreateInvoiceLivePreview(){
 // Refresh the live preview on every relevant field, both the create-invoice
 // form and the appearance settings — one delegated listener covers both
 // since they now share the same overlay.
+['input','change'].forEach(evt=>{
+  createInvoiceOverlay.addEventListener(evt, (e)=>{
+    if(e.target.closest('#createInvoiceForm') || e.target.closest('#invoiceAppearanceCol')){
+      updateCreateInvoiceLivePreview();
+    }
+  });
+});
 
 /* ================== About modal ================== */
 const aboutOverlay = document.getElementById('aboutOverlay');
@@ -19190,15 +18924,14 @@ initAppFileHandle();
   const defaults=[
     ['patient','اسم المريض',true],
     ['caseId','رقم الحالة',true],
-    ['doctor','الطبيب',true],
+    ['doctor','الطبيب',false],
     ['teeth','الأسنان',true],
     ['work','نوع العمل / المادة',true],
     ['qty','العدد',true],
     ['unit','سعر الوحدة',true],
     ['total','المجموع',true],
-    ['date','التاريخ',true],
-    ['notes','التفاصيل / الملاحظات',true],
-    ['history','سجل التعديلات',true]
+    ['date','التاريخ',false],
+    ['notes','التفاصيل / الملاحظات',false]
   ];
   function load(){
     try{
@@ -19221,10 +18954,10 @@ initAppFileHandle();
     if(old) old.remove();
     const wrap=document.createElement('div');
     wrap.id='al95-print-settings-modal';
-    wrap.className='overlay open'; wrap.style.zIndex='999998';
+    wrap.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:999998;display:grid;place-items:center;padding:22px';
     const box=document.createElement('div');
-    box.className='modal wide al95-print-settings'; box.style.cssText='width:min(820px,96vw);max-width:820px;max-height:90vh;overflow:auto';
-    box.innerHTML='<h2><span>📋 إعداد محتويات الفاتورة</span><span></span></h2><p>حدد الأعمدة والبيانات التي تريد ظهورها. الافتراضي هو الفاتورة المفصلة الكاملة، ويمكن تعديلها من شاشة إنشاء الفاتورة.</p><div class="al95-print-grid"></div><div class="al95-print-actions"><button data-reset>إعادة الافتراضي</button><button data-cancel>إلغاء</button><button data-preview>حفظ ومعاينة</button><button data-save>حفظ فقط</button></div>';
+    box.className='al95-print-settings'; box.style.cssText='width:min(820px,96vw);max-height:90vh;overflow:auto';
+    box.innerHTML='<h2 style="margin-top:0">إعدادات طباعة الفاتورة</h2><p>حدد الأعمدة والبيانات التي تريد ظهورها. بعد الحفظ يمكنك فتح معاينة حقيقية للفاتورة قبل الطباعة — بدون نوافذ منبثقة.</p><div class="al95-print-grid"></div><div class="al95-print-actions"><button data-reset>إعادة الافتراضي</button><button data-cancel>إلغاء</button><button data-preview>حفظ ومعاينة</button><button data-save>حفظ فقط</button></div>';
     const grid=box.querySelector('.al95-print-grid');
     load().forEach(function(c){
       const id=c[0],label=c[1],checked=c[2];
@@ -19375,6 +19108,116 @@ initAppFileHandle();
   }
 
   setInterval(tick, INTERVAL_MS);
+})();
+</script>
+
+
+<style id="v926-window-chrome">
+/* v9.26 — Windows-like window chrome: title text on one side, controls together on the opposite side. */
+.modal > h2{
+  background:linear-gradient(180deg,#17353e 0%,#0f2830 58%,#081b21 100%) !important;
+  color:#f7fcfd !important;
+  border:1px solid rgba(94,170,190,.42) !important;
+  border-radius:10px !important;
+  min-height:42px;
+  padding:6px 8px 6px 12px !important;
+  box-sizing:border-box;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 28px rgba(4,18,24,.42),0 2px 0 rgba(0,0,0,.28) !important;
+}
+.modal > h2 > span:first-child{color:#f7fcfd !important;font-weight:900;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-flex;align-items:center;gap:8px}
+.modal > h2 > span:last-child,.modal > h2 > div:last-child,.modal > h2 .win-controls{margin-inline-start:auto !important;direction:ltr !important;display:flex !important;align-items:center !important;gap:5px !important;flex:0 0 auto !important}
+.win-controls{order:2}
+.win-min-btn,.win-max-btn,.win-close-btn{
+  width:34px !important; min-width:34px !important; height:30px !important; padding:0 !important;
+  border:1px solid rgba(255,255,255,.28) !important; border-radius:5px !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  background:rgba(255,255,255,.07) !important; color:#f4fbfd !important;
+  font-family:"Segoe UI",Arial,sans-serif !important; font-weight:900 !important; line-height:1 !important;
+  cursor:pointer !important; box-sizing:border-box !important;
+}
+.win-min-btn{font-size:17px !important}
+.win-max-btn{font-size:15px !important}
+.win-close-btn{font-size:13px !important}
+.win-min-btn:hover,.win-max-btn:hover{background:rgba(255,255,255,.19) !important;border-color:rgba(255,255,255,.65) !important;transform:none !important}
+.win-close-btn:hover{background:#b4232c !important;border-color:#f0787f !important;color:#fff !important}
+/* Dark mode gets deeper title shading; light mode keeps the same dark title but softer shadow. */
+:root[data-theme="dark"] .modal > h2,
+:root[data-theme="dark"] .section-head h2{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 14px 30px rgba(0,0,0,.55),0 2px 0 rgba(0,0,0,.36) !important}
+:root[data-theme="light"] .modal > h2{box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 10px 24px rgba(8,28,36,.30),0 2px 0 rgba(0,0,0,.20) !important}
+
+/* The sidebar is the permanent desktop rail. Every maximized overlay begins AFTER it. */
+.overlay{inset-inline-start:290px !important;}
+.modal.win-maximized{
+  position:fixed !important;
+  left:290px !important; right:0 !important; top:0 !important; bottom:0 !important;
+  width:auto !important; height:auto !important; max-width:none !important; max-height:none !important;
+  margin:0 !important; border-radius:0 !important; transform:none !important;
+  box-sizing:border-box !important;
+}
+.modal.win-maximized > h2{border-radius:0 !important;position:sticky;top:0}
+.sidebar{position:relative !important;z-index:500100 !important}
+.overlay{z-index:500000}
+/* Preserve usable space when minimized-window bar appears. */
+body.has-minimized-windows .app-shell{height:calc(100vh - 44px)}
+.sidebar-footer{display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px}
+.sidebar-bottom-action{width:100%;min-height:42px;display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:9px 12px;border-radius:11px;font-weight:900;text-align:right}
+.sidebar-icon-actions{display:flex;justify-content:center;gap:8px;padding-top:2px}
+.sidebar-icon-actions .icon-round-btn{width:38px;height:38px}
+.sidebar-bottom-action:hover{transform:translateY(-1px)}
+@media(max-width:900px){
+  .overlay{inset-inline-start:0 !important}
+  .modal.win-maximized{left:0 !important}
+}
+</style>
+<script id="v926-window-chrome-js">
+(function(){
+  const SIDEBAR_WIDTH = 290;
+  function normalizeHeader(h2){
+    if(!h2) return null;
+    let group=h2.querySelector('.win-controls');
+    if(!group){
+      group=document.createElement('span');
+      group.className='win-controls';
+      const buttons=[...h2.querySelectorAll(':scope > button')];
+      const last=buttons[buttons.length-1];
+      if(last && last.parentElement===h2){
+        group.appendChild(last); h2.appendChild(group);
+      } else h2.appendChild(group);
+    }
+    return group;
+  }
+  function ensureControls(h2, overlay){
+    if(!h2 || !overlay || overlay.id==='confirmOverlay' || overlay.id==='promptOverlay') return;
+    const group=normalizeHeader(h2); if(!group) return;
+    if(!group.querySelector('.win-min-btn') && typeof window.__minimizeOverlay==='function'){
+      const b=document.createElement('button'); b.type='button'; b.className='win-min-btn'; b.textContent='—'; b.title='تصغير'; b.setAttribute('aria-label','تصغير');
+      b.onclick=e=>{e.stopPropagation(); window.__minimizeOverlay(overlay)}; group.insertBefore(b,group.firstChild);
+    }
+    if(!group.querySelector('.win-max-btn')){
+      const modal=overlay.querySelector('.modal'); if(!modal) return;
+      const b=document.createElement('button'); b.type='button'; b.className='win-max-btn'; b.textContent='□'; b.title='تكبير'; b.setAttribute('aria-label','تكبير');
+      b.onclick=e=>{
+        e.stopPropagation();
+        const max=modal.classList.toggle('win-maximized');
+        b.textContent=max?'❐':'□'; b.title=max?'استعادة الحجم':'تكبير'; b.setAttribute('aria-label',b.title);
+        if(max){ modal.style.left=SIDEBAR_WIDTH+'px'; modal.style.top='0'; }
+        else { modal.style.left=''; modal.style.top=''; }
+      };
+      group.insertBefore(b,group.firstChild);
+    }
+    const close=group.querySelector('button:last-child');
+    if(close && !close.classList.contains('win-close-btn')){
+      close.classList.add('win-close-btn');
+      close.title=close.title||'إغلاق';
+      close.setAttribute('aria-label',close.getAttribute('aria-label')||'إغلاق');
+    }
+  }
+  function scan(root=document){ root.querySelectorAll('.overlay .modal h2').forEach(h=>ensureControls(h,h.closest('.overlay'))); }
+  function init(){
+    scan();
+    new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1) scan(n)}))).observe(document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
 

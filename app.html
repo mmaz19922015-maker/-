@@ -299,70 +299,13 @@
      buttons in the corner it happened to land on. It also has to be display
      :flex here — it was only ever styled as flex, and a stray display:none
      from an older build left it invisible on some machines. */
-  /* Corner: the mini clock (unchanged) plus, above it, the lock control —
-     moved here per direct feedback ("مربع قفل البرنامج حوله ايقونة حطو فوق
-     الساعه ويكون مدور ع شكل قفل كبير وواضح وشيل من القائمة الجانبية الزر
-     تبع القفل"): the sidebar-footer icon is gone, and the home-screen
-     tool-card is gone too — this single floating round icon, always visible
-     above the clock, replaces both. Unlike the clock (which stays
-     passive/UNDER every window so it never clutters an open screen — it's a
-     readout, nothing to click), the lock button is a real action control and
-     must stay clickable no matter what else is open, the same guarantee the
-     old sidebar icon had.
-     BUG FIX (real, confirmed defect — reported directly: "زر القفل ...
-     هومو مو شغال"), TWO WRONG ATTEMPTS THEN THE ACTUAL FIX: the two controls
-     used to share one `#miniCornerStack` flex wrapper. Attempt 1 gave that
-     wrapper only `z-index:5` — too low, it lost to #mainArea (z-index:10)
-     and to any overlay. Attempt 2 removed the wrapper's z-index entirely,
-     reasoning that an explicit z-index was somehow "trapping" the button —
-     wrong: a `position:fixed` box with NO z-index of its own (`auto`) does
-     not create a stacking context, but is still painted as a single atomic
-     unit at the "z-index:auto positioned content" layer, which comes BEFORE
-     (underneath) every sibling with an actual positive z-index such as
-     #mainArea, regardless of how high a z-index something INSIDE that
-     auto-layer box carries (proved with a minimal, app-free reproduction: a
-     position:fixed box with no z-index, containing a child at
-     z-index:560000, still rendered under a plain sibling div with
-     z-index:10). Giving the WHOLE wrapper z-index:560000 would fix the
-     button but wrongly drags the clock up above overlays too, breaking its
-     documented "always passive/under" behavior. The actual fix: the two
-     controls are no longer siblings inside one positioned wrapper at all —
-     each is its own independent `position:fixed` element. #miniClockWidget
-     keeps no z-index (unchanged passive behavior). #miniLockBtn gets its
-     own `position:fixed; z-index:560000` directly, so it needs no shared
-     parent to beat every overlay. Since there's no flexbox wrapper anymore
-     to stack them vertically, #miniLockBtn's `bottom` offset is computed in
-     JS from the clock's measured height (see positionMiniLockBtn()). */
-  #miniLockBtn{
-    position:fixed; inset-inline-end:18px; z-index:560000; pointer-events:auto;
-    width:46px; height:46px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(155deg,#12b5d6 0%,#0e7c9e 55%,#0a5f7a 100%);
-    border:2.5px solid #fff; box-shadow:0 4px 16px rgba(14,124,158,0.55), var(--shadow);
-    color:#ffffff; cursor:pointer; padding:0;
-    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-  }
-  /* A bit smaller than before, and — direct feedback ("اعطيها شكل قفل حقيقي
-     ملون") — a real, two-tone padlock instead of a flat single-colour
-     outline: a silvery shackle, a golden-brass body, and a dark keyhole,
-     drawn with actual fills/gradient rather than currentColor stroke lines
-     only, so it reads as an actual lock at a glance, not an abstract icon. */
-  #miniLockBtn svg{ width:23px; height:23px; }
-  #miniLockBtn:hover{ transform:translateY(-2px) scale(1.06); box-shadow:0 8px 22px rgba(14,124,158,0.7), var(--shadow); background:linear-gradient(155deg,#1ccbef 0%,#0e7c9e 55%,#0a5f7a 100%); }
-  #miniLockBtn:active{ transform:translateY(0) scale(0.96); }
-  /* A slow, subtle pulsing ring — makes the control read as "a distinct,
-     always-available action" (direct feedback: "اعطيه ايقونة مميزة") rather
-     than blending in with the rest of the corner. */
-  #miniLockBtn::after{
-    content:''; position:absolute; inset:-4px; border-radius:50%;
-    border:2px solid #12b5d6; opacity:0; pointer-events:none;
-    animation: miniLockPulse 2.6s ease-out infinite;
-  }
-  @keyframes miniLockPulse{
-    0%{ opacity:.55; transform:scale(0.92); }
-    70%{ opacity:0; transform:scale(1.28); }
-    100%{ opacity:0; transform:scale(1.28); }
-  }
+  /* The floating round lock button that used to sit above this clock (a
+     whole detour across two rounds: z-index:5 -> no z-index -> its own
+     z-index:560000 -- see README changelog for the full story) is GONE per
+     direct further feedback ("خليها زر عادي بالقائمة الجانبية اسمو قفل
+     البرنامج"): the user wants a plain, ordinary sidebar button again, not a
+     distinctive floating icon. See "🔒 قفل البرنامج" in .sidebar-actions and
+     lockProgramNow()'s own wiring further down for the button itself. */
   #miniClockWidget{
     /* Slate rather than near-black, so it reads as part of the program in
        both themes instead of a hole punched in the corner. */
@@ -382,7 +325,7 @@
     font-family:'Tajawal', sans-serif; font-weight:700;
     font-size:11px; color:#8fc7da; line-height:1.1; margin-top:3px;
   }
-  @media (max-width: 720px){ #miniLockBtn, #miniClockWidget{ display:none; } }
+  @media (max-width: 720px){ #miniClockWidget{ display:none; } }
 
   /* ===== Update-available banner ===== */
   #updateBanner{
@@ -754,7 +697,21 @@
   .sidebar-head{ padding:18px 16px 14px; border-bottom:1px solid var(--line); }
   .sidebar-brand{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
   .sidebar-brand h1{ font-size:14.5px; margin:0; font-weight:900; }
-  .sidebar-actions{ padding:12px 16px; border-bottom:1px solid var(--line); }
+  /* Direct feedback: "القائمة الجانبية بدي تنعرض ع قد الشاشة بدون سحب لتحت
+     احصر الحجم تبعها بحجم ارتفاع الشاشة وليس سحب لعرض المزيد" — the button
+     list must fit inside whatever vertical space the screen actually gives
+     it, not force a scrollbar. flex:1 makes this the one growing/shrinking
+     child of .sidebar (which is a fixed 100vh flex column — see .app-shell),
+     so it always takes exactly the room left after .sidebar-head; min-height:0
+     lets it actually shrink below its content's natural height instead of
+     the default flex "never smaller than content" floor, which is what a
+     plain flex:1 alone would NOT fix. overflow-y:auto stays only as a safety
+     net for a pathologically short window where even the buttons' own
+     min-height (see .sidebar-btn) can't all fit. */
+  .sidebar-actions{
+    padding:12px 16px; border-bottom:1px solid var(--line);
+    flex:1; min-height:0; overflow-y:auto;
+  }
   .doctor-list{ flex:1; overflow-y:auto; padding:8px; }
   .doctor-item.active{ background:var(--accent-grad); }
   .doctor-item.active .doctor-name, .doctor-item.active .doctor-sub{ color:#fff; }
@@ -835,8 +792,20 @@
        actually rendered at .btn-ghost's 11px vertical padding, never this
        rule's, regardless of what value was written here. !important (same
        fix already applied to border/background on this exact rule, for the
-       exact same reason) makes the padding actually win. */
-    padding:20px 17px !important; border-radius:12px; line-height:1.4;
+       exact same reason) makes the padding actually win.
+       Follow-up ("احصر الحجم تبعها بحجم ارتفاع الشاشة"): vertical sizing is
+       no longer a fixed padding number at all — each button is now a flex:1
+       child of .sidebar-actions (see that rule) so the whole list stretches
+       or shrinks to exactly fill the sidebar's height; only horizontal
+       padding stays fixed, and min-height is a floor so a button never gets
+       so short it becomes unreadable/unclickable on a very short window. */
+    padding:0 17px !important; border-radius:12px; line-height:1.4;
+    /* min-height is a genuine last-resort FLOOR, not the everyday size: at a
+       normal screen height the 17 buttons' flex-shrink naturally settles well
+       above this (e.g. ~27px each at a 720px-tall window), so this only
+       kicks in and forces .sidebar-actions' own overflow-y:auto to take over
+       on a pathologically short window where even that isn't enough room. */
+    flex:1 1 0; min-height:24px; display:flex; align-items:center; justify-content:flex-start;
     position:relative; transition: transform .13s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
     border:2px solid var(--line) !important;
     background:var(--panel) !important;
@@ -1582,6 +1551,65 @@
      rows need more room than a plain checkbox list. */
   .invoice-appearance-layout{ display:grid; grid-template-columns:360px 1fr; gap:18px; align-items:start; }
   @media (max-width:920px){ .invoice-appearance-layout{ grid-template-columns:1fr; } }
+  /* Direct further feedback on this exact screen ("زر مظهر الفاتورة قلل
+     ارتفاع الشاشة وزيد حجمها بالعرض وخلي معاينة الفاتورة واضحة بالكامل اعرض
+     الفاتورة كاملة بدون اجزاء مخبايه"): the modal used to just grow with its
+     content (form fields column stacking taller than the preview) and rely
+     on the generic .modal{max-height:calc(100vh - 32px); overflow-y:auto;}
+     as a scroll fallback — so on a merely average window height, the form
+     column's own height silently dictated the whole modal's height, and the
+     bottom of the preview ended up needing a scroll to reach: exactly the
+     "أجزاء مخبأة" complaint. Fixed by decoupling the two: the modal gets one
+     fixed, deliberately SHORTER height (was effectively ~100vh) and a wider
+     max-width; inside it, the form column scrolls on its own
+     (#invoiceAppearanceOverlay .invoice-studio) while the preview column is
+     stretched to fill that exact height end-to-end, so the invoice preview
+     is always the one thing guaranteed to be fully visible, never clipped —
+     scaleToFitPreviewScript() then shrinks the actual invoice to fit that
+     frame, so nothing is ever hidden regardless of the invoice's own length.
+     Scoped to the same width the two-column grid itself requires (see the
+     max-width:920px collapse above) — below that, a taller, scrolling modal
+     is still the right fallback, so none of this applies there. */
+  @media (min-width:921px){
+    /* BUG FIX (real, confirmed defect, and very likely the actual cause of
+       "اعرض الفاتورة كاملة بدون اجزاء مخبايه"): .overlay is `position:fixed;
+       inset:0;` — it centers the modal across the FULL window width, with
+       no allowance at all for .sidebar (a fixed 290px-wide column with a
+       HIGHER z-index, 500100, than any regular .overlay's 500, and an
+       opaque background). A modal wide enough to have its centered right
+       edge cross into the sidebar's own x-range simply loses that whole
+       slice to the opaque sidebar sitting on top of it — this was already
+       true of the flat max-width:1560px this screen used to have (it
+       clipped under the sidebar on anything narrower than a ~2500px-wide
+       window). Shrinking the max-width to dodge that (the first fix tried
+       here) only "worked" by making the modal narrower than it was even
+       BEFORE this round of changes, defeating "زيد حجمها بالعرض" entirely —
+       the actual fix is to stop centering across the sidebar's space at
+       all: reserving the sidebar's own width as the overlay's end-side
+       padding shifts the whole centering box to exactly the area beside
+       it, so a genuinely wide modal now has real room to grow into,
+       instead of needing a shrink-to-avoid-overlap compromise. */
+    #invoiceAppearanceOverlay{ padding-inline-start:306px; }
+    #invoiceAppearanceOverlay .modal.wide{
+      max-width:1600px; height:min(680px, calc(100vh - 48px));
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    #invoiceAppearanceOverlay .invoice-appearance-layout{
+      flex:1; min-height:0; grid-template-rows:1fr; align-items:stretch;
+    }
+    #invoiceAppearanceOverlay .invoice-studio{
+      overflow-y:auto; height:100%; padding-inline-end:6px;
+    }
+    #invoiceAppearanceOverlay .invoice-columns-preview-wrap{
+      display:flex; flex-direction:column; height:100%;
+    }
+  }
+  /* Below the two-column breakpoint, .invoice-columns-preview-wrap stays a
+     plain (non-flex) block, so the iframe's own flex:1 above does nothing —
+     it needs an explicit height again here, same as its old fixed value. */
+  @media (max-width:920px){
+    #invoiceAppearancePreviewFrame{ height:72vh; min-height:560px; }
+  }
   .invoice-columns-picker{ display:flex; flex-direction:column; gap:8px; }
   /* Full design-panel row (direct feedback: "لوحة تصميم كاملة ... ترتيب
      لاعمدة محتوياتها اسماء ... وتعديل") — reorder buttons + visibility
@@ -1605,6 +1633,20 @@
   .invoice-col-label{
     flex:1; min-width:0; padding:7px 10px; border:1px solid var(--line); border-radius:7px;
     background:var(--panel); font-size:12.5px; font-weight:700; color:var(--ink); font-family:'Tajawal',sans-serif;
+  }
+  /* Per-column WIDTH control (direct feedback: "مع امكانية التحكم بعرض كل
+     شي داخلها" — control the width of everything inside the invoice table).
+     A blank field means "leave this column's width automatic," same spirit
+     as an untouched label falling back to the default — nothing has to be
+     filled in for the table to look exactly as it did before this existed. */
+  .invoice-col-width-wrap{
+    flex:0 0 auto; display:flex; align-items:center; gap:3px;
+    font-size:11.5px; font-weight:700; color:var(--ink-dim);
+  }
+  .invoice-col-width{
+    width:48px; padding:7px 4px; border:1px solid var(--line); border-radius:7px;
+    background:var(--panel); font-size:12px; font-weight:700; color:var(--ink);
+    font-family:'Segoe UI',Arial,sans-serif; text-align:center; direction:ltr;
   }
   .invoice-columns-preview-label{ font-size:12.5px; font-weight:800; color:var(--ink-dim); margin-bottom:6px; }
   .invoice-table-fontsize-row{
@@ -2323,6 +2365,12 @@ input:focus, select:focus, textarea:focus {
            "حول البرنامج" per direct feedback ("زر الضبط خليه تحت حول
            البرنامج"). -->
       <button type="button" class="btn-ghost sidebar-btn" id="settingsBtn">⚙ الضبط والإعدادات</button>
+      <!-- 🔒 قفل البرنامج: went through a floating round icon near the mini
+           clock for a couple of rounds, but per direct further feedback
+           ("خليها زر عادي بالقائمة الجانبية اسمو قفل البرنامج") this is back
+           to being a plain, ordinary sidebar button like all the others
+           above, wired to the same lockProgramNow() used everywhere. -->
+      <button type="button" class="btn-ghost sidebar-btn" id="lockProgramSidebarBtn">🔒 قفل البرنامج</button>
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
   </div>
@@ -4154,7 +4202,7 @@ input:focus, select:focus, textarea:focus {
      جانبي"). No live preview is embedded here any more — press "👁 معاينة
      قبل الطباعة" below to see the result, same as before the merge. -->
 <div class="overlay" id="invoiceAppearanceOverlay">
-  <div class="modal wide" style="max-width:1560px;">
+  <div class="modal wide">
     <h2><span>🎨 مظهر الفاتورة</span><button type="button" class="btn-ghost btn-small" id="closeInvoiceAppearanceBtn">إغلاق</button></h2>
     <!-- Live preview added per direct feedback ("خلي فيه معاينة حية
          للتغيرات") — same two-column pattern as the invoice columns/data
@@ -4236,7 +4284,7 @@ input:focus, select:focus, textarea:focus {
       </div>
       <div class="invoice-columns-preview-wrap">
         <div class="invoice-columns-preview-label">👁 معاينة حية</div>
-        <iframe id="invoiceAppearancePreviewFrame" title="معاينة مظهر الفاتورة" style="width:100%; height:72vh; min-height:560px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
+        <iframe id="invoiceAppearancePreviewFrame" title="معاينة مظهر الفاتورة" style="width:100%; flex:1; min-height:0; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
       </div>
     </div>
   </div>
@@ -4956,7 +5004,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.7';
+const APP_VERSION = '10.8';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -5305,6 +5353,8 @@ const TRANSLATIONS = {
     '➕ إضافة طبيب جديد':'➕ Add a new doctor',
     '📋 سجل الأطباء':'📋 Doctors directory',
     'بيانات الطبيب':'Doctor details',
+    'بيانات العميل':'Client details', 'اسم العميل':'Client name',
+    'عرض العمود — اتركه فارغًا لعرض تلقائي':'Column width — leave blank for automatic width',
     '✏ تعديل بيانات الطبيب':'✏ Edit the doctor',
     '✏️ تعديل بيانات الطبيب':'✏️ Edit the doctor',
     '🗑 حذف الطبيب':'🗑 Delete the doctor',
@@ -6014,6 +6064,8 @@ const TRANSLATIONS = {
     '➕ إضافة طبيب جديد':'➕ Nieuwe tandarts toevoegen',
     '📋 سجل الأطباء':'📋 Tandartsenoverzicht',
     'بيانات الطبيب':'Gegevens tandarts',
+    'بيانات العميل':'Klantgegevens', 'اسم العميل':'Klantnaam',
+    'عرض العمود — اتركه فارغًا لعرض تلقائي':'Kolombreedte — laat leeg voor automatische breedte',
     '✏ تعديل بيانات الطبيب':'✏ Tandarts bewerken',
     '✏️ تعديل بيانات الطبيب':'✏️ Tandarts bewerken',
     '🗑 حذف الطبيب':'🗑 Tandarts verwijderen',
@@ -6717,6 +6769,8 @@ const TRANSLATIONS = {
     '➕ إضافة طبيب جديد':'➕ Neuen Arzt hinzufügen',
     '📋 سجل الأطباء':'📋 Ärzteverzeichnis',
     'بيانات الطبيب':'Arztdaten',
+    'بيانات العميل':'Kundendaten', 'اسم العميل':'Kundenname',
+    'عرض العمود — اتركه فارغًا لعرض تلقائي':'Spaltenbreite — leer lassen für automatische Breite',
     '✏ تعديل بيانات الطبيب':'✏ Arzt bearbeiten',
     '✏️ تعديل بيانات الطبيب':'✏️ Arzt bearbeiten',
     '🗑 حذف الطبيب':'🗑 Arzt löschen',
@@ -7420,6 +7474,8 @@ const TRANSLATIONS = {
 '➕ إضافة طبيب جديد':'➕ Yeni Doktor Ekle',
 '📋 سجل الأطباء':'📋 Doktor Rehberi',
 'بيانات الطبيب':'Doktor Bilgileri',
+'بيانات العميل':'Müşteri Bilgileri', 'اسم العميل':'Müşteri Adı',
+'عرض العمود — اتركه فارغًا لعرض تلقائي':'Sütun genişliği — otomatik genişlik için boş bırakın',
 '✏ تعديل بيانات الطبيب':'✏ Doktoru Düzenle',
 '✏️ تعديل بيانات الطبيب':'✏️ Doktoru Düzenle',
 '🗑 حذف الطبيب':'🗑 Doktoru Sil',
@@ -8126,6 +8182,8 @@ const TRANSLATIONS = {
     '➕ إضافة طبيب جديد':'➕ הוספת רופא חדש',
     '📋 سجل الأطباء':'📋 מדריך הרופאים',
     'بيانات الطبيب':'פרטי הרופא',
+    'بيانات العميل':'פרטי הלקוח', 'اسم العميل':'שם הלקוח',
+    'عرض العمود — اتركه فارغًا لعرض تلقائي':'רוחב עמודה — השאירו ריק לרוחב אוטומטי',
     '✏ تعديل بيانات الطبيب':'✏ עריכת פרטי הרופא',
     '✏️ تعديل بيانات الطبيب':'✏️ עריכת פרטי הרופא',
     '🗑 حذف الطبيب':'🗑 מחיקת הרופא',
@@ -8832,6 +8890,8 @@ const TRANSLATIONS = {
     '➕ إضافة طبيب جديد':'➕ Dodaj nowego lekarza',
     '📋 سجل الأطباء':'📋 Katalog lekarzy',
     'بيانات الطبيب':'Dane lekarza',
+    'بيانات العميل':'Dane klienta', 'اسم العميل':'Nazwa klienta',
+    'عرض العمود — اتركه فارغًا لعرض تلقائي':'Szerokość kolumny — pozostaw puste dla szerokości automatycznej',
     '✏ تعديل بيانات الطبيب':'✏ Edytuj lekarza',
     '✏️ تعديل بيانات الطبيب':'✏️ Edytuj lekarza',
     '🗑 حذف الطبيب':'🗑 Usuń lekarza',
@@ -10643,11 +10703,12 @@ function refreshLockTabInfo(){
   statusEl.style.color = st.color;
 }
 
-/* Single entry point for the lock action — used to be split across a
-   sidebar-footer icon AND a home-screen card; per direct feedback ("شيل من
-   القائمة الجانبية الزر تبع القفل" + the home card became the round
-   #miniLockBtn above the mini clock) there is now exactly one control, so
-   this only needs one listener. */
+/* Single entry point for the lock action. This went through a few rounds
+   (sidebar button -> a floating round icon above the mini clock -> back to
+   a plain sidebar button per direct further feedback: "خليها زر عادي
+   بالقائمة الجانبية اسمو قفل البرنامج") and is now, once again, an ordinary
+   button inside .sidebar-actions — see "🔒 قفل البرنامج" there and its own
+   listener further down — so this only needs one listener wired to it. */
 function lockProgramNow(){
   localStorage.removeItem(LOCK_UNLOCKED_KEY);
   localStorage.removeItem(REMEMBER_LOGIN_KEY);
@@ -10659,16 +10720,6 @@ function lockProgramNow(){
   const pw=document.getElementById('lockPasswordInput'); if(pw){ pw.value=''; setTimeout(()=>pw.focus(),20); }
   try{ Promise.resolve(flushPendingSave()).catch(()=>{}); }catch(e){}
 }
-// BUG FIX (real, confirmed crash): #miniLockBtn is declared far later in the
-// document (right beside the mini clock, near the very end of <body>), so
-// wiring its click handler HERE — where #licenseDaysBtn's used to live,
-// while the DOM was still being parsed up to this point — grabbed null and
-// threw "Cannot read properties of null (reading 'addEventListener')",
-// aborting the rest of this script block on page load. lockProgramNow() is a
-// plain hoisted function declaration, callable from any later <script> block
-// in the same document just as well as from here, so the actual listener is
-// registered next to the button's own HTML instead — see "قفل البرنامج —
-// جوار الساعة" further down.
 document.getElementById('closePurchaseBtn').addEventListener('click', ()=> document.getElementById('purchaseOverlay').classList.remove('open'));
 
 document.getElementById('clearActivationBtn').addEventListener('click', async ()=>{
@@ -11388,6 +11439,21 @@ function contrastTextColor(hex){
     const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
     return lum > 0.6 ? '#1c2b33' : '#ffffff';
   }catch(e){ return '#1c2b33'; }
+}
+/* Same hex input as contrastTextColor() above, but returns a translucent
+   rgba() of that same color instead of a solid black/white — used for the
+   invoice table's alternating-row tint (item #7 follow-up, matching the
+   reference design) so the shading is always a soft tint of whatever table
+   color the user actually picked, never a hardcoded gray that could clash
+   with it. */
+function hexToRgba(hex, alpha){
+  try{
+    let h = String(hex||'').trim().replace('#','');
+    if(h.length === 3) h = h.split('').map(c=> c+c).join('');
+    if(!/^[0-9a-fA-F]{6}$/.test(h)) return `rgba(18,38,45,${alpha})`;
+    const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }catch(e){ return `rgba(18,38,45,${alpha})`; }
 }
 function fmtMoney(n){
   const v = Number(n)||0;
@@ -15400,6 +15466,34 @@ const PRINT_STYLES = `
   .party .party-name{ font-size:16px; font-weight:900; margin-bottom:3px; }
   .party div + div{ margin-top:2px; }
 
+  /* Client/Doctor two-card header — see printClientDoctorBlock(). Only used
+     on the itemized case invoice, so this never affects any other document
+     that still uses the plain single .party box above. */
+  .party-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .party-grid > .party-card:only-child{ grid-column:1 / -1; }
+  .party-card{
+    border:1px solid #d8e6ec; border-radius:10px; overflow:hidden; background:#fff;
+  }
+  .party-card-head{
+    display:flex; align-items:center; gap:8px; padding:8px 12px;
+    background:#0e7c9e; color:#fff;
+  }
+  .party-card-icon{ font-size:15px; line-height:1; }
+  .party-card-title{ display:block; font-size:12.5px; font-weight:900; }
+  .party-card-title-en{
+    display:block; font-size:9px; font-weight:700; opacity:.8; letter-spacing:.3px;
+    font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:right;
+  }
+  .party-card-body{ padding:9px 12px; background:#f8fafc; }
+  .party-card-row{ display:flex; justify-content:space-between; align-items:flex-end; gap:10px; padding:4px 0; font-size:12px; }
+  .party-card-row + .party-card-row{ border-top:1px dashed #e2eaee; }
+  .party-card-k{ color:#5a707a; font-weight:700; }
+  .party-card-k-en{
+    display:block; font-size:9px; color:#9aabb2; font-weight:600;
+    font-family:'Segoe UI',Arial,sans-serif; direction:ltr; text-align:right;
+  }
+  .party-card-v{ font-weight:900; color:#12262d; }
+
   table{ width:100%; border-collapse:collapse; margin-top:6px; font-size:12.5px; }
   thead{ display:table-header-group; }   /* repeat headers on every page */
   tfoot{ display:table-footer-group; }
@@ -15538,6 +15632,26 @@ function scaleToFitPreviewScript(){
     body.style.transformOrigin = 'top center';
     body.style.width = (100/scale) + '%';
     body.style.transform = 'scale(' + scale + ')';
+    // BUG FIX (real, confirmed defect, and very likely part of "اعرض
+    // الفاتورة كاملة بدون اجزاء مخبايه"): stretching the body back out to
+    // (100/scale)% before scaling is what lets a HEIGHT-driven shrink keep
+    // using the full iframe width instead of needlessly narrowing too — but
+    // on a narrower embedded preview this can widen the box past what some
+    // fixed-content row (e.g. a long "amount in words" line) actually
+    // reflows to fill, so that row can still poke past the stretched box,
+    // even though the exact same content fit fine at its own natural width
+    // a moment ago. Rather than trying to out-guess exactly how much any
+    // given invoice's content will overflow once stretched (tried a
+    // corrective re-scale here first — it does not converge reliably),
+    // this verifies the stretch actually held and, if it didn't, drops it
+    // and falls back to scaling the body at its OWN natural width instead.
+    // That fallback is provably safe, not just another guess: content*scale
+    // <= content*scaleW = viewW by definition of scaleW above, so nothing
+    // can still be left overflowing.
+    if(body.scrollWidth * scale > viewW + 0.5){
+      body.style.width = '';
+      body.style.transform = 'scale(' + scale + ')';
+    }
   }
   function fitSettled(){
     // A single pass right at 'load' can be measured before the Arabic web
@@ -15724,6 +15838,45 @@ function printPartyBlock(label, name, lines){
     <div class="party-name">${escapeHtml(name)}</div>
     ${(lines||[]).map(l=> `<div>${l}</div>`).join('')}
   </div>`;
+}
+
+/* Two side-by-side info cards — "بيانات العميل / Client Details" and
+   "بيانات الطبيب / Doctor Details" — replacing the single "الفاتورة إلى" box
+   on the itemized case invoice specifically (see printCasesInvoice()), per
+   direct feedback matching a reference invoice image. Client = whoever the
+   invoice is actually billed to (a doctor's own clinic, or the lab itself
+   for a lab invoice) — the SAME identity the old single box already showed,
+   just laid out as its own labelled card now. Doctor is a genuinely
+   SEPARATE card only for a doctor invoice (type !== 'lab'): this app has no
+   notion of a "referring doctor" distinct from the invoiced entity itself
+   (see openCaseInvoiceSelector()'s own type==='lab'/'doctor' split — a case
+   never carries its own doctor id apart from whoever it's billed to), so a
+   lab invoice gets one card, not two with the second one fabricated. */
+function printClientDoctorBlock(type, entity){
+  const row = (kEn, kAr, value)=> value
+    ? `<div class="party-card-row"><span class="party-card-k">${escapeHtml(kAr)}<span class="party-card-k-en">${escapeHtml(kEn)}</span></span><span class="party-card-v">${escapeHtml(value)}</span></div>`
+    : '';
+  const card = (icon, titleAr, titleEn, rowsHtml)=> `<div class="party-card">
+    <div class="party-card-head">
+      <span class="party-card-icon">${icon}</span>
+      <span><span class="party-card-title">${escapeHtml(titleAr)}</span><span class="party-card-title-en">${escapeHtml(titleEn)}</span></span>
+    </div>
+    <div class="party-card-body">${rowsHtml}</div>
+  </div>`;
+
+  const clientName = (type === 'lab' ? entity.name : (entity.clinic || entity.name)) || '—';
+  const clientCard = card('👤', tr('بيانات العميل'), 'Client Details',
+    row('Client Name', tr('اسم العميل'), clientName) +
+    (type === 'lab'
+      ? row('Address', tr('العنوان'), entity.address || '')
+      : row('Phone', tr('رقم الهاتف'), entity.phone || ''))
+  );
+
+  const doctorCard = (type !== 'lab')
+    ? card('🦷', tr('بيانات الطبيب'), 'Doctor Details', row('Doctor Name', tr('اسم الطبيب'), entity.name || '—'))
+    : '';
+
+  return `<div class="party-grid">${clientCard}${doctorCard}</div>`;
 }
 
 /* The summary stack at the end of a financial document. */
@@ -16003,6 +16156,30 @@ function printCasesInvoice(type, entity, opts){
     return tr(COL_META[id].label);
   };
   const visibleIds = orderedIds.filter(id=> cols[id] && COL_META[id]);
+  // Per-column WIDTH control (direct feedback: "مع امكانية التحكم بعرض كل
+  // شي داخلها"). Same override-priority pattern as colLabelFor() just
+  // above: the design panel's own unsaved slider/number-input drag wins via
+  // opts.widthsOverride; every real invoice reads the saved global config;
+  // a one-off caller passing columnsOverride with neither gets plain
+  // automatic columns, unchanged from before this existed.
+  const colWidthFor = (id)=>{
+    if(opts.widthsOverride && opts.widthsOverride[id]) return Number(opts.widthsOverride[id]) || null;
+    if(!opts.columnsOverride && typeof window.AL95GetInvoiceColumnWidth === 'function')
+      return window.AL95GetInvoiceColumnWidth(id);
+    return null;
+  };
+  const colWidths = visibleIds.map(colWidthFor);
+  // <colgroup> only when at least one column actually has a custom width —
+  // an invoice nobody has touched this on renders byte-for-byte the same
+  // plain, automatic table it always has. table-layout:fixed is what makes
+  // an explicit width on a <col> actually authoritative rather than just a
+  // hint content can override; unset columns simply split whatever width is
+  // left over evenly, so a partial set of custom widths is a perfectly
+  // normal, well-defined table, not an error.
+  const anyCustomWidth = colWidths.some(w=> w!=null);
+  const colGroupHtml = anyCustomWidth
+    ? `<colgroup>${colWidths.map(w=> w!=null ? `<col style="width:${w}%">` : '<col>').join('')}</colgroup>`
+    : '';
   const colHead = ()=> visibleIds.map(id=>
     `<th class="${COL_META[id].num?'num':''}">${escapeHtml(colLabelFor(id))}</th>`).join('');
   let grandTotal = 0, totalItems = 0;
@@ -16036,10 +16213,6 @@ function printCasesInvoice(type, entity, opts){
   }).join('');
 
   const partyLabel = tr(type === 'lab' ? 'المختبر' : 'الطبيب');
-  const infoLines = type === 'lab'
-    ? [`<b>${escapeHtml(tr('العنوان'))}:</b> ${escapeHtml(entity.address || '—')}`]
-    : [`<b>${escapeHtml(tr('رقم الهاتف'))}:</b> ${escapeHtml(entity.phone || '—')}`,
-       `<b>${escapeHtml(tr('العيادة / العنوان'))}:</b> ${escapeHtml(entity.clinic || '—')}`];
 
   const doc = buildPrintDocument({
     headerHtmlOverride: opts.headerHtmlOverride,
@@ -16074,6 +16247,14 @@ function printCasesInvoice(type, entity, opts){
       th{ background:${__cTable}; color:${__cTableText}; }
       tfoot td{ background:${__cTable}; color:${__cTableText}; }
       .totals .grand{ background:${__cTotal}; color:${__cTotalText}; border-radius:8px; padding:9px 12px; border-top:0; }
+      /* Client/Doctor cards + the redesigned table: use the SAME configured
+         header color as the rest of the invoice (not a hardcoded navy) so
+         this stays consistent with whatever the user already picked on
+         "🎨 مظهر الفاتورة", and the alternating row tint is a soft, translucent
+         version of the user's own table color instead of an unrelated fixed
+         gray — so it never clashes, whatever color they choose. */
+      .party-card-head{ background:${__cHeader}; color:${contrastTextColor(__cHeader)}; }
+      tbody tr:nth-child(even) td{ background:${hexToRgba(__cTable, 0.16)}; }
       /* Table text size — the design panel's own dedicated "حجم الكلام"
          control for the columns table specifically, independent of the
          document-wide font size above. tableFontSizeOverride lets the design
@@ -16092,8 +16273,9 @@ function printCasesInvoice(type, entity, opts){
           <div class="inv-barcode-text">${escapeHtml(serial)}</div>
         </div>
       </div>` +
-      printPartyBlock(partyLabel, entity.name || '—', infoLines) +
-      `<table>
+      printClientDoctorBlock(type, entity) +
+      `<table${anyCustomWidth ? ' style="table-layout:fixed;"' : ''}>
+        ${colGroupHtml}
         <thead><tr>${colHead()}</tr></thead>
         <tbody>${rows}</tbody>
         <tfoot><tr>
@@ -20076,6 +20258,7 @@ document.getElementById('langList').addEventListener('click', (e)=>{
 applyAppearance();
 applyLanguage();
 document.getElementById('settingsBtn').addEventListener('click', ()=> openSettingsOnTab('lock'));
+document.getElementById('lockProgramSidebarBtn').addEventListener('click', lockProgramNow);
 document.getElementById('closeSettingsBtn').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 // «موافق»: settings (font size, typeface, language, theme) apply live and are
 // stored the moment they change — this button confirms and closes the screen.
@@ -21841,42 +22024,11 @@ initBackupHandle();
 initAppFileHandle();
 
 </script>
-<button type="button" id="miniLockBtn" title="قفل البرنامج" aria-label="قفل البرنامج">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="miniLockBodyGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ffe08a"/>
-        <stop offset="100%" stop-color="#d99a2b"/>
-      </linearGradient>
-    </defs>
-    <path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5" fill="none" stroke="#e7edf1" stroke-width="2.1" stroke-linecap="round"/>
-    <rect x="4.5" y="10.5" width="15" height="10.5" rx="2.6" fill="url(#miniLockBodyGrad)" stroke="#a8701c" stroke-width="1"/>
-    <circle cx="12" cy="14.4" r="1.7" fill="#4a3210"/>
-    <path d="M11.15 15.6 L12.85 15.6 L12.35 18.1 L11.65 18.1 Z" fill="#4a3210"/>
-  </svg>
-</button>
 <div id="miniClockWidget">
   <div id="miniClockTime">--:--:--</div>
   <div id="miniClockDate">----/--/--</div>
 </div>
 <script>
-/* قفل البرنامج — جوار الساعة: the button's own HTML sits right above (see
-   #miniLockBtn), so its listener is wired here too, guaranteed to run after
-   the element actually exists in the DOM. */
-document.getElementById('miniLockBtn').addEventListener('click', lockProgramNow);
-/* #miniLockBtn and #miniClockWidget are now two independent position:fixed
-   elements (no shared flex wrapper — see the CSS comment above
-   #miniLockBtn for why), so the button's vertical offset above the clock
-   has to be computed here instead of via flexbox gap. */
-function positionMiniLockBtn(){
-  var clock = document.getElementById('miniClockWidget');
-  var btn = document.getElementById('miniLockBtn');
-  if(!clock || !btn) return;
-  var h = clock.offsetHeight || 0;
-  btn.style.bottom = (14 + h + 10) + 'px';
-}
-positionMiniLockBtn();
-window.addEventListener('resize', positionMiniLockBtn);
 (function(){
   var timeEl = document.getElementById('miniClockTime');
   var dateEl = document.getElementById('miniClockDate');
@@ -22257,12 +22409,15 @@ window.addEventListener('resize', positionMiniLockBtn);
 (function(){
   const KEY='al95_invoice_columns';
   const FONT_KEY='al95_invoice_table_fontsize';
-  // Tuple shape: [id, defaultLabel, defaultVisible, customLabel?]. The
-  // ARRAY'S OWN ORDER is the print order (direct feedback: "ترتيب لاعمدة") —
-  // reordering in the design panel just moves a row in this same array, no
-  // separate "order" field needed. customLabel (4th element) is optional;
-  // an older saved array without it just has fewer than 4 items per tuple,
-  // which reads as "no custom label, use the default" everywhere below.
+  // Tuple shape: [id, defaultLabel, defaultVisible, customLabel?, customWidthPercent?].
+  // The ARRAY'S OWN ORDER is the print order (direct feedback: "ترتيب
+  // لاعمدة") — reordering in the design panel just moves a row in this same
+  // array, no separate "order" field needed. customLabel (4th element) and
+  // customWidthPercent (5th, follow-up: "امكانية التحكم بعرض كل شي داخلها")
+  // are both optional; an older saved array without them just has fewer
+  // than 5 items per tuple, which reads as "no custom label/width, use the
+  // default/automatic" everywhere below — nothing about a save made before
+  // width control existed needs migrating.
   const defaults=[
     ['patient','اسم المريض',true],
     ['caseId','رقم الحالة',true],
@@ -22308,6 +22463,14 @@ window.addEventListener('resize', positionMiniLockBtn);
     const row = load().find(c=>c[0]===id);
     const custom = row && row[3];
     return (custom && String(custom).trim()) ? String(custom).trim() : fallback;
+  };
+  // Returns a finite percent (e.g. 18) if this column has a saved custom
+  // width, or null when it should stay automatic — callers treat null as
+  // "don't set an explicit width for this column at all," not as 0%.
+  window.AL95GetInvoiceColumnWidth=function(id){
+    const row = load().find(c=>c[0]===id);
+    const w = row && parseFloat(row[4]);
+    return (Number.isFinite(w) && w>0) ? w : null;
   };
   window.AL95GetInvoiceTableFontSize=loadTableFontSize;
   window.AL95InvoiceColumnDefaults=defaults.map(c=>c.slice());
@@ -22355,7 +22518,15 @@ window.addEventListener('resize', positionMiniLockBtn);
       const labelInput = row.querySelector('.invoice-col-label');
       const typedLabel = labelInput ? labelInput.value.trim() : '';
       const customLabel = (typedLabel && typedLabel !== tr(def[1])) ? typedLabel : '';
-      return [id, def[1], !!cb && cb.checked, customLabel];
+      const widthInput = row.querySelector('.invoice-col-width');
+      const typedWidth = widthInput ? parseFloat(widthInput.value) : NaN;
+      // A number input's min/max attributes are only an advisory hint —
+      // nothing stops someone from typing 500 directly, which would blow up
+      // the whole table's layout for every other column. Clamping here (not
+      // just in the HTML attribute) is what actually keeps a typo from
+      // wrecking the print output.
+      const customWidth = Number.isFinite(typedWidth) ? Math.min(60, Math.max(4, typedWidth)) : '';
+      return [id, def[1], !!cb && cb.checked, customLabel, customWidth];
     });
   }
   function draftTableFontSize(){
@@ -22367,8 +22538,8 @@ window.addEventListener('resize', positionMiniLockBtn);
     const frame = document.getElementById('invoiceColumnsPreviewFrame');
     if(!frame) return;
     const draft = collectInvoiceColumnsDraft();
-    const cols = {}, labelsOverride = {};
-    draft.forEach(function(c){ cols[c[0]] = c[2]; if(c[3]) labelsOverride[c[0]] = c[3]; });
+    const cols = {}, labelsOverride = {}, widthsOverride = {};
+    draft.forEach(function(c){ cols[c[0]] = c[2]; if(c[3]) labelsOverride[c[0]] = c[3]; if(c[4]) widthsOverride[c[0]] = c[4]; });
     try{
       const html = printCasesInvoice('doctor', sampleInvoiceColumnsParty(), {
         previewOnly: true,
@@ -22376,6 +22547,7 @@ window.addEventListener('resize', positionMiniLockBtn);
         columnsOverride: cols,
         orderOverride: draft.map(c=>c[0]),
         labelsOverride: labelsOverride,
+        widthsOverride: widthsOverride,
         tableFontSizeOverride: draftTableFontSize(),
         settingsOverride: (typeof invoiceSettings !== 'undefined') ? invoiceSettings : {},
         headerHtmlOverride: (typeof buildInvoiceHeaderHtml === 'function') ? buildInvoiceHeaderHtml() : undefined,
@@ -22387,7 +22559,7 @@ window.addEventListener('resize', positionMiniLockBtn);
     const grid = document.getElementById('invoiceColumnsGrid');
     grid.innerHTML = '';
     rows.forEach(function(c, i){
-      const id=c[0], defLabel=c[1], checked=c[2], customLabel=c[3]||'';
+      const id=c[0], defLabel=c[1], checked=c[2], customLabel=c[3]||'', customWidth=c[4]||'';
       const row = document.createElement('div');
       row.className = 'invoice-col-row';
       row.setAttribute('data-col', id);
@@ -22397,7 +22569,10 @@ window.addEventListener('resize', positionMiniLockBtn);
           '<button type="button" class="invoice-col-move" data-move="down" title="'+escapeHtml(tr('أسفل'))+'"'+(i===rows.length-1?' disabled':'')+'>▼</button>' +
         '</span>' +
         '<input type="checkbox" data-col="'+id+'" '+(checked?'checked':'')+'>' +
-        '<input type="text" class="invoice-col-label" value="'+escapeHtml(customLabel||tr(defLabel))+'" placeholder="'+escapeHtml(tr(defLabel))+'">';
+        '<input type="text" class="invoice-col-label" value="'+escapeHtml(customLabel||tr(defLabel))+'" placeholder="'+escapeHtml(tr(defLabel))+'">' +
+        '<span class="invoice-col-width-wrap" title="'+escapeHtml(tr('عرض العمود — اتركه فارغًا لعرض تلقائي'))+'">' +
+          '<input type="number" class="invoice-col-width" min="4" max="60" step="1" value="'+escapeHtml(String(customWidth))+'" placeholder="'+escapeHtml(tr('تلقائي'))+'">٪' +
+        '</span>';
       grid.appendChild(row);
     });
   }
@@ -22426,10 +22601,10 @@ window.addEventListener('resize', positionMiniLockBtn);
   const invoiceColumnsGridEl = document.getElementById('invoiceColumnsGrid');
   if(invoiceColumnsGridEl){
     invoiceColumnsGridEl.addEventListener('change', function(e){
-      if(e.target && (e.target.matches('[data-col]') || e.target.matches('.invoice-col-label'))) renderInvoiceColumnsPreview();
+      if(e.target && (e.target.matches('[data-col]') || e.target.matches('.invoice-col-label') || e.target.matches('.invoice-col-width'))) renderInvoiceColumnsPreview();
     });
     invoiceColumnsGridEl.addEventListener('input', function(e){
-      if(e.target && e.target.matches('.invoice-col-label')) renderInvoiceColumnsPreview();
+      if(e.target && (e.target.matches('.invoice-col-label') || e.target.matches('.invoice-col-width'))) renderInvoiceColumnsPreview();
     });
     // Reorder: move the row itself in the DOM — the DOM order IS the draft
     // order collectInvoiceColumnsDraft() reads back.

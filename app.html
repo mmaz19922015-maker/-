@@ -37,6 +37,15 @@
     --bg-top: #d6e2e8;
     --panel: #e0eaee;
     --panel-2: #d2e0e7;
+    /* Follow-up direct feedback ("شريط العنوانين ايضا قم بزيادة لون التظليل
+       فيه"): every screen's title bar (.modal h2 / .modal-compact h2) used
+       plain --panel-2 — a real, distinct band already, but the ask is for
+       MORE shading, not just "different from the body". color-mix() derives
+       this from --panel-2 itself (mixing in a slice of black) rather than a
+       second hand-picked hex, so it automatically re-darkens correctly
+       whenever --panel-2 changes — including its own dark-mode redefinition
+       further down this file — with no separate override needed there. */
+    --titlebar-bg: color-mix(in srgb, var(--panel-2) 82%, black 14%);
     /* Borders were a pale wash that left panels, buttons and menus without a
        readable edge. Darker and one step more saturated a second time per
        direct follow-up feedback ("خلي الها حواف واضحة") so every screen,
@@ -1412,6 +1421,31 @@
     background:transparent; pointer-events:none;
     backdrop-filter: none; -webkit-backdrop-filter: none;
   }
+  /* BUG FIX (real, confirmed defect, generalized — direct feedback: "اريد
+     ضبط اتوماتيكي للعرض بحيث تكون الشاشات من حدود الشاشة"): .overlay spans
+     the FULL viewport (inset:0) and centers its .modal across that entire
+     width — including the 290px the sidebar visually occupies on top of it
+     (z-index:500100). On a window narrower than "sidebar + centered modal
+     width", the modal's centred position lands partly UNDER where the
+     sidebar paints, silently hiding that slice of the screen's own title/
+     content/buttons behind it. A previous fix reserved the sidebar's real
+     width via padding-inline-start on 4 specific overlay ids that happened
+     to be reported (#invoiceAppearanceOverlay, #invoiceColumnsOverlay,
+     #caseInvoiceSelectorOverlay, #customStatementOverlay) — but every OTHER
+     wide screen in the program (settings, reports, directories, anything
+     using .modal.wide or even the default .modal at a narrow enough window)
+     had exactly the same latent bug, just not yet hit by whoever reported
+     it. Applying this to EVERY .overlay, not just those 4, is the actual
+     general fix "طبق هذا الشي على جميع شاشات البرنامج" calls for — 306px =
+     the sidebar's real 290px width + this rule's own 16px padding, same
+     arithmetic as the 4 pre-existing per-id rules (left in place — same
+     value, harmless duplication, not worth touching). Scoped to the same
+     min-width:921px breakpoint as those 4: below it the sidebar itself goes
+     full-width/stacks on top (see the max-width:760px sidebar rule further
+     down), so there is no side-by-side overlap to guard against there. */
+  @media (min-width:921px){
+    .overlay{ padding-inline-start:306px; }
+  }
   .overlay.open{ display:flex; }
   .overlay .modal{ pointer-events:auto; }
   /* Minimized: hidden but still "open" (state/timers/etc. some screens keep
@@ -1443,8 +1477,18 @@
     z-index:600000; background:rgba(12,28,34,0.5); pointer-events:auto;
   }
   .modal{
+    /* BUG FIX (see .modal h2 further down): the title bar bleeds out to
+       .modal's own edges using a negative margin equal to THIS padding —
+       expressed as custom properties, not hardcoded twice, specifically so
+       a screen that overrides this padding (a few do — #settingsOverlay,
+       #workTypesOverlay) only has to override these two variables and the
+       header's bleed automatically stays in sync with it. A plain second
+       hardcoded number here would silently drift out of sync with any
+       future padding override and make the header overshoot past the
+       modal's real edge on that one screen — exactly the bug this avoids. */
+    --modal-pad-y: 26px; --modal-pad-x: 28px;
     background:var(--panel); border-radius:18px; box-shadow: var(--shadow-lg); width:100%; max-width:560px;
-    padding:26px 28px; animation: modalPop .12s ease-out;
+    padding:var(--modal-pad-y) var(--modal-pad-x); animation: modalPop .12s ease-out;
     /* A visible edge, not a white-on-white hairline: a window has to read as
        a window against the page behind it. */
     border:1.5px solid var(--line);
@@ -1453,7 +1497,8 @@
   .modal.wide{ max-width:820px; }
   /* Statement screens: keep the whole thing inside the viewport */
   .modal-compact{
-    max-height:calc(100vh - 32px); overflow-y:auto; padding:18px 20px;
+    --modal-pad-y: 18px; --modal-pad-x: 20px;
+    max-height:calc(100vh - 32px); overflow-y:auto; padding:var(--modal-pad-y) var(--modal-pad-x);
   }
   /* تظليل — every screen's title/name gets a visibly distinct shaded band
      (was the same flat --panel as the body, so the name blended into the
@@ -1468,7 +1513,19 @@
      redefined for dark mode elsewhere in this file (see the
      :root[data-theme="dark"] / prefers-color-scheme blocks near the top),
      so this reads correctly in both themes with no separate override. */
-  .modal-compact h2{ font-size:15px; margin:0 0 12px; position:sticky; top:-18px; background:var(--panel-2); padding:6px 10px; z-index:2; }
+  /* BUG FIX (real, confirmed defect — direct feedback: "اريد رفع شريط
+     العنوانين لجميع الشاشات من بداية الشاشة من الاعلى ان يبدأ مع الاسم
+     وازارار الاغلاق ومحتوياته كاملة"): this header used to sit INSET inside
+     .modal-compact's own padding (18px 20px) — a visible band of plain
+     .modal background showed above and beside it before the shaded title
+     bar even started, so the bar never actually reached the screen's own
+     top/side edges. The negative margin here is exactly .modal-compact's
+     own padding, in the opposite direction — it bleeds the header flush to
+     the modal's true top-left/top-right border, edge to edge, while the
+     matching padding keeps its text/buttons visually indented the same as
+     before. top:-18px (unchanged, already correct) keeps it flush the same
+     way once the body below is actually scrolled, not just on first paint. */
+  .modal-compact h2{ font-size:15px; margin:calc(var(--modal-pad-y) * -1) calc(var(--modal-pad-x) * -1) 12px; position:sticky; top:calc(var(--modal-pad-y) * -1); background:var(--titlebar-bg); padding:10px var(--modal-pad-x); border-radius:16px 16px 8px 8px; z-index:2; }
   .modal-compact .due-item{ padding:7px 10px; margin-bottom:5px; }
   .modal-compact .due-item .who{ font-size:13px; }
   .modal-compact .due-item .what{ font-size:11px; }
@@ -1494,8 +1551,23 @@
      :root[data-theme="dark"] / prefers-color-scheme blocks near the top),
      so this reads correctly in both themes with no separate override here. */
   .modal h2{
-    display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px;
-    position:sticky; top:0; background:var(--panel-2); padding:10px 14px; z-index:3; cursor:move;
+    display:flex; justify-content:space-between; align-items:center; font-size:17px;
+    /* BUG FIX (real, confirmed defect — direct feedback: "اريد رفع شريط
+       العنوانين لجميع الشاشات من بداية الشاشة من الاعلى ان يبدأ مع الاسم
+       وازارار الاغلاق ومحتوياته كاملة"): this header used to render INSET
+       inside .modal's own padding (26px 28px), leaving a visible strip of
+       plain modal background above and beside the shaded bar instead of the
+       bar itself starting flush at the screen's real top/side edges (true
+       in BOTH the normal and the maximized state — applyMaximizedBounds()
+       never touches .modal's own padding, so the same gap showed there
+       too). The negative margin below is exactly that padding, reversed —
+       it bleeds the header out to .modal's true border on all 3 sides,
+       edge to edge, while the matching padding keeps the visible text/
+       buttons indented the same as before. top:-26px (was 0) keeps it
+       flush the same way once the body below is actually scrolled, not
+       just on first paint — same technique .modal-compact h2 already uses
+       with its own top:-18px, just applied here too now. */
+    margin:calc(var(--modal-pad-y) * -1) calc(var(--modal-pad-x) * -1) 20px; position:sticky; top:calc(var(--modal-pad-y) * -1); background:var(--titlebar-bg); padding:14px var(--modal-pad-x); z-index:3; cursor:move;
     -webkit-user-select:none; user-select:none; touch-action:none;
     /* BUG FIX/RESTYLE (direct feedback: "تعديل شكل التظليل عند اسماء
        الشاشات بحيث يصبح ارتب ومتناسق بشكل افضل وقريب لنظام الويندوز"): a
@@ -1506,8 +1578,15 @@
        divider line (the border-bottom already added by the shared
        "v8.5 universal inner-screen polish" rule further down). Softened the
        radius and dropped the extra shadow so every screen's title reads as
-       one consistent, calmer bar instead of a floating pill. */
-    border-radius:8px;
+       one consistent, calmer bar instead of a floating pill.
+       Now that the header bleeds all the way to .modal's own edges (see
+       above), its OUTER corners are given the SAME radius as the modal
+       itself (--r-lg/16px, via the shared "universal inner-screen polish"
+       rule further down) so they trace one continuous rounded corner
+       instead of a sharp header corner poking past the modal's rounded
+       one; the inner corners (where the bar meets the screen's body) stay
+       a smaller, softer 8px. */
+    border-radius:16px 16px 8px 8px;
     /* BUG FIX (direct feedback: "استخدم تظليل لعنوان الشاشة بشكل واضح اكتر")
        — the previous shading (--panel-2 fill + a soft outer shadow) still
        read as barely different from the body of the screen on some
@@ -1519,10 +1598,14 @@
   }
   .modal.dragging{ transition:none; }
   .modal.dragging h2{ cursor:grabbing; }
-  /* Maximizing disables dragging (matches a real OS: a maximized window
-     can't be dragged until restored) — see the "Maximize / restore" script
-     further down. */
-  .modal.maximized h2{ cursor:default; }
+  /* Direct follow-up feedback ("لما تكبير الشاشات لا تقفل ميزة تحريكها
+     بالماوس"): a maximized window used to be undraggable outright — the
+     drag handler itself no longer refuses to start a drag on a maximized
+     modal (see the "Draggable windows" script further down), so the cursor
+     now advertises that it's still grabbable instead of reverting to a
+     plain, non-interactive default. */
+  .modal.maximized h2{ cursor:move; }
+  .modal.maximized.dragging h2{ cursor:grabbing; }
   /* h2's own children ("إغلاق" etc.) are usually wrapped so they sit at the
      end of the bar together; the maximize/minimize buttons (injected
      generically — see "Maximize / restore" and "Minimize / taskbar" further
@@ -1592,13 +1675,22 @@
     box-shadow: 0 -4px 14px rgba(18,38,45,0.08);
   }
   #minimizedWindowsBar.show{ display:flex; }
+  /* Direct follow-up feedback ("لما وطي شاشة لتحت اعرضها بشكل اكبر شوي
+     واوضح مع حدود واضحة لحواف الزر"): a bit bigger (padding + font-size both
+     nudged up) and a visibly stronger border (1.5px → 2px, plus a touch more
+     corner rounding) so each minimized screen's chip reads as a clearly
+     defined button on the taskbar strip, not a thin pale label. See the
+     matching height bump on body.has-minimized-windows .app-shell just
+     below — it has to grow by the same amount this taller chip adds to the
+     bar's own height, or the last sliver of the app behind it would be
+     clipped under the now-taller bar. */
   .min-taskbar-chip{
-    appearance:none; flex:0 0 auto; border:1.5px solid var(--line); background:var(--panel-2);
-    color:var(--ink); border-radius:9px; padding:8px 16px; font-size:12.5px; font-weight:800;
+    appearance:none; flex:0 0 auto; border:2px solid var(--line); background:var(--panel-2);
+    color:var(--ink); border-radius:10px; padding:10px 20px; font-size:13.5px; font-weight:800;
     cursor:pointer; white-space:nowrap; max-width:240px; overflow:hidden; text-overflow:ellipsis;
   }
   .min-taskbar-chip:hover{ background:var(--teal-tint); border-color:var(--teal-dim); }
-  body.has-minimized-windows .app-shell{ height:calc(100vh - 44px); }
+  body.has-minimized-windows .app-shell{ height:calc(100vh - 59px); }
 
   /* "🧾 إنشاء فاتورة" / "🎨 مظهر الفاتورة" — per direct feedback ("خليه شاشة
      عادية") the earlier merged 3-column layout (form + appearance + live
@@ -2000,6 +2092,11 @@
     max-width:720px;
     height:min(660px, calc(100vh - 40px));
     display:flex; flex-direction:column; overflow:hidden;
+    /* Keep in sync with the padding just below: --modal-pad-y/x are what
+       .modal h2's negative-margin bleed (further up this file) actually
+       reads — overriding the padding numbers alone without these would
+       make the header overshoot past this screen's own modal edge. */
+    --modal-pad-y: 18px; --modal-pad-x: 20px;
     padding:18px 20px 14px;
   }
   #settingsOverlay .modal > h2{ flex-shrink:0; margin-bottom:12px; }
@@ -2236,7 +2333,7 @@ input:focus, select:focus, textarea:focus {
 #workTypeApplyBtn{display:none;}
 #workTypeListBody .work-type-confirm{display:none !important;}
 #workTypeListBody .list-row.work-type-pending{border-color:var(--teal);background:var(--teal-tint);}
-#workTypesOverlay .modal{max-width:480px; padding:18px 20px;}
+#workTypesOverlay .modal{max-width:480px; --modal-pad-y:18px; --modal-pad-x:20px; padding:18px 20px;}
 #workTypesOverlay .modal h2{margin-bottom:12px;}
 #workTypesOverlay .work-types-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
 </style>
@@ -5138,7 +5235,40 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.9';
+const APP_VERSION = '10.10';
+
+/* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
+   في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
+   سيئة في بعض اجهزة العملاء"): Chromium (which every Electron app embeds,
+   including the desktop build, and which is exactly what a plain browser
+   tab running this same file also is) lets a user change the page's zoom
+   level completely by accident — an errant Ctrl+scroll while working, or a
+   trackpad pinch — and PERSISTS that per-origin zoom level across restarts.
+   Once that happens on one client's machine, the app renders visibly bigger
+   or smaller (and noticeably blurrier at a fractional zoom level — reads
+   exactly like "جودة سيئة" / poor quality) than on any other machine that
+   never got zoomed, with no error and no way for that user to know why "the
+   same program" looks different on two computers. Electron's own
+   'zoom-changed' main-process event cannot actually cancel a Ctrl+wheel
+   zoom (calling preventDefault() on it is a documented no-op) — the
+   reliable fix has to live here, in the page itself: intercepting the
+   wheel/keyboard events BEFORE Chromium's built-in zoom gesture ever sees
+   them, exactly like any web page disables Ctrl+scroll zoom. Keyboard zoom
+   (Ctrl+Plus/Minus/=/0) is ALSO blocked main-process-side in main.js, for
+   the desktop build specifically — this page-level guard is what covers
+   both the desktop build AND a plain browser tab, and is what actually
+   stops the mouse-wheel case either way. */
+(function preventAccidentalZoom(){
+  window.addEventListener('wheel', function(e){
+    if(e.ctrlKey) e.preventDefault();
+  }, { passive:false, capture:true });
+  window.addEventListener('keydown', function(e){
+    const k = e.key;
+    if((e.ctrlKey || e.metaKey) && (k === '+' || k === '-' || k === '=' || k === '0')){
+      e.preventDefault();
+    }
+  }, { capture:true });
+})();
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -11068,7 +11198,16 @@ function customPrompt(message, defaultValue, opts){
     if(!header || isInteractive(e.target)) return; // don't hijack clicks on "إغلاق" etc.
     const modal = header.closest('.modal');
     if(!modal) return;
-    if(modal.classList.contains('maximized')) return; // a maximized window can't be dragged, same as a real OS — restore it first
+    // Direct follow-up feedback ("لما تكبير الشاشات لا تقفل ميزة تحريكها
+    // بالماوس"): a maximized window used to be undraggable entirely here
+    // (matching a strict reading of "a real OS", where you'd restore it
+    // first) — dropped per direct request, so a maximized screen can still
+    // be repositioned without restoring it first. applyMaximizedBounds()
+    // already sets modal.style.transform:'none' as its baseline, and the
+    // baseX/baseY read from getComputedStyle() just below correctly comes
+    // back as 0,0 in that case, so dragging from a maximized state works
+    // exactly like dragging from any other state — no special-casing needed
+    // beyond simply no longer refusing to start.
     const rect = modal.getBoundingClientRect();
     let baseX = 0, baseY = 0;
     const t = getComputedStyle(modal).transform;

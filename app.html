@@ -630,6 +630,52 @@
     margin-top:var(--sp-4); padding-top:var(--sp-3);
     border-top:1px solid var(--line);
   }
+  /* BUG FIX/RESTYLE (direct feedback on "🖨 طباعة كشف بالحالات" /
+     "🧾 كشف حساب مخصص" — the same options-grid + preview shape on both:
+     "فيه مستطيل تبع خيارات الفاتورة بدل ما يكون بالطول وزع محتوياته بالعرض
+     ... يرتفع مستطيل الفاتورة يلي تحت ويبين اوضح"): .cs-grid's auto-fit
+     columns only reliably resolve to 2 across at the old modal width, so
+     the options cards stacked into 2 tall rows, and — since neither modal
+     gave itself a fixed height — the WHOLE modal (not just the preview)
+     just grew with that content and fell back to the generic
+     .modal{max-height:...;overflow-y:auto} scroll, burying the actual
+     invoice/statement preview below it. Forcing 4 columns (so every
+     options card sits in one single, short row) inside a genuinely wider,
+     fixed-height modal — with the preview panel stretched to fill
+     whatever height that first row leaves behind — makes the options
+     block shorter and the preview panel below it taller and clearer, on
+     both screens, without touching either screen's actual logic. */
+  @media (min-width:921px){
+    #caseInvoiceSelectorOverlay, #customStatementOverlay{ padding-inline-start:306px; }
+    #caseInvoiceSelectorOverlay .modal.wide{
+      max-width:1500px; height:min(720px, calc(100vh - 48px));
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    #customStatementOverlay .modal.wide{
+      max-width:1400px; height:min(680px, calc(100vh - 48px));
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    #caseInvoiceSelectorOverlay h2, #customStatementOverlay h2,
+    #caseInvoiceSelectorOverlay .cs-grid, #customStatementOverlay .cs-grid,
+    #caseInvoiceSelectorOverlay .cs-preview-head, #customStatementOverlay .cs-preview-head,
+    #caseInvoiceSelectorOverlay .cs-actions, #customStatementOverlay .cs-actions{
+      flex:0 0 auto;
+    }
+    #caseInvoiceSelectorOverlay .cs-grid, #customStatementOverlay .cs-grid{
+      grid-template-columns:repeat(4, 1fr);
+    }
+    #caseInvoiceSelectorOverlay .cs-preview, #customStatementOverlay .cs-preview{
+      flex:1; min-height:0; max-height:none; overflow-y:auto;
+    }
+    /* The case list inside "الحالات بيننا" had its own independent 360px
+       cap regardless of the grid's new shorter row — trimmed a bit so this
+       one card (spanning 2 columns) doesn't stay the tallest thing in the
+       row and eat back the room just freed up for the preview panel. */
+    #caseInvoiceCasesList{ max-height:220px !important; }
+  }
+  @media (max-width:920px){
+    #caseInvoiceSelectorOverlay .cs-preview, #customStatementOverlay .cs-preview{ max-height:320px; }
+  }
 
   /* ===== Save-problem banner =====
      Sits above every window, including #updateBanner and the activation and
@@ -709,7 +755,12 @@
      net for a pathologically short window where even the buttons' own
      min-height (see .sidebar-btn) can't all fit. */
   .sidebar-actions{
-    padding:12px 16px; border-bottom:1px solid var(--line);
+    /* Follow-up ("زيد حجمها بشكل عامودي قليلا"): vertical padding and the
+       gap between buttons (below, inline style) were both trimmed a touch
+       to make room for a taller min-height floor on .sidebar-btn without
+       forcing the list to overflow/scroll at a normal window height —
+       the whole point of this list is that it must NOT need scrolling. */
+    padding:7px 16px; border-bottom:1px solid var(--line);
     flex:1; min-height:0; overflow-y:auto;
   }
   .doctor-list{ flex:1; overflow-y:auto; padding:8px; }
@@ -743,14 +794,39 @@
      session; see applyRolePermissions()/ALWAYS_ADMIN_BTN_IDS/
      PERMISSION_GATED_BTN_IDS. */
   .role-hidden{ display:none !important; }
+  /* Task #58 — professional redesign of "المستخدمون والصلاحيات", style-only:
+     a subtle hover lift + accent-colored left edge per row, and a small
+     round avatar (employee's first letter) so the list reads as a proper
+     account directory instead of a plain settings list. No id/class/data-*
+     attribute used by JS or by the existing tests was touched. */
   .manage-user-row{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:10px 14px; border:1.5px solid var(--line); border-radius:9px; background:var(--panel-2);
-    flex-wrap:wrap;
+    flex-wrap:wrap; transition:box-shadow .15s ease, transform .15s ease; position:relative; overflow:hidden;
   }
-  .manage-user-info{ display:flex; align-items:center; gap:9px; font-weight:800; }
+  .manage-user-row::before{
+    content:''; position:absolute; inset-inline-start:0; top:0; bottom:0; width:4px; background:var(--teal-dim);
+  }
+  .manage-user-row:hover{ box-shadow:0 3px 10px rgba(0,0,0,.10); transform:translateY(-1px); }
+  .manage-user-info{ display:flex; align-items:center; gap:10px; font-weight:800; }
+  .manage-user-avatar{
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+    width:30px; height:30px; border-radius:50%; background:var(--teal); color:#fff;
+    font-size:13px; font-weight:900;
+  }
   .manage-user-name{ font-size:13.5px; }
   .manage-user-actions{ display:flex; align-items:center; gap:8px; }
+  .manage-users-section-label{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    font-size:12px; font-weight:900; color:var(--ink-dim); margin-bottom:8px;
+  }
+  .manage-users-count-chip{
+    font-size:11px; font-weight:800; padding:2px 9px; border-radius:var(--r-pill);
+    background:var(--teal-tint); color:var(--teal); border:1px solid var(--teal-dim);
+  }
+  .manage-users-add-card{
+    border:1.5px dashed var(--line); border-radius:10px; padding:14px; background:var(--panel-2);
+  }
   .role-badge{
     display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:800;
     padding:3px 9px; border-radius:var(--r-pill); border:1px solid transparent;
@@ -784,7 +860,12 @@
   }
   .icon-round-btn:hover{ background:var(--teal-tint); color:var(--teal); border-color:var(--teal-dim); transform:translateY(-2px); box-shadow:var(--shadow); }
   .sidebar-btn{
-    width:100%; text-align:start; font-size:15.5px; font-weight:800;
+    /* Follow-up direct feedback ("زيد حجمها بشكل عامودي قليلا ... مع تقصير
+       بسيط من حجم طول المستطيل"): a touch taller (font-size + min-height
+       floor both nudged up) and a touch narrower (width pulled in a few px
+       and centred instead of filling the container edge-to-edge) — a
+       slightly chunkier, less "long thin bar" proportion. */
+    width:calc(100% - 8px); margin-inline:auto; text-align:start; font-size:16.5px; font-weight:800;
     /* BUG FIX (real, confirmed defect uncovered while enlarging these
        buttons — "زيد ارتفاع الأزرار شوي"): .btn-ghost (below, same 0,1,0
        specificity but LATER in the stylesheet) was silently overriding this
@@ -805,7 +886,7 @@
        above this (e.g. ~27px each at a 720px-tall window), so this only
        kicks in and forces .sidebar-actions' own overflow-y:auto to take over
        on a pathologically short window where even that isn't enough room. */
-    flex:1 1 0; min-height:24px; display:flex; align-items:center; justify-content:flex-start;
+    flex:1 1 0; min-height:29px; display:flex; align-items:center; justify-content:flex-start;
     position:relative; transition: transform .13s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
     border:2px solid var(--line) !important;
     background:var(--panel) !important;
@@ -818,6 +899,14 @@
     width:3px; height:0; border-radius:3px; background:var(--teal); transition:height .18s ease;
   }
   .sidebar-btn:hover::before{ height:60%; }
+  /* "🏠 الرئيسية" — the primary/home entry point, called out with a
+     noticeably bigger label+icon than the other sidebar buttons per direct
+     feedback ("تكبير كلمة الرئيسية والايقونة يلي جنبها"), plus a teal-tinted
+     fill so it reads as the anchor item at the top of the list. */
+  .sidebar-btn-home{
+    font-size:19px; font-weight:900;
+    background:var(--teal-tint) !important; border-color:var(--teal-dim) !important; color:var(--teal-ink, var(--teal)) !important;
+  }
 
   /* Unified close ("إغلاق") button — light red, consistent across every screen */
   button[id^="close"], button.close-x{
@@ -1408,7 +1497,17 @@
     display:flex; justify-content:space-between; align-items:center; font-size:17px; margin:0 0 20px;
     position:sticky; top:0; background:var(--panel-2); padding:10px 14px; z-index:3; cursor:move;
     -webkit-user-select:none; user-select:none; touch-action:none;
-    border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.10);
+    /* BUG FIX/RESTYLE (direct feedback: "تعديل شكل التظليل عند اسماء
+       الشاشات بحيث يصبح ارتب ومتناسق بشكل افضل وقريب لنظام الويندوز"): a
+       12px pill radius + its own floating drop-shadow read as a badge/chip
+       sitting loose inside the screen, not a title bar. A real desktop
+       title bar is flatter and doesn't cast its own shadow — the shading
+       comes purely from the background-color contrast plus a single crisp
+       divider line (the border-bottom already added by the shared
+       "v8.5 universal inner-screen polish" rule further down). Softened the
+       radius and dropped the extra shadow so every screen's title reads as
+       one consistent, calmer bar instead of a floating pill. */
+    border-radius:8px;
     /* BUG FIX (direct feedback: "استخدم تظليل لعنوان الشاشة بشكل واضح اكتر")
        — the previous shading (--panel-2 fill + a soft outer shadow) still
        read as barely different from the body of the screen on some
@@ -1609,6 +1708,38 @@
      it needs an explicit height again here, same as its old fixed value. */
   @media (max-width:920px){
     #invoiceAppearancePreviewFrame{ height:72vh; min-height:560px; }
+  }
+  /* BUG FIX (direct feedback, "🧾 إنشاء فاتورة" flow → "📋 اختيار البيانات/
+     الأعمدة" → this screen: "بدي الفاتورة تكون ظاهرة بحجم الشاشة تمام جوا
+     التبويبة بدون ما لف بالماوس"): #invoiceColumnsOverlay shares the exact
+     same .invoice-columns-preview-wrap/iframe markup as
+     #invoiceAppearanceOverlay above, but the earlier fix for that sibling
+     screen (see the long comment above #invoiceAppearanceOverlay's own
+     rule) was only ever scoped to #invoiceAppearanceOverlay — this screen
+     still had the old fixed-height iframe + a modal that just grows with
+     its content, so the bottom of the live invoice preview needed a manual
+     scroll to reach here too. Same fix, same reasoning, applied to this
+     screen: a fixed modal height + a stretched preview column instead of a
+     merely tall one, plus the sidebar-overlap guard every wide overlay
+     needs (see #invoiceAppearanceOverlay's own padding-inline-start note). */
+  @media (min-width:921px){
+    #invoiceColumnsOverlay{ padding-inline-start:306px; }
+    #invoiceColumnsOverlay .modal.wide{
+      max-width:1400px; height:min(680px, calc(100vh - 48px));
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    #invoiceColumnsOverlay .invoice-columns-layout{
+      flex:1; min-height:0; grid-template-rows:1fr; align-items:stretch;
+    }
+    #invoiceColumnsOverlay .invoice-columns-form-col{
+      overflow-y:auto; height:100%; padding-inline-end:6px;
+    }
+    #invoiceColumnsOverlay .invoice-columns-preview-wrap{
+      display:flex; flex-direction:column; height:100%;
+    }
+  }
+  @media (max-width:920px){
+    #invoiceColumnsPreviewFrame{ height:72vh; min-height:560px; }
   }
   .invoice-columns-picker{ display:flex; flex-direction:column; gap:8px; }
   /* Full design-panel row (direct feedback: "لوحة تصميم كاملة ... ترتيب
@@ -2330,8 +2461,8 @@ input:focus, select:focus, textarea:focus {
         <div class="brand-mark" style="width:64px; height:64px; margin:0 auto;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==" alt="شعار" style="width:100%; height:100%;"></div>
       </div>
     </div>
-    <div class="sidebar-actions" style="display:flex; flex-direction:column; gap:6px;">
-      <button type="button" class="btn-ghost sidebar-btn" id="homeBtn">🏠 الرئيسية</button>
+    <div class="sidebar-actions" style="display:flex; flex-direction:column; gap:3px;">
+      <button type="button" class="btn-ghost sidebar-btn sidebar-btn-home" id="homeBtn">🏠 الرئيسية</button>
       <button type="button" class="btn-ghost sidebar-btn" id="addPatientCaseBtn">➕ إضافة حالة مرضية</button>
       <button type="button" class="btn-ghost sidebar-btn" id="incomingPaymentsBtn">💰 دفعة واردة</button>
       <button type="button" class="btn-ghost sidebar-btn" id="expensePaymentsBtn" style="border-color:var(--green) !important; color:var(--green);">📤 إنشاء دفعة صادرة</button>
@@ -4316,7 +4447,7 @@ input:focus, select:focus, textarea:focus {
       رتّب الأعمدة (▲▼)، حدد الظاهر منها، وعدّل اسم كل عمود إن أردت، وحجم خط الجدول أدناه — كل تغيير يظهر مباشرة بالمعاينة المجاورة، قبل ما تطبع أي شي فعليًا.
     </div>
     <div class="invoice-columns-layout">
-      <div>
+      <div class="invoice-columns-form-col">
         <div class="invoice-columns-picker" id="invoiceColumnsGrid"></div>
         <div class="invoice-table-fontsize-row">
           <span>🔠 حجم خط الجدول</span>
@@ -4326,7 +4457,7 @@ input:focus, select:focus, textarea:focus {
       </div>
       <div class="invoice-columns-preview-wrap">
         <div class="invoice-columns-preview-label">👁 معاينة حية</div>
-        <iframe id="invoiceColumnsPreviewFrame" title="معاينة الفاتورة" style="width:100%; height:72vh; min-height:560px; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
+        <iframe id="invoiceColumnsPreviewFrame" title="معاينة الفاتورة" style="width:100%; flex:1; min-height:0; border:1px solid var(--line); border-radius:10px; background:#fff;"></iframe>
       </div>
     </div>
     <div class="modal-actions" style="justify-content:space-between;">
@@ -4759,19 +4890,22 @@ input:focus, select:focus, textarea:focus {
     <div class="muted" style="margin:-6px 0 14px; font-size:12px; line-height:1.8;">
       الأدمن (أنت) يشوف ويتحكم بكل شيء بالبرنامج. أي حساب تضيفه هون إما <b>👑 مشرف</b> (نفس صلاحيات الأدمن بالكامل) أو <b>👷 موظف</b> — الموظف افتراضيًا يقدر بس يسجل حالات ودفعات واردة، وتقدر تفتح له/تفتح لها صلاحيات إضافية من زر "🔧 الصلاحيات" جنب اسمه.
     </div>
+    <div class="manage-users-section-label"><span>👥 الحسابات الحالية</span><span class="manage-users-count-chip" id="manageUsersCountChip">0</span></div>
     <div id="manageUsersList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
     <div class="muted" id="manageUsersEmpty" style="display:none; text-align:center; padding:16px 0;">لا يوجد حسابات موظفين بعد.</div>
-    <form id="addEmployeeAccountForm" style="border-top:1px solid var(--line); padding-top:14px; display:flex; flex-direction:column; gap:10px;">
-      <div class="field" style="margin-bottom:0;"><label>➕ إضافة حساب جديد</label></div>
-      <input type="text" id="newEmployeeUsername" autocomplete="off" placeholder="اسم المستخدم">
-      <input type="password" id="newEmployeePassword" autocomplete="new-password" placeholder="كلمة السر (4 أحرف على الأقل)">
-      <label class="employee-permission-row" style="border-style:dashed;">
-        <input type="checkbox" id="newEmployeeIsSupervisor">
-        <span>👑 إضافة كمسؤول (صلاحيات كاملة مثل الأدمن)</span>
-      </label>
-      <div id="addEmployeeAccountError" class="muted" style="display:none; color:var(--red); font-size:12px;"></div>
-      <button type="submit" class="btn-primary btn-small">➕ إضافة الحساب</button>
-    </form>
+    <div class="manage-users-add-card" style="margin-top:6px;">
+      <form id="addEmployeeAccountForm" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="field" style="margin-bottom:0;"><label>➕ إضافة حساب جديد</label></div>
+        <input type="text" id="newEmployeeUsername" autocomplete="off" placeholder="اسم المستخدم">
+        <input type="password" id="newEmployeePassword" autocomplete="new-password" placeholder="كلمة السر (4 أحرف على الأقل)">
+        <label class="employee-permission-row" style="border-style:dashed;">
+          <input type="checkbox" id="newEmployeeIsSupervisor">
+          <span>👑 إضافة كمسؤول (صلاحيات كاملة مثل الأدمن)</span>
+        </label>
+        <div id="addEmployeeAccountError" class="muted" style="display:none; color:var(--red); font-size:12px;"></div>
+        <button type="submit" class="btn-primary btn-small">➕ إضافة الحساب</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -5004,7 +5138,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.8';
+const APP_VERSION = '10.9';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -9619,7 +9753,23 @@ function showToast(message, type){
   const container = document.getElementById('toastContainer');
   const el = document.createElement('div');
   el.className = 'toast ' + type;
-  el.innerHTML = `<span class="icon">${TOAST_ICONS[type]||''}</span><span>${text}</span>`;
+  // BUG FIX (deep code audit): this used to build its content via innerHTML
+  // with the raw message interpolated unescaped. Most callers pass static
+  // Arabic strings, but several interpolate live user-entered entity names
+  // (a doctor/lab/company/agent/"other party" name) straight into the
+  // toast text — an entity named e.g. "<img src=x onerror=...>" would
+  // execute arbitrary JS the next time any toast mentioned it. Building the
+  // nodes directly with textContent (instead of one innerHTML template
+  // literal) fixes every call site at once, not just the ones caught so
+  // far — the icon itself always comes from the trusted TOAST_ICONS map,
+  // never from caller input, so it's safe to set as text too.
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'icon';
+  iconSpan.textContent = TOAST_ICONS[type] || '';
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = text;
+  el.appendChild(iconSpan);
+  el.appendChild(msgSpan);
   container.appendChild(el);
   const life = (type === 'success') ? 3200 : 5000; // +1s across the board, per direct feedback
   setTimeout(()=>{ el.style.transition='opacity .3s ease'; el.style.opacity='0'; setTimeout(()=> el.remove(), 300); }, life);
@@ -10136,6 +10286,20 @@ const DEFAULT_EMPLOYEE_PERMISSIONS = {
   createInvoices: false,    // إنشاء فواتير
   editRecords: false,       // تعديل بيانات الأطباء/المختبرات/الشركات/المناديب/الموظفين
   canDelete: false,         // أي عملية حذف
+  // BUG FIX (deep code audit): the doctors/labs/companies/agents/staff
+  // "directory" home cards (and the balance/statement/salary screens they
+  // open into) were never gated by ANY permission — an employee with every
+  // permission left at its safe default could still see every party's due
+  // amount and open their full statement, and see a technician's monthly
+  // salary + advances ledger. Real confidentiality gap, not just a missing
+  // convenience toggle.
+  viewDirectories: false,   // عرض أدلة الأطباء/المختبرات/الشركات/المناديب/الموظفين (الأرصدة والكشوفات والرواتب)
+  // BUG FIX (deep code audit): "سجل أنواع الأعمال" (work-type list + prices)
+  // is opened from buttons INSIDE the add-case screen, so any employee with
+  // the (default-on) addCases permission could add/rename/delete work types
+  // and change their prices — real pricing data, not covered by any existing
+  // permission.
+  manageWorkTypes: false,   // إدارة أنواع الأعمال وأسعارها
 };
 const PERMISSION_LABELS = {
   addCases: '➕ تسجيل حالة مرضية جديدة',
@@ -10154,6 +10318,8 @@ const PERMISSION_LABELS = {
   createInvoices: '🧾 إنشاء فواتير',
   editRecords: '✏️ تعديل البيانات (أطباء / مختبرات / شركات / مناديب / موظفين)',
   canDelete: '🗑 الحذف (أي شاشة)',
+  viewDirectories: '📇 عرض أدلة الأطباء/المختبرات/الشركات/المناديب/الموظفين (الأرصدة والكشوفات والرواتب)',
+  manageWorkTypes: '🛠 إدارة أنواع الأعمال وأسعارها',
 };
 function loadEmployeeAccounts(){
   try{
@@ -10224,6 +10390,7 @@ const PERMISSION_GATED_BTN_IDS = {
   checksRegister: ['checksRegisterSidebarBtn'],
   workLog: ['workLogSidebarBtn'],
   createInvoices: ['createInvoiceSidebarBtn'],
+  manageWorkTypes: ['addWorkTypeFromCaseBtn', 'manageWorkTypesFromQuickPickBtn'],
 };
 // Home-screen stat cards that surface the SAME report a sidebar button (or,
 // for the three that have no dedicated sidebar button of their own, only
@@ -10235,6 +10402,11 @@ const PERMISSION_GATED_HOME_CARD_IDS = {
   viewDebtsLog: ['homeDebtsCard'],
   viewDuesReport: ['homeDuesCard'],
   viewEditLog: ['homeEditLogCard'],
+  // BUG FIX (deep code audit): these five directory cards open a full
+  // balance/statement (or, for staff, salary + advances) screen for every
+  // doctor/lab/company/agent/technician — previously ungated entirely, so
+  // any employee account could see them regardless of permissions.
+  viewDirectories: ['homeDoctorsCard', 'homeLabsCard', 'homeStaffCard', 'homeCompaniesCard', 'homeAgentsCard'],
 };
 const EDIT_ENTITY_BTN_IDS = [
   'editDoctorBtn','editDoctorFromDetailsBtn','editDoctorFromStatementBtn',
@@ -10303,6 +10475,8 @@ function renderManageUsersList(){
   const list = loadEmployeeAccounts();
   wrap.innerHTML = '';
   empty.style.display = list.length ? 'none' : 'block';
+  const countChip = document.getElementById('manageUsersCountChip');
+  if(countChip) countChip.textContent = String(list.length);
   list.forEach(function(u){
     const row = document.createElement('div');
     row.className = 'manage-user-row';
@@ -10312,8 +10486,10 @@ function renderManageUsersList(){
     const badge = u.isSupervisor
       ? '<span class="role-badge role-badge-supervisor">👑 مشرف</span>'
       : '<span class="role-badge role-badge-employee">👷 موظف</span>';
+    const initial = escapeHtml((u.username||'؟').trim().charAt(0).toUpperCase());
     row.innerHTML =
       '<div class="manage-user-info">' +
+        '<span class="manage-user-avatar">' + initial + '</span>' +
         '<span class="manage-user-name">' + escapeHtml(u.username) + '</span>' + badge +
       '</div>' +
       '<div class="manage-user-actions">' +
@@ -10409,11 +10585,21 @@ if(addEmployeeAccountFormEl) addEmployeeAccountFormEl.addEventListener('submit',
   // admin itself), so its own `permissions` object is never even consulted;
   // still saved with the defaults so nothing breaks if it's ever demoted.
   const isSupervisor = !!(supervisorInput && supervisorInput.checked);
-  list.push({ id: uid('emp'), username: u, passwordHash: hash, isSupervisor, permissions: Object.assign({}, DEFAULT_EMPLOYEE_PERMISSIONS) });
+  const newAcc = { id: uid('emp'), username: u, passwordHash: hash, isSupervisor, permissions: Object.assign({}, DEFAULT_EMPLOYEE_PERMISSIONS) };
+  list.push(newAcc);
   saveEmployeeAccounts(list);
   addEmployeeAccountFormEl.reset();
   renderManageUsersList();
   showToast(tr('تمت إضافة حساب الموظف.'), 'success');
+  // Direct feedback (point 9): "ضيف موظف حط لي زر كمان امنحو صلاحيات ع كيفي
+  // ... يفتح جدول مهام ومنو حدد شو رح افتحلو مميزات ... وزر موافق لتطبيق
+  // الصلاحيات" — right after adding a new EMPLOYEE (a supervisor's own
+  // permissions object is never consulted, so there is nothing to grant),
+  // drop the admin straight into that employee's own permissions table —
+  // the same checkbox-per-feature table + "💾 حفظ الصلاحيات" apply button
+  // already used from the "🔧 الصلاحيات" row button — instead of making them
+  // hunt for it afterwards in the list below.
+  if(!isSupervisor) openEmployeePermissionsPanel(newAcc.id);
 });
 
 const lockScreenEl = document.getElementById('lockScreen');
@@ -11717,6 +11903,13 @@ async function deletePaymentRecordById(id){
   if(!(await customConfirm('هل تريد حذف هذه الدفعة؟', {danger:true}))) return false;
   const { kind, ownerType, owner, payment } = loc;
   if(kind === 'incoming'){
+    // BUG FIX (deep financial audit): an incoming payment recorded with
+    // purpose==='debt' mutated owner.debts[] on creation (see
+    // applyPaymentToDebts()/debtTouches). Reverse that mutation BEFORE
+    // filtering the payment out, or cancelling the payment silently leaves
+    // the debt ledger corrupted (a debt stuck "settled" or short by an
+    // amount that no longer has any real payment behind it).
+    if(payment && payment.debtTouches) restoreDebtTouches(owner, payment.debtTouches);
     if(ownerType === 'doctor'){
       owner.payments = (owner.payments||[]).filter(p=> p.id !== id);
       logEdit(`حذف دفعة واردة من حساب د. ${owner.name}`, {type:'doctor', doctorId: owner.id});
@@ -11748,6 +11941,19 @@ async function deletePaymentRecordById(id){
       const co = companies.find(x=>x.id===payment.recipientId);
       if(co) co.payments = (co.payments||[]).filter(p=> p.id !== payment.linkedCompanyPaymentId);
       saveCompanies();
+    }
+    // BUG FIX (deep financial audit): a purpose==='debt' expense payment
+    // also files an independent entry in the entity's own debts[] (see
+    // expensePaymentForm's submit handler, linkedDebtId). Without this,
+    // deleting the payment left that debt permanently orphaned — still
+    // counted in totalOpenManualDebts()/the debts log with no real
+    // payment behind it anymore.
+    if(payment.linkedDebtId){
+      const debtOwner = debtEntityById(payment.recipientType, payment.recipientId);
+      if(debtOwner && debtOwner.debts){
+        debtOwner.debts = debtOwner.debts.filter(d=> d.id !== payment.linkedDebtId);
+        saveDebtEntityType(payment.recipientType);
+      }
     }
     expensePayments = expensePayments.filter(x=> x.id !== id);
     const ctx = payment.recipientType==='employee' ? {type:'technician', techId: payment.recipientId}
@@ -13169,16 +13375,26 @@ function acctPayments(x){
     expensePayments.filter(e=> e.recipientType==='lab' && e.recipientId===x.id)
       .forEach(e=> out.push({date:e.date, note:e.note, amount:Number(e.amount)||0, dir:'out'}));
   }else if(acctType === 'company'){
-    // A company's payments are money going OUT to a supplier, and the only
-    // thing that writes them is the expenses form — which records the same
-    // payment in expensePayments too, linked by linkedCompanyPaymentId.
-    // Listing both showed every payment twice, and the c.payments copy was
-    // marked 'in', so the printed statement reported money paid out as
-    // revenue received. Read the entity's own list only.
-    (x.payments||[]).forEach(p=> out.push({date:p.date, note:p.note, amount:Number(p.amount)||0, dir:'out'}));
+    // BUG FIX (deep financial audit): c.payments holds BOTH directions —
+    // a real incoming payment FROM the company (pushed directly by the
+    // incoming-payment form, no viaExpense flag) and a viaExpense:true
+    // MIRROR of an outgoing expense payment TO the company (see
+    // linkedCompanyPaymentId). The old code unconditionally tagged every
+    // entry 'out', so a genuine incoming payment from a company showed up
+    // in this ledger — and the printed statement — as an outgoing expense,
+    // inverted from reality. Split exactly like every other reader of
+    // c.payments already does (see collectAllChecks, collectAllPaymentsForCancel,
+    // renderIncomingPaymentsReportPage, printGenericPaymentsReport).
+    (x.payments||[]).forEach(p=> out.push({date:p.date, note:p.note, amount:Number(p.amount)||0, dir: p.viaExpense ? 'out' : 'in'}));
     expensePayments.filter(e=> e.recipientType==='company' && e.recipientId===x.id && !e.linkedCompanyPaymentId)
       .forEach(e=> out.push({date:e.date, note:e.note, amount:Number(e.amount)||0, dir:'out'}));
   }else if(acctType === 'agent'){
+    // BUG FIX (deep financial audit): a.payments (real incoming payments
+    // FROM the agent, or a viaExpense:true mirror of an outgoing payment
+    // TO the agent — same pattern as companies, see agentPaidTotal()) was
+    // never read here at all, so incoming payments from an agent were
+    // completely missing from this ledger/statement.
+    (x.payments||[]).forEach(p=> out.push({date:p.date, note:p.note, amount:Number(p.amount)||0, dir: p.viaExpense ? 'out' : 'in'}));
     expensePayments.filter(e=> e.recipientType==='agent' && e.recipientId===x.id)
       .forEach(e=> out.push({date:e.date, note:e.note, amount:Number(e.amount)||0, dir:'out'}));
   }else if(acctType === 'technician'){
@@ -15449,19 +15665,32 @@ const PRINT_STYLES = `
     font-variant-numeric: lining-nums tabular-nums;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }
+  /* RESTYLE (direct feedback: "اريد تطبيق شكل الفاتورة بشكل احترافي ومنظم
+     اكثر ... التعديل على الشكل فقط" — style-only pass, no data/markup/logic
+     touched anywhere in this file: every selector below already exists in
+     the printed document, only its declared properties changed). A slightly
+     bolder header accent, a touch more breathing room, and a soft shadow on
+     the boxed elements (party card, note, totals) give the document a more
+     deliberate, "designed" feel instead of a flatter default look. */
   .doc-head{
     display:flex; align-items:flex-start; justify-content:space-between;
-    gap:18px; padding-bottom:12px; margin-bottom:16px;
+    gap:18px; padding-bottom:14px; margin-bottom:20px;
     border-bottom:3px solid #0e7c9e;
+    position:relative;
   }
-  .doc-title{ font-size:21px; font-weight:900; margin:0 0 3px; }
+  .doc-head::after{
+    content:''; position:absolute; inset-inline-start:0; bottom:-3px;
+    width:64px; height:3px; background:#12262d;
+  }
+  .doc-title{ font-size:22px; font-weight:900; margin:0 0 3px; letter-spacing:.2px; }
   .doc-sub{ color:#5a707a; font-size:12.5px; font-weight:700; }
   .doc-meta{ text-align:left; font-size:12px; color:#5a707a; white-space:nowrap; }
   .doc-meta b{ color:#12262d; }
 
   .party{
-    background:#f4f9fb; border:1px solid #d8e6ec; border-radius:9px;
-    padding:11px 14px; margin-bottom:14px; font-size:13px;
+    background:#f4f9fb; border:1px solid #d8e6ec; border-radius:10px;
+    padding:12px 15px; margin-bottom:16px; font-size:13px;
+    box-shadow:0 1px 3px rgba(18,38,45,.06);
   }
   .party .party-name{ font-size:16px; font-weight:900; margin-bottom:3px; }
   .party div + div{ margin-top:2px; }
@@ -15473,6 +15702,7 @@ const PRINT_STYLES = `
   .party-grid > .party-card:only-child{ grid-column:1 / -1; }
   .party-card{
     border:1px solid #d8e6ec; border-radius:10px; overflow:hidden; background:#fff;
+    box-shadow:0 1px 4px rgba(18,38,45,.07);
   }
   .party-card-head{
     display:flex; align-items:center; gap:8px; padding:8px 12px;
@@ -15494,13 +15724,14 @@ const PRINT_STYLES = `
   }
   .party-card-v{ font-weight:900; color:#12262d; }
 
-  table{ width:100%; border-collapse:collapse; margin-top:6px; font-size:12.5px; }
+  table{ width:100%; border-collapse:collapse; margin-top:8px; font-size:12.5px; }
   thead{ display:table-header-group; }   /* repeat headers on every page */
   tfoot{ display:table-footer-group; }
   tr{ page-break-inside:avoid; break-inside:avoid; }
   th{
     background:#e7f1f5; text-align:right; font-weight:900; font-size:12px;
-    padding:9px 10px; border:1px solid #b9d3dd; white-space:nowrap;
+    padding:10px 10px; border:1px solid #b9d3dd; white-space:nowrap;
+    letter-spacing:.15px;
   }
   td{ padding:8px 10px; border:1px solid #dce7ec; }
   tbody tr:nth-child(even) td{ background:#fafcfd; }
@@ -15512,28 +15743,36 @@ const PRINT_STYLES = `
   tfoot td{ background:#eef5f8; font-weight:900; font-size:13.5px; border-top:2px solid #7fa9b8; }
   .empty{ padding:18px; text-align:center; color:#8b9aa2; font-weight:700; }
 
-  .totals{ margin-top:18px; margin-inline-start:auto; max-width:360px; }
+  .totals{ margin-top:20px; margin-inline-start:auto; max-width:360px; }
   .totals div{
     display:flex; justify-content:space-between; gap:20px;
-    padding:6px 0; font-size:13px; border-bottom:1px solid #e6eef2;
+    padding:6px 2px; font-size:13px; border-bottom:1px solid #e6eef2;
   }
   .totals div span:last-child{ font-family:'Segoe UI',Arial,sans-serif; font-weight:800; }
   .totals .grand{
-    border-top:2px solid #12262d; border-bottom:0;
-    margin-top:6px; padding-top:9px; font-size:15.5px; font-weight:900;
+    border:0; background:#12262d; color:#fff; border-radius:8px;
+    margin-top:8px; padding:10px 12px; font-size:15.5px; font-weight:900;
   }
   .credit{ color:#0f7a50; }
   .debit{ color:#a83a29; }
+  /* Several grand-total lines also carry a credit/debit tone on their value
+     span (see printTotalsBlock()) — the plain .credit/.debit colors above
+     are tuned for the light page background, not the .grand row's new dark
+     chip, so they're brightened specifically inside .grand to stay legible
+     there without changing how credit/debit read anywhere else. */
+  .totals .grand .credit{ color:#5ce0a0; }
+  .totals .grand .debit{ color:#ff9f8a; }
 
   ${PRINT_CREDIT_STYLES}
 
   .doc-note{
-    margin-top:18px; padding:11px 14px; font-size:12.5px;
-    background:#f4f9fb; border:1px solid #d8e6ec; border-radius:8px;
+    margin-top:20px; padding:12px 15px; font-size:12.5px;
+    background:#f4f9fb; border:1px solid #d8e6ec; border-radius:9px;
     border-inline-start:4px solid #0e7c9e;
+    box-shadow:0 1px 3px rgba(18,38,45,.06);
   }
   .doc-foot{
-    margin-top:30px; padding-top:12px; border-top:1px solid #d8e6ec;
+    margin-top:32px; padding-top:14px; border-top:1px solid #d8e6ec;
     display:flex; justify-content:space-between; align-items:flex-end;
     font-size:11.5px; color:#5a707a;
   }
@@ -17012,18 +17251,37 @@ document.getElementById('ipPurpose').addEventListener('change', updateIncomingPa
    partial payment reduces the last debt it reaches. «حساب جاري» records the
    payment as an ordinary account movement and touches no debt. */
 function applyPaymentToDebts(ent, amount){
-  if(!ent || !Array.isArray(ent.debts)) return 0;
+  // BUG FIX (deep financial audit): this destructively mutates ent.debts[]
+  // (settling a debt, or shrinking its remaining amount) with no record of
+  // what it changed — so cancelling the incoming payment that caused this
+  // had no way to reverse it, permanently corrupting the debt ledger (see
+  // restoreDebtTouches() below, which undoes exactly what's returned here).
+  // Returns [{id, prevSettled, prevAmount}] for every debt actually
+  // touched, in case callers want to store it on the payment record.
+  if(!ent || !Array.isArray(ent.debts)) return [];
   let remaining = amount;
-  let settledCount = 0;
+  const touches = [];
   const open = ent.debts.filter(d=> !d.settled)
     .sort((a,b)=> (a.dueDate||'').localeCompare(b.dueDate||''));
   for(const d of open){
     if(remaining <= 0) break;
     const amt = Number(d.amount)||0;
-    if(remaining >= amt){ d.settled = true; remaining -= amt; settledCount++; }
+    touches.push({ id: d.id, prevSettled: d.settled, prevAmount: d.amount });
+    if(remaining >= amt){ d.settled = true; remaining -= amt; }
     else { d.amount = Math.round((amt - remaining) * 100) / 100; remaining = 0; }
   }
-  return settledCount;
+  return touches;
+}
+/* Reverses exactly what applyPaymentToDebts() did, using the touches array
+   it returned (stored on the payment record as .debtTouches). Called when
+   the incoming payment that caused those debt mutations is deleted/
+   cancelled. Safe no-op if the debt was itself deleted in the meantime. */
+function restoreDebtTouches(ent, touches){
+  if(!ent || !Array.isArray(touches) || !touches.length || !Array.isArray(ent.debts)) return;
+  touches.forEach(t=>{
+    const d = ent.debts.find(x=> x.id === t.id);
+    if(d){ d.settled = t.prevSettled; d.amount = t.prevAmount; }
+  });
 }
 
 incomingPaymentForm.addEventListener('submit', (e)=>{
@@ -17064,8 +17322,8 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     const d = doctors.find(x=>x.id===id);
     if(!d){ showToast('الرجاء اختيار الطبيب أولًا.', 'error'); return; }
     if(!d.payments) d.payments = [];
-    d.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, dueDate: '', paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
-    if(purpose === 'debt') applyPaymentToDebts(d, amount);
+    const debtTouches1 = (purpose === 'debt') ? applyPaymentToDebts(d, amount) : null;
+    d.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, dueDate: '', debtTouches: debtTouches1, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'د. ' + d.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من د. ${d.name}`, {type:'doctor', doctorId: d.id});
     saveDoctors();
@@ -17076,8 +17334,8 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     const l = labs.find(x=>x.id===id);
     if(!l){ showToast('الرجاء اختيار المختبر أولًا.', 'error'); return; }
     if(!l.payments) l.payments = [];
-    l.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
-    if(purpose === 'debt') applyPaymentToDebts(l, amount);
+    const debtTouches2 = (purpose === 'debt') ? applyPaymentToDebts(l, amount) : null;
+    l.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, debtTouches: debtTouches2, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'مختبر ' + l.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من مختبر ${l.name}`, {type:'lab', labId: l.id});
     saveLabs();
@@ -17092,8 +17350,8 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     // went down. Recording it in c.payments (exactly like a doctor/lab
     // payment) is what companyPaidTotal() actually sums.
     if(!c.payments) c.payments = [];
-    c.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
-    if(purpose === 'debt') applyPaymentToDebts(c, amount);
+    const debtTouches3 = (purpose === 'debt') ? applyPaymentToDebts(c, amount) : null;
+    c.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, debtTouches: debtTouches3, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'شركة ' + c.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من شركة ${c.name}`, {type:'company', companyId: c.id});
     saveCompanies();
@@ -17104,8 +17362,8 @@ incomingPaymentForm.addEventListener('submit', (e)=>{
     // Same bug and same fix as the company branch above — see agentPaidTotal(),
     // which now also sums a.payments so this actually reduces agentBalance().
     if(!a.payments) a.payments = [];
-    a.payments.push({ id: uid('pay'), amount, date, note, purpose, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
-    if(purpose === 'debt') applyPaymentToDebts(a, amount);
+    const debtTouches4 = (purpose === 'debt') ? applyPaymentToDebts(a, amount) : null;
+    a.payments.push({ id: uid('pay'), amount, date, note, purpose, debtTouches: debtTouches4, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'المندوب ' + a.name;
     logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من المندوب ${a.name}`, {type:'agent', agentId: a.id});
     saveAgents();
@@ -17172,9 +17430,16 @@ document.getElementById('incomingPaymentsLogBody').addEventListener('click', asy
   const sourceId = e.target.getAttribute('data-source-id');
   if(!payId) return;
   if(!(await customConfirm('هل تريد حذف هذه الدفعة؟', {danger:true}))) return;
+  // BUG FIX (deep financial audit): same debtTouches reversal as
+  // deletePaymentRecordById() — a purpose==='debt' payment mutates
+  // owner.debts[] on creation, and this is a second, independent delete
+  // path for the same payment records (the incoming-payments log's own
+  // inline "حذف" button), so it needs the identical undo before filtering.
   if(sourceType === 'doctor'){
     const d = doctors.find(x=>x.id===sourceId);
     if(!d) return;
+    const p0 = (d.payments||[]).find(p=> p.id === payId);
+    if(p0 && p0.debtTouches) restoreDebtTouches(d, p0.debtTouches);
     d.payments = (d.payments||[]).filter(p=> p.id !== payId);
     logEdit(`حذف دفعة واردة من حساب د. ${d.name}`, {type:'doctor', doctorId: d.id});
     saveDoctors();
@@ -17184,6 +17449,8 @@ document.getElementById('incomingPaymentsLogBody').addEventListener('click', asy
   }else if(sourceType === 'lab'){
     const l = labs.find(x=>x.id===sourceId);
     if(!l) return;
+    const p0 = (l.payments||[]).find(p=> p.id === payId);
+    if(p0 && p0.debtTouches) restoreDebtTouches(l, p0.debtTouches);
     l.payments = (l.payments||[]).filter(p=> p.id !== payId);
     logEdit(`حذف دفعة واردة من مختبر ${l.name}`, {type:'lab', labId: l.id});
     saveLabs();
@@ -17191,6 +17458,8 @@ document.getElementById('incomingPaymentsLogBody').addEventListener('click', asy
   }else if(sourceType === 'company'){
     const c = companies.find(x=>x.id===sourceId);
     if(!c) return;
+    const p0 = (c.payments||[]).find(p=> p.id === payId);
+    if(p0 && p0.debtTouches) restoreDebtTouches(c, p0.debtTouches);
     c.payments = (c.payments||[]).filter(p=> p.id !== payId);
     logEdit(`حذف دفعة واردة من شركة ${c.name}`, {type:'company', companyId: c.id});
     saveCompanies();
@@ -17198,6 +17467,8 @@ document.getElementById('incomingPaymentsLogBody').addEventListener('click', asy
   }else if(sourceType === 'agent'){
     const a = agents.find(x=>x.id===sourceId);
     if(!a) return;
+    const p0 = (a.payments||[]).find(p=> p.id === payId);
+    if(p0 && p0.debtTouches) restoreDebtTouches(a, p0.debtTouches);
     a.payments = (a.payments||[]).filter(p=> p.id !== payId);
     logEdit(`حذف دفعة واردة من المندوب ${a.name}`, {type:'agent', agentId: a.id});
     saveAgents();
@@ -17803,6 +18074,13 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   const purposeApplies = (type === 'doctor' || type === 'lab' || type === 'company' || type === 'agent');
   const epPurposeEl = document.getElementById('epPurpose');
   const purpose = purposeApplies ? ((epPurposeEl && epPurposeEl.value) || 'balance') : 'balance';
+  // BUG FIX (deep financial audit): when purpose==='debt' this expense
+  // payment also writes an independent entry into purposeEntity.debts[]
+  // below — pre-generating its id here and storing it on the expense
+  // record (linkedDebtId) lets every delete path for this payment clean
+  // up that debt entry too, instead of leaving a permanent orphan debt
+  // behind with no real payment backing it.
+  const linkedDebtId = (purpose === 'debt') ? uid('debt') : '';
 
   if(type === 'other'){
     recipientLabel = document.getElementById('expenseRecipientOtherInput').value.trim();
@@ -17866,16 +18144,18 @@ expensePaymentForm.addEventListener('submit', (e)=>{
   }
 
   expensePayments.push({
-    id: uid('exp'), recipientType: type, recipientId, recipientLabel, amount, date, note, linkedAdvanceId, linkedCompanyPaymentId, caseAllocations, purpose,
+    id: uid('exp'), recipientType: type, recipientId, recipientLabel, amount, date, note, linkedAdvanceId, linkedCompanyPaymentId, linkedDebtId, caseAllocations, purpose,
     paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||''
   });
   // purpose === 'debt': file this as its own independent debt entry (same
   // shape debtEntryForm's handler writes) rather than letting it touch the
   // entity's running balance at all — outgoingToTotal()/agentPaidTotal()
   // both exclude purpose 'debt' and 'expense' entries from their sums.
+  // Uses the pre-generated linkedDebtId (see above) so deleting this
+  // payment later can find and remove this exact debt entry.
   if(purpose === 'debt' && purposeEntity){
     if(!purposeEntity.debts) purposeEntity.debts = [];
-    purposeEntity.debts.push({ id: uid('debt'), amount, dueDate: date, note: note || 'دين ناتج عن دفعة صادرة', settled:false, createdAt: new Date(getTrustedNow()).toISOString() });
+    purposeEntity.debts.push({ id: linkedDebtId, amount, dueDate: date, note: note || 'دين ناتج عن دفعة صادرة', settled:false, createdAt: new Date(getTrustedNow()).toISOString() });
     logEdit(`تسجيل دين ${fmtMoney(amount)} على ${EXPENSE_RECIPIENT_LABELS[type]||''} ${recipientLabel} (عبر دفعة صادرة) — استحقاق ${date}`);
     saveDebtEntityType(type);
   }
@@ -17945,6 +18225,17 @@ document.getElementById('expensePaymentsLogBody').addEventListener('click', asyn
       const co = companies.find(x=>x.id===exp.recipientId);
       if(co) co.payments = (co.payments||[]).filter(p=> p.id !== exp.linkedCompanyPaymentId);
       saveCompanies();
+    }
+    // BUG FIX (deep financial audit): same orphaned-debt fix as
+    // deletePaymentRecordById() above — this is a second, independent
+    // delete path for the exact same expense-payment records (the expense
+    // log's own inline "حذف" button), so it needs the identical cleanup.
+    if(exp.linkedDebtId){
+      const debtOwner = debtEntityById(exp.recipientType, exp.recipientId);
+      if(debtOwner && debtOwner.debts){
+        debtOwner.debts = debtOwner.debts.filter(d=> d.id !== exp.linkedDebtId);
+        saveDebtEntityType(exp.recipientType);
+      }
     }
     expensePayments = expensePayments.filter(x=> x.id !== id);
     const delExpenseCtx = exp.recipientType === 'employee' ? {type:'technician', techId: exp.recipientId}

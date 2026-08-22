@@ -335,21 +335,26 @@
      JS from the clock's measured height (see positionMiniLockBtn()). */
   #miniLockBtn{
     position:fixed; inset-inline-end:18px; z-index:560000; pointer-events:auto;
-    width:56px; height:56px; border-radius:50%;
+    width:46px; height:46px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
     background:linear-gradient(155deg,#12b5d6 0%,#0e7c9e 55%,#0a5f7a 100%);
     border:2.5px solid #fff; box-shadow:0 4px 16px rgba(14,124,158,0.55), var(--shadow);
     color:#ffffff; cursor:pointer; padding:0;
     transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
-  #miniLockBtn svg{ width:28px; height:28px; }
+  /* A bit smaller than before, and — direct feedback ("اعطيها شكل قفل حقيقي
+     ملون") — a real, two-tone padlock instead of a flat single-colour
+     outline: a silvery shackle, a golden-brass body, and a dark keyhole,
+     drawn with actual fills/gradient rather than currentColor stroke lines
+     only, so it reads as an actual lock at a glance, not an abstract icon. */
+  #miniLockBtn svg{ width:23px; height:23px; }
   #miniLockBtn:hover{ transform:translateY(-2px) scale(1.06); box-shadow:0 8px 22px rgba(14,124,158,0.7), var(--shadow); background:linear-gradient(155deg,#1ccbef 0%,#0e7c9e 55%,#0a5f7a 100%); }
   #miniLockBtn:active{ transform:translateY(0) scale(0.96); }
   /* A slow, subtle pulsing ring — makes the control read as "a distinct,
      always-available action" (direct feedback: "اعطيه ايقونة مميزة") rather
      than blending in with the rest of the corner. */
   #miniLockBtn::after{
-    content:''; position:absolute; inset:-5px; border-radius:50%;
+    content:''; position:absolute; inset:-4px; border-radius:50%;
     border:2px solid #12b5d6; opacity:0; pointer-events:none;
     animation: miniLockPulse 2.6s ease-out infinite;
   }
@@ -795,12 +800,20 @@
   }
   .role-badge-supervisor{ background:#fff3d6; color:#8a6d00; border-color:#ffd54f; }
   .role-badge-employee{ background:var(--teal-tint); color:var(--teal); border-color:var(--teal-dim); }
-  .employee-permission-row{
-    display:flex; align-items:center; gap:10px; padding:10px 12px;
-    border:1.5px solid var(--line); border-radius:9px; background:var(--panel-2);
-    cursor:pointer; font-size:12.5px; font-weight:700;
+  /* 🔧 لوحة صلاحيات موظف — follow-up request: "حط لي جدول بالصلاحيات ...
+     كل ميزة بحط عليها اشارة صح" — a real two-column table (feature | on
+     switch), one row per app feature, instead of the earlier checkbox list. */
+  .employee-permissions-table{
+    width:100%; border-collapse:collapse; font-size:12.5px; font-weight:700;
   }
-  .employee-permission-row input[type="checkbox"]{ width:17px; height:17px; flex:0 0 auto; }
+  .employee-permissions-table th{
+    text-align:start; padding:9px 12px; background:var(--panel-2);
+    border:1px solid var(--line); font-size:11.5px; font-weight:900; color:var(--ink-dim);
+  }
+  .employee-permissions-table th:last-child, .employee-permissions-table td.perm-check-cell{ text-align:center; width:90px; }
+  .employee-permissions-table td{ padding:9px 12px; border:1px solid var(--line); }
+  .employee-permissions-table tbody tr:nth-child(even) td{ background:var(--panel-2); }
+  .employee-permissions-table input[type="checkbox"]{ width:19px; height:19px; cursor:pointer; }
   .sidebar-footer{
     padding:var(--sp-3) var(--sp-4); border-top:1px solid var(--line);
     display:flex; justify-content:center; align-items:center;
@@ -815,7 +828,15 @@
   .icon-round-btn:hover{ background:var(--teal-tint); color:var(--teal); border-color:var(--teal-dim); transform:translateY(-2px); box-shadow:var(--shadow); }
   .sidebar-btn{
     width:100%; text-align:start; font-size:15.5px; font-weight:800;
-    padding:16px 17px; border-radius:12px; line-height:1.4;
+    /* BUG FIX (real, confirmed defect uncovered while enlarging these
+       buttons — "زيد ارتفاع الأزرار شوي"): .btn-ghost (below, same 0,1,0
+       specificity but LATER in the stylesheet) was silently overriding this
+       rule's own padding this whole time — every sidebar button has always
+       actually rendered at .btn-ghost's 11px vertical padding, never this
+       rule's, regardless of what value was written here. !important (same
+       fix already applied to border/background on this exact rule, for the
+       exact same reason) makes the padding actually win. */
+    padding:20px 17px !important; border-radius:12px; line-height:1.4;
     position:relative; transition: transform .13s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
     border:2px solid var(--line) !important;
     background:var(--panel) !important;
@@ -1867,17 +1888,19 @@
   @keyframes flashPop{ from{ opacity:0; transform:scale(0.8) translateY(10px);} to{ opacity:1; transform:scale(1) translateY(0);} }
   @keyframes flashRingPop{ 0%{ transform:scale(0);} 60%{ transform:scale(1.15);} 100%{ transform:scale(1);} }
 
-  /* ===== Periodic dhikr (see initDhikrRotation() near the end of the script) =====
-     Bottom of the home screen only, brief and non-intrusive: 2s visible, then
-     fades — never a modal, never blocks a click, never repeats a phrase back
-     to back. */
+  /* ===== Periodic dhikr (see the "dhikr-rotation" script near the end of the
+     page) ===== Bottom of the home screen only, brief and non-intrusive: 3s
+     visible then fades — never a modal, never blocks a click, never repeats
+     a phrase back to back. The 100-phrase list (up from 8) includes some
+     longer du'as, so this wraps onto up to 2 lines instead of truncating
+     with an ellipsis — a cut-off dua would be worse than a 2-line popup. */
   #dhikrPopup{
     position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(0);
     z-index:1500; background:linear-gradient(155deg, var(--panel) 0%, var(--panel-2) 100%);
-    border:1px solid var(--teal-dim); border-radius:100px; padding:10px 22px;
+    border:1px solid var(--teal-dim); border-radius:20px; padding:10px 22px;
     font-size:13.5px; font-weight:800; color:var(--teal-ink); box-shadow:var(--shadow-lg);
     opacity:0; pointer-events:none; transition:opacity .5s ease, transform .5s ease;
-    max-width:min(88vw, 460px); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    max-width:min(90vw, 540px); text-align:center; white-space:normal; line-height:1.6;
   }
   #dhikrPopup.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
   .toast{
@@ -4131,7 +4154,7 @@ input:focus, select:focus, textarea:focus {
      جانبي"). No live preview is embedded here any more — press "👁 معاينة
      قبل الطباعة" below to see the result, same as before the merge. -->
 <div class="overlay" id="invoiceAppearanceOverlay">
-  <div class="modal wide" style="max-width:1380px;">
+  <div class="modal wide" style="max-width:1560px;">
     <h2><span>🎨 مظهر الفاتورة</span><button type="button" class="btn-ghost btn-small" id="closeInvoiceAppearanceBtn">إغلاق</button></h2>
     <!-- Live preview added per direct feedback ("خلي فيه معاينة حية
          للتغيرات") — same two-column pattern as the invoice columns/data
@@ -4425,6 +4448,7 @@ input:focus, select:focus, textarea:focus {
       <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
       <button type="button" class="settings-tab" data-tab="appearance">🔠 حجم الخط ونوعه</button>
       <button type="button" class="settings-tab" data-tab="language">🌐 اللغة</button>
+      <button type="button" class="settings-tab" data-tab="dhikr">🕌 الأذكار</button>
     </div>
 
     <div class="settings-panel" data-panel="appearance" style="display:none;">
@@ -4466,6 +4490,23 @@ input:focus, select:focus, textarea:focus {
       <div class="lang-search"><input type="text" id="langSearch" placeholder="ابحث عن لغة…" autocomplete="off"></div>
       <div class="lang-note" id="langNote"></div>
       <div class="lang-list" id="langList"></div>
+    </div>
+
+    <!-- Direct feedback: "ضيف بالإعدادات والضبط زر اسمه ايقاف للأذكار في
+         حال بدو المستخدم يطفيها" — a simple on/off toggle for the periodic
+         home-screen dhikr popup (see the dhikr-rotation script near the end
+         of the page), same pattern as autoUpdateCheckToggle. -->
+    <div class="settings-panel" data-panel="dhikr" style="display:none;">
+      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:14px 16px;">
+        <div style="font-weight:900; margin-bottom:8px;">🕌 الأذكار الدورية</div>
+        <div class="muted" style="font-size:12.5px; line-height:1.8; margin-bottom:12px;">
+          يظهر ذكر إسلامي قصير أعلى الشاشة الرئيسية كل دقيقة لمدة 3 ثوانٍ ثم يختفي تلقائيًا.
+        </div>
+        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
+          <input type="checkbox" id="dhikrEnabledToggle" style="width:auto; margin:0;" checked>
+          تفعيل الأذكار الدورية
+        </label>
+      </div>
     </div>
     <!-- Invoice appearance settings used to live in their own tab here, then
          were briefly merged into "🧾 إنشاء فاتورة" with a live preview; per
@@ -4530,6 +4571,18 @@ input:focus, select:focus, textarea:focus {
         </label>
         <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
         <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+      </div>
+      <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
+           بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
+           installUpdate() always keeps exactly one previous version as a
+           local .bak before overwriting — this button restores it. Desktop
+           only (there is nothing to swap in the browser edition, which
+           never self-replaces a file in the first place). -->
+      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px; display:none;">
+        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
+        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">لو صار عندك مشكلة بعد تحديث البرنامج، هذا الزر يرجعك تلقائيًا للإصدار الذي كان يعمل قبل آخر تحديث مباشرة.</div>
+        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
+        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
       </div>
       <!-- BUG FIX (real, confirmed defect — direct feedback): the old
            "🔄 تحديث البرنامج الآن" button below this comment was ALWAYS
@@ -4679,12 +4732,12 @@ input:focus, select:focus, textarea:focus {
      واضح". Opened from the "🔧 الصلاحيات" button next to a non-supervisor
      account in #manageUsersList — see openEmployeePermissionsPanel(). -->
 <div class="overlay" id="employeePermissionsOverlay">
-  <div class="modal" style="max-width:480px;">
+  <div class="modal" style="max-width:560px;">
     <h2><span>🔧 صلاحيات <span id="employeePermissionsUserLabel"></span></span><button type="button" class="btn-ghost btn-small" id="closeEmployeePermissionsBtn">إغلاق</button></h2>
     <div class="muted" style="margin:-6px 0 14px; font-size:12px; line-height:1.7;">
-      فعّل أو أطفئ أي صلاحية لهذا الموظف تحديدًا — كل شي مطفي افتراضيًا ما عدا تسجيل الحالات والدفعات الواردة.
+      فعّل أو أطفئ أي ميزة لهذا الموظف تحديدًا من الجدول أدناه — كل شي مطفي افتراضيًا ما عدا تسجيل الحالات والدفعات الواردة.
     </div>
-    <div id="employeePermissionsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
+    <div id="employeePermissionsList" style="margin-bottom:16px;"></div>
     <button type="button" class="btn-primary btn-small" id="saveEmployeePermissionsBtn" style="width:100%;">💾 حفظ الصلاحيات</button>
   </div>
 </div>
@@ -4903,7 +4956,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.6';
+const APP_VERSION = '10.7';
 
 /* Declared here, not beside the database code that used to own it: the
    activation and trial checks run during startup and read this, and a const
@@ -9996,23 +10049,51 @@ const CURRENT_USERNAME_KEY = 'dental_lab_current_username_v1';
 let currentUserRole = 'admin'; // 'admin' | 'supervisor' | 'employee' — safe default: never silently locks the admin out
 let currentUserName = '';      // the logged-in employee/supervisor's username; stays '' for the admin account itself
 
+/* Follow-up request — a genuine per-feature TABLE instead of one bundled
+   "viewFinance" bucket ("حط لي جدول بالصلاحيات ... كل ميزة بحط عليها اشارة
+   صح ... مثلا هيك يكون الدفعات الواردة - الدفعات الصادرة - طباعة كشوفات -
+   ..ضيف كل ميزات البرنامج"): every operational screen in the sidebar/home
+   now gets its OWN on/off key instead of several screens sharing one
+   checkbox. Purely administrative screens (الإعدادات، إدارة المستخدمين،
+   تصميم/مظهر الفاتورة) are deliberately NOT in this list at all — they stay
+   in ALWAYS_ADMIN_BTN_IDS below regardless of what the admin ticks here,
+   because letting a plain employee reach user-management or global settings
+   would be a real privilege-escalation bug, not a feature. */
 const DEFAULT_EMPLOYEE_PERMISSIONS = {
-  addCases: true,        // تسجيل حالات مرضية جديدة
-  addPayments: true,     // تسجيل دفعات واردة
-  addExpenses: false,    // تسجيل دفعات/مصاريف صادرة
-  createInvoices: false, // إنشاء فواتير
-  editRecords: false,    // تعديل بيانات الأطباء/المختبرات/الشركات/المناديب/الموظفين
-  viewFinance: false,    // الاطلاع على الأرصدة/الديون/الأرباح والتقارير المالية
-  canDelete: false,      // أي عملية حذف
+  addCases: true,           // تسجيل حالات مرضية جديدة
+  addPayments: true,        // تسجيل دفعة واردة
+  addExpenses: false,       // تسجيل دفعة صادرة
+  cancelPayment: false,     // إلغاء دفعة
+  viewIncomeReport: false,  // عرض تقرير الدفعات الواردة (المبلغ/المجموع)
+  viewExpensesReport: false,// عرض تقرير الدفعات الصادرة (المبلغ/المجموع)
+  accountStatement: false,  // طباعة كشف حساب
+  collectDebt: false,       // تسجيل دين
+  viewDebtsLog: false,      // عرض سجل الديون
+  viewDuesReport: false,    // عرض المبالغ المستحقة
+  checksRegister: false,    // سجل الشيكات
+  workLog: false,           // سجل الموظفين
+  viewEditLog: false,       // عرض سجل التعديلات
+  createInvoices: false,    // إنشاء فواتير
+  editRecords: false,       // تعديل بيانات الأطباء/المختبرات/الشركات/المناديب/الموظفين
+  canDelete: false,         // أي عملية حذف
 };
 const PERMISSION_LABELS = {
-  addCases: 'تسجيل حالات مرضية جديدة',
-  addPayments: 'تسجيل دفعات واردة',
-  addExpenses: 'تسجيل دفعات / مصاريف صادرة',
-  createInvoices: 'إنشاء فواتير',
-  editRecords: 'تعديل البيانات (أطباء / مختبرات / شركات / مناديب / موظفين)',
-  viewFinance: 'الاطلاع على الأرصدة والديون والأرباح والتقارير المالية',
-  canDelete: 'الحذف (أي شاشة)',
+  addCases: '➕ تسجيل حالة مرضية جديدة',
+  addPayments: '💰 تسجيل دفعة واردة',
+  addExpenses: '📤 تسجيل دفعة صادرة',
+  cancelPayment: '❌ إلغاء دفعة',
+  viewIncomeReport: '📄 عرض تقرير الدفعات الواردة',
+  viewExpensesReport: '📄 عرض تقرير الدفعات الصادرة',
+  accountStatement: '🧾 طباعة كشف حساب',
+  collectDebt: '➕ تسجيل دين',
+  viewDebtsLog: '📄 عرض سجل الديون',
+  viewDuesReport: '💰 عرض المبالغ المستحقة',
+  checksRegister: '🧾 سجل الشيكات',
+  workLog: '📋 سجل الموظفين',
+  viewEditLog: '📝 عرض سجل التعديلات',
+  createInvoices: '🧾 إنشاء فواتير',
+  editRecords: '✏️ تعديل البيانات (أطباء / مختبرات / شركات / مناديب / موظفين)',
+  canDelete: '🗑 الحذف (أي شاشة)',
 };
 function loadEmployeeAccounts(){
   try{
@@ -10076,14 +10157,24 @@ const PERMISSION_GATED_BTN_IDS = {
   addCases: ['addPatientCaseBtn'],
   addPayments: ['incomingPaymentsBtn'],
   addExpenses: ['expensePaymentsBtn'],
+  cancelPayment: ['cancelPaymentSidebarBtn'],
+  accountStatement: ['accountStatementSidebarBtn'],
+  collectDebt: ['collectDebtSidebarBtn'],
+  viewDuesReport: ['debtsLogSidebarBtn'],
+  checksRegister: ['checksRegisterSidebarBtn'],
+  workLog: ['workLogSidebarBtn'],
   createInvoices: ['createInvoiceSidebarBtn'],
-  viewFinance: [
-    'cancelPaymentSidebarBtn','accountStatementSidebarBtn','collectDebtSidebarBtn',
-    'debtsLogSidebarBtn','checksRegisterSidebarBtn','workLogSidebarBtn',
-  ],
 };
+// Home-screen stat cards that surface the SAME report a sidebar button (or,
+// for the three that have no dedicated sidebar button of their own, only
+// this card) opens — gated on the matching individual permission above so
+// an employee without it never sees so much as a total/number on the card.
 const PERMISSION_GATED_HOME_CARD_IDS = {
-  viewFinance: ['homeIncomeCard','homeDuesCard','homeExpensesCard','homeDebtsCard','homeEditLogCard'],
+  viewIncomeReport: ['homeIncomeCard'],
+  viewExpensesReport: ['homeExpensesCard'],
+  viewDebtsLog: ['homeDebtsCard'],
+  viewDuesReport: ['homeDuesCard'],
+  viewEditLog: ['homeEditLogCard'],
 };
 const EDIT_ENTITY_BTN_IDS = [
   'editDoctorBtn','editDoctorFromDetailsBtn','editDoctorFromStatementBtn',
@@ -10172,10 +10263,11 @@ function renderManageUsersList(){
     wrap.appendChild(row);
   });
 }
-/* 🔧 لوحة صلاحيات موظف واحد — a small, clear on/off panel per employee
-   (direct feedback: "حط لي لوحة تحكم بشكل جميل وسهل للصلاحيات ... ضيف كل
-   شي بلوحة تحكم بشكل واضح"). Built generically from PERMISSION_LABELS so
-   adding a new permission later only means adding one entry there. */
+/* 🔧 لوحة صلاحيات موظف واحد — follow-up request: a real TABLE, one row per
+   feature, a checkbox column to tick ("حط لي جدول بالصلاحيات من جوا
+   البرنامج كل ميزة بحط عليها اشارة صح ... ضيف كل ميزات البرنامج وانا
+   بختار") — built generically from PERMISSION_LABELS so adding a new
+   permission later only ever means adding one entry there, nothing here. */
 let currentPermissionsEditUserId = null;
 function openEmployeePermissionsPanel(userId){
   const acc = loadEmployeeAccounts().find(u=> u.id === userId);
@@ -10184,15 +10276,16 @@ function openEmployeePermissionsPanel(userId){
   const perms = Object.assign({}, DEFAULT_EMPLOYEE_PERMISSIONS, acc.permissions || {});
   document.getElementById('employeePermissionsUserLabel').textContent = '👷 ' + acc.username;
   const wrap = document.getElementById('employeePermissionsList');
-  wrap.innerHTML = '';
-  Object.keys(PERMISSION_LABELS).forEach(function(key){
-    const row = document.createElement('label');
-    row.className = 'employee-permission-row';
-    row.innerHTML =
-      '<input type="checkbox" data-perm-key="' + key + '" ' + (perms[key] ? 'checked' : '') + '>' +
-      '<span>' + escapeHtml(PERMISSION_LABELS[key]) + '</span>';
-    wrap.appendChild(row);
-  });
+  const rows = Object.keys(PERMISSION_LABELS).map(function(key){
+    return '<tr><td>' + escapeHtml(PERMISSION_LABELS[key]) + '</td>' +
+      '<td class="perm-check-cell"><input type="checkbox" data-perm-key="' + key + '" ' + (perms[key] ? 'checked' : '') + '></td></tr>';
+  }).join('');
+  wrap.innerHTML =
+    '<table class="employee-permissions-table">' +
+      '<thead><tr><th>الميزة</th><th>مفعّلة؟</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody>' +
+    '</table>' +
+    '<div class="muted" style="margin-top:10px; font-size:11.5px; line-height:1.8;">الإعدادات وإدارة المستخدمين وتصميم/مظهر الفاتورة متاحة فقط للأدمن والمشرف ولا تظهر هنا — أي ميزة غير مفعّلة هنا يبقى زرها معطّلًا تمامًا عند هذا الموظف ولا يرى أي أرقام تخصها.</div>';
   document.getElementById('employeePermissionsOverlay').classList.add('open');
 }
 const closeEmployeePermissionsBtnEl = document.getElementById('closeEmployeePermissionsBtn');
@@ -15424,16 +15517,45 @@ function scaleToFitPreviewScript(){
     if(!body) return;
     body.style.transform = '';
     body.style.width = '';
+    // Follow-up request ("صغر حجم الفاتورة عشان تبين كلها امامي بدون ما
+    // اسحب بالماوس"): the original version only ever checked HEIGHT
+    // overflow, on the assumption the invoice always fits the iframe's
+    // width already. Checking width too (defensively — the invoice itself
+    // has no fixed px width, but a narrower embedded preview iframe could
+    // still overflow it) makes this a genuine fit-both-dimensions shrink
+    // instead of a height-only one, so nothing is ever left needing a
+    // horizontal drag/scroll either.
+    var contentW = body.scrollWidth;
     var contentH = body.scrollHeight;
+    var viewW = window.innerWidth;
     var viewH = window.innerHeight;
-    if(!contentH || contentH <= viewH) return;
-    var scale = Math.max(0.3, viewH / contentH);
+    if(!contentW || !contentH) return;
+    var scaleH = contentH > viewH ? (viewH / contentH) : 1;
+    var scaleW = contentW > viewW ? (viewW / contentW) : 1;
+    var scale = Math.min(scaleH, scaleW);
+    if(scale >= 1) return;
+    scale = Math.max(0.3, scale);
     body.style.transformOrigin = 'top center';
     body.style.width = (100/scale) + '%';
     body.style.transform = 'scale(' + scale + ')';
   }
-  if(document.readyState === 'complete') fit();
-  else window.addEventListener('load', fit);
+  function fitSettled(){
+    // A single pass right at 'load' can be measured before the Arabic web
+    // font (Tajawal, loaded via a separate stylesheet link rather than
+    // inlined) finishes swapping in — that reflows text a moment later and
+    // can leave the page a hair taller/shorter than what was just measured,
+    // just enough to need a scroll again. document.fonts.ready re-fits once
+    // the real fonts have actually settled, catching that drift instead of
+    // leaving a barely-scrolling sliver.
+    fit();
+    if(document.fonts && document.fonts.ready){
+      document.fonts.ready.then(function(){ requestAnimationFrame(fit); }).catch(function(){});
+    }else{
+      setTimeout(fit, 300);
+    }
+  }
+  if(document.readyState === 'complete') fitSettled();
+  else window.addEventListener('load', fitSettled);
   window.addEventListener('resize', fit);
 })();
 <\/script>`;
@@ -21663,6 +21785,45 @@ document.getElementById('autoUpdateCheckToggle').addEventListener('change', (e)=
 });
 document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
 
+// 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
+// autoUpdateEnabled() just above; read by the dhikr-rotation script's
+// tick() near the end of the page.
+const DHIKR_ENABLED_KEY = 'dental_lab_dhikr_enabled_v1';
+function dhikrEnabled(){
+  return localStorage.getItem(DHIKR_ENABLED_KEY) !== 'false';
+}
+const dhikrEnabledToggleEl = document.getElementById('dhikrEnabledToggle');
+if(dhikrEnabledToggleEl){
+  dhikrEnabledToggleEl.checked = dhikrEnabled();
+  dhikrEnabledToggleEl.addEventListener('change', (e)=>{
+    localStorage.setItem(DHIKR_ENABLED_KEY, e.target.checked ? 'true' : 'false');
+  });
+}
+
+// ↩️ الرجوع للإصدار السابق — desktop-only; the browser edition never
+// self-replaces a file so there is nothing to roll back.
+if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
+  const rollbackFieldEl = document.getElementById('rollbackUpdateField');
+  if(rollbackFieldEl) rollbackFieldEl.style.display = 'block';
+  const rollbackBtnEl = document.getElementById('rollbackUpdateBtn');
+  if(rollbackBtnEl) rollbackBtnEl.addEventListener('click', async ()=>{
+    const statusEl = document.getElementById('rollbackUpdateStatusText');
+    const setRollbackStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
+    const ok = await customConfirm('سيتم إرجاع البرنامج للإصدار الذي كان مثبتًا قبل آخر تحديث، وإعادة فتح البرنامج تلقائيًا. هل تريد المتابعة؟', {danger:true, okText:'الرجوع للإصدار السابق'});
+    if(!ok) return;
+    setRollbackStatus('جارٍ الرجوع للإصدار السابق...', 'var(--teal)');
+    const result = await window.ekhlasDesktop.rollbackUpdate();
+    if(result && result.ok){
+      showToast('تم الرجوع للإصدار السابق، جارٍ إعادة فتح البرنامج...', 'success');
+      setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
+    }else if(result && result.reason === 'no-backup'){
+      setRollbackStatus('لا يوجد إصدار سابق محفوظ للرجوع إليه (لم يُثبَّت أي تحديث بعد على هذا الجهاز).', 'var(--red)');
+    }else{
+      setRollbackStatus('تعذّر الرجوع للإصدار السابق. حاول مرة أخرى.', 'var(--red)');
+    }
+  });
+}
+
 /* Automatic check on every startup — if a newer version exists, the user is
    reminded each time they open the program until they update. */
 setTimeout(()=>{
@@ -21681,11 +21842,17 @@ initAppFileHandle();
 
 </script>
 <button type="button" id="miniLockBtn" title="قفل البرنامج" aria-label="قفل البرنامج">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round">
-    <rect x="4.5" y="10.5" width="15" height="10.5" rx="2.4"/>
-    <path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/>
-    <path d="M12 14.6v3"/>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="miniLockBodyGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffe08a"/>
+        <stop offset="100%" stop-color="#d99a2b"/>
+      </linearGradient>
+    </defs>
+    <path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5" fill="none" stroke="#e7edf1" stroke-width="2.1" stroke-linecap="round"/>
+    <rect x="4.5" y="10.5" width="15" height="10.5" rx="2.6" fill="url(#miniLockBodyGrad)" stroke="#a8701c" stroke-width="1"/>
+    <circle cx="12" cy="14.4" r="1.7" fill="#4a3210"/>
+    <path d="M11.15 15.6 L12.85 15.6 L12.35 18.1 L11.65 18.1 Z" fill="#4a3210"/>
   </svg>
 </button>
 <div id="miniClockWidget">
@@ -22387,22 +22554,119 @@ window.addEventListener('resize', positionMiniLockBtn);
 
 <script id="dhikr-rotation">
 (function(){
-  // A short, universally-recognized set of adhkar (remembrance phrases) —
-  // deliberately simple tasbih/tahmid/istighfar wording only, nothing
-  // sectarian or debated, appropriate for a general Muslim audience.
+  // A universally-recognized set of adhkar (remembrance phrases) — direct
+  // Quranic phrases, well-known prophetic du'as, and common tasbih/tahmid/
+  // istighfar wording only, nothing sectarian, scholarly-disputed, or
+  // group-specific — 100 of them per direct feedback ("حط لي 100 ذكر
+  // اسلامي"), appropriate for a general Muslim audience.
   var DHIKR_LIST = [
     'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
+    'سُبْحَانَ اللَّهِ الْعَظِيمِ',
     'لَا إِلَٰهَ إِلَّا اللَّهُ',
     'اللَّهُ أَكْبَرُ',
     'الْحَمْدُ لِلَّهِ',
+    'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
     'أَسْتَغْفِرُ اللَّهَ',
+    'أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ',
     'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
     'سُبْحَانَ اللَّهِ',
-    'اللَّهُمَّ صَلِّ عَلَى مُحَمَّد'
+    'اللَّهُمَّ صَلِّ عَلَى مُحَمَّد',
+    'اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّد',
+    'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ',
+    'لَا إِلَٰهَ إِلَّا اللَّهُ الْمَلِكُ الْحَقُّ الْمُبِينُ',
+    'سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَٰهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ',
+    'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ',
+    'تَوَكَّلْتُ عَلَى اللَّهِ',
+    'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ',
+    'رَبِّ اغْفِرْ لِي',
+    'رَبِّ اغْفِرْ لِي وَلِوَالِدَيَّ',
+    'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+    'رَبِّ زِدْنِي عِلْمًا',
+    'رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي',
+    'اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ',
+    'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي',
+    'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ',
+    'اللَّهُمَّ اهْدِنِي وَسَدِّدْنِي',
+    'اللَّهُمَّ لَكَ الْحَمْدُ كُلُّهُ',
+    'اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا',
+    'رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا',
+    'سُبْحَانَ رَبِّيَ الْعَظِيمِ',
+    'سُبْحَانَ رَبِّيَ الْأَعْلَى',
+    'لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
+    'رَبَّنَا لَا تُؤَاخِذْنَا إِنْ نَسِينَا أَوْ أَخْطَأْنَا',
+    'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ حُبَّكَ وَحُبَّ مَنْ يُحِبُّكَ',
+    'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ رِزْقًا حَلَالًا طَيِّبًا',
+    'اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ الْمُتَطَهِّرِينَ',
+    'سُبْحَانَ مَنْ لَا يَنَامُ وَلَا يَسْهُو',
+    'سُبْحَانَ الدَّائِمِ الَّذِي لَا يَزُولُ',
+    'لَا مَلْجَأَ وَلَا مَنْجَا مِنَ اللَّهِ إِلَّا إِلَيْهِ',
+    'بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ',
+    'اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي',
+    'اللَّهُمَّ أَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي',
+    'اللَّهُمَّ اجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ',
+    'اللَّهُمَّ اجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ',
+    'رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ',
+    'رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِنْ ذُرِّيَّتِي',
+    'رَبَّنَا لَكَ الْحَمْدُ مِلْءَ السَّمَاوَاتِ وَمِلْءَ الْأَرْضِ',
+    'سُبْحَانَ اللَّهِ عَدَدَ خَلْقِهِ',
+    'سُبْحَانَ اللَّهِ رِضَا نَفْسِهِ',
+    'سُبْحَانَ اللَّهِ زِنَةَ عَرْشِهِ',
+    'سُبْحَانَ اللَّهِ مِدَادَ كَلِمَاتِهِ',
+    'اللَّهُمَّ اغْفِرْ لِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ',
+    'اللَّهُمَّ ارْحَمْ وَالِدَيَّ كَمَا رَبَّيَانِي صَغِيرًا',
+    'اللَّهُمَّ اجْعَلْنَا مِنْ عِبَادِكَ الشَّاكِرِينَ',
+    'اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا',
+    'اللَّهُمَّ اجْعَلْ خَيْرَ عُمُرِي آخِرَهُ',
+    'اللَّهُمَّ اجْعَلْ خَيْرَ أَعْمَالِي خَوَاتِيمَهَا',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ',
+    'اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا',
+    'اللَّهُمَّ بِكَ نَحْيَا وَبِكَ نَمُوتُ',
+    'اللَّهُمَّ إِلَيْكَ النُّشُورُ',
+    'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ',
+    'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ',
+    'اللَّهُمَّ أَنْتَ خَلَقْتَنِي وَأَنْتَ تَهْدِينِي',
+    'اللَّهُمَّ عَافِنِي فِي بَدَنِي',
+    'اللَّهُمَّ عَافِنِي فِي سَمْعِي وَبَصَرِي',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ',
+    'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
+    'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا',
+    'اللَّهُمَّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي',
+    'اللَّهُمَّ إِنَّكَ عَفُوٌّ كَرِيمٌ تُحِبُّ الْعَفْوَ فَاعْفُ عَنَّا',
+    'لَا قُوَّةَ إِلَّا بِاللَّهِ',
+    'اللَّهُمَّ اهْدِنَا فِيمَنْ هَدَيْتَ',
+    'اللَّهُمَّ وَعَافِنَا فِيمَنْ عَافَيْتَ',
+    'اللَّهُمَّ بَارِكْ لَنَا فِيمَا أَعْطَيْتَ',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ النَّارِ',
+    'اللَّهُمَّ سَلِّمْنِي وَسَلِّمْ مِنِّي',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ الثَّبَاتَ فِي الْأَمْرِ',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ صِحَّةً فِي إِيمَانٍ',
+    'رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ',
+    'رَبَّنَا لَا تَجْعَلْنَا فِتْنَةً لِلَّذِينَ كَفَرُوا',
+    'رَبَّنَا اغْفِرْ لَنَا ذُنُوبَنَا وَإِسْرَافَنَا فِي أَمْرِنَا',
+    'رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ',
+    'اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنَ الْخَيْرِ كُلِّهِ',
+    'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الشَّرِّ كُلِّهِ',
+    'اللَّهُمَّ اغْفِرْ لِي ذَنْبِي كُلَّهُ',
+    'سُبْحَانَ اللَّهِ حِينَ تُمْسُونَ وَحِينَ تُصْبِحُونَ',
+    'وَلَهُ الْحَمْدُ فِي السَّمَاوَاتِ وَالْأَرْضِ',
+    'اللَّهُمَّ اجْعَلْنَا هَادِينَ مَهْدِيِّينَ',
+    'اللَّهُمَّ اجْعَلْ عَمَلَنَا كُلَّهُ صَالِحًا وَاجْعَلْهُ لِوَجْهِكَ خَالِصًا'
   ];
-  var INTERVAL_MS = 5 * 60 * 1000;  // every 5 minutes
-  var VISIBLE_MS = 2000;            // stays on screen for 2 seconds
+  // Direct feedback: "تطلع كل دقيقة وتضل لمدة 3 ثواني وتختفي" — was every 5
+  // minutes for 2 seconds, now every 1 minute for 3 seconds.
+  var INTERVAL_MS = 60 * 1000;      // every 1 minute
+  var VISIBLE_MS = 3000;            // stays on screen for 3 seconds
   var lastIndex = -1;
+  window.__DHIKR_LIST_FOR_TESTS__ = DHIKR_LIST; // test-only hook: the list itself has no other externally-reachable handle
 
   function pickNext(){
     if(DHIKR_LIST.length < 2) return DHIKR_LIST[0];
@@ -22413,6 +22677,10 @@ window.addEventListener('resize', positionMiniLockBtn);
   }
 
   function tick(){
+    // Direct feedback: "ضيف بالإعدادات زر اسمه إيقاف للأذكار في حال بدو
+    // المستخدم يطفيها" — dhikrEnabled() below backs that settings toggle;
+    // same on/off-in-localStorage pattern as autoUpdateEnabled().
+    if(!dhikrEnabled()) return;
     var popup = document.getElementById('dhikrPopup');
     var home = document.getElementById('homeView');
     // Only on the home screen, and only while the tab/window is actually

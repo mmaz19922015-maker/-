@@ -1525,7 +1525,23 @@
      matching padding keeps its text/buttons visually indented the same as
      before. top:-18px (unchanged, already correct) keeps it flush the same
      way once the body below is actually scrolled, not just on first paint. */
-  .modal-compact h2{ font-size:15px; margin:calc(var(--modal-pad-y) * -1) calc(var(--modal-pad-x) * -1) 12px; position:sticky; top:calc(var(--modal-pad-y) * -1); background:var(--titlebar-bg); padding:10px var(--modal-pad-x); border-radius:16px 16px 8px 8px; z-index:2; }
+  /* BUG FIX (real, confirmed defect — direct feedback: overlapping text on
+     several screens, e.g. the lock/security settings tab's trial badge and
+     "قفل الآن" section hidden under other section headers, and the invoice
+     appearance tab's "🎨 الألوان" header sitting on top of the size/align
+     fields above it). Root cause: this rule (and the sibling ".modal h2"
+     rule below) used a plain DESCENDANT selector, so it matched not only
+     each modal's own title bar but also every plain <h2> used further down
+     as an inner section header (".section-head h2" — "تغيير كلمة السر",
+     "قفل الآن", "🎨 الألوان", etc. — 13 places across the app). Every one of
+     those inner headers was becoming sticky and bleeding out via the same
+     negative margin meant for the ONE real title bar, so they all "stuck" to
+     the same top offset inside their scrollable panel and rendered on top of
+     whatever content was already there. Scoping both rules to the DIRECT
+     CHILD (">") — the one real title h2 immediately inside .modal /
+     .modal-compact — fixes every affected screen at once without touching
+     the intentional sticky title-bar behavior itself. */
+  .modal-compact > h2{ font-size:15px; margin:calc(var(--modal-pad-y) * -1) calc(var(--modal-pad-x) * -1) 12px; position:sticky; top:calc(var(--modal-pad-y) * -1); background:var(--titlebar-bg); padding:10px var(--modal-pad-x); border-radius:16px 16px 8px 8px; z-index:2; }
   .modal-compact .due-item{ padding:7px 10px; margin-bottom:5px; }
   .modal-compact .due-item .who{ font-size:13px; }
   .modal-compact .due-item .what{ font-size:11px; }
@@ -1550,7 +1566,7 @@
      redefined for dark mode elsewhere in this file (the
      :root[data-theme="dark"] / prefers-color-scheme blocks near the top),
      so this reads correctly in both themes with no separate override here. */
-  .modal h2{
+  .modal > h2{
     display:flex; justify-content:space-between; align-items:center; font-size:17px;
     /* BUG FIX (real, confirmed defect — direct feedback: "اريد رفع شريط
        العنوانين لجميع الشاشات من بداية الشاشة من الاعلى ان يبدأ مع الاسم
@@ -1597,21 +1613,21 @@
     border:1.5px solid var(--line);
   }
   .modal.dragging{ transition:none; }
-  .modal.dragging h2{ cursor:grabbing; }
+  .modal.dragging > h2{ cursor:grabbing; }
   /* Direct follow-up feedback ("لما تكبير الشاشات لا تقفل ميزة تحريكها
      بالماوس"): a maximized window used to be undraggable outright — the
      drag handler itself no longer refuses to start a drag on a maximized
      modal (see the "Draggable windows" script further down), so the cursor
      now advertises that it's still grabbable instead of reverting to a
      plain, non-interactive default. */
-  .modal.maximized h2{ cursor:move; }
-  .modal.maximized.dragging h2{ cursor:grabbing; }
+  .modal.maximized > h2{ cursor:move; }
+  .modal.maximized.dragging > h2{ cursor:grabbing; }
   /* h2's own children ("إغلاق" etc.) are usually wrapped so they sit at the
      end of the bar together; the maximize/minimize buttons (injected
      generically — see "Maximize / restore" and "Minimize / taskbar" further
      down) ride along in that same group so they always land directly beside
      close, not off on their own. */
-  .modal h2 > span:last-child, .modal h2 > div:last-child{ display:flex; align-items:center; gap:8px; }
+  .modal > h2 > span:last-child, .modal > h2 > div:last-child{ display:flex; align-items:center; gap:8px; }
   /* BUG FIX (real, confirmed regression: "الازرار مش مرتبين جنب بعض لساهم
      بنص الشاشات") + Windows-XP-style window-control cluster, per direct
      feedback. Every h2's trailing buttons (whatever the screen originally
@@ -5235,7 +5251,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10';
+const APP_VERSION = '10.10.1';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -11194,7 +11210,7 @@ function customPrompt(message, defaultValue, opts){
 
   document.addEventListener('pointerdown', function(e){
     if(e.button !== 0 && e.pointerType === 'mouse') return; // primary mouse button only; any touch/pen point is fine
-    const header = e.target.closest('.modal h2');
+    const header = e.target.closest('.modal > h2');
     if(!header || isInteractive(e.target)) return; // don't hijack clicks on "إغلاق" etc.
     const modal = header.closest('.modal');
     if(!modal) return;
@@ -11444,7 +11460,7 @@ document.addEventListener('pointerdown', function(e){
   }
   function chipIdFor(overlay){ return 'mintab_' + overlay.id; }
   function windowTitleFor(overlay){
-    const span = overlay.querySelector('.modal h2 span');
+    const span = overlay.querySelector('.modal > h2 span');
     const t = span ? span.textContent.trim() : '';
     return t || overlay.id;
   }
@@ -11698,7 +11714,7 @@ document.addEventListener('pointerdown', function(e){
       synthesizeHeaderIfMissing(overlay);
       return;
     }
-    const h2 = overlay.querySelector('.modal h2');
+    const h2 = overlay.querySelector('.modal > h2');
     if(h2){ ensureMinimizeButton(h2, overlay); ensureMaximizeButton(h2, overlay); }
   }
 

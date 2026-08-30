@@ -37,6 +37,10 @@
     --bg-top: #d6e2e8;
     --panel: #e0eaee;
     --panel-2: #d2e0e7;
+    --style-bg-base: #cbd9e0;
+    --style-bg-top-base: #d6e2e8;
+    --style-panel-base: #e0eaee;
+    --style-panel2-base: #d2e0e7;
     /* Follow-up direct feedback ("شريط العنوانين ايضا قم بزيادة لون التظليل
        فيه"): every screen's title bar (.modal h2 / .modal-compact h2) used
        plain --panel-2 — a real, distinct band already, but the ask is for
@@ -124,6 +128,10 @@
       --bg-top: #31434e;
       --panel: #344956;
       --panel-2: #3c5361;
+      --style-bg-base: #2a3b45;
+      --style-bg-top-base: #31434e;
+      --style-panel-base: #344956;
+      --style-panel2-base: #3c5361;
       --line: #4e6a78;
       --ink: #f2f8fa;
       --ink-dim: #b7ccd6;
@@ -2224,6 +2232,36 @@
     .sidebar{ width:100%; border-inline-end:none; border-bottom:1px solid var(--line); max-height:40vh; flex-shrink:0; }
     .main-area{ padding:18px 16px 60px; height:auto; flex:1; min-height:0; overflow-y:auto; }
   }
+  /* ===== Global screen-style surfaces =====
+     Surface colors are derived from the selected style while preserving the
+     existing light/dark base. This reaches every screen without per-screen edits. */
+  .screen-styles-modal{ max-width:760px; }
+  .screen-styles-intro{ padding:11px 13px; border:1px solid var(--line); border-radius:10px;
+    background:var(--screen-surface); color:var(--ink-dim); line-height:1.8; font-size:13px; margin-bottom:12px; }
+  .screen-style-grid{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:9px; }
+  .screen-style-card{ min-height:92px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:8px; padding:10px; border:1.5px solid var(--line); border-radius:12px; background:var(--screen-surface-2);
+    color:var(--ink); cursor:pointer; font:inherit; transition:transform .12s ease,border-color .15s ease,box-shadow .15s ease,background .15s ease; }
+  .screen-style-card:hover{ transform:translateY(-1px); border-color:var(--teal); background:var(--screen-tint); }
+  .screen-style-card.active{ border:2px solid var(--teal); background:var(--screen-tint); box-shadow:0 0 0 2px color-mix(in srgb,var(--teal) 18%,transparent); }
+  .screen-style-card strong{ display:block; font-size:13px; }
+  .screen-style-card small{ display:block; color:var(--ink-dim); font-size:10.5px; margin-top:2px; }
+  .screen-style-swatch{ width:38px; height:38px; border-radius:50%; background:var(--style-preview);
+    box-shadow:0 0 0 5px color-mix(in srgb,var(--style-preview) 13%,transparent),inset 0 0 0 1px rgba(255,255,255,.35); }
+  .screen-style-preview{ margin-top:12px; overflow:hidden; border:1.5px solid var(--line); border-radius:12px;
+    background:var(--screen-surface); box-shadow:var(--shadow-sm); }
+  .screen-style-preview-bar{ padding:11px 14px; background:var(--screen-titlebar); color:var(--screen-title-ink);
+    font-weight:900; border-bottom:1px solid color-mix(in srgb,var(--teal) 35%,var(--line)); }
+  .screen-style-preview-body{ padding:12px; display:grid; gap:8px; background:var(--screen-surface); }
+  .screen-style-preview-row{ padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:var(--screen-surface-2); }
+  body{ background:linear-gradient(180deg,var(--screen-bg-top),var(--screen-bg)) !important; }
+  .sidebar{ background:linear-gradient(180deg,var(--screen-surface),var(--screen-surface-2)) !important; }
+  .modal{ background:var(--screen-surface) !important; }
+  .field,.list-row,.directory-row,.stat,.case-card,.tool-card,.cs-card,.settings-tab,.acct-filter-card,.win-btn-group{
+    background:var(--screen-surface-2); }
+  .modal > h2,.modal-compact > h2{ background:var(--screen-titlebar) !important; color:var(--screen-title-ink); }
+  .settings-tab.active{ background:var(--screen-tint); }
+  @media (max-width:900px){ .screen-style-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
   /* ============ Global modern polish (v6.5 refresh) ============ */
   .modal{ border:1.5px solid var(--line); box-shadow: var(--shadow-lg); }
   /* Clearer element edges across the board — buttons, fields and list rows all
@@ -2622,6 +2660,7 @@ input:focus, select:focus, textarea:focus {
            "حول البرنامج" per direct feedback ("زر الضبط خليه تحت حول
            البرنامج"). -->
       <button type="button" class="btn-ghost sidebar-btn" id="settingsBtn">⚙ الضبط والإعدادات</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="stylesSidebarBtn">🎨 الستايلات</button>
       <!-- 🔒 قفل البرنامج: went through a floating round icon near the mini
            clock for a couple of rounds, but per direct further feedback
            ("خليها زر عادي بالقائمة الجانبية اسمو قفل البرنامج") this is back
@@ -4800,24 +4839,7 @@ input:focus, select:focus, textarea:focus {
         <button type="button" class="btn-ghost btn-small chip" data-font-preset="140">كبير جدًا</button>
       </div>
     </section>
-
-    <section class="cs-card" style="margin-bottom:12px;">
-      <h3>🎨 ألوان وستايلات الشاشات</h3>
-      <div class="muted" style="font-size:12px; margin-bottom:10px;">اختر ستايل الواجهات ولونها. التغيير يطبق مباشرة على جميع الشاشات ويحفظ تلقائيًا.</div>
-      <div id="screenStylePresets" class="chip-row" style="gap:8px;">
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="teal">تركوازي هادئ</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="blue">أزرق احترافي</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="purple">بنفسجي أنيق</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="green">أخضر هادئ</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="slate">رمادي احترافي</button>
-      </div>
-      <div class="field" style="margin-top:10px; margin-bottom:0;">
-        <label for="screenAccentColor">لون رئيسي مخصص</label>
-        <input type="color" id="screenAccentColor" value="#0e7c9e" style="height:42px; padding:3px; cursor:pointer;">
-      </div>
-    </section>
-
-    <section class="cs-card" style="margin-bottom:12px;">
+<section class="cs-card" style="margin-bottom:12px;">
       <h3>نوع الخط</h3>
       <div class="ap-fonts" id="apFontFamily"></div>
     </section>
@@ -4854,6 +4876,32 @@ input:focus, select:focus, textarea:focus {
         </label>
       </div>
     </div>
+    <!-- Screen styles: the five existing presets are kept exactly as they were.
+         Font size and language remain inside "⚙ الضبط والإعدادات". -->
+    <div class="overlay" id="screenStylesOverlay">
+      <div class="modal wide screen-styles-modal">
+        <h2><span>🎨 الستايلات</span><button type="button" class="btn-ghost btn-small" id="closeScreenStylesBtn">إغلاق</button></h2>
+        <div class="screen-styles-intro">
+          اختر الستايل. التغيير يُطبّق فورًا على جميع الشاشات والقوائم ويحفظ تلقائيًا،
+          بدون تغيير بيانات البرنامج أو وظائفه.
+        </div>
+        <div id="screenStylePresets" class="screen-style-grid">
+          <button type="button" class="screen-style-card" data-screen-style="teal"><span class="screen-style-swatch" style="--style-preview:#0e7c9e;"></span><span><strong>تركوازي هادئ</strong><small>Teal</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="blue"><span class="screen-style-swatch" style="--style-preview:#2563a8;"></span><span><strong>أزرق احترافي</strong><small>Blue</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="purple"><span class="screen-style-swatch" style="--style-preview:#6d55b7;"></span><span><strong>بنفسجي أنيق</strong><small>Purple</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="green"><span class="screen-style-swatch" style="--style-preview:#2b8a63;"></span><span><strong>أخضر هادئ</strong><small>Green</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="slate"><span class="screen-style-swatch" style="--style-preview:#536b78;"></span><span><strong>رمادي احترافي</strong><small>Slate</small></span></button>
+        </div>
+        <div class="screen-style-preview">
+          <div class="screen-style-preview-bar">معاينة شريط عنوان الشاشة</div>
+          <div class="screen-style-preview-body">
+            <div class="screen-style-preview-row">لون خفيف من نفس الستايل</div>
+            <div class="screen-style-preview-row">القوائم والبطاقات تتلوّن تلقائيًا</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Invoice appearance settings used to live in their own tab here, then
          were briefly merged into "🧾 إنشاء فاتورة" with a live preview; per
          further direct feedback that merge is undone — they now live on
@@ -5305,7 +5353,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10.7';
+const APP_VERSION = '10.10.8';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -5405,6 +5453,8 @@ function toggleTheme(){
   const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
   try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
   applyTheme();
+
+  try{ if(typeof applyScreenStyle==='function') applyScreenStyle(); }catch(e){}
 }
 
 /* ================== Appearance: text size and typeface ==================
@@ -5496,15 +5546,45 @@ function currentScreenStyle(){try{return localStorage.getItem(SCREEN_STYLE_KEY)|
 function applyScreenStyle(){
  const key=currentScreenStyle(), p=SCREEN_STYLES[key]||SCREEN_STYLES.teal; let accent=p.accent;
  try{const c=localStorage.getItem(SCREEN_ACCENT_KEY);if(/^#[0-9a-f]{6}$/i.test(c||''))accent=c;}catch(e){}
- document.documentElement.style.setProperty('--teal',accent);
- document.documentElement.style.setProperty('--teal-dim',accent);
- document.documentElement.style.setProperty('--teal-tint',p.tint);
- document.documentElement.style.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
+ const root=document.documentElement.style;
+ root.setProperty('--teal',accent);
+ root.setProperty('--teal-dim',accent);
+ root.setProperty('--teal-tint',p.tint);
+ root.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
+ root.setProperty('--screen-bg',`color-mix(in srgb,var(--style-bg-base) 95%,${accent} 5%)`);
+ root.setProperty('--screen-bg-top',`color-mix(in srgb,var(--style-bg-top-base) 94%,${accent} 6%)`);
+ root.setProperty('--screen-surface',`color-mix(in srgb,var(--style-panel-base) 93%,${accent} 7%)`);
+ root.setProperty('--screen-surface-2',`color-mix(in srgb,var(--style-panel2-base) 90%,${accent} 10%)`);
+ root.setProperty('--screen-tint',`color-mix(in srgb,${accent} 10%,var(--style-panel-base))`);
+ root.setProperty('--screen-titlebar',`color-mix(in srgb,var(--style-panel2-base) 72%,${accent} 28%)`);
+ root.setProperty('--screen-title-ink',effectiveTheme()==='dark'?'#f2f8fa':'#10242b');
  const c=document.getElementById('screenAccentColor');if(c)c.value=accent;
  document.querySelectorAll('[data-screen-style]').forEach(b=>b.classList.toggle('active',b.getAttribute('data-screen-style')===key));
 }
 function setScreenStyle(key){if(!SCREEN_STYLES[key])return;try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}applyScreenStyle();showToast('تم تطبيق ستايل الشاشات وحفظه.','success');}
 function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try{localStorage.setItem(SCREEN_ACCENT_KEY,color);}catch(e){}applyScreenStyle();}
+/* Standalone "الستايلات" screen. */
+(function(){
+  const overlay=document.getElementById('screenStylesOverlay');
+  const openBtn=document.getElementById('stylesSidebarBtn');
+  const closeBtn=document.getElementById('closeScreenStylesBtn');
+  function openStylesScreen(){
+    if(!overlay)return;
+    overlay.classList.remove('minimized');
+    overlay.classList.add('open');
+    try{__overlayTopZ+=1;overlay.style.zIndex=String(__overlayTopZ);}catch(e){}
+    applyScreenStyle();
+  }
+  if(openBtn)openBtn.addEventListener('click',openStylesScreen);
+  if(closeBtn)closeBtn.addEventListener('click',()=>overlay.classList.remove('open'));
+  if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-screen-style]');
+    if(b&&overlay&&overlay.contains(b))setScreenStyle(b.getAttribute('data-screen-style'));
+  });
+  window.openScreenStyles=openStylesScreen;
+})();
+
 applyTheme();
 applyScreenStyle();
 /* ================== Languages ==================
@@ -10600,7 +10680,7 @@ async function verifyEmployeeLogin(username, password){
        when that specific permission is on for the current employee.
      - EDIT_ENTITY_BTN_IDS: gated on the single editRecords permission. */
 const ALWAYS_ADMIN_BTN_IDS = [
-  'settingsBtn','invoiceAppearanceSidebarBtn','manageUsersSidebarBtn','invoiceColumnsBtn',
+  'settingsBtn','stylesSidebarBtn','invoiceAppearanceSidebarBtn','manageUsersSidebarBtn','invoiceColumnsBtn',
 ];
 const PERMISSION_GATED_BTN_IDS = {
   addCases: ['addPatientCaseBtn'],
@@ -11493,6 +11573,74 @@ const ALWAYS_TOP_OVERLAY_IDS = ['confirmOverlay', 'promptOverlay', 'storageSetup
   }else{
     observeAll();
     watchForNewOverlays();
+  }
+})();
+
+/* ================== Single-instance screen launcher ==================
+   A sidebar screen is one persistent in-app window. Clicking its button again
+   never rebuilds/resets that screen: if it is already open (even minimized),
+   it is restored and raised to the front. This preserves the exact form/filter
+   state the user left on the screen. */
+(function(){
+  const map={
+    incomingPaymentsBtn:'incomingPaymentOverlay',
+    expensePaymentsBtn:'expensePaymentOverlay',
+    cancelPaymentSidebarBtn:'cancelPaymentOverlay',
+    accountStatementSidebarBtn:'acctTypeOverlay',
+    collectDebtSidebarBtn:'collectDebtTypeOverlay',
+    debtsLogSidebarBtn:'duesReportOverlay',
+    checksRegisterSidebarBtn:'checksRegisterOverlay',
+    workLogSidebarBtn:'staffReportOverlay',
+    createInvoiceSidebarBtn:'invoiceTypeChooserOverlay',
+    invoiceAppearanceSidebarBtn:'invoiceAppearanceOverlay',
+    aboutSidebarBtn:'aboutOverlay',
+    manageUsersSidebarBtn:'manageUsersOverlay',
+    settingsBtn:'settingsOverlay',
+    stylesSidebarBtn:'screenStylesOverlay'
+  };
+  function focusOverlay(overlay){
+    if(!overlay)return;
+    overlay.classList.remove('minimized');
+    overlay.classList.add('open');
+    try{
+      if(typeof __overlayTopZ==='number'){
+        __overlayTopZ+=1;
+        overlay.style.zIndex=String(__overlayTopZ);
+      }
+    }catch(e){}
+    const modal=overlay.querySelector('.modal');
+    if(modal){
+      modal.dispatchEvent(new MouseEvent('pointerdown',{bubbles:true}));
+      const first=modal.querySelector('input,select,textarea,button');
+      if(first && first.id && /^(close|min|max)/i.test(first.id)) return;
+    }
+  }
+  Object.keys(map).forEach(btnId=>{
+    const btn=document.getElementById(btnId);
+    const overlayId=map[btnId];
+    if(!btn)return;
+    btn.addEventListener('click',function(e){
+      const ov=document.getElementById(overlayId);
+      if(ov && ov.classList.contains('open')){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        focusOverlay(ov);
+      }
+    },true);
+  });
+  /* Add-case is a main-area view rather than an overlay. It is still a single
+     screen and must retain its form state on repeated sidebar clicks. */
+  const caseBtn=document.getElementById('addPatientCaseBtn');
+  if(caseBtn){
+    caseBtn.addEventListener('click',function(e){
+      const view=document.getElementById('caseFormView');
+      if(view && getComputedStyle(view).display!=='none'){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        view.scrollIntoView({block:'start',behavior:'auto'});
+        window.scrollTo(0,0);
+      }
+    },true);
   }
 })();
 
@@ -20778,7 +20926,7 @@ document.getElementById('settingsOverlay').addEventListener('click', (e)=>{
   if(font) setFontFamily(font.getAttribute('data-font-id'));
 });
 
-document.getElementById('screenAccentColor').addEventListener('input',e=>setScreenAccent(e.target.value));
+const __screenAccentColorEl=document.getElementById('screenAccentColor'); if(__screenAccentColorEl) __screenAccentColorEl.addEventListener('input',e=>setScreenAccent(e.target.value));
 
 /* ---- languages (a tab inside Settings) ---- */
 document.getElementById('langSearch').addEventListener('input', (e)=> renderLanguageList(e.target.value));

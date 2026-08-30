@@ -1,6 +1,6 @@
 {
-    "version":  "10.10.5",
-    "notes":  "",
+    "version":  "10.10.6",
+    "notes":  "إصدار 10.10.6: ألوان وستاندات ناعمة للشاشات في الوضع العادي فقط، مع الحفاظ على الوضع الليلي، وإصلاحات نظام النوافذ والإغلاق وطباعة كشف الحالات.",
     "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-    "sha256":  "80080cab892f5211eafb50dd25c7a1a9ec1ef2cdc135f992ce3d9345c343c5c1"
+    "sha256":  "c87cb7717d8db76a919ba5d695ababd640bf0fba4ffa9ea1f0b98781e0bfc1ff"
 }

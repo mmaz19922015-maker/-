@@ -5292,7 +5292,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10.4';
+const APP_VERSION = '10.10.5';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -11414,36 +11414,10 @@ async function ensureHasEntity(kind, arr){
 }
 
 /* ================== Independent application windows ==================
-   Every feature screen is an independent desktop-style window. Opening a new
-   screen must NEVER silently close an already-open screen. Existing legacy
-   flows contain parent-close calls before opening child screens; those closes
-   are blocked only when another regular window is already open. Explicit
-   user closes (close buttons, backdrop, Escape) continue to work normally. */
-(function installIndependentWindowPolicy(){
-  const originalRemove = DOMTokenList.prototype.remove;
-  let explicitClose = false;
-  function markExplicitClose(){ explicitClose=true; queueMicrotask(()=>{explicitClose=false;}); }
-  document.addEventListener('pointerdown',e=>{
-    const t=e.target;
-    if(t && t.closest && (t.closest('.win-btn-group button:last-child') || t.closest('[id^="close"]') || t.closest('[id^="cancel"]') || t.closest('[id^="Cancel"]'))) markExplicitClose();
-    else if(t && t.classList && t.classList.contains('overlay')) markExplicitClose();
-  },true);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')markExplicitClose();},true);
-  document.querySelectorAll('.overlay').forEach(el=>{try{Object.defineProperty(el.classList,'_ownerElement',{value:el,configurable:true});}catch(e){}});
-  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes&&m.addedNodes.forEach(n=>{
-    if(n.nodeType===1 && n.classList && n.classList.contains('overlay')) try{Object.defineProperty(n.classList,'_ownerElement',{value:n,configurable:true});}catch(e){}
-  }))).observe(document.body,{childList:true});
-  DOMTokenList.prototype.remove=function(...tokens){
-    if(!explicitClose && tokens.includes('open') && this.contains('open')){
-      const el=this._ownerElement;
-      if(el && el.classList && el.classList.contains('overlay')){
-        const another=Array.from(document.querySelectorAll('.overlay.open')).some(x=>x!==el && !x.classList.contains('minimized'));
-        if(another) return;
-      }
-    }
-    return originalRemove.apply(this,tokens);
-  };
-})();
+   Screens are independent in-app windows. Opening another screen never closes
+   the screen underneath. Navigation handlers therefore keep parent windows
+   open; explicit إغلاق/رجوع actions close only the window the user requested.
+   ================== */
 
 /* ================== Overlay stacking manager ==================
    Any overlay that gets the 'open' class is automatically raised above every
@@ -12774,7 +12748,6 @@ function renderDuesReportPage(){
       <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;" dir="ltr">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
-      document.getElementById('duesReportOverlay').classList.remove('open');
       openDueReasonDetail(r.type, r.id);
     });
     return tr;
@@ -12947,14 +12920,12 @@ document.querySelectorAll('.collect-debt-type-btn').forEach(btn=>{
     // whole pick-a-person screen and goes straight to its own one-shot form
     // (see otherDebtEntryOverlay below).
     if(collectDebtType === 'other'){
-      document.getElementById('collectDebtTypeOverlay').classList.remove('open');
       openOtherDebtEntry();
       return;
     }
     const meta = COLLECT_DEBT_META[collectDebtType];
     // If this category is empty, offer to add one right here instead of an empty list.
     if(!meta.list().length){
-      document.getElementById('collectDebtTypeOverlay').classList.remove('open');
       const created = await quickAddEntity(collectDebtType);
       if(!created){ document.getElementById('collectDebtTypeOverlay').classList.add('open'); return; }
     }else{
@@ -12995,7 +12966,6 @@ function renderCollectDebtPick(search){
       <div class="amt" style="font-weight:800; color:${openTotal > 0 ? 'var(--red)' : 'var(--ink-dim)'};">${fmtMoney(openTotal)}</div>
     `;
     row.addEventListener('click', ()=>{
-      document.getElementById('collectDebtPickOverlay').classList.remove('open');
       openDebtEntry(collectDebtType, x.id);
     });
     return row;
@@ -13179,7 +13149,6 @@ document.getElementById('openSupplierPayablesFromDebtsLogBtn').addEventListener(
   // companies>0/doctors<0/labs<0/agents>0) is fully subsumed by it and is
   // no longer linked from anywhere; left in place, unreachable, rather than
   // deleted under time pressure (see README's dead-code note).
-  document.getElementById('debtsLogOverlay').classList.remove('open');
   openDuesReport();
 });
 document.querySelectorAll('.debts-log-filter').forEach(btn=>{
@@ -13289,7 +13258,6 @@ document.getElementById('debtsLogBody').addEventListener('click', async (e)=>{
   const ptype = e.target.getAttribute('data-open-debt-party');
   const pid = e.target.getAttribute('data-open-debt-id');
   if(!ptype) return;
-  document.getElementById('debtsLogOverlay').classList.remove('open');
   openDebtEntry(ptype, pid);
 });
 
@@ -13324,12 +13292,10 @@ document.getElementById('closeCalcBtn').addEventListener('click', ()=> calcOverl
 // payment to whichever party it actually belongs to before saving it.
 document.getElementById('calcToIncomingBtn').addEventListener('click', ()=>{
   const amount = parseFloat(document.getElementById('calcResult').textContent);
-  calcOverlay.classList.remove('open');
   openIncomingPaymentScreen('doctor', null, (isFinite(amount) && amount > 0) ? amount : null);
 });
 document.getElementById('calcToOutgoingBtn').addEventListener('click', ()=>{
   const amount = parseFloat(document.getElementById('calcResult').textContent);
-  calcOverlay.classList.remove('open');
   openExpensePaymentScreen('employee', null, (isFinite(amount) && amount > 0) ? amount : null);
 });
 /* Evaluates what is currently typed. The expression is stripped to digits and
@@ -13991,11 +13957,9 @@ document.getElementById('closeInvoiceTypeChooserBtn').addEventListener('click', 
   document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
 });
 document.getElementById('invoiceTypeSimpleBtn').addEventListener('click', ()=>{
-  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   openCreateInvoiceOverlay();
 });
 document.getElementById('invoiceTypeStatementBtn').addEventListener('click', ()=>{
-  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   document.getElementById('acctTypeOverlay').classList.add('open');
 });
 
@@ -14010,7 +13974,6 @@ function renderCaseInvoiceShortcutParties(){
   document.getElementById('caseInvoiceShortcutContinueBtn').disabled=!has;
 }
 document.getElementById('invoiceTypeCasesBtn').addEventListener('click',()=>{
-  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   document.getElementById('caseInvoiceShortcutOverlay').classList.add('open');
   renderCaseInvoiceShortcutParties();
 });
@@ -14022,7 +13985,6 @@ document.getElementById('caseInvoiceShortcutContinueBtn').addEventListener('clic
   const list=type==='doctor'?doctors:labs;
   const entity=(Array.isArray(list)?list:[]).find(x=>String(x.id)===String(id));
   if(!entity) return;
-  document.getElementById('caseInvoiceShortcutOverlay').classList.remove('open');
   openCaseInvoiceSelector(type,entity);
 });
 // The simple "🧾 إنشاء فاتورة" screen — per direct feedback this is back to
@@ -14032,7 +13994,6 @@ document.getElementById('caseInvoiceShortcutContinueBtn').addEventListener('clic
 // #invoiceAppearanceOverlay screen — see openInvoiceAppearanceOverlay()
 // below — reached from its own sidebar button, not from in here.
 function openCreateInvoiceOverlay(){
-  document.getElementById('purchaseOverlay').classList.remove('open');
   document.getElementById('createInvoiceForm').reset();
   document.getElementById('invRecipientType').value = 'doctor';
   renderInvoiceRecipientPicker();
@@ -14051,7 +14012,6 @@ const invoiceAppearanceOverlay = document.getElementById('invoiceAppearanceOverl
 document.getElementById('invoiceAppearanceSidebarBtn').addEventListener('click', ()=> openInvoiceAppearanceOverlay());
 function openInvoiceAppearanceOverlay(opts){
   opts = opts || {};
-  document.getElementById('purchaseOverlay').classList.remove('open');
   renderInvoiceSettingsPanel();
   invoiceAppearanceOverlay.classList.add('open');
   if(opts.focusFirstField){
@@ -14508,7 +14468,6 @@ function renderDebtsReportPage(){
       <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
-      document.getElementById('debtsReportOverlay').classList.remove('open');
       r.openFn();
     });
     return tr;
@@ -14518,23 +14477,18 @@ function renderDebtsReportPage(){
 const statementsTypeOverlay = document.getElementById('statementsTypeOverlay');
 document.getElementById('closeStatementsTypeBtn').addEventListener('click', ()=> statementsTypeOverlay.classList.remove('open'));
 document.getElementById('statementsTypeStaffBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openStaffPicker('statement');
 });
 document.getElementById('statementsTypeDoctorBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openDoctorsDirectory();
 });
 document.getElementById('statementsTypeLabBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openLabsPicker();
 });
 document.getElementById('statementsTypeCompanyBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openCompaniesPicker();
 });
 document.getElementById('statementsTypeAgentBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openAgentsPicker();
 });
 document.getElementById('closeDebtsReportBtn').addEventListener('click', ()=> document.getElementById('debtsReportOverlay').classList.remove('open'));
@@ -14866,13 +14820,17 @@ function renderUnifiedNotifications(){
     const amount=item.kind==='financial'?'<div class="amt" style="color:'+(item.overdue?'var(--red)':'var(--teal)')+';">'+(item.overdue?'⚠️ ':'')+fmtMoney(item.amount)+'</div>':'<div class="amt">'+escapeHtml(String(item.date||''))+'</div>';
     row.innerHTML='<div><div class="who">'+icon+' '+escapeHtml(item.title)+'</div><div class="what">'+status+escapeHtml(item.text)+'</div></div>'+amount+'<button type="button" class="unified-notif-dismiss" title="إزالة الإشعار" aria-label="إزالة الإشعار">×</button>';
     row.querySelector('.unified-notif-dismiss').addEventListener('click',(ev)=>{ev.preventDefault();ev.stopPropagation();dismissUnifiedNotification(item);});
-    row.addEventListener('click',()=>{if(item.kind==='note'){unifiedNotifOverlay.classList.remove('open');openNoteView(item.id);}else if(item.kind==='financial'&&item.payload){unifiedNotifOverlay.classList.remove('open');const p=item.payload;if(p.isDebt){if(p.partyType==='other'){openDebtsLog();}else{openDebtEntry(p.partyType,p.partyId);}}else if(p.partyType==='doctor')selectDoctor(p.partyId);}else if(item.kind==='delivery'&&item.payload){unifiedNotifOverlay.classList.remove('open');openCaseOwner(item.payload);}});
+    row.addEventListener('click',()=>{if(item.kind==='note'){openNoteView(item.id);}else if(item.kind==='financial'&&item.payload){const p=item.payload;if(p.isDebt){if(p.partyType==='other'){openDebtsLog();}else{openDebtEntry(p.partyType,p.partyId);}}else if(p.partyType==='doctor')selectDoctor(p.partyId);}else if(item.kind==='delivery'&&item.payload){openCaseOwner(item.payload);}});
     body.appendChild(row);
   });
 }
 function openUnifiedNotifications(){renderUnifiedNotifications();unifiedNotifOverlay.classList.add('open');}
 document.getElementById('deliveryNotifBtn').addEventListener('click',openUnifiedNotifications);
 document.getElementById('closeUnifiedNotifBtn').addEventListener('click',()=>unifiedNotifOverlay.classList.remove('open'));
+// Legacy notification windows are kept for compatibility; their visible close buttons
+// must still work if an older flow ever opens them.
+document.getElementById('closeDeliveryNotifBtn').addEventListener('click',()=>document.getElementById('deliveryNotifOverlay').classList.remove('open'));
+document.getElementById('closePaymentNotifBtn').addEventListener('click',()=>document.getElementById('paymentNotifOverlay').classList.remove('open'));
 unifiedNotifOverlay.addEventListener('click',e=>{if(e.target===unifiedNotifOverlay)unifiedNotifOverlay.classList.remove('open');});
 
 /* ================== Case count filter (home stat card) ================== */
@@ -15196,7 +15154,6 @@ document.getElementById('editDoctorFromDetailsBtn').addEventListener('click', ()
   document.getElementById('dPhone').value = d.phone || '';
   document.getElementById('dClinic').value = d.clinic || '';
   document.getElementById('dNotes').value = d.notes || '';
-  doctorDetailsOverlay.classList.remove('open');
   doctorOverlay.classList.add('open');
 });
 document.getElementById('deleteDoctorFromDetailsBtn').addEventListener('click', async ()=>{
@@ -17882,7 +17839,6 @@ document.getElementById('editLabFromDetailsBtn').addEventListener('click', ()=>{
   document.getElementById('labName').value = l.name || '';
   document.getElementById('labAddress').value = l.address || '';
   document.getElementById('labNotes').value = l.notes || '';
-  document.getElementById('labDetailsOverlay').classList.remove('open');
   labAddOverlay.classList.add('open');
 });
 document.getElementById('deleteLabFromDetailsBtn').addEventListener('click', async ()=>{
@@ -18684,7 +18640,6 @@ function renderStaffReportPage(){
       <td style="padding:9px 12px; text-align:center; font-weight:700; color:var(--teal);">${technicianCaseCountLast30Days(t)}</td>
     `;
     tr.addEventListener('click', ()=>{
-      staffReportOverlay.classList.remove('open');
       openStaffStatement(t.id);
     });
     return tr;
@@ -18758,7 +18713,6 @@ function openStaffDetails(id){
     <div style="margin-top:14px;"><b>🚫 الغياب</b><div style="margin-top:6px;">${absencesHtml}</div></div>
   `;
   document.getElementById('staffDetailsCaseCountLink').addEventListener('click', ()=>{
-    staffDetailsOverlay.classList.remove('open');
     openWorkLog(t.id);
   });
   document.getElementById('editStaffFromDetailsBtn').setAttribute('data-tech-id', t.id);
@@ -20229,7 +20183,6 @@ document.getElementById('editCompanyFromDetailsBtn').addEventListener('click', (
   document.getElementById('companyAddressInput2').value = c.address || '';
   document.getElementById('companyPhoneInput2').value = c.phone || '';
   document.getElementById('companyNotesInput2').value = c.notes || '';
-  document.getElementById('companyDetailsOverlay').classList.remove('open');
   companyAddOverlay.classList.add('open');
 });
 document.getElementById('deleteCompanyFromDetailsBtn').addEventListener('click', async ()=>{
@@ -20618,7 +20571,6 @@ document.getElementById('editAgentFromDetailsBtn').addEventListener('click', ()=
   document.getElementById('newAgentAddressInput').value = a.address || '';
   document.getElementById('newAgentNotesInput').value = a.notes || '';
   document.getElementById('newAgentNameInput').setAttribute('data-edit-agent-id', a.id);
-  document.getElementById('agentDetailsOverlay').classList.remove('open');
   document.getElementById('agentsOverlay').classList.add('open');
 });
 document.getElementById('deleteAgentFromDetailsBtn').addEventListener('click', async ()=>{
@@ -20654,7 +20606,6 @@ document.getElementById('editAgentInfoBtn').addEventListener('click', ()=>{
   document.getElementById('newAgentAddressInput').value = a.address || '';
   document.getElementById('newAgentNotesInput').value = a.notes || '';
   document.getElementById('newAgentNameInput').setAttribute('data-edit-agent-id', a.id);
-  document.getElementById('agentStatementOverlay').classList.remove('open');
   document.getElementById('agentsOverlay').classList.add('open');
 });
 function renderAgentStatementStat(a){

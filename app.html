@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AL EKHLAS لإدارة العيادات والمختبرات السنية</title>
-<!-- AL EKHLAS 10.10.6 hardened build: financial integrity + statement fixes -->
+<!-- AL EKHLAS 10.10.9 hardened build: financial integrity + statement fixes -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogItio2LHZhtin2YXYrCDYp9mE2KXYrtmE2KfYtSDZhNil2K/Yp9ix2Kkg2KfZhNi52YrYp9iv2KfYqiDZiNin2YTZhdiu2KrYqNix2KfYqiDYp9mE2LPZhtmK2KkiLCAic2hvcnRfbmFtZSI6ICLYqNix2YbYp9mF2Kwg2KfZhNil2K7ZhNin2LUiLCAic3RhcnRfdXJsIjogIi4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgImJhY2tncm91bmRfY29sb3IiOiAiI2Y3ZmJmYyIsICJ0aGVtZV9jb2xvciI6ICIjMGU3YzllIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjEyMHgxMjAiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55In0sIHsic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ==">
@@ -4876,32 +4876,6 @@ input:focus, select:focus, textarea:focus {
         </label>
       </div>
     </div>
-    <!-- Screen styles: the five existing presets are kept exactly as they were.
-         Font size and language remain inside "⚙ الضبط والإعدادات". -->
-    <div class="overlay" id="screenStylesOverlay">
-      <div class="modal wide screen-styles-modal">
-        <h2><span>🎨 الستايلات</span><button type="button" class="btn-ghost btn-small" id="closeScreenStylesBtn">إغلاق</button></h2>
-        <div class="screen-styles-intro">
-          اختر الستايل. التغيير يُطبّق فورًا على جميع الشاشات والقوائم ويحفظ تلقائيًا،
-          بدون تغيير بيانات البرنامج أو وظائفه.
-        </div>
-        <div id="screenStylePresets" class="screen-style-grid">
-          <button type="button" class="screen-style-card" data-screen-style="teal"><span class="screen-style-swatch" style="--style-preview:#0e7c9e;"></span><span><strong>تركوازي هادئ</strong><small>Teal</small></span></button>
-          <button type="button" class="screen-style-card" data-screen-style="blue"><span class="screen-style-swatch" style="--style-preview:#2563a8;"></span><span><strong>أزرق احترافي</strong><small>Blue</small></span></button>
-          <button type="button" class="screen-style-card" data-screen-style="purple"><span class="screen-style-swatch" style="--style-preview:#6d55b7;"></span><span><strong>بنفسجي أنيق</strong><small>Purple</small></span></button>
-          <button type="button" class="screen-style-card" data-screen-style="green"><span class="screen-style-swatch" style="--style-preview:#2b8a63;"></span><span><strong>أخضر هادئ</strong><small>Green</small></span></button>
-          <button type="button" class="screen-style-card" data-screen-style="slate"><span class="screen-style-swatch" style="--style-preview:#536b78;"></span><span><strong>رمادي احترافي</strong><small>Slate</small></span></button>
-        </div>
-        <div class="screen-style-preview">
-          <div class="screen-style-preview-bar">معاينة شريط عنوان الشاشة</div>
-          <div class="screen-style-preview-body">
-            <div class="screen-style-preview-row">لون خفيف من نفس الستايل</div>
-            <div class="screen-style-preview-row">القوائم والبطاقات تتلوّن تلقائيًا</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Invoice appearance settings used to live in their own tab here, then
          were briefly merged into "🧾 إنشاء فاتورة" with a live preview; per
          further direct feedback that merge is undone — they now live on
@@ -5042,6 +5016,38 @@ input:focus, select:focus, textarea:focus {
     </div>
   </div>
 </div>
+
+    <!-- Screen styles: the five existing presets are kept exactly as they were.
+         Font size and language remain inside "⚙ الضبط والإعدادات". -->
+    <div class="overlay" id="screenStylesOverlay">
+      <div class="modal wide screen-styles-modal">
+        <h2><span>🎨 الستايلات</span><button type="button" class="btn-ghost btn-small" id="closeScreenStylesBtn">إغلاق</button></h2>
+        <div class="screen-styles-intro">
+          اختر الستايل. التغيير يُطبّق فورًا على جميع الشاشات والقوائم ويحفظ تلقائيًا،
+          بدون تغيير بيانات البرنامج أو وظائفه.
+        </div>
+        <div id="screenStylePresets" class="screen-style-grid">
+          <button type="button" class="screen-style-card" data-screen-style="teal"><span class="screen-style-swatch" style="--style-preview:#0e7c9e;"></span><span><strong>تركوازي هادئ</strong><small>Teal</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="blue"><span class="screen-style-swatch" style="--style-preview:#2563a8;"></span><span><strong>أزرق احترافي</strong><small>Blue</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="purple"><span class="screen-style-swatch" style="--style-preview:#6d55b7;"></span><span><strong>بنفسجي أنيق</strong><small>Purple</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="green"><span class="screen-style-swatch" style="--style-preview:#2b8a63;"></span><span><strong>أخضر هادئ</strong><small>Green</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="slate"><span class="screen-style-swatch" style="--style-preview:#536b78;"></span><span><strong>رمادي احترافي</strong><small>Slate</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="navy"><span class="screen-style-swatch" style="--style-preview:#1f4f78;"></span><span><strong>كحلي عميق</strong><small>Navy</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="forest"><span class="screen-style-swatch" style="--style-preview:#1f654d;"></span><span><strong>أخضر غامق</strong><small>Forest</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="burgundy"><span class="screen-style-swatch" style="--style-preview:#743747;"></span><span><strong>عنابي راقٍ</strong><small>Burgundy</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="indigo"><span class="screen-style-swatch" style="--style-preview:#443d83;"></span><span><strong>نيلي داكن</strong><small>Indigo</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="charcoal"><span class="screen-style-swatch" style="--style-preview:#3f4a52;"></span><span><strong>فحمي أنيق</strong><small>Charcoal</small></span></button>
+        </div>
+        <div class="screen-style-preview">
+          <div class="screen-style-preview-bar">معاينة شريط عنوان الشاشة</div>
+          <div class="screen-style-preview-body">
+            <div class="screen-style-preview-row">لون خفيف من نفس الستايل</div>
+            <div class="screen-style-preview-row">القوائم والبطاقات تتلوّن تلقائيًا</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 <!-- About modal -->
 <!-- Purchase / contact for full version -->
@@ -5353,7 +5359,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10.8';
+const APP_VERSION = '10.10.10';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -5540,7 +5546,12 @@ const SCREEN_STYLES={
  blue:{accent:'#2563a8',accent2:'#3b82d0',tint:'rgba(37,99,168,.09)'},
  purple:{accent:'#6d55b7',accent2:'#8a72d1',tint:'rgba(109,85,183,.10)'},
  green:{accent:'#2b8a63',accent2:'#43b985',tint:'rgba(43,138,99,.10)'},
- slate:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.10)'}
+ slate:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.10)'},
+ navy:{accent:'#1f4f78',accent2:'#316f9f',tint:'rgba(31,79,120,.12)'},
+ forest:{accent:'#1f654d',accent2:'#2f8a69',tint:'rgba(31,101,77,.12)'},
+ burgundy:{accent:'#743747',accent2:'#9a4c60',tint:'rgba(116,55,71,.12)'},
+ indigo:{accent:'#443d83',accent2:'#6258a5',tint:'rgba(68,61,131,.12)'},
+ charcoal:{accent:'#3f4a52',accent2:'#596873',tint:'rgba(63,74,82,.13)'}
 };
 function currentScreenStyle(){try{return localStorage.getItem(SCREEN_STYLE_KEY)||'teal';}catch(e){return'teal';}}
 function applyScreenStyle(){
@@ -5578,10 +5589,6 @@ function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try
   if(openBtn)openBtn.addEventListener('click',openStylesScreen);
   if(closeBtn)closeBtn.addEventListener('click',()=>overlay.classList.remove('open'));
   if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});
-  document.addEventListener('click',e=>{
-    const b=e.target.closest('[data-screen-style]');
-    if(b&&overlay&&overlay.contains(b))setScreenStyle(b.getAttribute('data-screen-style'));
-  });
   window.openScreenStyles=openStylesScreen;
 })();
 
@@ -11621,6 +11628,16 @@ const ALWAYS_TOP_OVERLAY_IDS = ['confirmOverlay', 'promptOverlay', 'storageSetup
     if(!btn)return;
     btn.addEventListener('click',function(e){
       const ov=document.getElementById(overlayId);
+      // STYLES FIX: handle this button in the capture phase even on its first
+      // click. The old logic only intercepted clicks when the overlay was
+      // already open, while the dedicated bubble listener opened it later;
+      // other sidebar/delegated handlers could consume that first click.
+      if(btnId==='stylesSidebarBtn' && ov){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        focusOverlay(ov);
+        return;
+      }
       if(ov && ov.classList.contains('open')){
         e.preventDefault();
         e.stopImmediatePropagation();

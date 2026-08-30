@@ -20933,6 +20933,17 @@ document.getElementById('apFontRange').addEventListener('input', (e)=> setFontSc
 document.getElementById('apResetBtn').addEventListener('click', ()=>{
   setFontScale(100); setFontFamily('tajawal');
 });
+// Screen styles live in their own overlay, so their click handler must be
+// attached to that overlay (not Settings). Apply immediately on the same click.
+const __screenStylesOverlayEl=document.getElementById('screenStylesOverlay');
+if(__screenStylesOverlayEl) __screenStylesOverlayEl.addEventListener('click',(e)=>{
+  const card=e.target.closest('[data-screen-style]');
+  if(!card) return;
+  e.preventDefault();
+  e.stopPropagation();
+  setScreenStyle(card.getAttribute('data-screen-style'));
+});
+
 // Delegated on the settings window, since the controls now live inside it.
 document.getElementById('settingsOverlay').addEventListener('click', (e)=>{
   const screenStyle=e.target.closest('[data-screen-style]');

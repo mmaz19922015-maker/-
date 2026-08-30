@@ -4354,6 +4354,19 @@ input:focus, select:focus, textarea:focus {
         </span>
         <span class="tool-arrow" aria-hidden="true">‹</span>
       </button>
+      <button type="button" class="tool-card" id="invoiceTypeCasesBtn">
+        <span class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4h14v16H5z"/>
+            <path d="M8 8h8M8 12h8M8 16h5"/>
+          </svg>
+        </span>
+        <span class="tool-text">
+          <span class="tool-title">🖨 طباعة كشف حالات</span>
+          <span class="tool-sub">اختر الطبيب أو المختبر ثم انتقل لشاشة كشف الحالات الأصلية</span>
+        </span>
+        <span class="tool-arrow" aria-hidden="true">‹</span>
+      </button>
       <button type="button" class="tool-card tool-invtype-statement" id="invoiceTypeStatementBtn">
         <span class="tool-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -4373,6 +4386,18 @@ input:focus, select:focus, textarea:focus {
 </div>
 
 <!-- Case edit history (per-case detailed change log, for printing to the doctor) -->
+<!-- Shortcut: choose doctor/lab for the existing case-invoice printer -->
+<div class="overlay" id="caseInvoiceShortcutOverlay">
+  <div class="modal narrow">
+    <h2><span>🖨 طباعة كشف حالات</span><button type="button" class="btn-ghost btn-small" id="closeCaseInvoiceShortcutBtn">إغلاق</button></h2>
+    <div class="muted" style="margin-bottom:14px;">اختر الطبيب أو المختبر من الجهات المضافة عندك:</div>
+    <div class="field"><label>نوع الجهة</label><select id="caseInvoiceShortcutPartyType"><option value="doctor">🦷 طبيب</option><option value="lab">🧪 مختبر</option></select></div>
+    <div class="field"><label>الطبيب / المختبر</label><select id="caseInvoiceShortcutParty"></select></div>
+    <div id="caseInvoiceShortcutEmpty" class="muted" style="display:none;text-align:center;padding:10px 0;">لا يوجد أشخاص مضافون من هذا النوع.</div>
+    <button type="button" class="btn-primary" id="caseInvoiceShortcutContinueBtn" style="width:100%;">متابعة إلى كشف الحالات</button>
+  </div>
+</div>
+
 <!-- Create invoice -->
 <!-- Create invoice — reverted back to a plain, focused screen per direct
      feedback ("ولما اكبس انشاء فاتورة خليه شاشة عادية يسالني لمين الفاتورة
@@ -5251,7 +5276,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10.2';
+const APP_VERSION = '10.10.3';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -13900,6 +13925,33 @@ document.getElementById('invoiceTypeSimpleBtn').addEventListener('click', ()=>{
 document.getElementById('invoiceTypeStatementBtn').addEventListener('click', ()=>{
   document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   document.getElementById('acctTypeOverlay').classList.add('open');
+});
+
+// Shortcut from "إنشاء فاتورة" to the existing case-invoice printer.
+function renderCaseInvoiceShortcutParties(){
+  const type=document.getElementById('caseInvoiceShortcutPartyType').value;
+  const select=document.getElementById('caseInvoiceShortcutParty');
+  const empty=document.getElementById('caseInvoiceShortcutEmpty');
+  const list=type==='doctor'?doctors:labs;
+  select.innerHTML=(Array.isArray(list)?list:[]).map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||'—')}</option>`).join('');
+  const has=select.options.length>0; select.disabled=!has; empty.style.display=has?'none':'block';
+  document.getElementById('caseInvoiceShortcutContinueBtn').disabled=!has;
+}
+document.getElementById('invoiceTypeCasesBtn').addEventListener('click',()=>{
+  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
+  document.getElementById('caseInvoiceShortcutOverlay').classList.add('open');
+  renderCaseInvoiceShortcutParties();
+});
+document.getElementById('closeCaseInvoiceShortcutBtn').addEventListener('click',()=>document.getElementById('caseInvoiceShortcutOverlay').classList.remove('open'));
+document.getElementById('caseInvoiceShortcutPartyType').addEventListener('change',renderCaseInvoiceShortcutParties);
+document.getElementById('caseInvoiceShortcutContinueBtn').addEventListener('click',()=>{
+  const type=document.getElementById('caseInvoiceShortcutPartyType').value;
+  const id=document.getElementById('caseInvoiceShortcutParty').value;
+  const list=type==='doctor'?doctors:labs;
+  const entity=(Array.isArray(list)?list:[]).find(x=>String(x.id)===String(id));
+  if(!entity) return;
+  document.getElementById('caseInvoiceShortcutOverlay').classList.remove('open');
+  openCaseInvoiceSelector(type,entity);
 });
 // The simple "🧾 إنشاء فاتورة" screen — per direct feedback this is back to
 // asking only who the invoice is for, its reason/amount, and which currency

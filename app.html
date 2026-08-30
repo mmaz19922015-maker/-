@@ -4789,6 +4789,22 @@ input:focus, select:focus, textarea:focus {
     </section>
 
     <section class="cs-card" style="margin-bottom:12px;">
+      <h3>🎨 ألوان وستايلات الشاشات</h3>
+      <div class="muted" style="font-size:12px; margin-bottom:10px;">اختر ستايل الواجهات ولونها. التغيير يطبق مباشرة على جميع الشاشات ويحفظ تلقائيًا.</div>
+      <div id="screenStylePresets" class="chip-row" style="gap:8px;">
+        <button type="button" class="btn-ghost btn-small chip" data-screen-style="teal">تركوازي هادئ</button>
+        <button type="button" class="btn-ghost btn-small chip" data-screen-style="blue">أزرق احترافي</button>
+        <button type="button" class="btn-ghost btn-small chip" data-screen-style="purple">بنفسجي أنيق</button>
+        <button type="button" class="btn-ghost btn-small chip" data-screen-style="green">أخضر هادئ</button>
+        <button type="button" class="btn-ghost btn-small chip" data-screen-style="slate">رمادي احترافي</button>
+      </div>
+      <div class="field" style="margin-top:10px; margin-bottom:0;">
+        <label for="screenAccentColor">لون رئيسي مخصص</label>
+        <input type="color" id="screenAccentColor" value="#0e7c9e" style="height:42px; padding:3px; cursor:pointer;">
+      </div>
+    </section>
+
+    <section class="cs-card" style="margin-bottom:12px;">
       <h3>نوع الخط</h3>
       <div class="ap-fonts" id="apFontFamily"></div>
     </section>
@@ -5276,7 +5292,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10.3';
+const APP_VERSION = '10.10.4';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -5454,6 +5470,30 @@ function setFontFamily(id){
   try{ localStorage.setItem(FONT_FAMILY_KEY, id); }catch(e){}
   applyAppearance();
 }
+
+/* ================== Screen colors / styles ================== */
+const SCREEN_STYLE_KEY='ekhlas_screen_style_v1', SCREEN_ACCENT_KEY='ekhlas_screen_accent_v1';
+const SCREEN_STYLES={
+ teal:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.08)'},
+ blue:{accent:'#2563a8',accent2:'#3b82d0',tint:'rgba(37,99,168,.09)'},
+ purple:{accent:'#6d55b7',accent2:'#8a72d1',tint:'rgba(109,85,183,.10)'},
+ green:{accent:'#2b8a63',accent2:'#43b985',tint:'rgba(43,138,99,.10)'},
+ slate:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.10)'}
+};
+function currentScreenStyle(){try{return localStorage.getItem(SCREEN_STYLE_KEY)||'teal';}catch(e){return'teal';}}
+function applyScreenStyle(){
+ const key=currentScreenStyle(), p=SCREEN_STYLES[key]||SCREEN_STYLES.teal; let accent=p.accent;
+ try{const c=localStorage.getItem(SCREEN_ACCENT_KEY);if(/^#[0-9a-f]{6}$/i.test(c||''))accent=c;}catch(e){}
+ document.documentElement.style.setProperty('--teal',accent);
+ document.documentElement.style.setProperty('--teal-dim',accent);
+ document.documentElement.style.setProperty('--teal-tint',p.tint);
+ document.documentElement.style.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
+ const c=document.getElementById('screenAccentColor');if(c)c.value=accent;
+ document.querySelectorAll('[data-screen-style]').forEach(b=>b.classList.toggle('active',b.getAttribute('data-screen-style')===key));
+}
+function setScreenStyle(key){if(!SCREEN_STYLES[key])return;try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}applyScreenStyle();showToast('تم تطبيق ستايل الشاشات وحفظه.','success');}
+function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try{localStorage.setItem(SCREEN_ACCENT_KEY,color);}catch(e){}applyScreenStyle();}
+applyScreenStyle();
 
 /* ================== Languages ==================
    BUG FIX / feature change (real, direct feedback: "اريد اللغات التالية...
@@ -11373,6 +11413,38 @@ async function ensureHasEntity(kind, arr){
   return !!created;
 }
 
+/* ================== Independent application windows ==================
+   Every feature screen is an independent desktop-style window. Opening a new
+   screen must NEVER silently close an already-open screen. Existing legacy
+   flows contain parent-close calls before opening child screens; those closes
+   are blocked only when another regular window is already open. Explicit
+   user closes (close buttons, backdrop, Escape) continue to work normally. */
+(function installIndependentWindowPolicy(){
+  const originalRemove = DOMTokenList.prototype.remove;
+  let explicitClose = false;
+  function markExplicitClose(){ explicitClose=true; queueMicrotask(()=>{explicitClose=false;}); }
+  document.addEventListener('pointerdown',e=>{
+    const t=e.target;
+    if(t && t.closest && (t.closest('.win-btn-group button:last-child') || t.closest('[id^="close"]') || t.closest('[id^="cancel"]') || t.closest('[id^="Cancel"]'))) markExplicitClose();
+    else if(t && t.classList && t.classList.contains('overlay')) markExplicitClose();
+  },true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')markExplicitClose();},true);
+  document.querySelectorAll('.overlay').forEach(el=>{try{Object.defineProperty(el.classList,'_ownerElement',{value:el,configurable:true});}catch(e){}});
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes&&m.addedNodes.forEach(n=>{
+    if(n.nodeType===1 && n.classList && n.classList.contains('overlay')) try{Object.defineProperty(n.classList,'_ownerElement',{value:n,configurable:true});}catch(e){}
+  }))).observe(document.body,{childList:true});
+  DOMTokenList.prototype.remove=function(...tokens){
+    if(!explicitClose && tokens.includes('open') && this.contains('open')){
+      const el=this._ownerElement;
+      if(el && el.classList && el.classList.contains('overlay')){
+        const another=Array.from(document.querySelectorAll('.overlay.open')).some(x=>x!==el && !x.classList.contains('minimized'));
+        if(another) return;
+      }
+    }
+    return originalRemove.apply(this,tokens);
+  };
+})();
+
 /* ================== Overlay stacking manager ==================
    Any overlay that gets the 'open' class is automatically raised above every
    other currently-open overlay. This guarantees the newest screen is always on
@@ -14591,7 +14663,6 @@ function renderCasesReportPage(){
     `;
     tr.querySelector('[data-edit-case-report]').addEventListener('click', (ev)=>{
       ev.stopPropagation();
-      document.getElementById('casesReportOverlay').classList.remove('open');
       openEditCaseModal(c.ownerType, c.ownerId, c.id);
     });
     tr.querySelector('[data-del-case-report]').addEventListener('click', async (ev)=>{
@@ -14889,8 +14960,6 @@ function openCaseIdCard(ownerType, ownerId, caseId){
 document.getElementById('closeCaseIdCardBtn').addEventListener('click', ()=> document.getElementById('caseIdCardOverlay').classList.remove('open'));
 document.getElementById('caseIdCardEditBtn').addEventListener('click', ()=>{
   if(!caseIdCardRef) return;
-  document.getElementById('caseIdCardOverlay').classList.remove('open');
-  caseFilterOverlay.classList.remove('open');
   openEditCaseModal(caseIdCardRef.ownerType, caseIdCardRef.ownerId, caseIdCardRef.caseId);
 });
 document.getElementById('caseIdCardHistoryBtn').addEventListener('click', ()=>{
@@ -14925,7 +14994,7 @@ function renderCaseGrid(d){
       <span class="status-pill status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
       <div class="case-actions">
         <button type="button" class="icon-btn" data-edit-case="${c.id}">تعديل</button>
-        <button type="button" class="icon-btn danger" data-del-case="${c.id}">حذف</button>
+        <button type="button" class="icon-btn danger" data-del-case="${c.id}" title="حذف الحالة" aria-label="حذف الحالة">🗑 حذف</button>
       </div>
     `;
     grid.appendChild(card);
@@ -15092,7 +15161,6 @@ function renderDirectoryResults(query){
         <span class="d-match-tag">نتيجة من حالة</span>
       `;
       row.addEventListener('click', ()=>{
-        doctorsDirectoryOverlay.classList.remove('open');
         selectDoctor(r.doctor.id);
         setTimeout(()=> showToast(`فتحت سجل د. ${r.doctor.name} — الحالة ID ${r.caseItem.caseNumber}`, 'info'), 300);
       });
@@ -18008,12 +18076,11 @@ function renderLabCasesList(l){
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <div class="amt" style="color:var(--red);">${fmtMoney(en.cost)}</div>
-          <button type="button" class="icon-btn danger" data-del-lab-case="${en.id}">حذف</button>
+          <button type="button" class="icon-btn danger" data-del-lab-case="${en.id}" title="حذف الحالة" aria-label="حذف الحالة">🗑 حذف</button>
         </div>
       `;
       row.addEventListener('click', (ev)=>{
         if(ev.target.closest('[data-del-lab-case]')) return;
-        labCasesOverlay.classList.remove('open');
         openEditCaseModal('lab', l.id, en.id);
       });
     }else{
@@ -20740,11 +20807,15 @@ document.getElementById('apResetBtn').addEventListener('click', ()=>{
 });
 // Delegated on the settings window, since the controls now live inside it.
 document.getElementById('settingsOverlay').addEventListener('click', (e)=>{
+  const screenStyle=e.target.closest('[data-screen-style]');
+  if(screenStyle){setScreenStyle(screenStyle.getAttribute('data-screen-style'));return;}
   const preset = e.target.closest('[data-font-preset]');
   if(preset){ setFontScale(Number(preset.getAttribute('data-font-preset'))); return; }
   const font = e.target.closest('[data-font-id]');
   if(font) setFontFamily(font.getAttribute('data-font-id'));
 });
+
+document.getElementById('screenAccentColor').addEventListener('input',e=>setScreenAccent(e.target.value));
 
 /* ---- languages (a tab inside Settings) ---- */
 document.getElementById('langSearch').addEventListener('input', (e)=> renderLanguageList(e.target.value));

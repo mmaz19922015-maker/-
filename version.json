@@ -1,6 +1,6 @@
 {
-    "version":  "10.10.1",
-    "notes":  "",
+    "version":  "10.10.2",
+    "notes":  "إضافة اختصار طباعة كشف حالات من زر إنشاء فاتورة، مع اختيار الطبيب أو المختبر وإعادة استخدام شاشة طباعة الحالات الحالية.",
     "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-    "sha256":  "9ca1f173cc0ac073ab3f9839598e672094013672dcb5888816e6837e79f10c4e"
+    "sha256":  "7a317f13a6baaf3a18943b7949f6408e5bde076d6937b9ee41ffa665ee92a0f4"
 }

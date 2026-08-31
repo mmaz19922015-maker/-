@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AL EKHLAS لإدارة العيادات والمختبرات السنية</title>
-<!-- AL EKHLAS 10.10.6 hardened build: financial integrity + statement fixes -->
+<!-- AL EKHLAS 8.5 hardened build: financial integrity + statement fixes -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogItio2LHZhtin2YXYrCDYp9mE2KXYrtmE2KfYtSDZhNil2K/Yp9ix2Kkg2KfZhNi52YrYp9iv2KfYqiDZiNin2YTZhdiu2KrYqNix2KfYqiDYp9mE2LPZhtmK2KkiLCAic2hvcnRfbmFtZSI6ICLYqNix2YbYp9mF2Kwg2KfZhNil2K7ZhNin2LUiLCAic3RhcnRfdXJsIjogIi4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgImJhY2tncm91bmRfY29sb3IiOiAiI2Y3ZmJmYyIsICJ0aGVtZV9jb2xvciI6ICIjMGU3YzllIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjEyMHgxMjAiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55In0sIHsic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ==">
@@ -1494,19 +1494,6 @@
     border:1.5px solid var(--line);
     max-height: calc(100vh - 32px); overflow-y:auto;
   }
-  /* Light-mode screen tint: subtle enough to read as a style, never as a
-     saturated colored window.  It applies to every program window through
-     the shared .modal selector.  Dark mode explicitly falls back to the
-     original theme surfaces. */
-  .overlay .modal{
-    background:var(--screen-surface, var(--panel));
-    border-color:var(--screen-border, var(--line));
-    transition:background-color .22s ease, border-color .22s ease, box-shadow .22s ease;
-  }
-  .overlay .modal > h2{
-    background:var(--screen-titlebar, var(--titlebar-bg));
-    transition:background-color .22s ease, border-color .22s ease;
-  }
   .modal.wide{ max-width:820px; }
   /* Statement screens: keep the whole thing inside the viewport */
   .modal-compact{
@@ -2612,6 +2599,7 @@ input:focus, select:focus, textarea:focus {
            its label and icon flip live between "تشغيل"/"إيقاف" — see
            applyTheme() in the script, which now also drives this button. -->
       <button type="button" class="btn-ghost sidebar-btn" id="themeToggleSidebarBtn">🌙 تشغيل الوضع الليلي</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
       <!-- 👤 المستخدمون (أدمن/موظف) — direct feedback: "بدي اعمل نظام
            المستخدمين ادمن يتحكم بكل شي ونظام موظف يكون ليه قيود". Admin-only
            (see ADMIN_ONLY_BTN_IDS/applyRolePermissions()) — an employee never
@@ -2627,7 +2615,6 @@ input:focus, select:focus, textarea:focus {
            to being a plain, ordinary sidebar button like all the others
            above, wired to the same lockProgramNow() used everywhere. -->
       <button type="button" class="btn-ghost sidebar-btn" id="lockProgramSidebarBtn">🔒 قفل البرنامج</button>
-      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
   </div>
@@ -4367,19 +4354,6 @@ input:focus, select:focus, textarea:focus {
         </span>
         <span class="tool-arrow" aria-hidden="true">‹</span>
       </button>
-      <button type="button" class="tool-card" id="invoiceTypeCasesBtn">
-        <span class="tool-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 4h14v16H5z"/>
-            <path d="M8 8h8M8 12h8M8 16h5"/>
-          </svg>
-        </span>
-        <span class="tool-text">
-          <span class="tool-title">🖨 طباعة كشف حالات</span>
-          <span class="tool-sub">اختر الطبيب أو المختبر ثم انتقل لشاشة كشف الحالات الأصلية</span>
-        </span>
-        <span class="tool-arrow" aria-hidden="true">‹</span>
-      </button>
       <button type="button" class="tool-card tool-invtype-statement" id="invoiceTypeStatementBtn">
         <span class="tool-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -4399,18 +4373,6 @@ input:focus, select:focus, textarea:focus {
 </div>
 
 <!-- Case edit history (per-case detailed change log, for printing to the doctor) -->
-<!-- Shortcut: choose doctor/lab for the existing case-invoice printer -->
-<div class="overlay" id="caseInvoiceShortcutOverlay">
-  <div class="modal narrow">
-    <h2><span>🖨 طباعة كشف حالات</span><button type="button" class="btn-ghost btn-small" id="closeCaseInvoiceShortcutBtn">إغلاق</button></h2>
-    <div class="muted" style="margin-bottom:14px;">اختر الطبيب أو المختبر من الجهات المضافة عندك:</div>
-    <div class="field"><label>نوع الجهة</label><select id="caseInvoiceShortcutPartyType"><option value="doctor">🦷 طبيب</option><option value="lab">🧪 مختبر</option></select></div>
-    <div class="field"><label>الطبيب / المختبر</label><select id="caseInvoiceShortcutParty"></select></div>
-    <div id="caseInvoiceShortcutEmpty" class="muted" style="display:none;text-align:center;padding:10px 0;">لا يوجد أشخاص مضافون من هذا النوع.</div>
-    <button type="button" class="btn-primary" id="caseInvoiceShortcutContinueBtn" style="width:100%;">متابعة إلى كشف الحالات</button>
-  </div>
-</div>
-
 <!-- Create invoice -->
 <!-- Create invoice — reverted back to a plain, focused screen per direct
      feedback ("ولما اكبس انشاء فاتورة خليه شاشة عادية يسالني لمين الفاتورة
@@ -4775,6 +4737,7 @@ input:focus, select:focus, textarea:focus {
            Settings at all (see that overlay's own comment). -->
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
+      <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
       <button type="button" class="settings-tab" data-tab="appearance">🔠 حجم الخط ونوعه</button>
       <button type="button" class="settings-tab" data-tab="language">🌐 اللغة</button>
       <button type="button" class="settings-tab" data-tab="dhikr">🕌 الأذكار</button>
@@ -4797,22 +4760,6 @@ input:focus, select:focus, textarea:focus {
         <button type="button" class="btn-ghost btn-small chip" data-font-preset="100">افتراضي</button>
         <button type="button" class="btn-ghost btn-small chip" data-font-preset="120">كبير</button>
         <button type="button" class="btn-ghost btn-small chip" data-font-preset="140">كبير جدًا</button>
-      </div>
-    </section>
-
-    <section class="cs-card" style="margin-bottom:12px;">
-      <h3>🎨 ألوان وستايلات الشاشات</h3>
-      <div class="muted" style="font-size:12px; margin-bottom:10px;">اختر ستايل الواجهات ولونها. التغيير يطبق مباشرة على جميع الشاشات ويحفظ تلقائيًا.</div>
-      <div id="screenStylePresets" class="chip-row" style="gap:8px;">
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="teal">تركوازي هادئ</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="blue">أزرق احترافي</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="purple">بنفسجي أنيق</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="green">أخضر هادئ</button>
-        <button type="button" class="btn-ghost btn-small chip" data-screen-style="slate">رمادي احترافي</button>
-      </div>
-      <div class="field" style="margin-top:10px; margin-bottom:0;">
-        <label for="screenAccentColor">لون رئيسي مخصص</label>
-        <input type="color" id="screenAccentColor" value="#0e7c9e" style="height:42px; padding:3px; cursor:pointer;">
       </div>
     </section>
 
@@ -4902,6 +4849,52 @@ input:focus, select:focus, textarea:focus {
       <div class="field">
         <label>استيراد نسخة احتياطية يدوية (ملف .json صدّرته بنفسك من قبل)</label>
         <input type="file" id="importBackupInput" accept=".json">
+      </div>
+    </div>
+
+    <div class="settings-panel" data-panel="update" style="display:none;">
+      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+        <div style="font-size:13.5px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
+      </div>
+      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
+          <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
+          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
+        </label>
+        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
+        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+      </div>
+      <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
+           بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
+           installUpdate() always keeps exactly one previous version as a
+           local .bak before overwriting — this button restores it. Desktop
+           only (there is nothing to swap in the browser edition, which
+           never self-replaces a file in the first place). -->
+      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px; display:none;">
+        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
+        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">لو صار عندك مشكلة بعد تحديث البرنامج، هذا الزر يرجعك تلقائيًا للإصدار الذي كان يعمل قبل آخر تحديث مباشرة.</div>
+        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
+        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+      </div>
+      <!-- BUG FIX (real, confirmed defect — direct feedback): the old
+           "🔄 تحديث البرنامج الآن" button below this comment was ALWAYS
+           disabled unless a separate, easy-to-miss "تحديد ملف البرنامج"
+           step ran first, and even then only actually worked in a
+           browser edition with the File System Access API — on desktop
+           the real update path has always been the online one above
+           (🌐 فحص التحديثات الآن / the 🎉 banner), which downloads,
+           verifies, installs and relaunches automatically via the main
+           process. The dead manual button and its file picker were
+           removed entirely rather than fixed — there was nothing for a
+           user to correctly operate, since the real update mechanism
+           never needed them. "تحديد ملف البرنامج" itself is kept below
+           because it still has a real, separate job: letting a password
+           change (see "كلمة المرور والحماية") persist permanently inside
+           this file instead of only on this one device. -->
+      <div class="field">
+        <button type="button" class="btn-primary btn-small" id="pickAppFileBtn">📄 تحديد ملف البرنامج (مرة واحدة)</button>
+        <div class="muted" id="appUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+        <div class="muted" style="margin-top:6px; line-height:1.7;">يُستخدم فقط لحفظ تغيير كلمة السر بشكل دائم داخل هذا الملف نفسه (من تبويب "كلمة المرور والحماية") — لا علاقة له بتحديث البرنامج، الذي يتم تلقائيًا بالكامل من الأعلى عبر "🌐 فحص التحديثات الآن".</div>
       </div>
     </div>
 
@@ -5061,18 +5054,6 @@ input:focus, select:focus, textarea:focus {
            (getActivationStatusMessage()/licenseRemainingSummaryText()), so
            it always agrees with what the lock screen itself would say. -->
       <div id="aboutLicenseStatus" style="display:inline-block; margin-bottom:14px; padding:6px 16px; border-radius:20px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
-      <div style="margin:0 0 14px; padding:13px 14px; border-radius:12px; text-align:right; background:linear-gradient(135deg, rgba(244,196,48,.18), rgba(184,134,11,.08), rgba(255,255,255,.04)); border:1px solid rgba(212,175,55,.45); box-shadow:0 8px 22px rgba(120,85,10,.12);">
-        <div style="font-weight:900; margin-bottom:7px;">🔄 تحديث البرنامج</div>
-        <div class="muted" style="font-size:12px; line-height:1.7; margin-bottom:10px;">الإصدار المثبت حاليًا: <b id="aboutUpdateVersionText">AL EKHLAS v12.5</b></div>
-        <button type="button" class="btn-primary btn-small" id="checkUpdatesNowBtn" style="width:100%;">🌐 البحث عن تحديثات</button>
-        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12px;"></div>
-      </div>
-      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:14px; display:none; text-align:right;">
-        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
-        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">يرجعك إلى النسخة التي كانت تعمل قبل آخر تحديث.</div>
-        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%;">↩️ الرجوع للإصدار السابق</button>
-        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12px;"></div>
-      </div>
       <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
         <div style="font-size:13.5px; font-weight:800; margin-bottom:8px;">للتواصل والدعم الفني</div>
         <div dir="ltr" style="font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:800; color:var(--teal); margin-bottom:12px;">+962 78 714 5048</div>
@@ -5270,7 +5251,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '12.5';
+const APP_VERSION = '10.10.1';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -5371,6 +5352,7 @@ function toggleTheme(){
   try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
   applyTheme();
 }
+applyTheme();
 
 /* ================== Appearance: text size and typeface ==================
    Scaling is applied to the root element, so everything sized in rem grows
@@ -5448,30 +5430,6 @@ function setFontFamily(id){
   applyAppearance();
 }
 
-/* ================== Screen colors / styles ================== */
-const SCREEN_STYLE_KEY='ekhlas_screen_style_v1', SCREEN_ACCENT_KEY='ekhlas_screen_accent_v1';
-const SCREEN_STYLES={
- teal:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.08)'},
- blue:{accent:'#2563a8',accent2:'#3b82d0',tint:'rgba(37,99,168,.09)'},
- purple:{accent:'#6d55b7',accent2:'#8a72d1',tint:'rgba(109,85,183,.10)'},
- green:{accent:'#2b8a63',accent2:'#43b985',tint:'rgba(43,138,99,.10)'},
- slate:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.10)'}
-};
-function currentScreenStyle(){try{return localStorage.getItem(SCREEN_STYLE_KEY)||'teal';}catch(e){return'teal';}}
-function applyScreenStyle(){
- const key=currentScreenStyle(), p=SCREEN_STYLES[key]||SCREEN_STYLES.teal; let accent=p.accent;
- try{const c=localStorage.getItem(SCREEN_ACCENT_KEY);if(/^#[0-9a-f]{6}$/i.test(c||''))accent=c;}catch(e){}
- document.documentElement.style.setProperty('--teal',accent);
- document.documentElement.style.setProperty('--teal-dim',accent);
- document.documentElement.style.setProperty('--teal-tint',p.tint);
- document.documentElement.style.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
- const c=document.getElementById('screenAccentColor');if(c)c.value=accent;
- document.querySelectorAll('[data-screen-style]').forEach(b=>b.classList.toggle('active',b.getAttribute('data-screen-style')===key));
-}
-function setScreenStyle(key){if(!SCREEN_STYLES[key])return;try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}applyScreenStyle();showToast('تم تطبيق ستايل الشاشات وحفظه.','success');}
-function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try{localStorage.setItem(SCREEN_ACCENT_KEY,color);}catch(e){}applyScreenStyle();}
-applyTheme();
-applyScreenStyle();
 /* ================== Languages ==================
    BUG FIX / feature change (real, direct feedback: "اريد اللغات التالية...
    ارجو تطبيق نظام اللغات بشكل دقيق واحترافي" — restrict the language list to
@@ -11390,12 +11348,6 @@ async function ensureHasEntity(kind, arr){
   return !!created;
 }
 
-/* ================== Independent application windows ==================
-   Screens are independent in-app windows. Opening another screen never closes
-   the screen underneath. Navigation handlers therefore keep parent windows
-   open; explicit إغلاق/رجوع actions close only the window the user requested.
-   ================== */
-
 /* ================== Overlay stacking manager ==================
    Any overlay that gets the 'open' class is automatically raised above every
    other currently-open overlay. This guarantees the newest screen is always on
@@ -12725,6 +12677,7 @@ function renderDuesReportPage(){
       <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;" dir="ltr">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
+      document.getElementById('duesReportOverlay').classList.remove('open');
       openDueReasonDetail(r.type, r.id);
     });
     return tr;
@@ -12897,12 +12850,14 @@ document.querySelectorAll('.collect-debt-type-btn').forEach(btn=>{
     // whole pick-a-person screen and goes straight to its own one-shot form
     // (see otherDebtEntryOverlay below).
     if(collectDebtType === 'other'){
+      document.getElementById('collectDebtTypeOverlay').classList.remove('open');
       openOtherDebtEntry();
       return;
     }
     const meta = COLLECT_DEBT_META[collectDebtType];
     // If this category is empty, offer to add one right here instead of an empty list.
     if(!meta.list().length){
+      document.getElementById('collectDebtTypeOverlay').classList.remove('open');
       const created = await quickAddEntity(collectDebtType);
       if(!created){ document.getElementById('collectDebtTypeOverlay').classList.add('open'); return; }
     }else{
@@ -12943,6 +12898,7 @@ function renderCollectDebtPick(search){
       <div class="amt" style="font-weight:800; color:${openTotal > 0 ? 'var(--red)' : 'var(--ink-dim)'};">${fmtMoney(openTotal)}</div>
     `;
     row.addEventListener('click', ()=>{
+      document.getElementById('collectDebtPickOverlay').classList.remove('open');
       openDebtEntry(collectDebtType, x.id);
     });
     return row;
@@ -13126,6 +13082,7 @@ document.getElementById('openSupplierPayablesFromDebtsLogBtn').addEventListener(
   // companies>0/doctors<0/labs<0/agents>0) is fully subsumed by it and is
   // no longer linked from anywhere; left in place, unreachable, rather than
   // deleted under time pressure (see README's dead-code note).
+  document.getElementById('debtsLogOverlay').classList.remove('open');
   openDuesReport();
 });
 document.querySelectorAll('.debts-log-filter').forEach(btn=>{
@@ -13235,6 +13192,7 @@ document.getElementById('debtsLogBody').addEventListener('click', async (e)=>{
   const ptype = e.target.getAttribute('data-open-debt-party');
   const pid = e.target.getAttribute('data-open-debt-id');
   if(!ptype) return;
+  document.getElementById('debtsLogOverlay').classList.remove('open');
   openDebtEntry(ptype, pid);
 });
 
@@ -13269,10 +13227,12 @@ document.getElementById('closeCalcBtn').addEventListener('click', ()=> calcOverl
 // payment to whichever party it actually belongs to before saving it.
 document.getElementById('calcToIncomingBtn').addEventListener('click', ()=>{
   const amount = parseFloat(document.getElementById('calcResult').textContent);
+  calcOverlay.classList.remove('open');
   openIncomingPaymentScreen('doctor', null, (isFinite(amount) && amount > 0) ? amount : null);
 });
 document.getElementById('calcToOutgoingBtn').addEventListener('click', ()=>{
   const amount = parseFloat(document.getElementById('calcResult').textContent);
+  calcOverlay.classList.remove('open');
   openExpensePaymentScreen('employee', null, (isFinite(amount) && amount > 0) ? amount : null);
 });
 /* Evaluates what is currently typed. The expression is stripped to digits and
@@ -13934,35 +13894,12 @@ document.getElementById('closeInvoiceTypeChooserBtn').addEventListener('click', 
   document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
 });
 document.getElementById('invoiceTypeSimpleBtn').addEventListener('click', ()=>{
+  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   openCreateInvoiceOverlay();
 });
 document.getElementById('invoiceTypeStatementBtn').addEventListener('click', ()=>{
+  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   document.getElementById('acctTypeOverlay').classList.add('open');
-});
-
-// Shortcut from "إنشاء فاتورة" to the existing case-invoice printer.
-function renderCaseInvoiceShortcutParties(){
-  const type=document.getElementById('caseInvoiceShortcutPartyType').value;
-  const select=document.getElementById('caseInvoiceShortcutParty');
-  const empty=document.getElementById('caseInvoiceShortcutEmpty');
-  const list=type==='doctor'?doctors:labs;
-  select.innerHTML=(Array.isArray(list)?list:[]).map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||'—')}</option>`).join('');
-  const has=select.options.length>0; select.disabled=!has; empty.style.display=has?'none':'block';
-  document.getElementById('caseInvoiceShortcutContinueBtn').disabled=!has;
-}
-document.getElementById('invoiceTypeCasesBtn').addEventListener('click',()=>{
-  document.getElementById('caseInvoiceShortcutOverlay').classList.add('open');
-  renderCaseInvoiceShortcutParties();
-});
-document.getElementById('closeCaseInvoiceShortcutBtn').addEventListener('click',()=>document.getElementById('caseInvoiceShortcutOverlay').classList.remove('open'));
-document.getElementById('caseInvoiceShortcutPartyType').addEventListener('change',renderCaseInvoiceShortcutParties);
-document.getElementById('caseInvoiceShortcutContinueBtn').addEventListener('click',()=>{
-  const type=document.getElementById('caseInvoiceShortcutPartyType').value;
-  const id=document.getElementById('caseInvoiceShortcutParty').value;
-  const list=type==='doctor'?doctors:labs;
-  const entity=(Array.isArray(list)?list:[]).find(x=>String(x.id)===String(id));
-  if(!entity) return;
-  openCaseInvoiceSelector(type,entity);
 });
 // The simple "🧾 إنشاء فاتورة" screen — per direct feedback this is back to
 // asking only who the invoice is for, its reason/amount, and which currency
@@ -13971,6 +13908,7 @@ document.getElementById('caseInvoiceShortcutContinueBtn').addEventListener('clic
 // #invoiceAppearanceOverlay screen — see openInvoiceAppearanceOverlay()
 // below — reached from its own sidebar button, not from in here.
 function openCreateInvoiceOverlay(){
+  document.getElementById('purchaseOverlay').classList.remove('open');
   document.getElementById('createInvoiceForm').reset();
   document.getElementById('invRecipientType').value = 'doctor';
   renderInvoiceRecipientPicker();
@@ -13989,6 +13927,7 @@ const invoiceAppearanceOverlay = document.getElementById('invoiceAppearanceOverl
 document.getElementById('invoiceAppearanceSidebarBtn').addEventListener('click', ()=> openInvoiceAppearanceOverlay());
 function openInvoiceAppearanceOverlay(opts){
   opts = opts || {};
+  document.getElementById('purchaseOverlay').classList.remove('open');
   renderInvoiceSettingsPanel();
   invoiceAppearanceOverlay.classList.add('open');
   if(opts.focusFirstField){
@@ -14445,6 +14384,7 @@ function renderDebtsReportPage(){
       <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
+      document.getElementById('debtsReportOverlay').classList.remove('open');
       r.openFn();
     });
     return tr;
@@ -14454,18 +14394,23 @@ function renderDebtsReportPage(){
 const statementsTypeOverlay = document.getElementById('statementsTypeOverlay');
 document.getElementById('closeStatementsTypeBtn').addEventListener('click', ()=> statementsTypeOverlay.classList.remove('open'));
 document.getElementById('statementsTypeStaffBtn').addEventListener('click', ()=>{
+  statementsTypeOverlay.classList.remove('open');
   openStaffPicker('statement');
 });
 document.getElementById('statementsTypeDoctorBtn').addEventListener('click', ()=>{
+  statementsTypeOverlay.classList.remove('open');
   openDoctorsDirectory();
 });
 document.getElementById('statementsTypeLabBtn').addEventListener('click', ()=>{
+  statementsTypeOverlay.classList.remove('open');
   openLabsPicker();
 });
 document.getElementById('statementsTypeCompanyBtn').addEventListener('click', ()=>{
+  statementsTypeOverlay.classList.remove('open');
   openCompaniesPicker();
 });
 document.getElementById('statementsTypeAgentBtn').addEventListener('click', ()=>{
+  statementsTypeOverlay.classList.remove('open');
   openAgentsPicker();
 });
 document.getElementById('closeDebtsReportBtn').addEventListener('click', ()=> document.getElementById('debtsReportOverlay').classList.remove('open'));
@@ -14594,6 +14539,7 @@ function renderCasesReportPage(){
     `;
     tr.querySelector('[data-edit-case-report]').addEventListener('click', (ev)=>{
       ev.stopPropagation();
+      document.getElementById('casesReportOverlay').classList.remove('open');
       openEditCaseModal(c.ownerType, c.ownerId, c.id);
     });
     tr.querySelector('[data-del-case-report]').addEventListener('click', async (ev)=>{
@@ -14797,17 +14743,13 @@ function renderUnifiedNotifications(){
     const amount=item.kind==='financial'?'<div class="amt" style="color:'+(item.overdue?'var(--red)':'var(--teal)')+';">'+(item.overdue?'⚠️ ':'')+fmtMoney(item.amount)+'</div>':'<div class="amt">'+escapeHtml(String(item.date||''))+'</div>';
     row.innerHTML='<div><div class="who">'+icon+' '+escapeHtml(item.title)+'</div><div class="what">'+status+escapeHtml(item.text)+'</div></div>'+amount+'<button type="button" class="unified-notif-dismiss" title="إزالة الإشعار" aria-label="إزالة الإشعار">×</button>';
     row.querySelector('.unified-notif-dismiss').addEventListener('click',(ev)=>{ev.preventDefault();ev.stopPropagation();dismissUnifiedNotification(item);});
-    row.addEventListener('click',()=>{if(item.kind==='note'){openNoteView(item.id);}else if(item.kind==='financial'&&item.payload){const p=item.payload;if(p.isDebt){if(p.partyType==='other'){openDebtsLog();}else{openDebtEntry(p.partyType,p.partyId);}}else if(p.partyType==='doctor')selectDoctor(p.partyId);}else if(item.kind==='delivery'&&item.payload){openCaseOwner(item.payload);}});
+    row.addEventListener('click',()=>{if(item.kind==='note'){unifiedNotifOverlay.classList.remove('open');openNoteView(item.id);}else if(item.kind==='financial'&&item.payload){unifiedNotifOverlay.classList.remove('open');const p=item.payload;if(p.isDebt){if(p.partyType==='other'){openDebtsLog();}else{openDebtEntry(p.partyType,p.partyId);}}else if(p.partyType==='doctor')selectDoctor(p.partyId);}else if(item.kind==='delivery'&&item.payload){unifiedNotifOverlay.classList.remove('open');openCaseOwner(item.payload);}});
     body.appendChild(row);
   });
 }
 function openUnifiedNotifications(){renderUnifiedNotifications();unifiedNotifOverlay.classList.add('open');}
 document.getElementById('deliveryNotifBtn').addEventListener('click',openUnifiedNotifications);
 document.getElementById('closeUnifiedNotifBtn').addEventListener('click',()=>unifiedNotifOverlay.classList.remove('open'));
-// Legacy notification windows are kept for compatibility; their visible close buttons
-// must still work if an older flow ever opens them.
-document.getElementById('closeDeliveryNotifBtn').addEventListener('click',()=>document.getElementById('deliveryNotifOverlay').classList.remove('open'));
-document.getElementById('closePaymentNotifBtn').addEventListener('click',()=>document.getElementById('paymentNotifOverlay').classList.remove('open'));
 unifiedNotifOverlay.addEventListener('click',e=>{if(e.target===unifiedNotifOverlay)unifiedNotifOverlay.classList.remove('open');});
 
 /* ================== Case count filter (home stat card) ================== */
@@ -14895,6 +14837,8 @@ function openCaseIdCard(ownerType, ownerId, caseId){
 document.getElementById('closeCaseIdCardBtn').addEventListener('click', ()=> document.getElementById('caseIdCardOverlay').classList.remove('open'));
 document.getElementById('caseIdCardEditBtn').addEventListener('click', ()=>{
   if(!caseIdCardRef) return;
+  document.getElementById('caseIdCardOverlay').classList.remove('open');
+  caseFilterOverlay.classList.remove('open');
   openEditCaseModal(caseIdCardRef.ownerType, caseIdCardRef.ownerId, caseIdCardRef.caseId);
 });
 document.getElementById('caseIdCardHistoryBtn').addEventListener('click', ()=>{
@@ -14929,7 +14873,7 @@ function renderCaseGrid(d){
       <span class="status-pill status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
       <div class="case-actions">
         <button type="button" class="icon-btn" data-edit-case="${c.id}">تعديل</button>
-        <button type="button" class="icon-btn danger" data-del-case="${c.id}" title="حذف الحالة" aria-label="حذف الحالة">🗑 حذف</button>
+        <button type="button" class="icon-btn danger" data-del-case="${c.id}">حذف</button>
       </div>
     `;
     grid.appendChild(card);
@@ -15096,6 +15040,7 @@ function renderDirectoryResults(query){
         <span class="d-match-tag">نتيجة من حالة</span>
       `;
       row.addEventListener('click', ()=>{
+        doctorsDirectoryOverlay.classList.remove('open');
         selectDoctor(r.doctor.id);
         setTimeout(()=> showToast(`فتحت سجل د. ${r.doctor.name} — الحالة ID ${r.caseItem.caseNumber}`, 'info'), 300);
       });
@@ -15131,6 +15076,7 @@ document.getElementById('editDoctorFromDetailsBtn').addEventListener('click', ()
   document.getElementById('dPhone').value = d.phone || '';
   document.getElementById('dClinic').value = d.clinic || '';
   document.getElementById('dNotes').value = d.notes || '';
+  doctorDetailsOverlay.classList.remove('open');
   doctorOverlay.classList.add('open');
 });
 document.getElementById('deleteDoctorFromDetailsBtn').addEventListener('click', async ()=>{
@@ -17816,6 +17762,7 @@ document.getElementById('editLabFromDetailsBtn').addEventListener('click', ()=>{
   document.getElementById('labName').value = l.name || '';
   document.getElementById('labAddress').value = l.address || '';
   document.getElementById('labNotes').value = l.notes || '';
+  document.getElementById('labDetailsOverlay').classList.remove('open');
   labAddOverlay.classList.add('open');
 });
 document.getElementById('deleteLabFromDetailsBtn').addEventListener('click', async ()=>{
@@ -18009,11 +17956,12 @@ function renderLabCasesList(l){
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <div class="amt" style="color:var(--red);">${fmtMoney(en.cost)}</div>
-          <button type="button" class="icon-btn danger" data-del-lab-case="${en.id}" title="حذف الحالة" aria-label="حذف الحالة">🗑 حذف</button>
+          <button type="button" class="icon-btn danger" data-del-lab-case="${en.id}">حذف</button>
         </div>
       `;
       row.addEventListener('click', (ev)=>{
         if(ev.target.closest('[data-del-lab-case]')) return;
+        labCasesOverlay.classList.remove('open');
         openEditCaseModal('lab', l.id, en.id);
       });
     }else{
@@ -18617,6 +18565,7 @@ function renderStaffReportPage(){
       <td style="padding:9px 12px; text-align:center; font-weight:700; color:var(--teal);">${technicianCaseCountLast30Days(t)}</td>
     `;
     tr.addEventListener('click', ()=>{
+      staffReportOverlay.classList.remove('open');
       openStaffStatement(t.id);
     });
     return tr;
@@ -18690,6 +18639,7 @@ function openStaffDetails(id){
     <div style="margin-top:14px;"><b>🚫 الغياب</b><div style="margin-top:6px;">${absencesHtml}</div></div>
   `;
   document.getElementById('staffDetailsCaseCountLink').addEventListener('click', ()=>{
+    staffDetailsOverlay.classList.remove('open');
     openWorkLog(t.id);
   });
   document.getElementById('editStaffFromDetailsBtn').setAttribute('data-tech-id', t.id);
@@ -20160,6 +20110,7 @@ document.getElementById('editCompanyFromDetailsBtn').addEventListener('click', (
   document.getElementById('companyAddressInput2').value = c.address || '';
   document.getElementById('companyPhoneInput2').value = c.phone || '';
   document.getElementById('companyNotesInput2').value = c.notes || '';
+  document.getElementById('companyDetailsOverlay').classList.remove('open');
   companyAddOverlay.classList.add('open');
 });
 document.getElementById('deleteCompanyFromDetailsBtn').addEventListener('click', async ()=>{
@@ -20548,6 +20499,7 @@ document.getElementById('editAgentFromDetailsBtn').addEventListener('click', ()=
   document.getElementById('newAgentAddressInput').value = a.address || '';
   document.getElementById('newAgentNotesInput').value = a.notes || '';
   document.getElementById('newAgentNameInput').setAttribute('data-edit-agent-id', a.id);
+  document.getElementById('agentDetailsOverlay').classList.remove('open');
   document.getElementById('agentsOverlay').classList.add('open');
 });
 document.getElementById('deleteAgentFromDetailsBtn').addEventListener('click', async ()=>{
@@ -20583,6 +20535,7 @@ document.getElementById('editAgentInfoBtn').addEventListener('click', ()=>{
   document.getElementById('newAgentAddressInput').value = a.address || '';
   document.getElementById('newAgentNotesInput').value = a.notes || '';
   document.getElementById('newAgentNameInput').setAttribute('data-edit-agent-id', a.id);
+  document.getElementById('agentStatementOverlay').classList.remove('open');
   document.getElementById('agentsOverlay').classList.add('open');
 });
 function renderAgentStatementStat(a){
@@ -20735,15 +20688,11 @@ document.getElementById('apResetBtn').addEventListener('click', ()=>{
 });
 // Delegated on the settings window, since the controls now live inside it.
 document.getElementById('settingsOverlay').addEventListener('click', (e)=>{
-  const screenStyle=e.target.closest('[data-screen-style]');
-  if(screenStyle){setScreenStyle(screenStyle.getAttribute('data-screen-style'));return;}
   const preset = e.target.closest('[data-font-preset]');
   if(preset){ setFontScale(Number(preset.getAttribute('data-font-preset'))); return; }
   const font = e.target.closest('[data-font-id]');
   if(font) setFontFamily(font.getAttribute('data-font-id'));
 });
-
-document.getElementById('screenAccentColor').addEventListener('input',e=>setScreenAccent(e.target.value));
 
 /* ---- languages (a tab inside Settings) ---- */
 document.getElementById('langSearch').addEventListener('input', (e)=> renderLanguageList(e.target.value));
@@ -21007,7 +20956,7 @@ function hardReloadAppFile(){
 }
 document.getElementById('appVersionBadge').textContent = 'v' + APP_VERSION;
 document.getElementById('aboutVersionText').textContent = 'الإصدار الحالي: AL EKHLAS v' + APP_VERSION;
-const updateTabVersionEl = document.getElementById('updateTabVersionText'); if(updateTabVersionEl) updateTabVersionEl.textContent = 'AL EKHLAS v' + APP_VERSION; const aboutUpdateVersionEl = document.getElementById('aboutUpdateVersionText'); if(aboutUpdateVersionEl) aboutUpdateVersionEl.textContent = 'AL EKHLAS v' + APP_VERSION;
+document.getElementById('updateTabVersionText').textContent = 'AL EKHLAS v' + APP_VERSION;
 
 /* ================== Render root ================== */
 function render(){
@@ -22319,10 +22268,15 @@ const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/mmaz19922015-make
 const LAST_UPDATE_CHECK_KEY = 'dental_lab_last_update_check_v1';
 const AUTO_UPDATE_ENABLED_KEY = 'dental_lab_auto_update_v1';
 
-// Update policy: any different version identifier is a valid update/rollback,
-// including a deliberate rollback to a lower number.
 function isNewerVersion(remote, local){
-  return String(remote || '').trim() !== String(local || '').trim();
+  const a = String(remote).split('.').map(n=> parseInt(n,10)||0);
+  const b = String(local).split('.').map(n=> parseInt(n,10)||0);
+  for(let i=0; i<Math.max(a.length,b.length); i++){
+    const x = a[i]||0, y = b[i]||0;
+    if(x > y) return true;
+    if(x < y) return false;
+  }
+  return false;
 }
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
@@ -22454,15 +22408,11 @@ async function checkForUpdates(manual){
 function autoUpdateEnabled(){
   return localStorage.getItem(AUTO_UPDATE_ENABLED_KEY) !== 'false';
 }
-const autoUpdateCheckToggleEl = document.getElementById('autoUpdateCheckToggle');
-if(autoUpdateCheckToggleEl){
-  autoUpdateCheckToggleEl.checked = autoUpdateEnabled();
-  autoUpdateCheckToggleEl.addEventListener('change', (e)=>{
-    localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
-  });
-}
-const checkUpdatesNowBtnEl = document.getElementById('checkUpdatesNowBtn');
-if(checkUpdatesNowBtnEl) checkUpdatesNowBtnEl.addEventListener('click', ()=> checkForUpdates(true));
+document.getElementById('autoUpdateCheckToggle').checked = autoUpdateEnabled();
+document.getElementById('autoUpdateCheckToggle').addEventListener('change', (e)=>{
+  localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
+});
+document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
 
 // 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
 // autoUpdateEnabled() just above; read by the dhikr-rotation script's

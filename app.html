@@ -22533,15 +22533,19 @@ async function checkForUpdates(manual){
           // downloaded bytes by the main process before anything on disk is
           // touched — a corrupted or tampered download is rejected instead
           // of being installed and relaunched into.
-          const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null);
+          const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null, info.version);
           if(result && result.ok){
             try{ localStorage.setItem('al_ekhlas_pending_update_v1', JSON.stringify({version:info.version,notes:info.notes || ''})); }catch(e){}
             showToast('تم تثبيت التحديث، جارٍ إعادة فتح البرنامج...', 'success');
             setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
           }else if(result && result.reason === 'checksum-mismatch'){
-            setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (sha256). لم يُثبَّت شيء.', 'var(--red)');
+            setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة. لم يُثبَّت شيء.', 'var(--red)');
+          }else if(result && result.reason === 'version-mismatch'){
+            setStatus('رُفض التحديث: ملف GitHub لا يطابق رقم الإصدار المعلن. أعد رفع ملفات التحديث ثم حاول مرة أخرى.', 'var(--red)');
+          }else if(result && result.reason === 'download-failed'){
+            setStatus('تعذّر تحميل ملف التحديث من GitHub. تأكد من رفع app.html ثم أعد المحاولة.', 'var(--red)');
           }else{
-            setStatus('فشل تثبيت التحديث. حاول مرة أخرى لاحقًا.', 'var(--red)');
+            setStatus('فشل تثبيت التحديث. لم يتم تغيير النسخة الحالية.', 'var(--red)');
           }
         }
       }else{

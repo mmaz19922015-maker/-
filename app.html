@@ -5317,7 +5317,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '11.0.1';
+const APP_VERSION = '11.0.2';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -22782,7 +22782,15 @@ initAppFileHandle();
         overlay.classList.remove('open');
         return;
       }
-    }catch(e){ console.error(e); return; }
+    }catch(e){
+      console.error('تعذّر فحص مكان حفظ البيانات عند بدء التشغيل', e);
+      if(status){
+        status.style.display = 'block';
+        status.textContent = 'تعذّر فحص إعدادات التخزين مؤقتًا. يمكنك اختيار مكان البيانات يدويًا.';
+      }
+      // Do not return: the chooser remains usable so an update can never leave
+      // the application trapped behind a dead first-run screen.
+    }
 
     overlay.classList.add('open');
 
@@ -22810,7 +22818,7 @@ initAppFileHandle();
       status.style.display = 'block';
       status.textContent = 'جاري فتح نافذة اختيار المجلد...';
       try{
-        var res = await window.ekhlasDesktop.chooseNewDataDir();
+        var res = await window.ekhlasDesktop.chooseDataDirectory();
         if(res && res.error === 'not-writable'){
           status.textContent = 'لا يمكن الحفظ في هذا المجلد (لا توجد صلاحية كتابة). اختر مجلدًا آخر.';
           return;

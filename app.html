@@ -4813,6 +4813,7 @@ input:focus, select:focus, textarea:focus {
            Settings at all (see that overlay's own comment). -->
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
+      <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
       <button type="button" class="settings-tab" data-tab="appearance">🔠 حجم الخط ونوعه</button>
       <button type="button" class="settings-tab" data-tab="styles">🎨 الستايلات</button>
       <button type="button" class="settings-tab" data-tab="language">🌐 اللغة</button>
@@ -4941,6 +4942,52 @@ input:focus, select:focus, textarea:focus {
       <div class="field">
         <label>استيراد نسخة احتياطية يدوية (ملف .json صدّرته بنفسك من قبل)</label>
         <input type="file" id="importBackupInput" accept=".json">
+      </div>
+    </div>
+
+    <div class="settings-panel" data-panel="update" style="display:none;">
+      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+        <div style="font-size:13.5px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
+      </div>
+      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
+          <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
+          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
+        </label>
+        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
+        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+      </div>
+      <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
+           بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
+           installUpdate() always keeps exactly one previous version as a
+           local .bak before overwriting — this button restores it. Desktop
+           only (there is nothing to swap in the browser edition, which
+           never self-replaces a file in the first place). -->
+      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px; display:none;">
+        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
+        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">لو صار عندك مشكلة بعد تحديث البرنامج، هذا الزر يرجعك تلقائيًا للإصدار الذي كان يعمل قبل آخر تحديث مباشرة.</div>
+        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
+        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+      </div>
+      <!-- BUG FIX (real, confirmed defect — direct feedback): the old
+           "🔄 تحديث البرنامج الآن" button below this comment was ALWAYS
+           disabled unless a separate, easy-to-miss "تحديد ملف البرنامج"
+           step ran first, and even then only actually worked in a
+           browser edition with the File System Access API — on desktop
+           the real update path has always been the online one above
+           (🌐 فحص التحديثات الآن / the 🎉 banner), which downloads,
+           verifies, installs and relaunches automatically via the main
+           process. The dead manual button and its file picker were
+           removed entirely rather than fixed — there was nothing for a
+           user to correctly operate, since the real update mechanism
+           never needed them. "تحديد ملف البرنامج" itself is kept below
+           because it still has a real, separate job: letting a password
+           change (see "كلمة المرور والحماية") persist permanently inside
+           this file instead of only on this one device. -->
+      <div class="field">
+        <button type="button" class="btn-primary btn-small" id="pickAppFileBtn">📄 تحديد ملف البرنامج (مرة واحدة)</button>
+        <div class="muted" id="appUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+        <div class="muted" style="margin-top:6px; line-height:1.7;">يُستخدم فقط لحفظ تغيير كلمة السر بشكل دائم داخل هذا الملف نفسه (من تبويب "كلمة المرور والحماية") — لا علاقة له بتحديث البرنامج، الذي يتم تلقائيًا بالكامل من الأعلى عبر "🌐 فحص التحديثات الآن".</div>
       </div>
     </div>
 
@@ -5084,16 +5131,6 @@ input:focus, select:focus, textarea:focus {
   </div>
 </div>
 
-<div class="overlay" id="updateCompleteOverlay">
-  <div class="modal narrow about-gold-card">
-    <h2 class="about-gold-title"><span>✨ ما الجديد في هذا التحديث؟</span><button type="button" class="btn-ghost btn-small" id="closeUpdateCompleteBtn">إغلاق</button></h2>
-    <div style="line-height:1.9;text-align:right;">
-      <div id="updateCompleteVersion" style="font-weight:900;margin-bottom:8px;"></div>
-      <div id="updateCompleteNotes" class="muted" style="white-space:pre-wrap;"></div>
-    </div>
-  </div>
-</div>
-
 <div class="overlay" id="aboutOverlay">
   <div class="modal narrow about-gold-card">
     <h2 class="about-gold-title"><span>✨ حول البرنامج</span><button type="button" class="btn-ghost btn-small about-close-btn" id="closeAboutBtn">إغلاق</button></h2>
@@ -5105,10 +5142,6 @@ input:focus, select:focus, textarea:focus {
         <b>المهندس محمد الحموي</b>
       </p>
       <div class="muted" id="aboutVersionText" style="margin-bottom:8px; font-size:13px;"></div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 14px;">
-        <button type="button" class="btn-primary btn-small" id="aboutCheckUpdatesBtn">🔄 تحديث البرنامج</button>
-      </div>
-      <div class="muted" id="aboutUpdateStatusText" style="margin-bottom:10px;line-height:1.7;"></div>
       <!-- Remaining activation/trial duration, per direct feedback ("زر حول
            البرنامج حط فيه مدة التفعيل يلي باقيه") — reuses the exact same
            status text already computed for the lock screen's own info tab
@@ -5312,7 +5345,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '12.0';
+const APP_VERSION = '11.0.2';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -9929,6 +9962,8 @@ function applyBrandText(){
 
   const about = document.getElementById('aboutVersionText');
   if(about) about.textContent = b.name + ' v' + APP_VERSION;
+  const updTab = document.getElementById('updateTabVersionText');
+  if(updTab) updTab.textContent = b.name + ' v' + APP_VERSION;
 }
 
 function setLanguage(code){
@@ -21110,20 +21145,8 @@ function hardReloadAppFile(){
   location.reload();
 }
 document.getElementById('appVersionBadge').textContent = 'v' + APP_VERSION;
-(function showPendingUpdateNotes(){
-  try{
-    const raw=localStorage.getItem('al_ekhlas_pending_update_v1');
-    if(!raw) return;
-    const info=JSON.parse(raw);
-    localStorage.removeItem('al_ekhlas_pending_update_v1');
-    const v=document.getElementById('updateCompleteVersion'), n=document.getElementById('updateCompleteNotes'), o=document.getElementById('updateCompleteOverlay');
-    if(v) v.textContent='تم التحديث بنجاح إلى الإصدار v' + (info.version || APP_VERSION);
-    if(n) n.textContent=info.notes || 'تم تحسين البرنامج وإصلاحات داخلية وتحديث نظام التحديثات.';
-    if(o) setTimeout(()=>o.classList.add('open'), 900);
-  }catch(e){}
-})();
-document.getElementById('closeUpdateCompleteBtn').addEventListener('click', ()=> document.getElementById('updateCompleteOverlay').classList.remove('open'));
 document.getElementById('aboutVersionText').textContent = 'الإصدار الحالي: AL EKHLAS v' + APP_VERSION;
+document.getElementById('updateTabVersionText').textContent = 'AL EKHLAS v' + APP_VERSION;
 
 /* ================== Render root ================== */
 function render(){
@@ -22435,24 +22458,8 @@ const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/mmaz19922015-make
 const LAST_UPDATE_CHECK_KEY = 'dental_lab_last_update_check_v1';
 const AUTO_UPDATE_ENABLED_KEY = 'dental_lab_auto_update_v1';
 
-function normalizeVersionValue(v){
-  const parts=String(v||'').trim().replace(/^v/i,'').split('.').map(n=>parseInt(n,10)||0);
-  while(parts.length>1 && parts[parts.length-1]===0) parts.pop();
-  return parts.join('.')||'0';
-}
-function isNewerVersionValue(remote, local){
-  const a=normalizeVersionValue(remote).split('.').map(n=>parseInt(n,10)||0);
-  const b=normalizeVersionValue(local).split('.').map(n=>parseInt(n,10)||0);
-  for(let i=0;i<Math.max(a.length,b.length);i++){ const x=a[i]||0,y=b[i]||0; if(x>y)return true; if(x<y)return false; }
-  return false;
-}
-function isLegacyMigrationValue(remote, local){
-  const r=normalizeVersionValue(remote).split('.').map(n=>parseInt(n,10)||0);
-  const l=normalizeVersionValue(local).split('.').map(n=>parseInt(n,10)||0);
-  return (l[0]||0)>=10 && (r[0]||0)===3;
-}
 function isDifferentVersion(remote, local){
-  return isNewerVersionValue(remote, local) || isLegacyMigrationValue(remote, local);
+  return String(remote || '').trim() !== String(local || '').trim();
 }
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
@@ -22481,7 +22488,7 @@ function formatUpdateNotesForDialog(notes){
 }
 
 async function checkForUpdates(manual){
-  const statusEl = document.getElementById('aboutUpdateStatusText');
+  const statusEl = document.getElementById('onlineUpdateStatusText');
   const setStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
   if(!navigator.onLine){
     if(manual) setStatus('لا يوجد اتصال بالإنترنت حاليًا.', 'var(--red)');
@@ -22533,19 +22540,14 @@ async function checkForUpdates(manual){
           // downloaded bytes by the main process before anything on disk is
           // touched — a corrupted or tampered download is rejected instead
           // of being installed and relaunched into.
-          const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null, info.version);
+          const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null);
           if(result && result.ok){
-            try{ localStorage.setItem('al_ekhlas_pending_update_v1', JSON.stringify({version:info.version,notes:info.notes || ''})); }catch(e){}
             showToast('تم تثبيت التحديث، جارٍ إعادة فتح البرنامج...', 'success');
             setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
           }else if(result && result.reason === 'checksum-mismatch'){
-            setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة. لم يُثبَّت شيء.', 'var(--red)');
-          }else if(result && result.reason === 'version-mismatch'){
-            setStatus('رُفض التحديث: ملف GitHub لا يطابق رقم الإصدار المعلن. أعد رفع ملفات التحديث ثم حاول مرة أخرى.', 'var(--red)');
-          }else if(result && result.reason === 'download-failed'){
-            setStatus('تعذّر تحميل ملف التحديث من GitHub. تأكد من رفع app.html ثم أعد المحاولة.', 'var(--red)');
+            setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (sha256). لم يُثبَّت شيء.', 'var(--red)');
           }else{
-            setStatus('فشل تثبيت التحديث. لم يتم تغيير النسخة الحالية.', 'var(--red)');
+            setStatus('فشل تثبيت التحديث. حاول مرة أخرى لاحقًا.', 'var(--red)');
           }
         }
       }else{
@@ -22589,7 +22591,11 @@ async function checkForUpdates(manual){
 function autoUpdateEnabled(){
   return localStorage.getItem(AUTO_UPDATE_ENABLED_KEY) !== 'false';
 }
-document.getElementById('aboutCheckUpdatesBtn').addEventListener('click', ()=> checkForUpdates(true));
+document.getElementById('autoUpdateCheckToggle').checked = autoUpdateEnabled();
+document.getElementById('autoUpdateCheckToggle').addEventListener('change', (e)=>{
+  localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
+});
+document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
 
 // 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
 // autoUpdateEnabled() just above; read by the dhikr-rotation script's
@@ -22722,7 +22728,7 @@ initAppFileHandle();
   // for why the link can no longer just carry a plain href.
   var latestUpdateInfo = null;
 
-  function cmpVersions(a,b){ return normalizeVersionValue(a) === normalizeVersionValue(b) ? 0 : 1; }
+  function cmpVersions(a,b){ return String(a||'').trim() === String(b||'').trim() ? 0 : 1; }
 
 
   function showBanner(info){
@@ -22771,7 +22777,7 @@ initAppFileHandle();
   fetch(VERSION_CHECK_URL + '?t=' + Date.now())
     .then(function(res){ return res.ok ? res.json() : null; })
     .then(function(info){
-      if (info && info.version && isDifferentVersion(info.version, CURRENT_VERSION)){
+      if (info && info.version && cmpVersions(info.version, CURRENT_VERSION) !== 0){
         showBanner(info);
       }
     })
@@ -22966,7 +22972,7 @@ initAppFileHandle();
   function syncV94Version(){
     try{
       var v = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '9.4';
-      document.querySelectorAll('#appVersionBadge,#aboutVersionText').forEach(function(el){
+      document.querySelectorAll('#appVersionBadge,#updateTabVersionText,#aboutVersionText').forEach(function(el){
         if(!el) return;
         if(el.id === 'aboutVersionText') {
           var name = (document.getElementById('brandName')||{}).textContent || 'AL EKHLAS';

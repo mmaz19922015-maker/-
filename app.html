@@ -5084,72 +5084,16 @@ input:focus, select:focus, textarea:focus {
   </div>
 </div>
 
-
-<!-- Program update screen: moved out of Settings into About as requested. -->
-<div class="overlay" id="programUpdateOverlay">
-  <div class="modal wide">
-    <h2><span>🔄 تحديث البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeProgramUpdateBtn">إغلاق</button></h2>
-    <div class="update-panel-body">
-      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
-        <div style="font-size:13.5px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
-      </div>
-      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
-        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
-          <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
-          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
-        </label>
-        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
-        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-      </div>
-      <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
-           بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
-           installUpdate() always keeps exactly one previous version as a
-           local .bak before overwriting — this button restores it. Desktop
-           only (there is nothing to swap in the browser edition, which
-           never self-replaces a file in the first place). -->
-      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px; display:none;">
-        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
-        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">لو صار عندك مشكلة بعد تحديث البرنامج، هذا الزر يرجعك تلقائيًا للإصدار الذي كان يعمل قبل آخر تحديث مباشرة.</div>
-        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
-        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-      </div>
-      <!-- BUG FIX (real, confirmed defect — direct feedback): the old
-           "🔄 تحديث البرنامج الآن" button below this comment was ALWAYS
-           disabled unless a separate, easy-to-miss "تحديد ملف البرنامج"
-           step ran first, and even then only actually worked in a
-           browser edition with the File System Access API — on desktop
-           the real update path has always been the online one above
-           (🌐 فحص التحديثات الآن / the 🎉 banner), which downloads,
-           verifies, installs and relaunches automatically via the main
-           process. The dead manual button and its file picker were
-           removed entirely rather than fixed — there was nothing for a
-           user to correctly operate, since the real update mechanism
-           never needed them. "تحديد ملف البرنامج" itself is kept below
-           because it still has a real, separate job: letting a password
-           change (see "كلمة المرور والحماية") persist permanently inside
-           this file instead of only on this one device. -->
-      <div class="field">
-        <button type="button" class="btn-primary btn-small" id="pickAppFileBtn">📄 تحديد ملف البرنامج (مرة واحدة)</button>
-        <div class="muted" id="appUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-        <div class="muted" style="margin-top:6px; line-height:1.7;">يُستخدم فقط لحفظ تغيير كلمة السر بشكل دائم داخل هذا الملف نفسه (من تبويب "كلمة المرور والحماية") — لا علاقة له بتحديث البرنامج، الذي يتم تلقائيًا بالكامل من الأعلى عبر "🌐 فحص التحديثات الآن".</div>
-      </div>
-    </div>
-
-
-  </div>
-</div>
-
-<!-- Post-update release notes screen. It is shown once after a successful update/relaunch. -->
-<div class="overlay" id="postUpdateOverlay">
-  <div class="modal narrow" style="max-width:560px;">
-    <h2><span>🎉 ما الجديد في هذا التحديث؟</span><button type="button" class="btn-ghost btn-small" id="closePostUpdateBtn">متابعة</button></h2>
-    <div id="postUpdateVersion" style="font-weight:900;font-size:16px;margin-bottom:10px;text-align:center;"></div>
-    <div id="postUpdateNotes" class="field" style="background:var(--panel-2);line-height:1.9;white-space:pre-line;"></div>
-    <div style="margin-top:14px;text-align:center;">
-      <button type="button" class="btn-primary" id="postUpdateContinueBtn">✔ متابعة إلى البرنامج</button>
+<div class="overlay" id="updateCompleteOverlay">
+  <div class="modal narrow about-gold-card">
+    <h2 class="about-gold-title"><span>✨ ما الجديد في هذا التحديث؟</span><button type="button" class="btn-ghost btn-small" id="closeUpdateCompleteBtn">إغلاق</button></h2>
+    <div style="line-height:1.9;text-align:right;">
+      <div id="updateCompleteVersion" style="font-weight:900;margin-bottom:8px;"></div>
+      <div id="updateCompleteNotes" class="muted" style="white-space:pre-wrap;"></div>
     </div>
   </div>
 </div>
+
 <div class="overlay" id="aboutOverlay">
   <div class="modal narrow about-gold-card">
     <h2 class="about-gold-title"><span>✨ حول البرنامج</span><button type="button" class="btn-ghost btn-small about-close-btn" id="closeAboutBtn">إغلاق</button></h2>
@@ -5161,13 +5105,16 @@ input:focus, select:focus, textarea:focus {
         <b>المهندس محمد الحموي</b>
       </p>
       <div class="muted" id="aboutVersionText" style="margin-bottom:8px; font-size:13px;"></div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 14px;">
+        <button type="button" class="btn-primary btn-small" id="aboutCheckUpdatesBtn">🔄 تحديث البرنامج</button>
+      </div>
+      <div class="muted" id="aboutUpdateStatusText" style="margin-bottom:10px;line-height:1.7;"></div>
       <!-- Remaining activation/trial duration, per direct feedback ("زر حول
            البرنامج حط فيه مدة التفعيل يلي باقيه") — reuses the exact same
            status text already computed for the lock screen's own info tab
            (getActivationStatusMessage()/licenseRemainingSummaryText()), so
            it always agrees with what the lock screen itself would say. -->
       <div id="aboutLicenseStatus" style="display:inline-block; margin-bottom:14px; padding:6px 16px; border-radius:20px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
-      <button type="button" class="btn-primary btn-small" id="openProgramUpdateBtn" style="width:100%;margin:0 0 14px;">🔄 تحديث البرنامج</button>
       <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
         <div style="font-size:13.5px; font-weight:800; margin-bottom:8px;">للتواصل والدعم الفني</div>
         <div dir="ltr" style="font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:800; color:var(--teal); margin-bottom:12px;">+962 78 714 5048</div>
@@ -5615,13 +5562,6 @@ const TRANSLATIONS = {
      in the program has an entry here; anything missing would show through as
      Arabic, which is exactly the complaint this dictionary answers. */
   en: {
-    "تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.": "This update improves the program’s clarity and stability, moves program updates to the “About” section, standardizes version display, and adds a screen explaining what was improved after an update. Interface text and translations were also reviewed to reduce text appearing in a language other than the selected language.",
-    "🎉 ما الجديد في هذا التحديث؟": "🎉 What’s new in this update?",
-    "✔ متابعة إلى البرنامج": "✔ Continue to the program",
-    "متابعة": "Continue",
-    "إغلاق": "Close",
-    "🔄 تحديث البرنامج": "🔄 Program update",
-
     /* ---- sidebar and top-level navigation ---- */
     '🏠 الرئيسية':'🏠 Home',
     '➕ إضافة حالة مرضية':'➕ Add case',
@@ -6298,13 +6238,6 @@ const TRANSLATIONS = {
   },
 
   nl: {
-    "تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.": "Deze update maakt het programma duidelijker en stabieler, verplaatst programma-updates naar “Over”, maakt de versieweergave consistent en voegt een scherm toe dat uitlegt wat na een update is verbeterd. De interface en vertalingen zijn ook gecontroleerd om te voorkomen dat tekst in een andere taal dan de gekozen taal verschijnt.",
-    "🎉 ما الجديد في هذا التحديث؟": "🎉 Wat is er nieuw in deze update?",
-    "✔ متابعة إلى البرنامج": "✔ Doorgaan naar het programma",
-    "متابعة": "Doorgaan",
-    "إغلاق": "Sluiten",
-    "🔄 تحديث البرنامج": "🔄 Programma-update",
-
     '🏠 الرئيسية':'🏠 Start',
     '➕ إضافة حالة مرضية':'➕ Casus toevoegen',
     '💰 دفعة واردة':'💰 Ontvangen betaling',
@@ -7010,13 +6943,6 @@ const TRANSLATIONS = {
   },
 
   de: {
-    "تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.": "Dieses Update verbessert Klarheit und Stabilität, verschiebt die Programmaktualisierung in „Über“, vereinheitlicht die Versionsanzeige und fügt einen Bildschirm hinzu, der erklärt, was nach einem Update verbessert wurde. Benutzeroberfläche und Übersetzungen wurden ebenfalls überprüft, damit möglichst kein Text in einer anderen als der gewählten Sprache erscheint.",
-    "🎉 ما الجديد في هذا التحديث؟": "🎉 Was ist neu in diesem Update?",
-    "✔ متابعة إلى البرنامج": "✔ Zum Programm",
-    "متابعة": "Weiter",
-    "إغلاق": "Schließen",
-    "🔄 تحديث البرنامج": "🔄 Programmaktualisierung",
-
     '🏠 الرئيسية':'🏠 Startseite',
     '➕ إضافة حالة مرضية':'➕ Fall hinzufügen',
     '💰 دفعة واردة':'💰 Zahlungseingang',
@@ -7722,13 +7648,6 @@ const TRANSLATIONS = {
   },
 
   tr: {
-    "تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.": "Bu güncelleme programı daha anlaşılır ve kararlı hale getirir, program güncellemelerini “Hakkında” bölümüne taşır, sürüm gösterimini standartlaştırır ve güncellemeden sonra nelerin geliştirildiğini açıklayan bir ekran ekler. Arayüz ve çeviriler de seçilen dil dışında metin görünmesini azaltmak için gözden geçirilmiştir.",
-    "🎉 ما الجديد في هذا التحديث؟": "🎉 Bu güncellemede neler yeni?",
-    "✔ متابعة إلى البرنامج": "✔ Programa devam et",
-    "متابعة": "Devam",
-    "إغلاق": "Kapat",
-    "🔄 تحديث البرنامج": "🔄 Program Güncellemesi",
-
 '🏠 الرئيسية':'🏠 Ana Sayfa',
 '➕ إضافة حالة مرضية':'➕ Vaka Ekle',
 '💰 دفعة واردة':'💰 Gelen Ödeme',
@@ -8437,13 +8356,6 @@ const TRANSLATIONS = {
   },
 
   he: {
-    "تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.": "עדכון זה משפר את הבהירות והיציבות, מעביר את עדכון התוכנה אל „אודות”, מאחד את תצוגת הגרסה ומוסיף מסך שמסביר מה שופר לאחר העדכון. גם הטקסטים והתרגומים בממשק נבדקו כדי לצמצם הופעת טקסט בשפה שאינה השפה שנבחרה.",
-    "🎉 ما الجديد في هذا التحديث؟": "🎉 מה חדש בעדכון הזה?",
-    "✔ متابعة إلى البرنامج": "✔ המשך לתוכנה",
-    "متابعة": "המשך",
-    "إغلاق": "סגור",
-    "🔄 تحديث البرنامج": "🔄 עדכון התוכנה",
-
     '🏠 الرئيسية':'🏠 בית',
     '➕ إضافة حالة مرضية':'➕ הוספת מקרה',
     '💰 دفعة واردة':'💰 תשלום נכנס',
@@ -9152,13 +9064,6 @@ const TRANSLATIONS = {
   },
 
   pl: {
-    "تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.": "Ta aktualizacja poprawia przejrzystość i stabilność programu, przenosi aktualizacje do sekcji „O programie”, ujednolica wyświetlanie wersji i dodaje ekran wyjaśniający, co zostało ulepszone po aktualizacji. Teksty interfejsu i tłumaczenia zostały również sprawdzone, aby ograniczyć pojawianie się tekstu w innym języku niż wybrany.",
-    "🎉 ما الجديد في هذا التحديث؟": "🎉 Co nowego w tej aktualizacji?",
-    "✔ متابعة إلى البرنامج": "✔ Przejdź do programu",
-    "متابعة": "Dalej",
-    "إغلاق": "Zamknij",
-    "🔄 تحديث البرنامج": "🔄 Aktualizacja programu",
-
     '🏠 الرئيسية':'🏠 Strona główna',
     '➕ إضافة حالة مرضية':'➕ Dodaj przypadek',
     '💰 دفعة واردة':'💰 Płatność przychodząca',
@@ -10024,8 +9929,6 @@ function applyBrandText(){
 
   const about = document.getElementById('aboutVersionText');
   if(about) about.textContent = b.name + ' v' + APP_VERSION;
-  const updTab = document.getElementById('updateTabVersionText');
-  if(updTab) updTab.textContent = b.name + ' v' + APP_VERSION;
 }
 
 function setLanguage(code){
@@ -20955,7 +20858,6 @@ document.getElementById('langList').addEventListener('click', (e)=>{
 
 applyAppearance();
 applyLanguage();
-setTimeout(showPendingUpdateChangelog, 500);
 document.getElementById('settingsBtn').addEventListener('click', ()=> openSettingsOnTab('lock'));
 document.getElementById('lockProgramSidebarBtn').addEventListener('click', lockProgramNow);
 document.getElementById('closeSettingsBtn').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
@@ -21197,39 +21099,6 @@ document.getElementById('aboutSidebarBtn').addEventListener('click', ()=>{
 });
 document.getElementById('closeAboutBtn').addEventListener('click', ()=> aboutOverlay.classList.remove('open'));
 
-/* ================== Program update screen ================== */
-const programUpdateOverlay = document.getElementById('programUpdateOverlay');
-const postUpdateOverlay = document.getElementById('postUpdateOverlay');
-const openProgramUpdateBtn = document.getElementById('openProgramUpdateBtn');
-if(openProgramUpdateBtn) openProgramUpdateBtn.addEventListener('click', ()=>{
-  aboutOverlay.classList.remove('open');
-  programUpdateOverlay.classList.add('open');
-  const ver = document.getElementById('updateTabVersionText');
-  if(ver) ver.textContent = brand().name + ' v' + APP_VERSION;
-});
-const closeProgramUpdateBtn = document.getElementById('closeProgramUpdateBtn');
-if(closeProgramUpdateBtn) closeProgramUpdateBtn.addEventListener('click', ()=> programUpdateOverlay.classList.remove('open'));
-
-/* The successful self-update marks the new release before relaunching. On the
-   first launch of that new runtime we show the release notes exactly once. */
-const PENDING_UPDATE_KEY = 'ekhlas_pending_update_changelog_v1';
-function showPendingUpdateChangelog(){
-  let pending = null;
-  try{ pending = localStorage.getItem(PENDING_UPDATE_KEY); }catch(e){}
-  if(!pending) return;
-  try{ localStorage.removeItem(PENDING_UPDATE_KEY); }catch(e){}
-  const versionEl = document.getElementById('postUpdateVersion');
-  const notesEl = document.getElementById('postUpdateNotes');
-  if(versionEl) versionEl.textContent = brand().name + ' v' + pending;
-  if(notesEl) notesEl.textContent = tr('تم تطوير البرنامج في هذا التحديث ليكون أكثر وضوحًا وثباتًا، مع نقل تحديث البرنامج إلى قائمة «حول البرنامج»، وتوحيد عرض الإصدار، وإضافة شاشة تشرح للمستخدم ما تم تطويره بعد التحديث. كما تمت مراجعة نصوص الواجهة والترجمات لتقليل ظهور نصوص بلغة غير اللغة المختارة.');
-  postUpdateOverlay.classList.add('open');
-}
-const closePostUpdateBtn = document.getElementById('closePostUpdateBtn');
-const postUpdateContinueBtn = document.getElementById('postUpdateContinueBtn');
-if(closePostUpdateBtn) closePostUpdateBtn.addEventListener('click', ()=> postUpdateOverlay.classList.remove('open'));
-if(postUpdateContinueBtn) postUpdateContinueBtn.addEventListener('click', ()=> postUpdateOverlay.classList.remove('open'));
-
-
 function currentAppFilePath(){
   try{
     let p = decodeURIComponent(location.pathname);
@@ -21241,8 +21110,20 @@ function hardReloadAppFile(){
   location.reload();
 }
 document.getElementById('appVersionBadge').textContent = 'v' + APP_VERSION;
+(function showPendingUpdateNotes(){
+  try{
+    const raw=localStorage.getItem('al_ekhlas_pending_update_v1');
+    if(!raw) return;
+    const info=JSON.parse(raw);
+    localStorage.removeItem('al_ekhlas_pending_update_v1');
+    const v=document.getElementById('updateCompleteVersion'), n=document.getElementById('updateCompleteNotes'), o=document.getElementById('updateCompleteOverlay');
+    if(v) v.textContent='تم التحديث بنجاح إلى الإصدار v' + (info.version || APP_VERSION);
+    if(n) n.textContent=info.notes || 'تم تحسين البرنامج وإصلاحات داخلية وتحديث نظام التحديثات.';
+    if(o) setTimeout(()=>o.classList.add('open'), 900);
+  }catch(e){}
+})();
+document.getElementById('closeUpdateCompleteBtn').addEventListener('click', ()=> document.getElementById('updateCompleteOverlay').classList.remove('open'));
 document.getElementById('aboutVersionText').textContent = 'الإصدار الحالي: AL EKHLAS v' + APP_VERSION;
-const __updateVerEl = document.getElementById('updateTabVersionText'); if(__updateVerEl) __updateVerEl.textContent = 'AL EKHLAS v' + APP_VERSION;
 
 /* ================== Render root ================== */
 function render(){
@@ -22554,12 +22435,13 @@ const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/mmaz19922015-make
 const LAST_UPDATE_CHECK_KEY = 'dental_lab_last_update_check_v1';
 const AUTO_UPDATE_ENABLED_KEY = 'dental_lab_auto_update_v1';
 
+function normalizeVersionValue(v){
+  const parts=String(v||'').trim().replace(/^v/i,'').split('.').map(n=>parseInt(n,10)||0);
+  while(parts.length>1 && parts[parts.length-1]===0) parts.pop();
+  return parts.join('.')||'0';
+}
 function isDifferentVersion(remote, local){
-  const a = String(remote || '').trim().split('.').map(n=> parseInt(n,10) || 0);
-  const b = String(local || '').trim().split('.').map(n=> parseInt(n,10) || 0);
-  const len = Math.max(a.length, b.length);
-  for(let i=0;i<len;i++){ if((a[i]||0)!==(b[i]||0)) return true; }
-  return false;
+  return normalizeVersionValue(remote)!==normalizeVersionValue(local);
 }
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
@@ -22588,7 +22470,7 @@ function formatUpdateNotesForDialog(notes){
 }
 
 async function checkForUpdates(manual){
-  const statusEl = document.getElementById('onlineUpdateStatusText');
+  const statusEl = document.getElementById('aboutUpdateStatusText');
   const setStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
   if(!navigator.onLine){
     if(manual) setStatus('لا يوجد اتصال بالإنترنت حاليًا.', 'var(--red)');
@@ -22642,7 +22524,7 @@ async function checkForUpdates(manual){
           // of being installed and relaunched into.
           const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null);
           if(result && result.ok){
-            try{ localStorage.setItem(PENDING_UPDATE_KEY, String(info.version || APP_VERSION)); }catch(e){}
+            try{ localStorage.setItem('al_ekhlas_pending_update_v1', JSON.stringify({version:info.version,notes:info.notes || ''})); }catch(e){}
             showToast('تم تثبيت التحديث، جارٍ إعادة فتح البرنامج...', 'success');
             setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
           }else if(result && result.reason === 'checksum-mismatch'){
@@ -22692,11 +22574,7 @@ async function checkForUpdates(manual){
 function autoUpdateEnabled(){
   return localStorage.getItem(AUTO_UPDATE_ENABLED_KEY) !== 'false';
 }
-document.getElementById('autoUpdateCheckToggle').checked = autoUpdateEnabled();
-document.getElementById('autoUpdateCheckToggle').addEventListener('change', (e)=>{
-  localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
-});
-document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
+document.getElementById('aboutCheckUpdatesBtn').addEventListener('click', ()=> checkForUpdates(true));
 
 // 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
 // autoUpdateEnabled() just above; read by the dhikr-rotation script's
@@ -22829,7 +22707,7 @@ initAppFileHandle();
   // for why the link can no longer just carry a plain href.
   var latestUpdateInfo = null;
 
-  function cmpVersions(a,b){ return String(a||'').trim() === String(b||'').trim() ? 0 : 1; }
+  function cmpVersions(a,b){ return normalizeVersionValue(a) === normalizeVersionValue(b) ? 0 : 1; }
 
 
   function showBanner(info){
@@ -23073,7 +22951,7 @@ initAppFileHandle();
   function syncV94Version(){
     try{
       var v = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '9.4';
-      document.querySelectorAll('#appVersionBadge,#updateTabVersionText,#aboutVersionText').forEach(function(el){
+      document.querySelectorAll('#appVersionBadge,#aboutVersionText').forEach(function(el){
         if(!el) return;
         if(el.id === 'aboutVersionText') {
           var name = (document.getElementById('brandName')||{}).textContent || 'AL EKHLAS';

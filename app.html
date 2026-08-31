@@ -2644,28 +2644,12 @@ input:focus, select:focus, textarea:focus {
            occasional/config screens (dark mode, appearance, about,
            settings) rather than the day-to-day action buttons above. -->
       <button type="button" class="btn-ghost sidebar-btn" id="invoiceAppearanceSidebarBtn">🎨 مظهر الفاتورة</button>
-      <!-- Dark-mode toggle: moved out of the small icon-only footer row and
-           into the main labelled list per direct feedback ("خليه بالقائمة
-           الجانبية ... يصير تشغيل الوضع الليلي ويتغير اسمو يصير ايقاف") —
-           its label and icon flip live between "تشغيل"/"إيقاف" — see
-           applyTheme() in the script, which now also drives this button. -->
-      <button type="button" class="btn-ghost sidebar-btn" id="themeToggleSidebarBtn">🌙 تشغيل الوضع الليلي</button>
-      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
-      <!-- 👤 المستخدمون (أدمن/موظف) — direct feedback: "بدي اعمل نظام
-           المستخدمين ادمن يتحكم بكل شي ونظام موظف يكون ليه قيود". Admin-only
-           (see ADMIN_ONLY_BTN_IDS/applyRolePermissions()) — an employee never
-           sees this button at all. -->
+      <!-- 👤 المستخدمون والصلاحيات يبقى قبل أدوات المظهر والإعدادات. -->
       <button type="button" class="btn-ghost sidebar-btn" id="manageUsersSidebarBtn">👤 المستخدمون والصلاحيات</button>
-      <!-- ⚙ الضبط: moved out of the footer icon row to sit directly under
-           "حول البرنامج" per direct feedback ("زر الضبط خليه تحت حول
-           البرنامج"). -->
+      <!-- ترتيب النهاية المطلوب: الوضع الليلي ثم الإعدادات والضبط ثم حول البرنامج كآخر زر. -->
+      <button type="button" class="btn-ghost sidebar-btn" id="themeToggleSidebarBtn">🌙 تشغيل الوضع الليلي</button>
       <button type="button" class="btn-ghost sidebar-btn" id="settingsBtn">⚙ الضبط والإعدادات</button>
-      <!-- 🔒 قفل البرنامج: went through a floating round icon near the mini
-           clock for a couple of rounds, but per direct further feedback
-           ("خليها زر عادي بالقائمة الجانبية اسمو قفل البرنامج") this is back
-           to being a plain, ordinary sidebar button like all the others
-           above, wired to the same lockProgramNow() used everywhere. -->
-      <button type="button" class="btn-ghost sidebar-btn" id="lockProgramSidebarBtn">🔒 قفل البرنامج</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
   </div>
@@ -2729,6 +2713,14 @@ input:focus, select:focus, textarea:focus {
           <span class="tool-text">
             <span class="tool-title">الآلة الحاسبة</span>
             <span class="tool-sub">حساب سريع مع ذاكرة ونِسَب</span>
+          </span>
+          <span class="tool-arrow" aria-hidden="true">‹</span>
+        </button>
+        <button type="button" class="tool-card tool-lock" id="lockProgramHomeCard" aria-label="قفل وتبديل المستخدم">
+          <span class="tool-icon" aria-hidden="true">🔒</span>
+          <span class="tool-text">
+            <span class="tool-title">قفل وتبديل المستخدم</span>
+            <span class="tool-sub">قفل البرنامج والعودة لشاشة تسجيل الدخول</span>
           </span>
           <span class="tool-arrow" aria-hidden="true">‹</span>
         </button>
@@ -4952,10 +4944,9 @@ input:focus, select:focus, textarea:focus {
       <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
         <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
           <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
-          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
+          فحص التحديثات تلقائيًا كل ساعة (يتطلب اتصال إنترنت)
         </label>
-        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
-        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+         <div class="muted" style="font-size:12px; line-height:1.7; margin-top:10px;">الفحص اليدوي موجود الآن داخل شاشة «حول البرنامج».</div>
       </div>
       <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
            بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
@@ -5142,6 +5133,12 @@ input:focus, select:focus, textarea:focus {
         <b>المهندس محمد الحموي</b>
       </p>
       <div class="muted" id="aboutVersionText" style="margin-bottom:8px; font-size:13px;"></div>
+      <div class="field" style="background:var(--panel-2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:10px 0 14px;">
+        <div style="font-weight:900; margin-bottom:6px;">🌐 تحديث البرنامج</div>
+        <div class="muted" style="font-size:12px; line-height:1.7; margin-bottom:9px;">اضغط لفحص الإصدار المنشور على GitHub. لن يتم تثبيت أي تحديث إلا بعد موافقتك.</div>
+        <button type="button" class="btn-primary btn-small" id="checkUpdatesNowBtn" style="width:100%;">🌐 فحص التحديثات الآن</button>
+        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+      </div>
       <!-- Remaining activation/trial duration, per direct feedback ("زر حول
            البرنامج حط فيه مدة التفعيل يلي باقيه") — reuses the exact same
            status text already computed for the lock screen's own info tab
@@ -5345,7 +5342,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '11.0.3';
+const APP_VERSION = '11.0.4';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -13421,6 +13418,7 @@ function calcRender(){
   document.getElementById('calcResult').textContent = result;
 }
 document.getElementById('openCalcCard').addEventListener('click', ()=>{ calcOverlay.classList.add('open'); });
+document.getElementById('lockProgramHomeCard').addEventListener('click', lockProgramNow);
 document.getElementById('closeCalcBtn').addEventListener('click', ()=> calcOverlay.classList.remove('open'));
 // Asks incoming-vs-outgoing instead of assuming incoming — a calculator
 // result is just as often "how much do I owe the lab" as "how much did the
@@ -20894,7 +20892,6 @@ document.getElementById('langList').addEventListener('click', (e)=>{
 applyAppearance();
 applyLanguage();
 document.getElementById('settingsBtn').addEventListener('click', ()=> openSettingsOnTab('lock'));
-document.getElementById('lockProgramSidebarBtn').addEventListener('click', lockProgramNow);
 document.getElementById('closeSettingsBtn').addEventListener('click', ()=> settingsOverlay.classList.remove('open'));
 // «موافق»: settings (font size, typeface, language, theme) apply live and are
 // stored the moment they change — this button confirms and closes the screen.

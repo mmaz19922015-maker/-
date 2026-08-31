@@ -2100,11 +2100,6 @@
   .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
   .muted{ color:var(--ink-dim); font-size:12.5px; }
 
-  .about-gold-card{position:relative;overflow:hidden;border:1px solid rgba(184,134,11,.45);background:linear-gradient(145deg,#fffdf5 0%,#fff8df 42%,#f5e1a2 100%);box-shadow:0 22px 60px rgba(91,67,9,.28),inset 0 1px 0 rgba(255,255,255,.9);}
-  .about-gold-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 8% 5%,rgba(255,255,255,.85),transparent 30%),radial-gradient(circle at 92% 90%,rgba(184,134,11,.16),transparent 34%);}
-  .about-gold-card>*{position:relative;z-index:1}.about-gold-card h2{border-bottom-color:rgba(184,134,11,.25);}
-  .about-update-card{margin:16px auto 2px;padding:14px;border:1px solid rgba(184,134,11,.5);border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,245,205,.86));box-shadow:0 8px 20px rgba(91,67,9,.12);}
-  .about-update-btn{width:100%;border:1px solid #b8860b!important;background:linear-gradient(135deg,#c99a2e,#f2d47c 48%,#b8860b)!important;color:#3e2d05!important;box-shadow:0 6px 16px rgba(184,134,11,.25);font-weight:900;}
   /* ===== Revisions timeline ===== */
   .revision-item{
     display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--line);
@@ -4819,12 +4814,29 @@ input:focus, select:focus, textarea:focus {
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
-      <button type="button" class="settings-tab" data-tab="styles">🎨 الستايلات</button>
       <button type="button" class="settings-tab" data-tab="appearance">🔠 حجم الخط ونوعه</button>
+      <button type="button" class="settings-tab" data-tab="styles">🎨 الستايلات</button>
       <button type="button" class="settings-tab" data-tab="language">🌐 اللغة</button>
       <button type="button" class="settings-tab" data-tab="dhikr">🕌 الأذكار</button>
     </div>
 
+    <div class="settings-panel" data-panel="styles" style="display:none;">
+      <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">🎨 ستايل الشاشات</h2></div>
+      <div class="muted" style="margin-bottom:12px;line-height:1.8;">اختر شكل الشاشات والقوائم. يتطبق التغيير فورًا ويحفظ تلقائيًا بدون تغيير أي بيانات.</div>
+      <div id="screenStylePresets" class="screen-style-grid">
+        <button type="button" class="screen-style-card" data-screen-style="teal"><span class="screen-style-swatch" style="--style-preview:#0e7c9e;"></span><span><strong>تركوازي هادئ</strong><small>Teal</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="blue"><span class="screen-style-swatch" style="--style-preview:#2563a8;"></span><span><strong>أزرق احترافي</strong><small>Blue</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="purple"><span class="screen-style-swatch" style="--style-preview:#6d55b7;"></span><span><strong>بنفسجي أنيق</strong><small>Purple</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="green"><span class="screen-style-swatch" style="--style-preview:#2b8a63;"></span><span><strong>أخضر هادئ</strong><small>Green</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="slate"><span class="screen-style-swatch" style="--style-preview:#536b78;"></span><span><strong>رمادي احترافي</strong><small>Slate</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="navy"><span class="screen-style-swatch" style="--style-preview:#1f4f78;"></span><span><strong>كحلي عميق</strong><small>Navy</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="forest"><span class="screen-style-swatch" style="--style-preview:#1f654d;"></span><span><strong>أخضر غامق</strong><small>Forest</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="burgundy"><span class="screen-style-swatch" style="--style-preview:#743747;"></span><span><strong>عنابي راقٍ</strong><small>Burgundy</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="indigo"><span class="screen-style-swatch" style="--style-preview:#443d83;"></span><span><strong>نيلي داكن</strong><small>Indigo</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="charcoal"><span class="screen-style-swatch" style="--style-preview:#3f4a52;"></span><span><strong>فحمي أنيق</strong><small>Charcoal</small></span></button>
+      </div>
+      <div class="screen-style-preview" style="margin-top:14px;"><div class="screen-style-preview-bar">معاينة شريط عنوان الشاشة</div><div class="screen-style-preview-body"><div class="screen-style-preview-row">لون خفيف من نفس الستايل</div><div class="screen-style-preview-row">القوائم والبطاقات تتلوّن تلقائيًا</div></div></div>
+    </div>
     <div class="settings-panel" data-panel="appearance" style="display:none;">
       <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">🔠 حجم الخط ونوعه</h2></div>
 
@@ -4857,22 +4869,6 @@ input:focus, select:focus, textarea:focus {
     <div class="cs-actions">
       <button type="button" class="btn-ghost btn-small" id="apResetBtn">استعادة الافتراضي</button>
     </div>
-    </div>
-    <div class="settings-panel" data-panel="styles" style="display:none;">
-      <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">🎨 الستايلات</h2></div>
-      <div class="screen-styles-intro">اختر الستايل. التغيير يطبّق فورًا على جميع الشاشات والقوائم ويحفظ تلقائيًا.</div>
-      <div id="settingsScreenStylePresets" class="screen-style-grid">
-        <button type="button" class="screen-style-card" data-screen-style="teal"><span class="screen-style-swatch" style="--style-preview:#0e7c9e;"></span><span><strong>تركوازي هادئ</strong><small>Teal</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="blue"><span class="screen-style-swatch" style="--style-preview:#2563a8;"></span><span><strong>أزرق احترافي</strong><small>Blue</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="purple"><span class="screen-style-swatch" style="--style-preview:#6d55b7;"></span><span><strong>بنفسجي أنيق</strong><small>Purple</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="green"><span class="screen-style-swatch" style="--style-preview:#2b8a63;"></span><span><strong>أخضر هادئ</strong><small>Green</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="slate"><span class="screen-style-swatch" style="--style-preview:#536b78;"></span><span><strong>رمادي احترافي</strong><small>Slate</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="navy"><span class="screen-style-swatch" style="--style-preview:#1f4f78;"></span><span><strong>كحلي عميق</strong><small>Navy</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="forest"><span class="screen-style-swatch" style="--style-preview:#1f654d;"></span><span><strong>أخضر غامق</strong><small>Forest</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="burgundy"><span class="screen-style-swatch" style="--style-preview:#743747;"></span><span><strong>عنابي راقٍ</strong><small>Burgundy</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="indigo"><span class="screen-style-swatch" style="--style-preview:#443d83;"></span><span><strong>نيلي داكن</strong><small>Indigo</small></span></button>
-        <button type="button" class="screen-style-card" data-screen-style="charcoal"><span class="screen-style-swatch" style="--style-preview:#3f4a52;"></span><span><strong>فحمي أنيق</strong><small>Charcoal</small></span></button>
-      </div>
     </div>
     <div class="settings-panel" data-panel="language" style="display:none;">
       <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">🌐 لغة البرنامج</h2></div>
@@ -4956,8 +4952,9 @@ input:focus, select:focus, textarea:focus {
       <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
         <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
           <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
-          فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)
+          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
         </label>
+        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
         <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
       </div>
       <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
@@ -5037,6 +5034,7 @@ input:focus, select:focus, textarea:focus {
   </div>
 </div>
 
+<style id="about-gold-style">.about-gold-card{position:relative;overflow:hidden;border:1px solid rgba(184,134,11,.45)!important;background:linear-gradient(145deg,#fffdf4 0%,#fff8dc 38%,#f5df9a 72%,#d6a93b 100%)!important;box-shadow:0 22px 60px rgba(113,78,8,.28),inset 0 1px 0 rgba(255,255,255,.9)}.about-gold-card:before{content:"";position:absolute;inset:-40% -20%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.45) 48%,transparent 61%);transform:rotate(4deg);pointer-events:none}.about-gold-card>*{position:relative;z-index:1}.about-gold-title{color:#654b0a!important;border-bottom-color:rgba(126,91,10,.25)!important}.about-gold-card .muted{color:#6d5a2c!important}.about-gold-card .about-close-btn{border-color:rgba(101,75,10,.35);color:#654b0a}.about-gold-card a[style*="var(--teal)"]{background:linear-gradient(135deg,#8d6811,#c99a2e)!important;box-shadow:0 6px 16px rgba(141,104,17,.22)}</style>
 <!-- About modal -->
 <!-- Purchase / contact for full version -->
 <div class="overlay" id="purchaseOverlay">
@@ -5135,7 +5133,7 @@ input:focus, select:focus, textarea:focus {
 
 <div class="overlay" id="aboutOverlay">
   <div class="modal narrow about-gold-card">
-    <h2><span>✨ حول البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeAboutBtn">إغلاق</button></h2>
+    <h2 class="about-gold-title"><span>✨ حول البرنامج</span><button type="button" class="btn-ghost btn-small about-close-btn" id="closeAboutBtn">إغلاق</button></h2>
     <div style="text-align:center;">
       <div class="brand-mark" style="margin:0 auto 16px; width:56px; height:56px; font-size:18px;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlN2M5ZSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNGEyYzkiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0idXJsKCNnKSIvPgo8cGF0aCBkPSJNMzIgMTRjLTQuNSAwLTYuOCAyLjMtOS4yIDIuMy0zIDAtNS4zLTItNy44LTItNCAwLTYuNSAzLjYtNi41IDkuMiAwIDYuNSAzLjMgMTUuNSA2LjIgMjAuOCAxLjcgMy4xIDMgNC45IDQuOCA0LjkgMi40IDAgMi42LTUuNiA0LjQtOS43IDEtMi4zIDItMy4zIDMuNi0zLjNzMi42IDEgMy42IDMuM2MxLjggNC4xIDIgOS43IDQuNCA5LjcgMS44IDAgMy4xLTEuOCA0LjgtNC45IDIuOS01LjMgNi4yLTE0LjMgNi4yLTIwLjggMC01LjYtMi41LTkuMi02LjUtOS4yLTIuNSAwLTQuOCAyLTcuOCAyLTEuMSAwLTItLjMtMi43LS42eiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4=" alt="شعار"></div>
       <p style="font-size:14.5px; line-height:2; color:var(--ink);">
@@ -5144,11 +5142,6 @@ input:focus, select:focus, textarea:focus {
         <b>المهندس محمد الحموي</b>
       </p>
       <div class="muted" id="aboutVersionText" style="margin-bottom:8px; font-size:13px;"></div>
-      <div class="about-update-card">
-        <div style="font-size:12px;font-weight:800;margin-bottom:7px;">التحديثات</div>
-        <button type="button" class="btn-primary btn-small about-update-btn" id="aboutCheckUpdatesBtn">🔄 البحث عن تحديثات البرنامج</button>
-        <div class="muted" id="aboutUpdateStatusText" style="margin-top:8px;line-height:1.6;font-size:12px;"></div>
-      </div>
       <!-- Remaining activation/trial duration, per direct feedback ("زر حول
            البرنامج حط فيه مدة التفعيل يلي باقيه") — reuses the exact same
            status text already computed for the lock screen's own info tab
@@ -5352,7 +5345,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '11.0.1';
+const APP_VERSION = '11.0.2';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -5567,7 +5560,6 @@ function applyScreenStyle(){
 }
 function setScreenStyle(key){if(!SCREEN_STYLES[key])return;try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}applyScreenStyle();showToast('تم تطبيق ستايل الشاشات وحفظه.','success');}
 function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try{localStorage.setItem(SCREEN_ACCENT_KEY,color);}catch(e){}applyScreenStyle();}
-
 applyTheme();
 applyScreenStyle();
 /* ================== Languages ==================
@@ -6045,7 +6037,7 @@ const TRANSLATIONS = {
     'استعادة نسخة احتياطية':'Restore a backup',
     '🔄 تحديث البرنامج':'🔄 Program update',
     'المسار الكامل للملف الحالي (طابقه بالضبط عند اختيار "تحديد ملف البرنامج"):':'The full path of the current file (match it exactly when choosing "Select the program file"):',
-    'فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)':'Check for updates automatically every day (needs an internet connection)',
+    'فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)':'Check for updates automatically every day (needs an internet connection)',
     '🌐 فحص التحديثات الآن':'🌐 Check for updates now',
     'بياناتك محفوظة داخل ملف قاعدة بيانات منفصل، لذلك يمكنك استبدال محتوى هذا الملف بنسخة جديدة دون أن تفقد شيئًا — بشرط أن تبقي اسم الملف ومكانه كما هما.':'Your data lives in a separate database file, so you can replace this file with a new version without losing anything — as long as the file name and location stay the same.',
     '📄 تحديد ملف البرنامج (مرة واحدة)':'📄 Select the program file (once)',
@@ -6112,7 +6104,7 @@ const TRANSLATIONS = {
     'آخر نسخة احتياطية أخذتها:':'Last backup you took:',
     'لم تأخذ نسخة احتياطية بعد.':'You have not taken a backup yet.',
     'حدّد ملف البرنامج الحالي (هذا الملف نفسه) مرة واحدة.':'Select the current program file (this very file) once.',
-    'أنت تستخدم أحدث إصدار':'You are on the latest version',
+    'أنت تستخدم الإصدار الحالي':'You are on the latest version',
 
     /* ---- printed documents ---- */
     'تقرير':'Report',
@@ -6745,7 +6737,7 @@ const TRANSLATIONS = {
     'استعادة نسخة احتياطية':'Back-up herstellen',
     '🔄 تحديث البرنامج':'🔄 Programma-update',
     'المسار الكامل للملف الحالي (طابقه بالضبط عند اختيار "تحديد ملف البرنامج"):':'Het volledige pad van het huidige bestand (kies exact dit bestand bij "Programmabestand selecteren"):',
-    'فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)':'Dagelijks automatisch op updates controleren (internetverbinding vereist)',
+    'فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)':'Dagelijks automatisch op updates controleren (internetverbinding vereist)',
     '🌐 فحص التحديثات الآن':'🌐 Nu op updates controleren',
     'بياناتك محفوظة داخل ملف قاعدة بيانات منفصل، لذلك يمكنك استبدال محتوى هذا الملف بنسخة جديدة دون أن تفقد شيئًا — بشرط أن تبقي اسم الملف ومكانه كما هما.':'Uw gegevens staan in een apart databasebestand, zodat u dit bestand door een nieuwe versie kunt vervangen zonder iets te verliezen — zolang de bestandsnaam en locatie hetzelfde blijven.',
     '📄 تحديد ملف البرنامج (مرة واحدة)':'📄 Programmabestand selecteren (eenmalig)',
@@ -7450,7 +7442,7 @@ const TRANSLATIONS = {
     'استعادة نسخة احتياطية':'Sicherung wiederherstellen',
     '🔄 تحديث البرنامج':'🔄 Programmaktualisierung',
     'المسار الكامل للملف الحالي (طابقه بالضبط عند اختيار "تحديد ملف البرنامج"):':'Der vollständige Pfad der aktuellen Datei (bei der Auswahl von „Programmdatei auswählen" genau abgleichen):',
-    'فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)':'Täglich automatisch nach Updates suchen (Internetverbindung erforderlich)',
+    'فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)':'Täglich automatisch nach Updates suchen (Internetverbindung erforderlich)',
     '🌐 فحص التحديثات الآن':'🌐 Jetzt nach Updates suchen',
     'بياناتك محفوظة داخل ملف قاعدة بيانات منفصل، لذلك يمكنك استبدال محتوى هذا الملف بنسخة جديدة دون أن تفقد شيئًا — بشرط أن تبقي اسم الملف ومكانه كما هما.':'Ihre Daten befinden sich in einer separaten Datenbankdatei. Sie können diese Datei daher durch eine neue Version ersetzen, ohne etwas zu verlieren — solange Dateiname und Speicherort unverändert bleiben.',
     '📄 تحديد ملف البرنامج (مرة واحدة)':'📄 Programmdatei auswählen (einmalig)',
@@ -8158,7 +8150,7 @@ const TRANSLATIONS = {
 'استعادة نسخة احتياطية':'Yedeği Geri Yükle',
 '🔄 تحديث البرنامج':'🔄 Program Güncellemesi',
 'المسار الكامل للملف الحالي (طابقه بالضبط عند اختيار "تحديد ملف البرنامج"):':'Mevcut dosyanın tam yolu (\"Program Dosyasını Seç\" seçeneğinde tam olarak eşleştirin):',
-'فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)':'Güncellemeleri her gün otomatik olarak denetle (internet bağlantısı gerektirir)',
+'فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)':'Güncellemeleri her gün otomatik olarak denetle (internet bağlantısı gerektirir)',
 '🌐 فحص التحديثات الآن':'🌐 Şimdi Güncellemeleri Denetle',
 'بياناتك محفوظة داخل ملف قاعدة بيانات منفصل، لذلك يمكنك استبدال محتوى هذا الملف بنسخة جديدة دون أن تفقد شيئًا — بشرط أن تبقي اسم الملف ومكانه كما هما.':'Verileriniz ayrı bir veritabanı dosyasında saklanır, bu nedenle dosya adı ve konumu aynı kaldığı sürece bu dosyanın içeriğini hiçbir şey kaybetmeden yeni bir sürümle değiştirebilirsiniz.',
 '📄 تحديد ملف البرنامج (مرة واحدة)':'📄 Program Dosyasını Seç (bir kez)',
@@ -8866,7 +8858,7 @@ const TRANSLATIONS = {
     'استعادة نسخة احتياطية':'שחזור גיבוי',
     '🔄 تحديث البرنامج':'🔄 עדכון התוכנה',
     'المسار الكامل للملف الحالي (طابقه بالضبط عند اختيار "تحديد ملف البرنامج"):':'הנתיב המלא של הקובץ הנוכחי (התאם אותו בדיוק בעת בחירת "בחירת קובץ התוכנה"):',
-    'فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)':'בדיקת עדכונים אוטומטית מדי יום (דורש חיבור לאינטרנט)',
+    'فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)':'בדיקת עדכונים אוטומטית מדי יום (דורש חיבור לאינטרנט)',
     '🌐 فحص التحديثات الآن':'🌐 בדוק עדכונים עכשיו',
     'بياناتك محفوظة داخل ملف قاعدة بيانات منفصل، لذلك يمكنك استبدال محتوى هذا الملف بنسخة جديدة دون أن تفقد شيئًا — بشرط أن تبقي اسم الملف ومكانه كما هما.':'הנתונים שלך שמורים בתוך קובץ מסד נתונים נפרד, כך שניתן להחליף את תוכן הקובץ הזה בגרסה חדשה מבלי לאבד דבר — בתנאי ששם הקובץ ומיקומו יישארו כפי שהם.',
     '📄 تحديد ملف البرنامج (مرة واحدة)':'📄 בחירת קובץ התוכנה (פעם אחת)',
@@ -9571,7 +9563,7 @@ const TRANSLATIONS = {
     'استعادة نسخة احتياطية':'Przywróć kopię zapasową',
     '🔄 تحديث البرنامج':'🔄 Aktualizacja programu',
     'المسار الكامل للملف الحالي (طابقه بالضبط عند اختيار "تحديد ملف البرنامج"):':'Pełna ścieżka bieżącego pliku (dopasuj ją dokładnie przy wyborze opcji "Wybierz plik programu"):',
-    'فحص التحديثات تلقائيًا عند التشغيل وكل ساعة (يتطلب اتصال إنترنت)':'Automatycznie sprawdzaj aktualizacje codziennie (wymaga połączenia z internetem)',
+    'فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)':'Automatycznie sprawdzaj aktualizacje codziennie (wymaga połączenia z internetem)',
     '🌐 فحص التحديثات الآن':'🌐 Sprawdź aktualizacje teraz',
     'بياناتك محفوظة داخل ملف قاعدة بيانات منفصل، لذلك يمكنك استبدال محتوى هذا الملف بنسخة جديدة دون أن تفقد شيئًا — بشرط أن تبقي اسم الملف ومكانه كما هما.':'Twoje dane znajdują się w osobnym pliku bazy danych, dzięki czemu możesz zastąpić ten plik nową wersją bez utraty czegokolwiek — pod warunkiem że nazwa i lokalizacja pliku pozostaną takie same.',
     '📄 تحديد ملف البرنامج (مرة واحدة)':'📄 Wybierz plik programu (jednorazowo)',
@@ -11578,7 +11570,7 @@ const ALWAYS_TOP_OVERLAY_IDS = ['confirmOverlay', 'promptOverlay', 'storageSetup
     invoiceAppearanceSidebarBtn:'invoiceAppearanceOverlay',
     aboutSidebarBtn:'aboutOverlay',
     manageUsersSidebarBtn:'manageUsersOverlay',
-    settingsBtn:'settingsOverlay',
+    settingsBtn:'settingsOverlay'
   };
   function focusOverlay(overlay){
     if(!overlay)return;
@@ -19831,49 +19823,15 @@ document.getElementById('caseDeleteBtn').addEventListener('click', async ()=>{
 });
 document.getElementById('closeCaseEditHistoryBtn').addEventListener('click', ()=> document.getElementById('caseEditHistoryOverlay').classList.remove('open'));
 document.getElementById('printCaseEditHistoryBtn').addEventListener('click', ()=>{
-  const ref = currentEditingCaseRef;
-  const ownerType = ref ? (ref.sourceType || ref.ownerType) : null;
-  const owner = ref ? findCaseOwner(ownerType, ref.ownerId) : null;
+  const ref = currentEditingCaseRef || caseIdCardRef;
+  const sourceType = ref ? (ref.sourceType || ref.ownerType || 'none') : null;
+  const owner = ref ? findCaseOwner(sourceType, ref.ownerId) : null;
   const caseObj = owner ? (owner.cases||[]).find(x=>x.id===ref.caseId) : null;
-  if(!caseObj){ showToast('تعذّر العثور على الحالة.', 'error'); return; }
-
-  // Rendered from the data, not by scraping the on-screen table. That markup
-  // is styled with var(--line) / var(--red) / var(--green), and a print popup
-  // is a separate document that has none of those custom properties — so this
-  // report used to come out as an unstyled grey box every single time.
+  if(!caseObj){ showToast('تعذّر العثور على الحالة المحددة. أعد فتح سجل الحالة ثم حاول مرة أخرى.', 'error'); return; }
   const history = caseObj.editHistory || [];
-  const rows = history.flatMap(entry =>
-    (entry.changes || []).map((ch, i) => `<tr>
-      <td class="num">${i === 0 ? escapeHtml(entry.date || '') + ' — ' + escapeHtml(entry.time || '') : ''}</td>
-      <td>${i === 0 ? escapeHtml(entry.technician || caseObj.technician || '—') : ''}</td>
-      <td>${escapeHtml(ch.field)}</td>
-      <td class="debit">${escapeHtml(ch.from)}</td>
-      <td class="credit">${escapeHtml(ch.to)}</td>
-    </tr>`)
-   ).join('') || `<tr><td colspan="5" class="empty">لا توجد تعديلات مسجّلة على هذه الحالة</td></tr>`;
-
-  const doc = buildPrintDocument({
-    title: 'سجل تعديلات الحالة',
-    subtitle: 'الحالة رقم ' + (caseObj.caseNumber || '—') +
-              (caseObj.patientName ? ' — ' + caseObj.patientName : ''),
-    body:
-      printPartyBlock(
-        ownerType === 'lab' ? 'المختبر' : ownerType === 'none' ? 'الجهة' : 'الطبيب',
-        owner ? owner.name : '—',
-        [`<b>عدد التعديلات:</b> ${history.length}`]
-      ) +
-      `<table>
-        <thead><tr>
-          <th class="num" style="width:150px;">التاريخ والوقت</th>
-          <th style="width:120px;">الفني</th>
-          <th style="width:150px;">الحقل</th>
-          <th>من</th>
-          <th>إلى</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>`
-  });
-  showDocumentPreview(doc, tr('👁 معاينة سجل تعديلات الحالة'));
+  const rows = history.flatMap(entry => (entry.changes || []).map((ch,i)=>`<tr><td class="num">${i===0?escapeHtml(entry.date||'')+' — '+escapeHtml(entry.time||''):''}</td><td>${i===0?escapeHtml(entry.technician||caseObj.technician||'—'):''}</td><td>${escapeHtml(ch.field)}</td><td class="debit">${escapeHtml(ch.from)}</td><td class="credit">${escapeHtml(ch.to)}</td></tr>`)).join('') || `<tr><td colspan="5" class="empty">لا توجد تعديلات مسجّلة على هذه الحالة</td></tr>`;
+  const printableDoc = buildPrintDocument({title:'سجل تعديلات الحالة',fileName:'سجل-تعديلات-'+(caseObj.caseNumber||'حالة'),subtitle:'الحالة رقم '+(caseObj.caseNumber||'—')+(caseObj.patientName?' — '+caseObj.patientName:''),body:printPartyBlock(sourceType==='lab'?'المختبر':sourceType==='none'?'الجهة':'الطبيب',owner?owner.name:'—',[`<b>عدد التعديلات:</b> ${history.length}`])+`<table><thead><tr><th class="num" style="width:150px;">التاريخ والوقت</th><th style="width:120px;">الفني</th><th style="width:150px;">الحقل</th><th>من</th><th>إلى</th></tr></thead><tbody>${rows}</tbody></table>`});
+  showDocumentPreview(printableDoc,'👁 معاينة سجل تعديلات الحالة');
 });
 
 document.getElementById('closeCaseBtn').addEventListener('click', hideCaseFormView);
@@ -20878,7 +20836,6 @@ function openSettingsOnTab(tab){
   document.querySelectorAll('.settings-panel').forEach(panel=> panel.style.display = (panel.getAttribute('data-panel')===tab) ? 'block' : 'none');
   if(tab === 'invoice') renderInvoiceSettingsPanel();
   if(tab === 'appearance') renderAppearancePanel();
-  if(tab === 'styles'){ document.querySelectorAll('[data-screen-style]').forEach(card=> card.classList.toggle('active', card.getAttribute('data-screen-style')===currentScreenStyle())); }
   if(tab === 'language'){
     document.getElementById('langSearch').value = '';
     renderLanguageList('');
@@ -20953,7 +20910,6 @@ document.querySelectorAll('.settings-tab').forEach(tabBtn=>{
     document.querySelectorAll('.settings-panel').forEach(panel=> panel.style.display = (panel.getAttribute('data-panel')===tab) ? 'block' : 'none');
     if(tab === 'invoice') renderInvoiceSettingsPanel();
     if(tab === 'appearance') renderAppearancePanel();
-  if(tab === 'styles'){ document.querySelectorAll('[data-screen-style]').forEach(card=> card.classList.toggle('active', card.getAttribute('data-screen-style')===currentScreenStyle())); }
   if(tab === 'language'){
       document.getElementById('langSearch').value = '';
       renderLanguageList('');
@@ -21177,14 +21133,6 @@ document.getElementById('aboutSidebarBtn').addEventListener('click', ()=>{
   aboutOverlay.classList.add('open');
 });
 document.getElementById('closeAboutBtn').addEventListener('click', ()=> aboutOverlay.classList.remove('open'));
-const aboutCheckUpdatesBtn = document.getElementById('aboutCheckUpdatesBtn');
-if(aboutCheckUpdatesBtn) aboutCheckUpdatesBtn.addEventListener('click', async ()=>{
-  const status = document.getElementById('aboutUpdateStatusText');
-  if(status) status.textContent = 'جارٍ الفحص...';
-  await checkForUpdates(true);
-  const mainStatus = document.getElementById('onlineUpdateStatusText');
-  if(status && mainStatus) status.textContent = mainStatus.textContent;
-});
 
 function currentAppFilePath(){
   try{
@@ -22510,15 +22458,8 @@ const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/mmaz19922015-make
 const LAST_UPDATE_CHECK_KEY = 'dental_lab_last_update_check_v1';
 const AUTO_UPDATE_ENABLED_KEY = 'dental_lab_auto_update_v1';
 
-function isNewerVersion(remote, local){
-  const a = String(remote).split('.').map(n=> parseInt(n,10)||0);
-  const b = String(local).split('.').map(n=> parseInt(n,10)||0);
-  for(let i=0; i<Math.max(a.length,b.length); i++){
-    const x = a[i]||0, y = b[i]||0;
-    if(x > y) return true;
-    if(x < y) return false;
-  }
-  return false;
+function isDifferentVersion(remote, local){
+  return String(remote || '').trim() !== String(local || '').trim();
 }
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
@@ -22536,18 +22477,6 @@ function isNewerVersion(remote, local){
 // grow the confirm dialog past a sane, always-clickable size — independent
 // of whatever caused this specific incident.
 const UPDATE_NOTES_MAX_CHARS = 400;
-function showAutomaticUpdateBanner(info){
-  try{
-    const banner=document.getElementById('updateBanner');
-    const text=document.getElementById('updateBannerText');
-    if(!banner || !text || !info || !info.version) return;
-    text.textContent='🎉 يتوفر إصدار مختلف v'+info.version+' من البرنامج';
-    banner.classList.add('show');
-    document.body.classList.add('has-update-banner');
-    requestAnimationFrame(()=>{ document.documentElement.style.setProperty('--update-banner-h', banner.offsetHeight+'px'); });
-  }catch(e){}
-}
-
 function formatUpdateNotesForDialog(notes){
   if(!notes) return '';
   const s = String(notes).trim();
@@ -22577,7 +22506,6 @@ async function checkForUpdates(manual){
       }
       if(info.available){
         setStatus('يتوفر إصدار مختلف: الإصدار ' + info.version, 'var(--green)');
-        if(!manual) showAutomaticUpdateBanner(info);
         // BUG FIX: this used to pop the confirm dialog on EVERY automatic
         // startup check too (manual=false, fired 8s after every launch,
         // unconditionally) — not just when the user actually clicked "🌐 فحص
@@ -22601,9 +22529,9 @@ async function checkForUpdates(manual){
         // one (see the customConfirm() dedup fix below).
         if(!manual) return;
         const ok = await customConfirm(
-          'يتوفر إصدار مختلف للبرنامج (الإصدار ' + info.version + ').\n' +
+          'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
           formatUpdateNotesForDialog(info.notes) +
-          '\nهل تريد تثبيت هذا الإصدار الآن؟ سيتم التحميل والتثبيت وإعادة فتح البرنامج تلقائيًا.'
+          '\nهل تريد تحديث البرنامج الآن؟ سيتم التحميل والتثبيت وإعادة فتح البرنامج تلقائيًا.'
         );
         if(ok){
           if(!info.rawUrl){ showToast('رابط التحديث غير مضبوط في version.json (rawUrl).', 'error'); return; }
@@ -22623,7 +22551,7 @@ async function checkForUpdates(manual){
           }
         }
       }else{
-        setStatus(tr('أنت تستخدم أحدث إصدار') + ' (' + APP_VERSION + ').', 'var(--green)');
+        setStatus(tr('أنت تستخدم الإصدار الحالي') + ' (' + APP_VERSION + ').', 'var(--green)');
       }
     }catch(e){
       console.error('desktop update check failed', e);
@@ -22638,14 +22566,14 @@ async function checkForUpdates(manual){
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const info = await res.json();
     try{ localStorage.setItem(LAST_UPDATE_CHECK_KEY, String(getTrustedNow())); }catch(e){}
-    if(info && info.version && String(info.version) !== String(APP_VERSION)){
-      setStatus('يتوفر إصدار مختلف: الإصدار ' + info.version, 'var(--green)');
+    if(info && info.version && isDifferentVersion(info.version, APP_VERSION)){
+      setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
       // Same fix as the desktop branch above: only an explicit manual click
       // opens the confirm dialog — a silent/automatic check just updates the
       // status text (the banner already covers unprompted notification).
       if(!manual) return;
       const ok = await customConfirm(
-        'يتوفر إصدار مختلف للبرنامج (الإصدار ' + info.version + ').\n' +
+        'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
         formatUpdateNotesForDialog(info.notes) +
         '\nهل تريد فتح صفحة التحديث الآن؟'
       );
@@ -22713,8 +22641,12 @@ if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
 setTimeout(()=>{
   if(!autoUpdateEnabled()) return;
   checkForUpdates(false);
-  setInterval(function(){ checkForUpdates(false); }, 60 * 60 * 1000);
-}, 8000);
+}, 3500);
+
+setInterval(()=>{
+  if(!autoUpdateEnabled()) return;
+  checkForUpdates(false);
+}, 60 * 60 * 1000);
 
 /* The old first-run "هل تريد إنشاء نسخة احتياطية؟" prompt is gone on purpose:
    the user is already required to choose where the data lives at the very
@@ -22796,16 +22728,8 @@ initAppFileHandle();
   // for why the link can no longer just carry a plain href.
   var latestUpdateInfo = null;
 
-  function cmpVersions(a, b){
-    var pa = String(a).split('.').map(Number);
-    var pb = String(b).split('.').map(Number);
-    for (var i = 0; i < Math.max(pa.length, pb.length); i++){
-      var na = pa[i] || 0, nb = pb[i] || 0;
-      if (na > nb) return 1;
-      if (na < nb) return -1;
-    }
-    return 0;
-  }
+  function cmpVersions(a,b){ return String(a||'').trim() === String(b||'').trim() ? 0 : 1; }
+
 
   function showBanner(info){
     latestUpdateInfo = info;

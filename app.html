@@ -22458,6 +22458,16 @@ const AUTO_UPDATE_ENABLED_KEY = 'dental_lab_auto_update_v1';
 function isDifferentVersion(remote, local){
   return String(remote || '').trim() !== String(local || '').trim();
 }
+function isNewerVersion(remote, local){
+  const a=String(remote||'').split('.').map(n=>parseInt(n,10)||0);
+  const b=String(local||'').split('.').map(n=>parseInt(n,10)||0);
+  for(let i=0;i<Math.max(a.length,b.length);i++){
+    const x=a[i]||0, y=b[i]||0;
+    if(x>y) return true;
+    if(x<y) return false;
+  }
+  return false;
+}
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
 // is meant to be a short changelog line, but nothing ever enforced that —
@@ -22543,6 +22553,16 @@ async function checkForUpdates(manual){
             setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
           }else if(result && result.reason === 'checksum-mismatch'){
             setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (sha256). لم يُثبَّت شيء.', 'var(--red)');
+          }else if(result && result.reason === 'not-newer'){
+            setStatus('تم رفض التحديث لأن النسخة المنشورة ليست أحدث من نسختك الحالية.', 'var(--red)');
+          }else if(result && result.reason === 'invalid-url'){
+            setStatus('رابط التحديث في version.json غير صالح.', 'var(--red)');
+          }else if(result && result.reason === 'untrusted-origin'){
+            setStatus('تم رفض رابط التحديث لأسباب أمنية.', 'var(--red)');
+          }else if(result && result.reason === 'download-failed'){
+            setStatus('تعذّر تحميل ملف التحديث. حاول مرة أخرى.', 'var(--red)');
+          }else if(result && result.reason === 'invalid-content'){
+            setStatus('ملف التحديث المنشور غير صالح.', 'var(--red)');
           }else{
             setStatus('فشل تثبيت التحديث. حاول مرة أخرى لاحقًا.', 'var(--red)');
           }
@@ -22563,7 +22583,7 @@ async function checkForUpdates(manual){
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const info = await res.json();
     try{ localStorage.setItem(LAST_UPDATE_CHECK_KEY, String(getTrustedNow())); }catch(e){}
-    if(info && info.version && isDifferentVersion(info.version, APP_VERSION)){
+    if(info && info.version && isNewerVersion(info.version, APP_VERSION)){
       setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
       // Same fix as the desktop branch above: only an explicit manual click
       // opens the confirm dialog — a silent/automatic check just updates the

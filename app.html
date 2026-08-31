@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AL EKHLAS لإدارة العيادات والمختبرات السنية</title>
-<!-- AL EKHLAS 12.0 release build: financial integrity + statement fixes -->
+<!-- AL EKHLAS 10.10.6 hardened build: financial integrity + statement fixes -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogItio2LHZhtin2YXYrCDYp9mE2KXYrtmE2KfYtSDZhNil2K/Yp9ix2Kkg2KfZhNi52YrYp9iv2KfYqiDZiNin2YTZhdiu2KrYqNix2KfYqiDYp9mE2LPZhtmK2KkiLCAic2hvcnRfbmFtZSI6ICLYqNix2YbYp9mF2Kwg2KfZhNil2K7ZhNin2LUiLCAic3RhcnRfdXJsIjogIi4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgImJhY2tncm91bmRfY29sb3IiOiAiI2Y3ZmJmYyIsICJ0aGVtZV9jb2xvciI6ICIjMGU3YzllIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjEyMHgxMjAiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55In0sIHsic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ==">
@@ -2144,34 +2144,6 @@
   #settingsOverlay .ap-sample{ padding:var(--sp-3); }
   #settingsOverlay .lang-list{ max-height:none; }
   .settings-panel{ }
-
-  /* v12.0 — premium About screen */
-  .about-sidebar-btn{
-    margin-top:2px;
-    background:linear-gradient(135deg,#8f6418 0%,#d4a83d 28%,#f5dc8a 52%,#c9972e 76%,#76500f 100%) !important;
-    color:#fff !important;
-    border:1px solid rgba(255,236,166,.8) !important;
-    box-shadow:0 3px 12px rgba(153,105,20,.25);
-    font-weight:900;
-  }
-  .about-sidebar-btn:hover{filter:brightness(1.05);box-shadow:0 5px 16px rgba(153,105,20,.32);}
-  #aboutOverlay .modal.about-gold-card{
-    max-width:650px;
-    border:1px solid rgba(201,151,46,.7);
-    background:linear-gradient(145deg,#fffdf5 0%,#fff8df 30%,#f8e6ae 62%,#fffaf0 100%);
-    box-shadow:0 22px 65px rgba(108,72,8,.28), inset 0 1px 0 rgba(255,255,255,.9);
-  }
-  #aboutOverlay .about-gold-inner{
-    border-radius:18px;
-    padding:6px;
-    background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(214,166,60,.18),rgba(255,255,255,.8));
-  }
-  #aboutOverlay .about-update-btn{
-    width:100%; padding:13px 18px; border:0; border-radius:12px; cursor:pointer;
-    color:#fff; font-weight:900; font-size:14px;
-    background:linear-gradient(135deg,#79520e,#b88622,#e8c45d,#a87517,#6d480b);
-    box-shadow:0 6px 18px rgba(119,79,10,.28);
-  }
   .list-row{
     display:flex; justify-content:space-between; align-items:center; padding:10px 12px;
     border:1px solid var(--line); border-radius:8px; margin-bottom:6px; background:var(--panel-2);
@@ -2655,7 +2627,7 @@ input:focus, select:focus, textarea:focus {
            to being a plain, ordinary sidebar button like all the others
            above, wired to the same lockProgramNow() used everywhere. -->
       <button type="button" class="btn-ghost sidebar-btn" id="lockProgramSidebarBtn">🔒 قفل البرنامج</button>
-      <button type="button" class="btn-ghost sidebar-btn about-sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
   </div>
@@ -5073,8 +5045,7 @@ input:focus, select:focus, textarea:focus {
 </div>
 
 <div class="overlay" id="aboutOverlay">
-  <div class="modal narrow about-gold-card">
-    <div class="about-gold-inner">
+  <div class="modal narrow">
     <h2><span>حول البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeAboutBtn">إغلاق</button></h2>
     <div style="text-align:center;">
       <div class="brand-mark" style="margin:0 auto 16px; width:56px; height:56px; font-size:18px;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlN2M5ZSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNGEyYzkiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0idXJsKCNnKSIvPgo8cGF0aCBkPSJNMzIgMTRjLTQuNSAwLTYuOCAyLjMtOS4yIDIuMy0zIDAtNS4zLTItNy44LTItNCAwLTYuNSAzLjYtNi41IDkuMiAwIDYuNSAzLjMgMTUuNSA2LjIgMjAuOCAxLjcgMy4xIDMgNC45IDQuOCA0LjkgMi40IDAgMi42LTUuNiA0LjQtOS43IDEtMi4zIDItMy4zIDMuNi0zLjNzMi42IDEgMy42IDMuM2MxLjggNC4xIDIgOS43IDQuNCA5LjcgMS44IDAgMy4xLTEuOCA0LjgtNC45IDIuOS01LjMgNi4yLTE0LjMgNi4yLTIwLjggMC01LjYtMi41LTkuMi02LjUtOS4yLTIuNSAwLTQuOCAyLTcuOCAyLTEuMSAwLTItLjMtMi43LS42eiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4=" alt="شعار"></div>
@@ -5090,6 +5061,18 @@ input:focus, select:focus, textarea:focus {
            (getActivationStatusMessage()/licenseRemainingSummaryText()), so
            it always agrees with what the lock screen itself would say. -->
       <div id="aboutLicenseStatus" style="display:inline-block; margin-bottom:14px; padding:6px 16px; border-radius:20px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
+      <div style="margin:0 0 14px; padding:13px 14px; border-radius:12px; text-align:right; background:linear-gradient(135deg, rgba(244,196,48,.18), rgba(184,134,11,.08), rgba(255,255,255,.04)); border:1px solid rgba(212,175,55,.45); box-shadow:0 8px 22px rgba(120,85,10,.12);">
+        <div style="font-weight:900; margin-bottom:7px;">🔄 تحديث البرنامج</div>
+        <div class="muted" style="font-size:12px; line-height:1.7; margin-bottom:10px;">الإصدار المثبت حاليًا: <b id="aboutUpdateVersionText">AL EKHLAS v12.5</b></div>
+        <button type="button" class="btn-primary btn-small" id="checkUpdatesNowBtn" style="width:100%;">🌐 البحث عن تحديثات</button>
+        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12px;"></div>
+      </div>
+      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:14px; display:none; text-align:right;">
+        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
+        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">يرجعك إلى النسخة التي كانت تعمل قبل آخر تحديث.</div>
+        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%;">↩️ الرجوع للإصدار السابق</button>
+        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12px;"></div>
+      </div>
       <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
         <div style="font-size:13.5px; font-weight:800; margin-bottom:8px;">للتواصل والدعم الفني</div>
         <div dir="ltr" style="font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:800; color:var(--teal); margin-bottom:12px;">+962 78 714 5048</div>
@@ -5109,11 +5092,7 @@ input:focus, select:focus, textarea:focus {
            زر حول البرنامج") — same #openOrderSoftwareCard id/handler and
            #orderSoftwareOverlay it always opened, just reached from inside
            "حول البرنامج" now instead of a separate footer icon. -->
-      <div style="border-top:1px solid rgba(154,112,29,.28); padding-top:14px; margin-top:14px;">
-        <button type="button" class="about-update-btn" id="aboutCheckUpdatesBtn">🔄 تحديث البرنامج</button>
-        <div id="aboutUpdateStatusText" class="muted" style="margin-top:8px;font-size:12px;min-height:18px;"></div>
-      </div>
-      <div style="border-top:1px solid rgba(154,112,29,.28); padding-top:14px; margin-top:14px;">
+      <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:14px;">
         <button type="button" class="btn-ghost btn-small" id="openOrderSoftwareCard" style="width:100%;">🛒 اطلب أيضًا برنامج</button>
       </div>
     </div>
@@ -5291,7 +5270,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '12.0';
+const APP_VERSION = '12.5';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -21028,7 +21007,7 @@ function hardReloadAppFile(){
 }
 document.getElementById('appVersionBadge').textContent = 'v' + APP_VERSION;
 document.getElementById('aboutVersionText').textContent = 'الإصدار الحالي: AL EKHLAS v' + APP_VERSION;
-document.getElementById('updateTabVersionText').textContent = 'AL EKHLAS v' + APP_VERSION;
+const updateTabVersionEl = document.getElementById('updateTabVersionText'); if(updateTabVersionEl) updateTabVersionEl.textContent = 'AL EKHLAS v' + APP_VERSION; const aboutUpdateVersionEl = document.getElementById('aboutUpdateVersionText'); if(aboutUpdateVersionEl) aboutUpdateVersionEl.textContent = 'AL EKHLAS v' + APP_VERSION;
 
 /* ================== Render root ================== */
 function render(){
@@ -22340,15 +22319,10 @@ const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/mmaz19922015-make
 const LAST_UPDATE_CHECK_KEY = 'dental_lab_last_update_check_v1';
 const AUTO_UPDATE_ENABLED_KEY = 'dental_lab_auto_update_v1';
 
+// Update policy: any different version identifier is a valid update/rollback,
+// including a deliberate rollback to a lower number.
 function isNewerVersion(remote, local){
-  const a = String(remote).split('.').map(n=> parseInt(n,10)||0);
-  const b = String(local).split('.').map(n=> parseInt(n,10)||0);
-  for(let i=0; i<Math.max(a.length,b.length); i++){
-    const x = a[i]||0, y = b[i]||0;
-    if(x > y) return true;
-    if(x < y) return false;
-  }
-  return false;
+  return String(remote || '').trim() !== String(local || '').trim();
 }
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
@@ -22487,21 +22461,8 @@ if(autoUpdateCheckToggleEl){
     localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
   });
 }
-document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
-const aboutCheckUpdatesBtn = document.getElementById('aboutCheckUpdatesBtn');
-if(aboutCheckUpdatesBtn){
-  aboutCheckUpdatesBtn.addEventListener('click', async ()=>{
-    const st=document.getElementById('aboutUpdateStatusText');
-    if(st) st.textContent='جارٍ البحث عن تحديثات...';
-    try{
-      await checkForUpdates(true);
-      const src=document.getElementById('onlineUpdateStatusText');
-      if(st && src && src.textContent) st.textContent=src.textContent;
-    }catch(e){
-      if(st) st.textContent='تعذّر التحقق من التحديثات.';
-    }
-  });
-}
+const checkUpdatesNowBtnEl = document.getElementById('checkUpdatesNowBtn');
+if(checkUpdatesNowBtnEl) checkUpdatesNowBtnEl.addEventListener('click', ()=> checkForUpdates(true));
 
 // 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
 // autoUpdateEnabled() just above; read by the dhikr-rotation script's

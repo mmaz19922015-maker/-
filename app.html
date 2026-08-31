@@ -19883,7 +19883,7 @@ document.getElementById('printCaseEditHistoryBtn').addEventListener('click', ()=
     </tr>`)
    ).join('') || `<tr><td colspan="5" class="empty">لا توجد تعديلات مسجّلة على هذه الحالة</td></tr>`;
 
-  openPrintWindow(buildPrintDocument({
+  showDocumentPreview(buildPrintDocument({
     title: 'سجل تعديلات الحالة',
     subtitle: 'الحالة رقم ' + (caseObj.caseNumber || '—') +
               (caseObj.patientName ? ' — ' + caseObj.patientName : ''),
@@ -20089,7 +20089,7 @@ async function handleCaseFormSubmit(){
           <td class="credit">${escapeHtml(ch.to)}</td>
         </tr>`)
       ).join('') || `<tr><td colspan="5" class="empty">لا توجد تعديلات مسجّلة على هذه الحالة</td></tr>`;
-      openPrintWindow(buildPrintDocument({
+      showDocumentPreview(buildPrintDocument({
         title:'سجل تعديلات الحالة',
         fileName:printDocumentName(['سجل تعديلات الحالة', c.patientName, 'ID '+c.caseNumber]),
         subtitle:'الحالة رقم ' + (c.caseNumber || '—') + (c.patientName ? ' — ' + c.patientName : ''),
@@ -20099,7 +20099,7 @@ async function handleCaseFormSubmit(){
           <th class="num" style="width:150px;">التاريخ والوقت</th>
           <th style="width:120px;">الفني</th><th style="width:150px;">الحقل</th><th>من</th><th>إلى</th>
         </tr></thead><tbody>${rows}</tbody></table>`
-      }));
+      }), 'معاينة سجل تعديلات الحالة');
     }
   }
 }

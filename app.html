@@ -2143,6 +2143,32 @@
   #settingsOverlay .cs-card{ margin-bottom:10px; padding:10px 12px; }
   #settingsOverlay .ap-sample{ padding:var(--sp-3); }
   #settingsOverlay .lang-list{ max-height:none; }
+  /* ===== Premium About / Update card ===== */
+  .about-program-modal{ max-width:980px; background:transparent; border:0; box-shadow:none; overflow:visible; }
+  .about-program-card{ overflow:hidden; border:1px solid rgba(171,125,25,.58); border-radius:24px; background:linear-gradient(135deg,#fffaf0 0%,#f6e4a8 36%,#d8ae42 68%,#fff5d1 100%); box-shadow:0 24px 60px rgba(95,66,10,.24), inset 0 1px 0 rgba(255,255,255,.75); }
+  .about-program-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:18px; padding:20px 24px 14px; background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,230,147,.32)); border-bottom:1px solid rgba(143,103,16,.32); }
+  .about-program-header h2{ margin:4px 0 0; color:#4b360d; }
+  .about-program-header .btn-ghost{ color:#4b360d; border-color:rgba(92,66,10,.38); background:rgba(255,255,255,.34); }
+  .about-kicker{ color:#8a6617; font-size:12px; font-weight:900; letter-spacing:.5px; }
+  .about-gold-orb{ width:46px; height:46px; border-radius:50%; display:grid; place-items:center; color:#fff8df; font-size:22px; background:radial-gradient(circle at 35% 30%,#fff1a6,#c49325 62%,#8c6414); box-shadow:0 8px 20px rgba(112,78,8,.25); }
+  .about-program-body{ padding:22px 24px; }
+  .about-brand-row{ display:flex; align-items:center; gap:16px; }
+  .about-brand-mark{ width:62px !important; height:62px !important; margin:0 !important; border:2px solid rgba(255,255,255,.8); box-shadow:0 8px 22px rgba(100,70,8,.2); }
+  .about-program-name{ font-size:20px; font-weight:900; color:#3d2d0b; }
+  .about-program-version{ margin-top:4px; font-size:13px; font-weight:800; color:#71541a; }
+  .about-license-status{ display:inline-block; margin-top:8px; padding:5px 13px; border-radius:18px; font-size:12px; font-weight:900; background:rgba(255,255,255,.48); border:1px solid rgba(112,80,10,.24); color:#5c430e; }
+  .about-developer{ margin-top:18px; padding:11px 14px; border-radius:12px; background:rgba(255,255,255,.34); color:#59420f; font-size:13px; line-height:1.8; }
+  .about-support{ margin-top:14px; padding-top:14px; border-top:1px solid rgba(112,80,10,.22); }
+  .about-support-title{ font-size:13px; font-weight:900; color:#59420f; margin-bottom:5px; }
+  .about-phone{ font-size:16px; font-weight:900; color:#4b360d; margin-bottom:10px; }
+  .about-support-actions{ display:flex; gap:9px; flex-wrap:wrap; }
+  .about-support-actions a{ display:inline-block; padding:9px 18px; border-radius:10px; text-decoration:none; font-weight:900; font-size:13px; color:#fff; background:linear-gradient(135deg,#b98216,#d8aa3f); box-shadow:0 5px 12px rgba(100,70,8,.15); }
+  .about-update-card{ margin-top:12px; border:1px solid rgba(171,125,25,.45); border-radius:18px; padding:16px 18px; background:linear-gradient(135deg,#fffdf6,#f5e6b6); box-shadow:0 10px 30px rgba(95,66,10,.12); }
+  .about-update-title{ font-size:15px; font-weight:900; color:#4b360d; margin-bottom:7px; }
+  .about-update-current{ font-size:13px; color:#6e5215; }
+  .about-update-note{ margin-top:7px; font-size:12px; line-height:1.8; color:#765d24; }
+  .about-update-actions{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; }
+  .about-update-card .btn-primary{ background:linear-gradient(135deg,#9d6d0d,#d7aa3b); border-color:#8c620c; }
   .settings-panel{ }
   .list-row{
     display:flex; justify-content:space-between; align-items:center; padding:10px 12px;
@@ -2442,14 +2468,6 @@ input:focus, select:focus, textarea:focus {
 </style>
 <div id="al95-toast" class="al95-toast" role="status" aria-live="polite"></div>
 
-
-<style id="about-program-style">
-.about-program-card{max-width:1050px;margin:24px auto;padding:0;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#fff8df 0%,#f3d77a 45%,#b8862c 100%);box-shadow:0 18px 50px rgba(110,75,15,.20);border:1px solid rgba(255,255,255,.75)}
-.about-program-header{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:30px 34px;color:#4a3308;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,231,151,.28))}
-.about-program-kicker{font-size:12px;letter-spacing:3px;font-weight:800;opacity:.7}.about-program-header h2{margin:5px 0;font-size:30px}.about-program-header p{margin:0;opacity:.75}.about-program-version{padding:10px 15px;border-radius:14px;background:rgba(255,255,255,.55);white-space:nowrap}
-.about-program-body{padding:28px 34px;background:rgba(255,255,255,.88)}
-.about-program-timeline{position:relative;margin-right:8px;padding-right:30px;border-right:2px solid #d5ad52}.about-timeline-item{position:relative;padding:0 0 28px}.about-timeline-item:last-child{padding-bottom:0}.about-dot{position:absolute;right:-39px;top:2px;width:16px;height:16px;border-radius:50%;background:#c39332;border:4px solid #fff5cf;box-shadow:0 2px 8px rgba(0,0,0,.15)}.about-timeline-item strong{font-size:20px;color:#7b5514}.about-timeline-item small{display:block;color:#96733b;margin:3px 0 7px}.about-timeline-item p{margin:0;color:#55472d;line-height:1.7}
-</style>
 </head>
 <body>
 
@@ -2620,7 +2638,6 @@ input:focus, select:focus, textarea:focus {
            its label and icon flip live between "تشغيل"/"إيقاف" — see
            applyTheme() in the script, which now also drives this button. -->
       <button type="button" class="btn-ghost sidebar-btn" id="themeToggleSidebarBtn">🌙 تشغيل الوضع الليلي</button>
-      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
       <!-- 👤 المستخدمون (أدمن/موظف) — direct feedback: "بدي اعمل نظام
            المستخدمين ادمن يتحكم بكل شي ونظام موظف يكون ليه قيود". Admin-only
            (see ADMIN_ONLY_BTN_IDS/applyRolePermissions()) — an employee never
@@ -2636,6 +2653,8 @@ input:focus, select:focus, textarea:focus {
            to being a plain, ordinary sidebar button like all the others
            above, wired to the same lockProgramNow() used everywhere. -->
       <button type="button" class="btn-ghost sidebar-btn" id="lockProgramSidebarBtn">🔒 قفل البرنامج</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="aboutSidebarBtn">ℹ️ حول البرنامج</button>
+
     </div>
     <div class="doctor-list" id="doctorList" style="display:none;"></div>
   </div>
@@ -4783,7 +4802,7 @@ input:focus, select:focus, textarea:focus {
            Settings at all (see that overlay's own comment). -->
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
-      <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
+     
       <button type="button" class="settings-tab" data-tab="appearance">🔠 حجم الخط ونوعه</button>
       <button type="button" class="settings-tab" data-tab="language">🌐 اللغة</button>
       <button type="button" class="settings-tab" data-tab="dhikr">🕌 الأذكار</button>
@@ -4914,51 +4933,7 @@ input:focus, select:focus, textarea:focus {
       </div>
     </div>
 
-    <div class="settings-panel" data-panel="update" style="display:none;">
-      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
-        <div style="font-size:13.5px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
-      </div>
-      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
-        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
-          <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
-          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
-        </label>
-        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
-        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-      </div>
-      <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
-           بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
-           installUpdate() always keeps exactly one previous version as a
-           local .bak before overwriting — this button restores it. Desktop
-           only (there is nothing to swap in the browser edition, which
-           never self-replaces a file in the first place). -->
-      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px; display:none;">
-        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
-        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">لو صار عندك مشكلة بعد تحديث البرنامج، هذا الزر يرجعك تلقائيًا للإصدار الذي كان يعمل قبل آخر تحديث مباشرة.</div>
-        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
-        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-      </div>
-      <!-- BUG FIX (real, confirmed defect — direct feedback): the old
-           "🔄 تحديث البرنامج الآن" button below this comment was ALWAYS
-           disabled unless a separate, easy-to-miss "تحديد ملف البرنامج"
-           step ran first, and even then only actually worked in a
-           browser edition with the File System Access API — on desktop
-           the real update path has always been the online one above
-           (🌐 فحص التحديثات الآن / the 🎉 banner), which downloads,
-           verifies, installs and relaunches automatically via the main
-           process. The dead manual button and its file picker were
-           removed entirely rather than fixed — there was nothing for a
-           user to correctly operate, since the real update mechanism
-           never needed them. "تحديد ملف البرنامج" itself is kept below
-           because it still has a real, separate job: letting a password
-           change (see "كلمة المرور والحماية") persist permanently inside
-           this file instead of only on this one device. -->
-      <div class="field">
-        <button type="button" class="btn-primary btn-small" id="pickAppFileBtn">📄 تحديد ملف البرنامج (مرة واحدة)</button>
-        <div class="muted" id="appUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-        <div class="muted" style="margin-top:6px; line-height:1.7;">يُستخدم فقط لحفظ تغيير كلمة السر بشكل دائم داخل هذا الملف نفسه (من تبويب "كلمة المرور والحماية") — لا علاقة له بتحديث البرنامج، الذي يتم تلقائيًا بالكامل من الأعلى عبر "🌐 فحص التحديثات الآن".</div>
-      </div>
-    </div>
+    
 
     <div class="settings-panel" data-panel="lock" style="display:none;">
       <div id="trialBadgeSettings" style="display:none; margin-bottom:16px; padding:11px 14px; border-radius:9px; color:#fff; font-size:13.5px; font-weight:800; text-align:center;"></div>
@@ -5100,43 +5075,48 @@ input:focus, select:focus, textarea:focus {
 </div>
 
 <div class="overlay" id="aboutOverlay">
-  <div class="modal narrow">
-    <h2><span>حول البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeAboutBtn">إغلاق</button></h2>
-    <div style="text-align:center;">
-      <div class="brand-mark" style="margin:0 auto 16px; width:56px; height:56px; font-size:18px;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlN2M5ZSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNGEyYzkiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0idXJsKCNnKSIvPgo8cGF0aCBkPSJNMzIgMTRjLTQuNSAwLTYuOCAyLjMtOS4yIDIuMy0zIDAtNS4zLTItNy44LTItNCAwLTYuNSAzLjYtNi41IDkuMiAwIDYuNSAzLjMgMTUuNSA2LjIgMjAuOCAxLjcgMy4xIDMgNC45IDQuOCA0LjkgMi40IDAgMi42LTUuNiA0LjQtOS43IDEtMi4zIDItMy4zIDMuNi0zLjNzMi42IDEgMy42IDMuM2MxLjggNC4xIDIgOS43IDQuNCA5LjcgMS44IDAgMy4xLTEuOCA0LjgtNC45IDIuOS01LjMgNi4yLTE0LjMgNi4yLTIwLjggMC01LjYtMi41LTkuMi02LjUtOS4yLTIuNSAwLTQuOCAyLTcuOCAyLTEuMSAwLTItLjMtMi43LS42eiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4=" alt="شعار"></div>
-      <p style="font-size:14.5px; line-height:2; color:var(--ink);">
-        <b id="aboutProgramName">AL EKHLAS لإدارة العيادات والمختبرات السنية</b><br>
-        تم إنشاء وتطوير هذا البرنامج من قبل<br>
-        <b>المهندس محمد الحموي</b>
-      </p>
-      <div class="muted" id="aboutVersionText" style="margin-bottom:8px; font-size:13px;"></div>
-      <!-- Remaining activation/trial duration, per direct feedback ("زر حول
-           البرنامج حط فيه مدة التفعيل يلي باقيه") — reuses the exact same
-           status text already computed for the lock screen's own info tab
-           (getActivationStatusMessage()/licenseRemainingSummaryText()), so
-           it always agrees with what the lock screen itself would say. -->
-      <div id="aboutLicenseStatus" style="display:inline-block; margin-bottom:14px; padding:6px 16px; border-radius:20px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
-      <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
-        <div style="font-size:13.5px; font-weight:800; margin-bottom:8px;">للتواصل والدعم الفني</div>
-        <div dir="ltr" style="font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:800; color:var(--teal); margin-bottom:12px;">+962 78 714 5048</div>
-        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-          <a href="https://wa.me/962787145048" target="_blank" rel="noopener"
-             style="display:inline-block; background:#25D366; color:#fff; padding:11px 22px; border-radius:9px; font-weight:800; font-size:14px; text-decoration:none;">
-            💬 واتساب
-          </a>
-          <a href="tel:+962787145048"
-             style="display:inline-block; background:var(--teal); color:#fff; padding:11px 22px; border-radius:9px; font-weight:800; font-size:14px; text-decoration:none;">
-            📞 اتصال بالمطور
-          </a>
+  <div class="modal wide about-program-modal">
+    <div class="about-program-card">
+      <div class="about-program-header">
+        <div>
+          <div class="about-kicker">ℹ️ معلومات البرنامج</div>
+          <h2><span>حول البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeAboutBtn">إغلاق</button></h2>
+        </div>
+        <div class="about-gold-orb">✦</div>
+      </div>
+      <div class="about-program-body">
+        <div class="about-brand-row">
+          <div class="brand-mark about-brand-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlN2M5ZSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNGEyYzkiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0idXJsKCNnKSIvPgo8cGF0aCBkPSJNMzIgMTRjLTQuNSAwLTYuOCAyLjMtOS4yIDIuMy0zIDAtNS4zLTItNy44LTItNCAwLTYuNSAzLjYtNi41IDkuMiAwIDYuNSAzLjMgMTUuNSA2LjIgMjAuOCAxLjcgMy4xIDMgNC45IDQuOCA0LjkgMi40IDAgMi42LTUuNiA0LjQtOS43IDEtMi4zIDItMy4zIDMuNi0zLjNzMi42IDEgMy42IDMuM2MxLjggNC4xIDIgOS43IDQuNCA5LjcgMS44IDAgMy4xLTEuOCA0LjgtNC45IDIuOS01LjMgNi4yLTE0LjMgNi4yLTIwLjggMC01LjYtMi41LTkuMi02LjUtOS4yLTIuNSAwLTQuOCAyLTcuOCAyLTEuMSAwLTItLjMtMi43LS42eiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4=" alt="شعار"></div>
+          <div>
+            <div class="about-program-name" id="aboutProgramName">AL EKHLAS</div>
+            <div class="about-program-version" id="aboutVersionText">الإصدار الحالي: AL EKHLAS v12.0</div>
+            <div id="aboutLicenseStatus" class="about-license-status"></div>
+          </div>
+        </div>
+        <div class="about-developer">تم إنشاء وتطوير هذا البرنامج من قبل <b>المهندس محمد الحموي</b></div>
+        <div class="about-support">
+          <div class="about-support-title">للتواصل والدعم الفني</div>
+          <div dir="ltr" class="about-phone">+962 78 714 5048</div>
+          <div class="about-support-actions">
+            <a href="https://wa.me/962787145048" target="_blank" rel="noopener">💬 واتساب</a>
+            <a href="tel:+962787145048">☎ اتصال</a>
+          </div>
         </div>
       </div>
-      <!-- 🛒 اطلب أيضًا برنامج: moved here from its own standalone
-           sidebar-footer icon per direct feedback ("وزر اطلب ايضا حطو جوا
-           زر حول البرنامج") — same #openOrderSoftwareCard id/handler and
-           #orderSoftwareOverlay it always opened, just reached from inside
-           "حول البرنامج" now instead of a separate footer icon. -->
-      <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:14px;">
-        <button type="button" class="btn-ghost btn-small" id="openOrderSoftwareCard" style="width:100%;">🛒 اطلب أيضًا برنامج</button>
+    </div>
+    <div class="about-update-card">
+      <div class="about-update-title">🔄 تحديث البرنامج</div>
+      <div class="about-update-current">الإصدار الحالي: <b id="updateTabVersionText">AL EKHLAS v12.0</b></div>
+      <div class="about-update-note">البحث يتحقق من رقم الإصدار المنشور فعليًا. إذا لم يوجد إصدار أحدث، لن يعرض البرنامج رسالة «يوجد تحديث جديد».</div>
+      <div class="about-update-actions">
+        <button type="button" class="btn-primary btn-small" id="checkUpdatesNowBtn">🔎 البحث عن تحديثات</button>
+        <div class="muted" id="onlineUpdateStatusText"></div>
+      </div>
+      <div class="field" id="rollbackUpdateField" style="background:rgba(255,255,255,.34); border-radius:12px; padding:12px 14px; margin-top:12px; display:none;">
+        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
+        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">إذا ثبت تحديث وظهر فيه خلل، يمكن الرجوع إلى النسخة السابقة المحفوظة على هذا الجهاز.</div>
+        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
+        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px;"></div>
       </div>
     </div>
   </div>
@@ -5313,7 +5293,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '11.0.7';
+const APP_VERSION = '12.0';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -14586,7 +14566,7 @@ function printEditLogReport(){
   const rows = (Array.isArray(editLog) ? editLog : []).slice();
   const htmlRows = rows.map((e,i)=>'<tr><td>'+ (i+1) +'</td><td>'+escapeHtml(e.date||'—') + ' ' + escapeHtml(e.time||'') +'</td><td>'+escapeHtml(e.description||'')+'</td><td>'+escapeHtml(e.context && e.context.type ? e.context.type : '—')+'</td><td>'+escapeHtml(e.enteredBy || '—')+'</td></tr>').join('');
   const html = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>سجل تعديلات AL EKHLAS</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#17252b}h1{font-size:22px;margin:0 0 6px}p{color:#60757d}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #b8c7cd;padding:9px;text-align:right}th{background:#eef4f6}td:first-child{width:55px;text-align:center}</style></head><body><h1>📝 سجل تعديلات البرنامج</h1><p>الإصدار '+escapeHtml(APP_VERSION)+' — عدد السجلات: '+rows.length+'</p><table><thead><tr><th>#</th><th>التاريخ والوقت</th><th>التعديل</th><th>المرجع</th><th>أدخلها</th></tr></thead><tbody>'+htmlRows+'</tbody></table></body></html>';
-  openPrintWindow(html, 'تعذّر فتح نافذة الطباعة.');
+  showDocumentPreview(html, '📝 معاينة سجل تعديلات الحالة');
 }
 document.getElementById('printEditLogBtn').addEventListener('click', printEditLogReport);
 
@@ -22499,14 +22479,9 @@ async function checkForUpdates(manual){
   }
 }
 
-function autoUpdateEnabled(){
-  return localStorage.getItem(AUTO_UPDATE_ENABLED_KEY) !== 'false';
-}
-document.getElementById('autoUpdateCheckToggle').checked = autoUpdateEnabled();
-document.getElementById('autoUpdateCheckToggle').addEventListener('change', (e)=>{
-  localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
-});
-document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
+function autoUpdateEnabled(){ return true; }
+const updateCheckButton = document.getElementById('checkUpdatesNowBtn');
+if(updateCheckButton) updateCheckButton.addEventListener('click', ()=> checkForUpdates(true));
 
 // 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
 // autoUpdateEnabled() just above; read by the dhikr-rotation script's
@@ -22547,12 +22522,25 @@ if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
   });
 }
 
-/* Automatic check on every startup — if a newer version exists, the user is
-   reminded each time they open the program until they update. */
-setTimeout(()=>{
-  if(!autoUpdateEnabled()) return;
-  checkForUpdates(false);
-}, 8000);
+/* Update safety policy: check shortly after every startup, then every hour.
+   The updater only reports a release when the remote version is STRICTLY
+   newer than APP_VERSION. */
+const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
+setTimeout(()=>{ checkForUpdates(false); }, 2500);
+setInterval(()=>{ checkForUpdates(false); }, UPDATE_CHECK_INTERVAL_MS);
+async function checkDatabaseHealth(){
+  if(!window.ekhlasDesktop || !window.ekhlasDesktop.isDesktop || typeof window.ekhlasDesktop.integrityCheck !== 'function') return;
+  try{
+    const health = await window.ekhlasDesktop.integrityCheck();
+    if(health && health.ok === false && health.reason !== 'no-dir'){
+      console.error('[AL EKHLAS] SQLite integrity check reported a problem:', health);
+      const statusEl=document.getElementById('onlineUpdateStatusText');
+      if(statusEl) statusEl.textContent='⚠️ تم رصد مشكلة في سلامة ملف البيانات. لم يتم حذف أو استبدال أي بيانات تلقائيًا.';
+    }
+  }catch(e){ console.error('[AL EKHLAS] database health check failed',e); }
+}
+setTimeout(checkDatabaseHealth, 3500);
+setInterval(checkDatabaseHealth, UPDATE_CHECK_INTERVAL_MS);
 
 /* The old first-run "هل تريد إنشاء نسخة احتياطية؟" prompt is gone on purpose:
    the user is already required to choose where the data lives at the very

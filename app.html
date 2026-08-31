@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AL EKHLAS لإدارة العيادات والمختبرات السنية</title>
-<!-- AL EKHLAS 8.5 hardened build: financial integrity + statement fixes -->
+<!-- AL EKHLAS 10.10.9 hardened build: financial integrity + statement fixes -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0YTJjOSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZTdjOWUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InRvb3RoIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZWFmN2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic29mdCIgeD0iLTMwJSIgeT0iLTMwJSIgd2lkdGg9IjE2MCUiIGhlaWdodD0iMTYwJSI+CiAgICAgIDxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIzIiBzdGREZXZpYXRpb249IjQiIGZsb29kLWNvbG9yPSIjMGI1ODcyIiBmbG9vZC1vcGFjaXR5PSIwLjM1Ii8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbHRlcj0idXJsKCNzb2Z0KSI+CiAgICA8cGF0aCBkPSJNNjAsMjggQzQ4LDI4IDQwLDM1IDQwLDQ2IEM0MCw1NCA0Myw2MCA0Myw2OCBDNDMsNzYgNDcsODQgNTEsODQgQzU1LDg0IDU2LDc3IDU2LDcyCiAgICAgICAgICAgICBMNTYsNjggQzU2LDY1LjUgNTcuNSw2NCA2MCw2NCBDNjIuNSw2NCA2NCw2NS41IDY0LDY4IEw2NCw3MiBDNjQsNzcgNjUsODQgNjksODQKICAgICAgICAgICAgIEM3Myw4NCA3Nyw3NiA3Nyw2OCBDNzcsNjAgODAsNTQgODAsNDYgQzgwLDM1IDcyLDI4IDYwLDI4IFoiIGZpbGw9InVybCgjdG9vdGgpIi8+CiAgPC9nPgogIDxwYXRoIGQ9Ik00Niw0MCBDNTAsMzYgNTUsMzQgNjAsMzQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC45Ii8+Cjwvc3ZnPg==">
 <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogItio2LHZhtin2YXYrCDYp9mE2KXYrtmE2KfYtSDZhNil2K/Yp9ix2Kkg2KfZhNi52YrYp9iv2KfYqiDZiNin2YTZhdiu2KrYqNix2KfYqiDYp9mE2LPZhtmK2KkiLCAic2hvcnRfbmFtZSI6ICLYqNix2YbYp9mF2Kwg2KfZhNil2K7ZhNin2LUiLCAic3RhcnRfdXJsIjogIi4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgImJhY2tncm91bmRfY29sb3IiOiAiI2Y3ZmJmYyIsICJ0aGVtZV9jb2xvciI6ICIjMGU3YzllIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjEyMHgxMjAiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55In0sIHsic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TWpBZ01USXdJajRLSUNBOFpHVm1jejRLSUNBZ0lEeHNhVzVsWVhKSGNtRmthV1Z1ZENCcFpEMGlZbWNpSUhneFBTSXdJaUI1TVQwaU1DSWdlREk5SWpFaUlIa3lQU0l4SWo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6RTBZVEpqT1NJdlBnb2dJQ0FnSUNBOGMzUnZjQ0J2Wm1aelpYUTlJakV3TUNVaUlITjBiM0F0WTI5c2IzSTlJaU13WlRkak9XVWlMejRLSUNBZ0lEd3ZiR2x1WldGeVIzSmhaR2xsYm5RK0NpQWdJQ0E4YkdsdVpXRnlSM0poWkdsbGJuUWdhV1E5SW5SdmIzUm9JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l3SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DVWlJSE4wYjNBdFkyOXNiM0k5SWlObVptWm1abVlpTHo0S0lDQWdJQ0FnUEhOMGIzQWdiMlptYzJWMFBTSXhNREFsSWlCemRHOXdMV052Ykc5eVBTSWpaV0ZtTjJaaUlpOCtDaUFnSUNBOEwyeHBibVZoY2tkeVlXUnBaVzUwUGdvZ0lDQWdQR1pwYkhSbGNpQnBaRDBpYzI5bWRDSWdlRDBpTFRNd0pTSWdlVDBpTFRNd0pTSWdkMmxrZEdnOUlqRTJNQ1VpSUdobGFXZG9kRDBpTVRZd0pTSStDaUFnSUNBZ0lEeG1aVVJ5YjNCVGFHRmtiM2NnWkhnOUlqQWlJR1I1UFNJeklpQnpkR1JFWlhacFlYUnBiMjQ5SWpRaUlHWnNiMjlrTFdOdmJHOXlQU0lqTUdJMU9EY3lJaUJtYkc5dlpDMXZjR0ZqYVhSNVBTSXdMak0xSWk4K0NpQWdJQ0E4TDJacGJIUmxjajRLSUNBOEwyUmxabk0rQ2lBZ1BHTnBjbU5zWlNCamVEMGlOakFpSUdONVBTSTJNQ0lnY2owaU5UWWlJR1pwYkd3OUluVnliQ2dqWW1jcElpOCtDaUFnUEdOcGNtTnNaU0JqZUQwaU5qQWlJR041UFNJMk1DSWdjajBpTlRZaUlHWnBiR3c5SW01dmJtVWlJSE4wY205clpUMGlJMlptWm1abVppSWdjM1J5YjJ0bExXOXdZV05wZEhrOUlqQXVNalVpSUhOMGNtOXJaUzEzYVdSMGFEMGlNeUl2UGdvZ0lEeG5JR1pwYkhSbGNqMGlkWEpzS0NOemIyWjBLU0krQ2lBZ0lDQThjR0YwYUNCa1BTSk5OakFzTWpnZ1F6UTRMREk0SURRd0xETTFJRFF3TERRMklFTTBNQ3cxTkNBME15dzJNQ0EwTXl3Mk9DQkRORE1zTnpZZ05EY3NPRFFnTlRFc09EUWdRelUxTERnMElEVTJMRGMzSURVMkxEY3lDaUFnSUNBZ0lDQWdJQ0FnSUNCTU5UWXNOamdnUXpVMkxEWTFMalVnTlRjdU5TdzJOQ0EyTUN3Mk5DQkROakl1TlN3Mk5DQTJOQ3cyTlM0MUlEWTBMRFk0SUV3Mk5DdzNNaUJETmpRc056Y2dOalVzT0RRZ05qa3NPRFFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTTNNeXc0TkNBM055dzNOaUEzTnl3Mk9DQkROemNzTmpBZ09EQXNOVFFnT0RBc05EWWdRemd3TERNMUlEY3lMREk0SURZd0xESTRJRm9pSUdacGJHdzlJblZ5YkNnamRHOXZkR2dwSWk4K0NpQWdQQzluUGdvZ0lEeHdZWFJvSUdROUlrMDBOaXcwTUNCRE5UQXNNellnTlRVc016UWdOakFzTXpRaUlITjBjbTlyWlQwaUkyWm1abVptWmlJZ2MzUnliMnRsTFhkcFpIUm9QU0l5TGpVaUlITjBjbTlyWlMxc2FXNWxZMkZ3UFNKeWIzVnVaQ0lnWm1sc2JEMGlibTl1WlNJZ2IzQmhZMmwwZVQwaU1DNDVJaTgrQ2p3dmMzWm5QZz09IiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ==">
@@ -37,6 +37,10 @@
     --bg-top: #d6e2e8;
     --panel: #e0eaee;
     --panel-2: #d2e0e7;
+    --style-bg-base: #cbd9e0;
+    --style-bg-top-base: #d6e2e8;
+    --style-panel-base: #e0eaee;
+    --style-panel2-base: #d2e0e7;
     /* Follow-up direct feedback ("شريط العنوانين ايضا قم بزيادة لون التظليل
        فيه"): every screen's title bar (.modal h2 / .modal-compact h2) used
        plain --panel-2 — a real, distinct band already, but the ask is for
@@ -124,6 +128,10 @@
       --bg-top: #31434e;
       --panel: #344956;
       --panel-2: #3c5361;
+      --style-bg-base: #2a3b45;
+      --style-bg-top-base: #31434e;
+      --style-panel-base: #344956;
+      --style-panel2-base: #3c5361;
       --line: #4e6a78;
       --ink: #f2f8fa;
       --ink-dim: #b7ccd6;
@@ -1494,6 +1502,19 @@
     border:1.5px solid var(--line);
     max-height: calc(100vh - 32px); overflow-y:auto;
   }
+  /* Light-mode screen tint: subtle enough to read as a style, never as a
+     saturated colored window.  It applies to every program window through
+     the shared .modal selector.  Dark mode explicitly falls back to the
+     original theme surfaces. */
+  .overlay .modal{
+    background:var(--screen-surface, var(--panel));
+    border-color:var(--screen-border, var(--line));
+    transition:background-color .22s ease, border-color .22s ease, box-shadow .22s ease;
+  }
+  .overlay .modal > h2{
+    background:var(--screen-titlebar, var(--titlebar-bg));
+    transition:background-color .22s ease, border-color .22s ease;
+  }
   .modal.wide{ max-width:820px; }
   /* Statement screens: keep the whole thing inside the viewport */
   .modal-compact{
@@ -2211,6 +2232,36 @@
     .sidebar{ width:100%; border-inline-end:none; border-bottom:1px solid var(--line); max-height:40vh; flex-shrink:0; }
     .main-area{ padding:18px 16px 60px; height:auto; flex:1; min-height:0; overflow-y:auto; }
   }
+  /* ===== Global screen-style surfaces =====
+     Surface colors are derived from the selected style while preserving the
+     existing light/dark base. This reaches every screen without per-screen edits. */
+  .screen-styles-modal{ max-width:760px; }
+  .screen-styles-intro{ padding:11px 13px; border:1px solid var(--line); border-radius:10px;
+    background:var(--screen-surface); color:var(--ink-dim); line-height:1.8; font-size:13px; margin-bottom:12px; }
+  .screen-style-grid{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:9px; }
+  .screen-style-card{ min-height:92px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:8px; padding:10px; border:1.5px solid var(--line); border-radius:12px; background:var(--screen-surface-2);
+    color:var(--ink); cursor:pointer; font:inherit; transition:transform .12s ease,border-color .15s ease,box-shadow .15s ease,background .15s ease; }
+  .screen-style-card:hover{ transform:translateY(-1px); border-color:var(--teal); background:var(--screen-tint); }
+  .screen-style-card.active{ border:2px solid var(--teal); background:var(--screen-tint); box-shadow:0 0 0 2px color-mix(in srgb,var(--teal) 18%,transparent); }
+  .screen-style-card strong{ display:block; font-size:13px; }
+  .screen-style-card small{ display:block; color:var(--ink-dim); font-size:10.5px; margin-top:2px; }
+  .screen-style-swatch{ width:38px; height:38px; border-radius:50%; background:var(--style-preview);
+    box-shadow:0 0 0 5px color-mix(in srgb,var(--style-preview) 13%,transparent),inset 0 0 0 1px rgba(255,255,255,.35); }
+  .screen-style-preview{ margin-top:12px; overflow:hidden; border:1.5px solid var(--line); border-radius:12px;
+    background:var(--screen-surface); box-shadow:var(--shadow-sm); }
+  .screen-style-preview-bar{ padding:11px 14px; background:var(--screen-titlebar); color:var(--screen-title-ink);
+    font-weight:900; border-bottom:1px solid color-mix(in srgb,var(--teal) 35%,var(--line)); }
+  .screen-style-preview-body{ padding:12px; display:grid; gap:8px; background:var(--screen-surface); }
+  .screen-style-preview-row{ padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:var(--screen-surface-2); }
+  body{ background:linear-gradient(180deg,var(--screen-bg-top),var(--screen-bg)) !important; }
+  .sidebar{ background:linear-gradient(180deg,var(--screen-surface),var(--screen-surface-2)) !important; }
+  .modal{ background:var(--screen-surface) !important; }
+  .field,.list-row,.directory-row,.stat,.case-card,.tool-card,.cs-card,.settings-tab,.acct-filter-card,.win-btn-group{
+    background:var(--screen-surface-2); }
+  .modal > h2,.modal-compact > h2{ background:var(--screen-titlebar) !important; color:var(--screen-title-ink); }
+  .settings-tab.active{ background:var(--screen-tint); }
+  @media (max-width:900px){ .screen-style-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
   /* ============ Global modern polish (v6.5 refresh) ============ */
   .modal{ border:1.5px solid var(--line); box-shadow: var(--shadow-lg); }
   /* Clearer element edges across the board — buttons, fields and list rows all
@@ -2609,6 +2660,7 @@ input:focus, select:focus, textarea:focus {
            "حول البرنامج" per direct feedback ("زر الضبط خليه تحت حول
            البرنامج"). -->
       <button type="button" class="btn-ghost sidebar-btn" id="settingsBtn">⚙ الضبط والإعدادات</button>
+      <button type="button" class="btn-ghost sidebar-btn" id="stylesSidebarBtn">🎨 الستايلات</button>
       <!-- 🔒 قفل البرنامج: went through a floating round icon near the mini
            clock for a couple of rounds, but per direct further feedback
            ("خليها زر عادي بالقائمة الجانبية اسمو قفل البرنامج") this is back
@@ -4354,6 +4406,19 @@ input:focus, select:focus, textarea:focus {
         </span>
         <span class="tool-arrow" aria-hidden="true">‹</span>
       </button>
+      <button type="button" class="tool-card" id="invoiceTypeCasesBtn">
+        <span class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4h14v16H5z"/>
+            <path d="M8 8h8M8 12h8M8 16h5"/>
+          </svg>
+        </span>
+        <span class="tool-text">
+          <span class="tool-title">🖨 طباعة كشف حالات</span>
+          <span class="tool-sub">اختر الطبيب أو المختبر ثم انتقل لشاشة كشف الحالات الأصلية</span>
+        </span>
+        <span class="tool-arrow" aria-hidden="true">‹</span>
+      </button>
       <button type="button" class="tool-card tool-invtype-statement" id="invoiceTypeStatementBtn">
         <span class="tool-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -4373,6 +4438,18 @@ input:focus, select:focus, textarea:focus {
 </div>
 
 <!-- Case edit history (per-case detailed change log, for printing to the doctor) -->
+<!-- Shortcut: choose doctor/lab for the existing case-invoice printer -->
+<div class="overlay" id="caseInvoiceShortcutOverlay">
+  <div class="modal narrow">
+    <h2><span>🖨 طباعة كشف حالات</span><button type="button" class="btn-ghost btn-small" id="closeCaseInvoiceShortcutBtn">إغلاق</button></h2>
+    <div class="muted" style="margin-bottom:14px;">اختر الطبيب أو المختبر من الجهات المضافة عندك:</div>
+    <div class="field"><label>نوع الجهة</label><select id="caseInvoiceShortcutPartyType"><option value="doctor">🦷 طبيب</option><option value="lab">🧪 مختبر</option></select></div>
+    <div class="field"><label>الطبيب / المختبر</label><select id="caseInvoiceShortcutParty"></select></div>
+    <div id="caseInvoiceShortcutEmpty" class="muted" style="display:none;text-align:center;padding:10px 0;">لا يوجد أشخاص مضافون من هذا النوع.</div>
+    <button type="button" class="btn-primary" id="caseInvoiceShortcutContinueBtn" style="width:100%;">متابعة إلى كشف الحالات</button>
+  </div>
+</div>
+
 <!-- Create invoice -->
 <!-- Create invoice — reverted back to a plain, focused screen per direct
      feedback ("ولما اكبس انشاء فاتورة خليه شاشة عادية يسالني لمين الفاتورة
@@ -4762,8 +4839,7 @@ input:focus, select:focus, textarea:focus {
         <button type="button" class="btn-ghost btn-small chip" data-font-preset="140">كبير جدًا</button>
       </div>
     </section>
-
-    <section class="cs-card" style="margin-bottom:12px;">
+<section class="cs-card" style="margin-bottom:12px;">
       <h3>نوع الخط</h3>
       <div class="ap-fonts" id="apFontFamily"></div>
     </section>
@@ -4940,6 +5016,38 @@ input:focus, select:focus, textarea:focus {
     </div>
   </div>
 </div>
+
+    <!-- Screen styles: the five existing presets are kept exactly as they were.
+         Font size and language remain inside "⚙ الضبط والإعدادات". -->
+    <div class="overlay" id="screenStylesOverlay">
+      <div class="modal wide screen-styles-modal">
+        <h2><span>🎨 الستايلات</span><button type="button" class="btn-ghost btn-small" id="closeScreenStylesBtn">إغلاق</button></h2>
+        <div class="screen-styles-intro">
+          اختر الستايل. التغيير يُطبّق فورًا على جميع الشاشات والقوائم ويحفظ تلقائيًا،
+          بدون تغيير بيانات البرنامج أو وظائفه.
+        </div>
+        <div id="screenStylePresets" class="screen-style-grid">
+          <button type="button" class="screen-style-card" data-screen-style="teal"><span class="screen-style-swatch" style="--style-preview:#0e7c9e;"></span><span><strong>تركوازي هادئ</strong><small>Teal</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="blue"><span class="screen-style-swatch" style="--style-preview:#2563a8;"></span><span><strong>أزرق احترافي</strong><small>Blue</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="purple"><span class="screen-style-swatch" style="--style-preview:#6d55b7;"></span><span><strong>بنفسجي أنيق</strong><small>Purple</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="green"><span class="screen-style-swatch" style="--style-preview:#2b8a63;"></span><span><strong>أخضر هادئ</strong><small>Green</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="slate"><span class="screen-style-swatch" style="--style-preview:#536b78;"></span><span><strong>رمادي احترافي</strong><small>Slate</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="navy"><span class="screen-style-swatch" style="--style-preview:#1f4f78;"></span><span><strong>كحلي عميق</strong><small>Navy</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="forest"><span class="screen-style-swatch" style="--style-preview:#1f654d;"></span><span><strong>أخضر غامق</strong><small>Forest</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="burgundy"><span class="screen-style-swatch" style="--style-preview:#743747;"></span><span><strong>عنابي راقٍ</strong><small>Burgundy</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="indigo"><span class="screen-style-swatch" style="--style-preview:#443d83;"></span><span><strong>نيلي داكن</strong><small>Indigo</small></span></button>
+          <button type="button" class="screen-style-card" data-screen-style="charcoal"><span class="screen-style-swatch" style="--style-preview:#3f4a52;"></span><span><strong>فحمي أنيق</strong><small>Charcoal</small></span></button>
+        </div>
+        <div class="screen-style-preview">
+          <div class="screen-style-preview-bar">معاينة شريط عنوان الشاشة</div>
+          <div class="screen-style-preview-body">
+            <div class="screen-style-preview-row">لون خفيف من نفس الستايل</div>
+            <div class="screen-style-preview-row">القوائم والبطاقات تتلوّن تلقائيًا</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 <!-- About modal -->
 <!-- Purchase / contact for full version -->
@@ -5251,7 +5359,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '10.10.1';
+const APP_VERSION = '11.0.0';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -5351,8 +5459,9 @@ function toggleTheme(){
   const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
   try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
   applyTheme();
+
+  try{ if(typeof applyScreenStyle==='function') applyScreenStyle(); }catch(e){}
 }
-applyTheme();
 
 /* ================== Appearance: text size and typeface ==================
    Scaling is applied to the root element, so everything sized in rem grows
@@ -5430,6 +5539,61 @@ function setFontFamily(id){
   applyAppearance();
 }
 
+/* ================== Screen colors / styles ================== */
+const SCREEN_STYLE_KEY='ekhlas_screen_style_v1', SCREEN_ACCENT_KEY='ekhlas_screen_accent_v1';
+const SCREEN_STYLES={
+ teal:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.08)'},
+ blue:{accent:'#2563a8',accent2:'#3b82d0',tint:'rgba(37,99,168,.09)'},
+ purple:{accent:'#6d55b7',accent2:'#8a72d1',tint:'rgba(109,85,183,.10)'},
+ green:{accent:'#2b8a63',accent2:'#43b985',tint:'rgba(43,138,99,.10)'},
+ slate:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.10)'},
+ navy:{accent:'#1f4f78',accent2:'#316f9f',tint:'rgba(31,79,120,.12)'},
+ forest:{accent:'#1f654d',accent2:'#2f8a69',tint:'rgba(31,101,77,.12)'},
+ burgundy:{accent:'#743747',accent2:'#9a4c60',tint:'rgba(116,55,71,.12)'},
+ indigo:{accent:'#443d83',accent2:'#6258a5',tint:'rgba(68,61,131,.12)'},
+ charcoal:{accent:'#3f4a52',accent2:'#596873',tint:'rgba(63,74,82,.13)'}
+};
+function currentScreenStyle(){try{return localStorage.getItem(SCREEN_STYLE_KEY)||'teal';}catch(e){return'teal';}}
+function applyScreenStyle(){
+ const key=currentScreenStyle(), p=SCREEN_STYLES[key]||SCREEN_STYLES.teal; let accent=p.accent;
+ try{const c=localStorage.getItem(SCREEN_ACCENT_KEY);if(/^#[0-9a-f]{6}$/i.test(c||''))accent=c;}catch(e){}
+ const root=document.documentElement.style;
+ root.setProperty('--teal',accent);
+ root.setProperty('--teal-dim',accent);
+ root.setProperty('--teal-tint',p.tint);
+ root.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
+ root.setProperty('--screen-bg',`color-mix(in srgb,var(--style-bg-base) 95%,${accent} 5%)`);
+ root.setProperty('--screen-bg-top',`color-mix(in srgb,var(--style-bg-top-base) 94%,${accent} 6%)`);
+ root.setProperty('--screen-surface',`color-mix(in srgb,var(--style-panel-base) 93%,${accent} 7%)`);
+ root.setProperty('--screen-surface-2',`color-mix(in srgb,var(--style-panel2-base) 90%,${accent} 10%)`);
+ root.setProperty('--screen-tint',`color-mix(in srgb,${accent} 10%,var(--style-panel-base))`);
+ root.setProperty('--screen-titlebar',`color-mix(in srgb,var(--style-panel2-base) 72%,${accent} 28%)`);
+ root.setProperty('--screen-title-ink',effectiveTheme()==='dark'?'#f2f8fa':'#10242b');
+ const c=document.getElementById('screenAccentColor');if(c)c.value=accent;
+ document.querySelectorAll('[data-screen-style]').forEach(b=>b.classList.toggle('active',b.getAttribute('data-screen-style')===key));
+}
+function setScreenStyle(key){if(!SCREEN_STYLES[key])return;try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}applyScreenStyle();showToast('تم تطبيق ستايل الشاشات وحفظه.','success');}
+function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try{localStorage.setItem(SCREEN_ACCENT_KEY,color);}catch(e){}applyScreenStyle();}
+/* Standalone "الستايلات" screen. */
+(function(){
+  const overlay=document.getElementById('screenStylesOverlay');
+  const openBtn=document.getElementById('stylesSidebarBtn');
+  const closeBtn=document.getElementById('closeScreenStylesBtn');
+  function openStylesScreen(){
+    if(!overlay)return;
+    overlay.classList.remove('minimized');
+    overlay.classList.add('open');
+    try{__overlayTopZ+=1;overlay.style.zIndex=String(__overlayTopZ);}catch(e){}
+    applyScreenStyle();
+  }
+  if(openBtn)openBtn.addEventListener('click',openStylesScreen);
+  if(closeBtn)closeBtn.addEventListener('click',()=>overlay.classList.remove('open'));
+  if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});
+  window.openScreenStyles=openStylesScreen;
+})();
+
+applyTheme();
+applyScreenStyle();
 /* ================== Languages ==================
    BUG FIX / feature change (real, direct feedback: "اريد اللغات التالية...
    ارجو تطبيق نظام اللغات بشكل دقيق واحترافي" — restrict the language list to
@@ -10523,7 +10687,7 @@ async function verifyEmployeeLogin(username, password){
        when that specific permission is on for the current employee.
      - EDIT_ENTITY_BTN_IDS: gated on the single editRecords permission. */
 const ALWAYS_ADMIN_BTN_IDS = [
-  'settingsBtn','invoiceAppearanceSidebarBtn','manageUsersSidebarBtn','invoiceColumnsBtn',
+  'settingsBtn','stylesSidebarBtn','invoiceAppearanceSidebarBtn','manageUsersSidebarBtn','invoiceColumnsBtn',
 ];
 const PERMISSION_GATED_BTN_IDS = {
   addCases: ['addPatientCaseBtn'],
@@ -11348,6 +11512,12 @@ async function ensureHasEntity(kind, arr){
   return !!created;
 }
 
+/* ================== Independent application windows ==================
+   Screens are independent in-app windows. Opening another screen never closes
+   the screen underneath. Navigation handlers therefore keep parent windows
+   open; explicit إغلاق/رجوع actions close only the window the user requested.
+   ================== */
+
 /* ================== Overlay stacking manager ==================
    Any overlay that gets the 'open' class is automatically raised above every
    other currently-open overlay. This guarantees the newest screen is always on
@@ -11410,6 +11580,84 @@ const ALWAYS_TOP_OVERLAY_IDS = ['confirmOverlay', 'promptOverlay', 'storageSetup
   }else{
     observeAll();
     watchForNewOverlays();
+  }
+})();
+
+/* ================== Single-instance screen launcher ==================
+   A sidebar screen is one persistent in-app window. Clicking its button again
+   never rebuilds/resets that screen: if it is already open (even minimized),
+   it is restored and raised to the front. This preserves the exact form/filter
+   state the user left on the screen. */
+(function(){
+  const map={
+    incomingPaymentsBtn:'incomingPaymentOverlay',
+    expensePaymentsBtn:'expensePaymentOverlay',
+    cancelPaymentSidebarBtn:'cancelPaymentOverlay',
+    accountStatementSidebarBtn:'acctTypeOverlay',
+    collectDebtSidebarBtn:'collectDebtTypeOverlay',
+    debtsLogSidebarBtn:'duesReportOverlay',
+    checksRegisterSidebarBtn:'checksRegisterOverlay',
+    workLogSidebarBtn:'staffReportOverlay',
+    createInvoiceSidebarBtn:'invoiceTypeChooserOverlay',
+    invoiceAppearanceSidebarBtn:'invoiceAppearanceOverlay',
+    aboutSidebarBtn:'aboutOverlay',
+    manageUsersSidebarBtn:'manageUsersOverlay',
+    settingsBtn:'settingsOverlay',
+    stylesSidebarBtn:'screenStylesOverlay'
+  };
+  function focusOverlay(overlay){
+    if(!overlay)return;
+    overlay.classList.remove('minimized');
+    overlay.classList.add('open');
+    try{
+      if(typeof __overlayTopZ==='number'){
+        __overlayTopZ+=1;
+        overlay.style.zIndex=String(__overlayTopZ);
+      }
+    }catch(e){}
+    const modal=overlay.querySelector('.modal');
+    if(modal){
+      modal.dispatchEvent(new MouseEvent('pointerdown',{bubbles:true}));
+      const first=modal.querySelector('input,select,textarea,button');
+      if(first && first.id && /^(close|min|max)/i.test(first.id)) return;
+    }
+  }
+  Object.keys(map).forEach(btnId=>{
+    const btn=document.getElementById(btnId);
+    const overlayId=map[btnId];
+    if(!btn)return;
+    btn.addEventListener('click',function(e){
+      const ov=document.getElementById(overlayId);
+      // STYLES FIX: handle this button in the capture phase even on its first
+      // click. The old logic only intercepted clicks when the overlay was
+      // already open, while the dedicated bubble listener opened it later;
+      // other sidebar/delegated handlers could consume that first click.
+      if(btnId==='stylesSidebarBtn' && ov){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        focusOverlay(ov);
+        return;
+      }
+      if(ov && ov.classList.contains('open')){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        focusOverlay(ov);
+      }
+    },true);
+  });
+  /* Add-case is a main-area view rather than an overlay. It is still a single
+     screen and must retain its form state on repeated sidebar clicks. */
+  const caseBtn=document.getElementById('addPatientCaseBtn');
+  if(caseBtn){
+    caseBtn.addEventListener('click',function(e){
+      const view=document.getElementById('caseFormView');
+      if(view && getComputedStyle(view).display!=='none'){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        view.scrollIntoView({block:'start',behavior:'auto'});
+        window.scrollTo(0,0);
+      }
+    },true);
   }
 })();
 
@@ -12677,7 +12925,6 @@ function renderDuesReportPage(){
       <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;" dir="ltr">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
-      document.getElementById('duesReportOverlay').classList.remove('open');
       openDueReasonDetail(r.type, r.id);
     });
     return tr;
@@ -12850,14 +13097,12 @@ document.querySelectorAll('.collect-debt-type-btn').forEach(btn=>{
     // whole pick-a-person screen and goes straight to its own one-shot form
     // (see otherDebtEntryOverlay below).
     if(collectDebtType === 'other'){
-      document.getElementById('collectDebtTypeOverlay').classList.remove('open');
       openOtherDebtEntry();
       return;
     }
     const meta = COLLECT_DEBT_META[collectDebtType];
     // If this category is empty, offer to add one right here instead of an empty list.
     if(!meta.list().length){
-      document.getElementById('collectDebtTypeOverlay').classList.remove('open');
       const created = await quickAddEntity(collectDebtType);
       if(!created){ document.getElementById('collectDebtTypeOverlay').classList.add('open'); return; }
     }else{
@@ -12898,7 +13143,6 @@ function renderCollectDebtPick(search){
       <div class="amt" style="font-weight:800; color:${openTotal > 0 ? 'var(--red)' : 'var(--ink-dim)'};">${fmtMoney(openTotal)}</div>
     `;
     row.addEventListener('click', ()=>{
-      document.getElementById('collectDebtPickOverlay').classList.remove('open');
       openDebtEntry(collectDebtType, x.id);
     });
     return row;
@@ -13082,7 +13326,6 @@ document.getElementById('openSupplierPayablesFromDebtsLogBtn').addEventListener(
   // companies>0/doctors<0/labs<0/agents>0) is fully subsumed by it and is
   // no longer linked from anywhere; left in place, unreachable, rather than
   // deleted under time pressure (see README's dead-code note).
-  document.getElementById('debtsLogOverlay').classList.remove('open');
   openDuesReport();
 });
 document.querySelectorAll('.debts-log-filter').forEach(btn=>{
@@ -13192,7 +13435,6 @@ document.getElementById('debtsLogBody').addEventListener('click', async (e)=>{
   const ptype = e.target.getAttribute('data-open-debt-party');
   const pid = e.target.getAttribute('data-open-debt-id');
   if(!ptype) return;
-  document.getElementById('debtsLogOverlay').classList.remove('open');
   openDebtEntry(ptype, pid);
 });
 
@@ -13227,12 +13469,10 @@ document.getElementById('closeCalcBtn').addEventListener('click', ()=> calcOverl
 // payment to whichever party it actually belongs to before saving it.
 document.getElementById('calcToIncomingBtn').addEventListener('click', ()=>{
   const amount = parseFloat(document.getElementById('calcResult').textContent);
-  calcOverlay.classList.remove('open');
   openIncomingPaymentScreen('doctor', null, (isFinite(amount) && amount > 0) ? amount : null);
 });
 document.getElementById('calcToOutgoingBtn').addEventListener('click', ()=>{
   const amount = parseFloat(document.getElementById('calcResult').textContent);
-  calcOverlay.classList.remove('open');
   openExpensePaymentScreen('employee', null, (isFinite(amount) && amount > 0) ? amount : null);
 });
 /* Evaluates what is currently typed. The expression is stripped to digits and
@@ -13894,12 +14134,35 @@ document.getElementById('closeInvoiceTypeChooserBtn').addEventListener('click', 
   document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
 });
 document.getElementById('invoiceTypeSimpleBtn').addEventListener('click', ()=>{
-  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   openCreateInvoiceOverlay();
 });
 document.getElementById('invoiceTypeStatementBtn').addEventListener('click', ()=>{
-  document.getElementById('invoiceTypeChooserOverlay').classList.remove('open');
   document.getElementById('acctTypeOverlay').classList.add('open');
+});
+
+// Shortcut from "إنشاء فاتورة" to the existing case-invoice printer.
+function renderCaseInvoiceShortcutParties(){
+  const type=document.getElementById('caseInvoiceShortcutPartyType').value;
+  const select=document.getElementById('caseInvoiceShortcutParty');
+  const empty=document.getElementById('caseInvoiceShortcutEmpty');
+  const list=type==='doctor'?doctors:labs;
+  select.innerHTML=(Array.isArray(list)?list:[]).map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||'—')}</option>`).join('');
+  const has=select.options.length>0; select.disabled=!has; empty.style.display=has?'none':'block';
+  document.getElementById('caseInvoiceShortcutContinueBtn').disabled=!has;
+}
+document.getElementById('invoiceTypeCasesBtn').addEventListener('click',()=>{
+  document.getElementById('caseInvoiceShortcutOverlay').classList.add('open');
+  renderCaseInvoiceShortcutParties();
+});
+document.getElementById('closeCaseInvoiceShortcutBtn').addEventListener('click',()=>document.getElementById('caseInvoiceShortcutOverlay').classList.remove('open'));
+document.getElementById('caseInvoiceShortcutPartyType').addEventListener('change',renderCaseInvoiceShortcutParties);
+document.getElementById('caseInvoiceShortcutContinueBtn').addEventListener('click',()=>{
+  const type=document.getElementById('caseInvoiceShortcutPartyType').value;
+  const id=document.getElementById('caseInvoiceShortcutParty').value;
+  const list=type==='doctor'?doctors:labs;
+  const entity=(Array.isArray(list)?list:[]).find(x=>String(x.id)===String(id));
+  if(!entity) return;
+  openCaseInvoiceSelector(type,entity);
 });
 // The simple "🧾 إنشاء فاتورة" screen — per direct feedback this is back to
 // asking only who the invoice is for, its reason/amount, and which currency
@@ -13908,7 +14171,6 @@ document.getElementById('invoiceTypeStatementBtn').addEventListener('click', ()=
 // #invoiceAppearanceOverlay screen — see openInvoiceAppearanceOverlay()
 // below — reached from its own sidebar button, not from in here.
 function openCreateInvoiceOverlay(){
-  document.getElementById('purchaseOverlay').classList.remove('open');
   document.getElementById('createInvoiceForm').reset();
   document.getElementById('invRecipientType').value = 'doctor';
   renderInvoiceRecipientPicker();
@@ -13927,7 +14189,6 @@ const invoiceAppearanceOverlay = document.getElementById('invoiceAppearanceOverl
 document.getElementById('invoiceAppearanceSidebarBtn').addEventListener('click', ()=> openInvoiceAppearanceOverlay());
 function openInvoiceAppearanceOverlay(opts){
   opts = opts || {};
-  document.getElementById('purchaseOverlay').classList.remove('open');
   renderInvoiceSettingsPanel();
   invoiceAppearanceOverlay.classList.add('open');
   if(opts.focusFirstField){
@@ -14384,7 +14645,6 @@ function renderDebtsReportPage(){
       <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
-      document.getElementById('debtsReportOverlay').classList.remove('open');
       r.openFn();
     });
     return tr;
@@ -14394,23 +14654,18 @@ function renderDebtsReportPage(){
 const statementsTypeOverlay = document.getElementById('statementsTypeOverlay');
 document.getElementById('closeStatementsTypeBtn').addEventListener('click', ()=> statementsTypeOverlay.classList.remove('open'));
 document.getElementById('statementsTypeStaffBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openStaffPicker('statement');
 });
 document.getElementById('statementsTypeDoctorBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openDoctorsDirectory();
 });
 document.getElementById('statementsTypeLabBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openLabsPicker();
 });
 document.getElementById('statementsTypeCompanyBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openCompaniesPicker();
 });
 document.getElementById('statementsTypeAgentBtn').addEventListener('click', ()=>{
-  statementsTypeOverlay.classList.remove('open');
   openAgentsPicker();
 });
 document.getElementById('closeDebtsReportBtn').addEventListener('click', ()=> document.getElementById('debtsReportOverlay').classList.remove('open'));
@@ -14539,7 +14794,6 @@ function renderCasesReportPage(){
     `;
     tr.querySelector('[data-edit-case-report]').addEventListener('click', (ev)=>{
       ev.stopPropagation();
-      document.getElementById('casesReportOverlay').classList.remove('open');
       openEditCaseModal(c.ownerType, c.ownerId, c.id);
     });
     tr.querySelector('[data-del-case-report]').addEventListener('click', async (ev)=>{
@@ -14743,13 +14997,17 @@ function renderUnifiedNotifications(){
     const amount=item.kind==='financial'?'<div class="amt" style="color:'+(item.overdue?'var(--red)':'var(--teal)')+';">'+(item.overdue?'⚠️ ':'')+fmtMoney(item.amount)+'</div>':'<div class="amt">'+escapeHtml(String(item.date||''))+'</div>';
     row.innerHTML='<div><div class="who">'+icon+' '+escapeHtml(item.title)+'</div><div class="what">'+status+escapeHtml(item.text)+'</div></div>'+amount+'<button type="button" class="unified-notif-dismiss" title="إزالة الإشعار" aria-label="إزالة الإشعار">×</button>';
     row.querySelector('.unified-notif-dismiss').addEventListener('click',(ev)=>{ev.preventDefault();ev.stopPropagation();dismissUnifiedNotification(item);});
-    row.addEventListener('click',()=>{if(item.kind==='note'){unifiedNotifOverlay.classList.remove('open');openNoteView(item.id);}else if(item.kind==='financial'&&item.payload){unifiedNotifOverlay.classList.remove('open');const p=item.payload;if(p.isDebt){if(p.partyType==='other'){openDebtsLog();}else{openDebtEntry(p.partyType,p.partyId);}}else if(p.partyType==='doctor')selectDoctor(p.partyId);}else if(item.kind==='delivery'&&item.payload){unifiedNotifOverlay.classList.remove('open');openCaseOwner(item.payload);}});
+    row.addEventListener('click',()=>{if(item.kind==='note'){openNoteView(item.id);}else if(item.kind==='financial'&&item.payload){const p=item.payload;if(p.isDebt){if(p.partyType==='other'){openDebtsLog();}else{openDebtEntry(p.partyType,p.partyId);}}else if(p.partyType==='doctor')selectDoctor(p.partyId);}else if(item.kind==='delivery'&&item.payload){openCaseOwner(item.payload);}});
     body.appendChild(row);
   });
 }
 function openUnifiedNotifications(){renderUnifiedNotifications();unifiedNotifOverlay.classList.add('open');}
 document.getElementById('deliveryNotifBtn').addEventListener('click',openUnifiedNotifications);
 document.getElementById('closeUnifiedNotifBtn').addEventListener('click',()=>unifiedNotifOverlay.classList.remove('open'));
+// Legacy notification windows are kept for compatibility; their visible close buttons
+// must still work if an older flow ever opens them.
+document.getElementById('closeDeliveryNotifBtn').addEventListener('click',()=>document.getElementById('deliveryNotifOverlay').classList.remove('open'));
+document.getElementById('closePaymentNotifBtn').addEventListener('click',()=>document.getElementById('paymentNotifOverlay').classList.remove('open'));
 unifiedNotifOverlay.addEventListener('click',e=>{if(e.target===unifiedNotifOverlay)unifiedNotifOverlay.classList.remove('open');});
 
 /* ================== Case count filter (home stat card) ================== */
@@ -14837,8 +15095,6 @@ function openCaseIdCard(ownerType, ownerId, caseId){
 document.getElementById('closeCaseIdCardBtn').addEventListener('click', ()=> document.getElementById('caseIdCardOverlay').classList.remove('open'));
 document.getElementById('caseIdCardEditBtn').addEventListener('click', ()=>{
   if(!caseIdCardRef) return;
-  document.getElementById('caseIdCardOverlay').classList.remove('open');
-  caseFilterOverlay.classList.remove('open');
   openEditCaseModal(caseIdCardRef.ownerType, caseIdCardRef.ownerId, caseIdCardRef.caseId);
 });
 document.getElementById('caseIdCardHistoryBtn').addEventListener('click', ()=>{
@@ -14873,7 +15129,7 @@ function renderCaseGrid(d){
       <span class="status-pill status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
       <div class="case-actions">
         <button type="button" class="icon-btn" data-edit-case="${c.id}">تعديل</button>
-        <button type="button" class="icon-btn danger" data-del-case="${c.id}">حذف</button>
+        <button type="button" class="icon-btn danger" data-del-case="${c.id}" title="حذف الحالة" aria-label="حذف الحالة">🗑 حذف</button>
       </div>
     `;
     grid.appendChild(card);
@@ -15040,7 +15296,6 @@ function renderDirectoryResults(query){
         <span class="d-match-tag">نتيجة من حالة</span>
       `;
       row.addEventListener('click', ()=>{
-        doctorsDirectoryOverlay.classList.remove('open');
         selectDoctor(r.doctor.id);
         setTimeout(()=> showToast(`فتحت سجل د. ${r.doctor.name} — الحالة ID ${r.caseItem.caseNumber}`, 'info'), 300);
       });
@@ -15076,7 +15331,6 @@ document.getElementById('editDoctorFromDetailsBtn').addEventListener('click', ()
   document.getElementById('dPhone').value = d.phone || '';
   document.getElementById('dClinic').value = d.clinic || '';
   document.getElementById('dNotes').value = d.notes || '';
-  doctorDetailsOverlay.classList.remove('open');
   doctorOverlay.classList.add('open');
 });
 document.getElementById('deleteDoctorFromDetailsBtn').addEventListener('click', async ()=>{
@@ -17762,7 +18016,6 @@ document.getElementById('editLabFromDetailsBtn').addEventListener('click', ()=>{
   document.getElementById('labName').value = l.name || '';
   document.getElementById('labAddress').value = l.address || '';
   document.getElementById('labNotes').value = l.notes || '';
-  document.getElementById('labDetailsOverlay').classList.remove('open');
   labAddOverlay.classList.add('open');
 });
 document.getElementById('deleteLabFromDetailsBtn').addEventListener('click', async ()=>{
@@ -17956,12 +18209,11 @@ function renderLabCasesList(l){
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <div class="amt" style="color:var(--red);">${fmtMoney(en.cost)}</div>
-          <button type="button" class="icon-btn danger" data-del-lab-case="${en.id}">حذف</button>
+          <button type="button" class="icon-btn danger" data-del-lab-case="${en.id}" title="حذف الحالة" aria-label="حذف الحالة">🗑 حذف</button>
         </div>
       `;
       row.addEventListener('click', (ev)=>{
         if(ev.target.closest('[data-del-lab-case]')) return;
-        labCasesOverlay.classList.remove('open');
         openEditCaseModal('lab', l.id, en.id);
       });
     }else{
@@ -18565,7 +18817,6 @@ function renderStaffReportPage(){
       <td style="padding:9px 12px; text-align:center; font-weight:700; color:var(--teal);">${technicianCaseCountLast30Days(t)}</td>
     `;
     tr.addEventListener('click', ()=>{
-      staffReportOverlay.classList.remove('open');
       openStaffStatement(t.id);
     });
     return tr;
@@ -18639,7 +18890,6 @@ function openStaffDetails(id){
     <div style="margin-top:14px;"><b>🚫 الغياب</b><div style="margin-top:6px;">${absencesHtml}</div></div>
   `;
   document.getElementById('staffDetailsCaseCountLink').addEventListener('click', ()=>{
-    staffDetailsOverlay.classList.remove('open');
     openWorkLog(t.id);
   });
   document.getElementById('editStaffFromDetailsBtn').setAttribute('data-tech-id', t.id);
@@ -20110,7 +20360,6 @@ document.getElementById('editCompanyFromDetailsBtn').addEventListener('click', (
   document.getElementById('companyAddressInput2').value = c.address || '';
   document.getElementById('companyPhoneInput2').value = c.phone || '';
   document.getElementById('companyNotesInput2').value = c.notes || '';
-  document.getElementById('companyDetailsOverlay').classList.remove('open');
   companyAddOverlay.classList.add('open');
 });
 document.getElementById('deleteCompanyFromDetailsBtn').addEventListener('click', async ()=>{
@@ -20499,7 +20748,6 @@ document.getElementById('editAgentFromDetailsBtn').addEventListener('click', ()=
   document.getElementById('newAgentAddressInput').value = a.address || '';
   document.getElementById('newAgentNotesInput').value = a.notes || '';
   document.getElementById('newAgentNameInput').setAttribute('data-edit-agent-id', a.id);
-  document.getElementById('agentDetailsOverlay').classList.remove('open');
   document.getElementById('agentsOverlay').classList.add('open');
 });
 document.getElementById('deleteAgentFromDetailsBtn').addEventListener('click', async ()=>{
@@ -20535,7 +20783,6 @@ document.getElementById('editAgentInfoBtn').addEventListener('click', ()=>{
   document.getElementById('newAgentAddressInput').value = a.address || '';
   document.getElementById('newAgentNotesInput').value = a.notes || '';
   document.getElementById('newAgentNameInput').setAttribute('data-edit-agent-id', a.id);
-  document.getElementById('agentStatementOverlay').classList.remove('open');
   document.getElementById('agentsOverlay').classList.add('open');
 });
 function renderAgentStatementStat(a){
@@ -20686,13 +20933,28 @@ document.getElementById('apFontRange').addEventListener('input', (e)=> setFontSc
 document.getElementById('apResetBtn').addEventListener('click', ()=>{
   setFontScale(100); setFontFamily('tajawal');
 });
+// Screen styles live in their own overlay, so their click handler must be
+// attached to that overlay (not Settings). Apply immediately on the same click.
+const __screenStylesOverlayEl=document.getElementById('screenStylesOverlay');
+if(__screenStylesOverlayEl) __screenStylesOverlayEl.addEventListener('click',(e)=>{
+  const card=e.target.closest('[data-screen-style]');
+  if(!card) return;
+  e.preventDefault();
+  e.stopPropagation();
+  setScreenStyle(card.getAttribute('data-screen-style'));
+});
+
 // Delegated on the settings window, since the controls now live inside it.
 document.getElementById('settingsOverlay').addEventListener('click', (e)=>{
+  const screenStyle=e.target.closest('[data-screen-style]');
+  if(screenStyle){setScreenStyle(screenStyle.getAttribute('data-screen-style'));return;}
   const preset = e.target.closest('[data-font-preset]');
   if(preset){ setFontScale(Number(preset.getAttribute('data-font-preset'))); return; }
   const font = e.target.closest('[data-font-id]');
   if(font) setFontFamily(font.getAttribute('data-font-id'));
 });
+
+const __screenAccentColorEl=document.getElementById('screenAccentColor'); if(__screenAccentColorEl) __screenAccentColorEl.addEventListener('input',e=>setScreenAccent(e.target.value));
 
 /* ---- languages (a tab inside Settings) ---- */
 document.getElementById('langSearch').addEventListener('input', (e)=> renderLanguageList(e.target.value));

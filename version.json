@@ -1,6 +1,7 @@
 {
-    "version":  "11.0.0",
-    "notes":  "AL EKHLAS 11.0.0 update",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-    "sha256":  "f197850bc6a56cfb3483b5063e7b1fb3b2bc722cb818bdd6cb60e11e9b1ba806"
+    "version":  "11.0.1",
+    "notes":  "AL EKHLAS version 11.0.1",
+    "url":  "app.html",
+    "sha256":  "d3abd62ea185fb095ab03f61c5ac95a533b6d4f6f0081bec2bf2d3e4e5b67d92",
+    "generatedAt":  "2026-08-31T16:00:04.0657255Z"
 }

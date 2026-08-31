@@ -4814,7 +4814,6 @@ input:focus, select:focus, textarea:focus {
            Settings at all (see that overlay's own comment). -->
       <button type="button" class="settings-tab" data-tab="storage">📍 مكان تخزن البيانات والنسخ الاحتياطي</button>
       <button type="button" class="settings-tab" data-tab="backup">💾 النسخ الاحتياطي</button>
-      <button type="button" class="settings-tab" data-tab="update">🔄 تحديث البرنامج</button>
       <button type="button" class="settings-tab" data-tab="appearance">🔠 حجم الخط ونوعه</button>
       <button type="button" class="settings-tab" data-tab="language">🌐 اللغة</button>
       <button type="button" class="settings-tab" data-tab="dhikr">🕌 الأذكار</button>
@@ -4928,52 +4927,6 @@ input:focus, select:focus, textarea:focus {
       </div>
     </div>
 
-    <div class="settings-panel" data-panel="update" style="display:none;">
-      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
-        <div style="font-size:13.5px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
-      </div>
-      <div class="field" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px;">
-        <label style="display:flex; align-items:center; gap:8px; margin:0; font-weight:700; cursor:pointer;">
-          <input type="checkbox" id="autoUpdateCheckToggle" style="width:auto; margin:0;" checked>
-          فحص التحديثات تلقائيًا يوميًا (يتطلب اتصال إنترنت)
-        </label>
-        <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="margin-top:10px;">🌐 فحص التحديثات الآن</button>
-        <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-      </div>
-      <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
-           بالاصدار السابق في حال كان الابديت فيه مشاكل ارجع خطوة لورا"):
-           installUpdate() always keeps exactly one previous version as a
-           local .bak before overwriting — this button restores it. Desktop
-           only (there is nothing to swap in the browser edition, which
-           never self-replaces a file in the first place). -->
-      <div class="field" id="rollbackUpdateField" style="background:var(--panel-2); border-radius:8px; padding:12px 14px; margin-bottom:16px; display:none;">
-        <div style="font-weight:900; margin-bottom:6px;">↩️ التراجع عن آخر تحديث</div>
-        <div class="muted" style="font-size:12px; line-height:1.8; margin-bottom:10px;">لو صار عندك مشكلة بعد تحديث البرنامج، هذا الزر يرجعك تلقائيًا للإصدار الذي كان يعمل قبل آخر تحديث مباشرة.</div>
-        <button type="button" class="btn-ghost btn-small danger" id="rollbackUpdateBtn" style="width:100%; color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
-        <div class="muted" id="rollbackUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-      </div>
-      <!-- BUG FIX (real, confirmed defect — direct feedback): the old
-           "🔄 تحديث البرنامج الآن" button below this comment was ALWAYS
-           disabled unless a separate, easy-to-miss "تحديد ملف البرنامج"
-           step ran first, and even then only actually worked in a
-           browser edition with the File System Access API — on desktop
-           the real update path has always been the online one above
-           (🌐 فحص التحديثات الآن / the 🎉 banner), which downloads,
-           verifies, installs and relaunches automatically via the main
-           process. The dead manual button and its file picker were
-           removed entirely rather than fixed — there was nothing for a
-           user to correctly operate, since the real update mechanism
-           never needed them. "تحديد ملف البرنامج" itself is kept below
-           because it still has a real, separate job: letting a password
-           change (see "كلمة المرور والحماية") persist permanently inside
-           this file instead of only on this one device. -->
-      <div class="field">
-        <button type="button" class="btn-primary btn-small" id="pickAppFileBtn">📄 تحديد ملف البرنامج (مرة واحدة)</button>
-        <div class="muted" id="appUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
-        <div class="muted" style="margin-top:6px; line-height:1.7;">يُستخدم فقط لحفظ تغيير كلمة السر بشكل دائم داخل هذا الملف نفسه (من تبويب "كلمة المرور والحماية") — لا علاقة له بتحديث البرنامج، الذي يتم تلقائيًا بالكامل من الأعلى عبر "🌐 فحص التحديثات الآن".</div>
-      </div>
-    </div>
-
     <div class="settings-panel" data-panel="lock" style="display:none;">
       <div id="trialBadgeSettings" style="display:none; margin-bottom:16px; padding:11px 14px; border-radius:9px; color:#fff; font-size:13.5px; font-weight:800; text-align:center;"></div>
       <div class="section-head" style="margin:0 0 12px;"><h2 style="font-size:14px;">تغيير كلمة السر</h2></div>
@@ -4988,6 +4941,11 @@ input:focus, select:focus, textarea:focus {
         <button type="submit" class="btn-primary btn-small">حفظ التغييرات</button>
       </form>
       <div class="muted" id="lockPersistStatusText" style="margin-top:14px; line-height:1.7;"></div>
+      <div class="field">
+        <button type="button" class="btn-primary btn-small" id="pickAppFileBtn">📄 تحديد ملف البرنامج (مرة واحدة)</button>
+        <div class="muted" id="appUpdateStatusText" style="margin-top:8px; line-height:1.6;"></div>
+        <div class="muted" style="margin-top:6px; line-height:1.7;">يُستخدم فقط لحفظ تغيير كلمة السر بشكل دائم داخل هذا الملف نفسه (من تبويب "كلمة المرور والحماية") — لا علاقة له بتحديث البرنامج، الذي يتم تلقائيًا بالكامل من الأعلى عبر "🌐 فحص التحديثات الآن".</div>
+      </div>
 
       <div class="section-head" style="margin:26px 0 12px;"><h2 style="font-size:14px;">قفل الآن</h2></div>
       <div class="field">
@@ -5146,44 +5104,44 @@ input:focus, select:focus, textarea:focus {
 </div>
 
 <div class="overlay" id="aboutOverlay">
-  <div class="modal narrow">
-    <h2><span>حول البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeAboutBtn">إغلاق</button></h2>
-    <div style="text-align:center;">
-      <div class="brand-mark" style="margin:0 auto 16px; width:56px; height:56px; font-size:18px;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBlN2M5ZSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNGEyYzkiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0idXJsKCNnKSIvPgo8cGF0aCBkPSJNMzIgMTRjLTQuNSAwLTYuOCAyLjMtOS4yIDIuMy0zIDAtNS4zLTItNy44LTItNCAwLTYuNSAzLjYtNi41IDkuMiAwIDYuNSAzLjMgMTUuNSA2LjIgMjAuOCAxLjcgMy4xIDMgNC45IDQuOCA0LjkgMi40IDAgMi42LTUuNiA0LjQtOS43IDEtMi4zIDItMy4zIDMuNi0zLjNzMi42IDEgMy42IDMuM2MxLjggNC4xIDIgOS43IDQuNCA5LjcgMS44IDAgMy4xLTEuOCA0LjgtNC45IDIuOS01LjMgNi4yLTE0LjMgNi4yLTIwLjggMC01LjYtMi41LTkuMi02LjUtOS4yLTIuNSAwLTQuOCAyLTcuOCAyLTEuMSAwLTItLjMtMi43LS42eiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4=" alt="شعار"></div>
-      <p style="font-size:14.5px; line-height:2; color:var(--ink);">
-        <b id="aboutProgramName">AL EKHLAS لإدارة العيادات والمختبرات السنية</b><br>
-        تم إنشاء وتطوير هذا البرنامج من قبل<br>
-        <b>المهندس محمد الحموي</b>
-      </p>
-      <div class="muted" id="aboutVersionText" style="margin-bottom:8px; font-size:13px;"></div>
-      <!-- Remaining activation/trial duration, per direct feedback ("زر حول
-           البرنامج حط فيه مدة التفعيل يلي باقيه") — reuses the exact same
-           status text already computed for the lock screen's own info tab
-           (getActivationStatusMessage()/licenseRemainingSummaryText()), so
-           it always agrees with what the lock screen itself would say. -->
-      <div id="aboutLicenseStatus" style="display:inline-block; margin-bottom:14px; padding:6px 16px; border-radius:20px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
-      <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:4px;">
-        <div style="font-size:13.5px; font-weight:800; margin-bottom:8px;">للتواصل والدعم الفني</div>
-        <div dir="ltr" style="font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:800; color:var(--teal); margin-bottom:12px;">+962 78 714 5048</div>
-        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-          <a href="https://wa.me/962787145048" target="_blank" rel="noopener"
-             style="display:inline-block; background:#25D366; color:#fff; padding:11px 22px; border-radius:9px; font-weight:800; font-size:14px; text-decoration:none;">
-            💬 واتساب
-          </a>
-          <a href="tel:+962787145048"
-             style="display:inline-block; background:var(--teal); color:#fff; padding:11px 22px; border-radius:9px; font-weight:800; font-size:14px; text-decoration:none;">
-            📞 اتصال بالمطور
-          </a>
-        </div>
+  <div class="modal narrow about-gold-modal">
+    <h2><span>ℹ️ حول البرنامج</span><button type="button" class="btn-ghost btn-small" id="closeAboutBtn">إغلاق</button></h2>
+    <div class="about-gold-hero">
+      <div class="about-gold-mark">✦</div>
+      <div class="about-gold-title" id="aboutProgramName">AL EKHLAS</div>
+      <div class="about-gold-subtitle">معلومات البرنامج والتحديثات والإصدارات</div>
+      <div class="about-gold-version" id="aboutVersionText">الإصدار الحالي: —</div>
+    </div>
+
+    <div id="aboutLicenseStatus" style="display:inline-block; margin:14px 0 8px; padding:6px 16px; border-radius:20px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
+
+    <div class="about-update-card">
+      <div class="about-card-title">🔄 تحديث البرنامج</div>
+      <div class="muted" id="aboutUpdateStatusText" style="font-size:12.5px; line-height:1.8; margin-bottom:10px;">يتم فحص التحديثات تلقائيًا عند تشغيل البرنامج وكل ساعة أثناء تشغيله.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-primary btn-small" id="aboutCheckUpdatesBtn">🌐 فحص التحديث الآن</button>
+        <button type="button" class="btn-ghost btn-small" id="aboutRollbackUpdateBtn" style="color:var(--red); border-color:var(--red);">↩️ الرجوع للإصدار السابق</button>
       </div>
-      <!-- 🛒 اطلب أيضًا برنامج: moved here from its own standalone
-           sidebar-footer icon per direct feedback ("وزر اطلب ايضا حطو جوا
-           زر حول البرنامج") — same #openOrderSoftwareCard id/handler and
-           #orderSoftwareOverlay it always opened, just reached from inside
-           "حول البرنامج" now instead of a separate footer icon. -->
-      <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:14px;">
-        <button type="button" class="btn-ghost btn-small" id="openOrderSoftwareCard" style="width:100%;">🛒 اطلب أيضًا برنامج</button>
+    </div>
+
+    <div class="about-changelog-card">
+      <div class="about-card-title">📋 سجل إصدارات البرنامج</div>
+      <div class="muted" style="font-size:12px; line-height:1.7; margin-bottom:10px;">من هنا يستطيع العميل معرفة ماذا تم تطويره وإصلاحه في كل إصدار.</div>
+      <div id="aboutChangelogList" class="about-changelog-list">
+        <div class="muted" style="text-align:center; padding:14px;">جارٍ تحميل سجل الإصدارات...</div>
       </div>
+    </div>
+
+    <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:14px;">
+      <div style="font-size:13.5px; font-weight:800; margin-bottom:8px;">للتواصل والدعم الفني</div>
+      <div dir="ltr" style="font-family:'Segoe UI', Arial, Helvetica, sans-serif; font-size:16px; font-weight:800; color:var(--teal); margin-bottom:12px;">+962 78 714 5048</div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <a href="https://wa.me/962787145048" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#fff; padding:11px 22px; border-radius:9px; font-weight:800; font-size:14px; text-decoration:none;">💬 واتساب</a>
+        <a href="tel:+962787145048" style="display:inline-block; background:var(--teal); color:#fff; padding:11px 22px; border-radius:9px; font-weight:800; font-size:14px; text-decoration:none;">📞 اتصال بالمطور</a>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--line); padding-top:14px; margin-top:14px;">
+      <button type="button" class="btn-ghost btn-small" id="openOrderSoftwareCard" style="width:100%;">🛒 اطلب أيضًا برنامج</button>
     </div>
   </div>
 </div>
@@ -5359,7 +5317,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '11.0.0';
+const APP_VERSION = '11.0.1';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -21189,36 +21147,112 @@ if(invoicePreviewButton) invoicePreviewButton.addEventListener('click', ()=>{
   });
 });
 
-/* ================== About modal ================== */
+/* ================== About modal + updates ================== */
 const aboutOverlay = document.getElementById('aboutOverlay');
-document.getElementById('aboutSidebarBtn').addEventListener('click', ()=>{
-  const nameEl = document.getElementById('aboutProgramName');
-  if(nameEl) nameEl.textContent = brand().full;
-  const verEl = document.getElementById('aboutVersionText');
-  if(verEl) verEl.textContent = 'الإصدار الحالي: ' + brand().name + ' v' + APP_VERSION;
-  const licEl = document.getElementById('aboutLicenseStatus');
-  if(licEl){
-    const st = licenseRemainingSummaryText();
-    licEl.textContent = st.text;
-    licEl.style.color = st.color;
+let latestAboutUpdateInfo = null;
+function escapeAboutHtml(v){
+  return String(v ?? '').replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+function renderAboutChangelog(history){
+  const host = document.getElementById('aboutChangelogList');
+  if(!host) return;
+  const items = Array.isArray(history) ? history.slice() : [];
+  if(!items.some(x=>String(x.version||'')===String(APP_VERSION))){
+    items.unshift({version:APP_VERSION,date:'',notes:['تحسينات وإصلاحات مستقرة في هذا الإصدار.']});
   }
-  aboutOverlay.classList.add('open');
-});
-document.getElementById('closeAboutBtn').addEventListener('click', ()=> aboutOverlay.classList.remove('open'));
-
-function currentAppFilePath(){
+  items.sort((a,b)=>{
+    const av=String(a.version||'').split('.').map(Number), bv=String(b.version||'').split('.').map(Number);
+    for(let i=0;i<Math.max(av.length,bv.length);i++){const x=av[i]||0,y=bv[i]||0;if(x!==y)return y-x;}
+    return 0;
+  });
+  host.innerHTML = items.length ? items.map(item=>{
+    const notes = Array.isArray(item.notes) ? item.notes : (item.notes ? [item.notes] : []);
+    return `<div class="about-release">
+      <div class="about-release-head"><span class="about-release-version">الإصدار ${escapeAboutHtml(item.version||'—')}</span><span class="about-release-date">${escapeAboutHtml(item.date||item.releaseDate||'')}</span></div>
+      ${notes.length ? `<ul>${notes.slice(0,30).map(n=>`<li>${escapeAboutHtml(n)}</li>`).join('')}</ul>` : '<div class="muted" style="font-size:12px;">لا توجد تفاصيل مسجلة لهذا الإصدار.</div>'}
+    </div>`;
+  }).join('') : '<div class="muted" style="text-align:center;padding:14px;">لا يوجد سجل إصدارات منشور حاليًا.</div>';
+}
+function updateAboutStatus(msg,color){
+  const el=document.getElementById('aboutUpdateStatusText');
+  if(el){el.textContent=msg;el.style.color=color||'var(--ink-dim)';}
+}
+function showAboutUpdateBanner(info){
+  latestAboutUpdateInfo=info;
+  const banner=document.getElementById('updateBanner');
+  const text=document.getElementById('updateBannerText');
+  if(!banner||!text)return;
+  text.textContent = info.sameVersionContentUpdate
+    ? '🎉 يوجد تحديث جديد لمحتوى الإصدار v'+info.version
+    : '🎉 يتوفر إصدار جديد v'+info.version+' من البرنامج';
+  banner.classList.add('show');
+  document.body.classList.add('has-update-banner');
+  requestAnimationFrame(()=>document.documentElement.style.setProperty('--update-banner-h',banner.offsetHeight+'px'));
+}
+async function runAboutUpdateCheck(manual){
+  if(!navigator.onLine){ if(manual) updateAboutStatus('لا يوجد اتصال بالإنترنت حاليًا.','var(--red)'); return; }
+  if(manual) updateAboutStatus('جارٍ الفحص الآمن عن آخر إصدار...','var(--teal)');
   try{
-    let p = decodeURIComponent(location.pathname);
-    if(/^\/[A-Za-z]:\//.test(p)) p = p.slice(1);
-    return p || 'غير معروف';
-  }catch(e){ return 'غير معروف'; }
+    const info=await window.ekhlasDesktop.checkForUpdate();
+    if(!info){ if(manual) updateAboutStatus('تعذّر الوصول لخادم التحديثات حاليًا. سيتم إعادة المحاولة تلقائيًا.','var(--red)'); return; }
+    latestAboutUpdateInfo=info;
+    renderAboutChangelog(info.history);
+    if(info.available){
+      showAboutUpdateBanner(info);
+      updateAboutStatus(info.sameVersionContentUpdate ? 'يوجد تحديث جديد لمحتوى الإصدار الحالي.' : 'يتوفر الإصدار '+info.version+'.','var(--green)');
+      if(manual) await installAboutUpdate(info);
+    }else{
+      updateAboutStatus('أنت تستخدم أحدث نسخة متاحة حاليًا: v'+APP_VERSION+'.','var(--green)');
+    }
+  }catch(e){
+    console.error('about update check failed',e);
+    if(manual) updateAboutStatus('تعذّر إكمال فحص التحديث. سيتم المحاولة لاحقًا.','var(--red)');
+  }
 }
-function hardReloadAppFile(){
-  location.reload();
+async function installAboutUpdate(info){
+  if(!info.rawUrl){ updateAboutStatus('رابط التحديث غير مضبوط في ملف الإصدار.','var(--red)'); return; }
+  const summary=info.sameVersionContentUpdate
+    ? 'يوجد تحديث جديد لنفس رقم الإصدار (إصلاحات/تحسينات داخلية).\n\n'+formatUpdateNotesForDialog(info.notes)+'\nهل تريد تثبيته الآن؟'
+    : 'يتوفر تحديث جديد للبرنامج: v'+info.version+'\n\n'+formatUpdateNotesForDialog(info.notes)+'\nهل تريد تحميله وتثبيته الآن؟';
+  const ok=await customConfirm(summary);
+  if(!ok)return;
+  updateAboutStatus('جارٍ تحميل وفحص التحديث قبل الاستبدال...','var(--teal)');
+  const result=await window.ekhlasDesktop.installUpdate(info.rawUrl,info.sha256||null);
+  if(result&&result.ok){
+    showToast('تم تثبيت التحديث بنجاح، جارٍ إعادة فتح البرنامج...','success');
+    setTimeout(()=>window.ekhlasDesktop.relaunchApp(),900);
+  }else if(result&&result.reason==='checksum-mismatch'){
+    updateAboutStatus('تم رفض التحديث لأن البصمة الرقمية لا تطابق الملف. لم يتم تغيير أي ملف.','var(--red)');
+  }else if(result&&result.reason==='downgrade-blocked'){
+    updateAboutStatus('تم رفض التحديث لأنه أقدم من الإصدار المثبت.','var(--red)');
+  }else if(result&&result.reason==='already-installed'){
+    updateAboutStatus('هذا التحديث مثبت بالفعل.','var(--green)');
+  }else{
+    updateAboutStatus('فشل تثبيت التحديث. لم يتم حذف النسخة الحالية. حاول مرة أخرى.','var(--red)');
+  }
 }
-document.getElementById('appVersionBadge').textContent = 'v' + APP_VERSION;
-document.getElementById('aboutVersionText').textContent = 'الإصدار الحالي: AL EKHLAS v' + APP_VERSION;
-document.getElementById('updateTabVersionText').textContent = 'AL EKHLAS v' + APP_VERSION;
+function refreshAbout(){
+  const nameEl=document.getElementById('aboutProgramName'); if(nameEl) nameEl.textContent=brand().full;
+  const verEl=document.getElementById('aboutVersionText'); if(verEl) verEl.textContent='الإصدار الحالي: '+brand().name+' v'+APP_VERSION;
+  const licEl=document.getElementById('aboutLicenseStatus');
+  if(licEl){const st=licenseRemainingSummaryText();licEl.textContent=st.text;licEl.style.color=st.color;}
+  renderAboutChangelog([]);
+  runAboutUpdateCheck(false);
+}
+document.getElementById('aboutSidebarBtn').addEventListener('click',()=>{aboutOverlay.classList.add('open');refreshAbout();});
+document.getElementById('closeAboutBtn').addEventListener('click',()=>aboutOverlay.classList.remove('open'));
+document.getElementById('aboutCheckUpdatesBtn').addEventListener('click',()=>runAboutUpdateCheck(true));
+document.getElementById('aboutRollbackUpdateBtn').addEventListener('click',async()=>{
+  const ok=await customConfirm('سيتم الرجوع إلى النسخة التي كانت مثبتة قبل آخر تحديث. هل تريد المتابعة؟',{danger:true,okText:'الرجوع'});
+  if(!ok)return;
+  const result=await window.ekhlasDesktop.rollbackUpdate();
+  if(result&&result.ok){showToast('تم الرجوع للإصدار السابق، جارٍ إعادة فتح البرنامج...','success');setTimeout(()=>window.ekhlasDesktop.relaunchApp(),900);}
+  else updateAboutStatus('لا توجد نسخة سابقة صالحة للرجوع إليها.','var(--red)');
+});
+
+document.getElementById('appVersionBadge').textContent='v'+APP_VERSION;
+document.getElementById('aboutVersionText').textContent='الإصدار الحالي: AL EKHLAS v'+APP_VERSION;
+document.getElementById('updateTabVersionText').textContent='AL EKHLAS v'+APP_VERSION;
 
 /* ================== Render root ================== */
 function render(){
@@ -22566,115 +22600,11 @@ function formatUpdateNotesForDialog(notes){
   return '\n' + clipped + '\n';
 }
 
-async function checkForUpdates(manual){
-  const statusEl = document.getElementById('onlineUpdateStatusText');
-  const setStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
-  if(!navigator.onLine){
-    if(manual) setStatus('لا يوجد اتصال بالإنترنت حاليًا.', 'var(--red)');
-    return;
-  }
-  if(manual) setStatus('جارٍ الفحص...');
+// The desktop updater is centralized in runAboutUpdateCheck(). The old
+// duplicate browser/Settings checker was removed so there is exactly one
+// update path, one banner, and one hourly timer.
 
-  /* Desktop app: real one-click self-update (download + replace + restart). */
-  if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
-    try{
-      const info = await window.ekhlasDesktop.checkForUpdate();
-      if(!info){
-        if(manual) setStatus('تعذّر الوصول لخادم التحديثات. تأكد من الاتصال أو من وجود ملف version.json في المستودع.', 'var(--red)');
-        return;
-      }
-      if(info.available){
-        setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
-        // BUG FIX: this used to pop the confirm dialog on EVERY automatic
-        // startup check too (manual=false, fired 8s after every launch,
-        // unconditionally) — not just when the user actually clicked "🌐 فحص
-        // التحديثات الآن" themselves. That meant a confirm() could silently
-        // open behind #lockScreen before the user even logs in (lockScreen's
-        // z-index sits above the dialog's on purpose, so it's not visible),
-        // then pop into view the moment they unlock — unprompted, disconnected
-        // from anything they clicked. Worse, customConfirm() reuses ONE static
-        // #confirmOverlay: a second call (e.g. the user manually clicking
-        // "check now" afterwards) stacks a second set of OK/Cancel listeners
-        // on the same buttons instead of replacing the first, so a single
-        // click could resolve two pending confirmations at once — this is
-        // very likely the real cause behind "بيعطي نفس المسج كل مرة": the
-        // user was really seeing the SAME still-open, silently-reopened
-        // dialog from the automatic check, not a fresh one from their click.
-        // A silent/automatic check now only ever updates the status text —
-        // the existing "🎉 يتوفر إصدار جديد" banner (which fetches and shows
-        // itself independently, see the IIFE further down) already covers
-        // unprompted notification without a modal. Only an explicit manual
-        // click opens the confirm dialog now, and always as a single fresh
-        // one (see the customConfirm() dedup fix below).
-        if(!manual) return;
-        const ok = await customConfirm(
-          'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
-          formatUpdateNotesForDialog(info.notes) +
-          '\nهل تريد تحديث البرنامج الآن؟ سيتم التحميل والتثبيت وإعادة فتح البرنامج تلقائيًا.'
-        );
-        if(ok){
-          if(!info.rawUrl){ showToast('رابط التحديث غير مضبوط في version.json (rawUrl).', 'error'); return; }
-          setStatus('جارٍ تحميل التحديث...', 'var(--teal)');
-          // sha256 (optional, from version.json) is verified against the
-          // downloaded bytes by the main process before anything on disk is
-          // touched — a corrupted or tampered download is rejected instead
-          // of being installed and relaunched into.
-          const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null);
-          if(result && result.ok){
-            showToast('تم تثبيت التحديث، جارٍ إعادة فتح البرنامج...', 'success');
-            setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
-          }else if(result && result.reason === 'checksum-mismatch'){
-            setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (sha256). لم يُثبَّت شيء.', 'var(--red)');
-          }else{
-            setStatus('فشل تثبيت التحديث. حاول مرة أخرى لاحقًا.', 'var(--red)');
-          }
-        }
-      }else{
-        setStatus(tr('أنت تستخدم أحدث إصدار') + ' (' + APP_VERSION + ').', 'var(--green)');
-      }
-    }catch(e){
-      console.error('desktop update check failed', e);
-      if(manual) setStatus('تعذّر الوصول لخادم التحديثات.', 'var(--red)');
-    }
-    return;
-  }
-
-  /* Browser version: cannot self-replace its own file — just notify and link. */
-  try{
-    const res = await fetch(UPDATE_MANIFEST_URL + '?t=' + Date.now(), {cache:'no-store'});
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const info = await res.json();
-    try{ localStorage.setItem(LAST_UPDATE_CHECK_KEY, String(getTrustedNow())); }catch(e){}
-    if(info && info.version && isNewerVersion(info.version, APP_VERSION)){
-      setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
-      // Same fix as the desktop branch above: only an explicit manual click
-      // opens the confirm dialog — a silent/automatic check just updates the
-      // status text (the banner already covers unprompted notification).
-      if(!manual) return;
-      const ok = await customConfirm(
-        'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
-        formatUpdateNotesForDialog(info.notes) +
-        '\nهل تريد فتح صفحة التحديث الآن؟'
-      );
-      const link = info.url || info.downloadUrl;
-      if(ok && link){ window.open(link, '_blank'); }
-    }else{
-      setStatus(tr('أنت تستخدم أحدث إصدار') + ' (' + APP_VERSION + ').', 'var(--green)');
-    }
-  }catch(e){
-    console.error('update check failed', e);
-    if(manual) setStatus('تعذّر الوصول لخادم التحديثات. تأكد من الاتصال أو من وجود ملف version.json في المستودع.', 'var(--red)');
-  }
-}
-
-function autoUpdateEnabled(){
-  return localStorage.getItem(AUTO_UPDATE_ENABLED_KEY) !== 'false';
-}
-document.getElementById('autoUpdateCheckToggle').checked = autoUpdateEnabled();
-document.getElementById('autoUpdateCheckToggle').addEventListener('change', (e)=>{
-  localStorage.setItem(AUTO_UPDATE_ENABLED_KEY, e.target.checked ? 'true' : 'false');
-});
-document.getElementById('checkUpdatesNowBtn').addEventListener('click', ()=> checkForUpdates(true));
+function autoUpdateEnabled(){ return true; }
 
 // 🕌 إيقاف/تفعيل الأذكار الدورية — same on/off-in-localStorage pattern as
 // autoUpdateEnabled() just above; read by the dhikr-rotation script's
@@ -22715,12 +22645,10 @@ if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
   });
 }
 
-/* Automatic check on every startup — if a newer version exists, the user is
-   reminded each time they open the program until they update. */
-setTimeout(()=>{
-  if(!autoUpdateEnabled()) return;
-  checkForUpdates(false);
-}, 8000);
+/* Automatic update checks: immediately after startup settles, then once every hour.
+   The check is read-only until a verified release is explicitly approved. */
+setTimeout(()=>{ if(autoUpdateEnabled()) runAboutUpdateCheck(false); }, 2200);
+setInterval(()=>{ if(autoUpdateEnabled()) runAboutUpdateCheck(false); }, 60*60*1000);
 
 /* The old first-run "هل تريد إنشاء نسخة احتياطية؟" prompt is gone on purpose:
    the user is already required to choose where the data lives at the very
@@ -22790,80 +22718,16 @@ initAppFileHandle();
 </div>
 <script>
 (function(){
-  // Read the running version from the one place that defines it. This used to
-  // be a second, hardcoded copy ('6.5') that drifted a release behind, so the
-  // web edition told every user a 6.6 update was available while they were
-  // already running 6.6 — a banner that could never be satisfied.
-  // build.js fails the build if APP_VERSION goes missing.
-  var CURRENT_VERSION = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '0';
-  var VERSION_CHECK_URL = 'https://raw.githubusercontent.com/mmaz19922015-maker/-/main/version.json';
-  // Set by showBanner() once a real update manifest is fetched, and read by
-  // the "تحميل التحديث" click handler below — see the BUG FIX comment there
-  // for why the link can no longer just carry a plain href.
-  var latestUpdateInfo = null;
-
-  function cmpVersions(a, b){
-    var pa = String(a).split('.').map(Number);
-    var pb = String(b).split('.').map(Number);
-    for (var i = 0; i < Math.max(pa.length, pb.length); i++){
-      var na = pa[i] || 0, nb = pb[i] || 0;
-      if (na > nb) return 1;
-      if (na < nb) return -1;
-    }
-    return 0;
-  }
-
-  function showBanner(info){
-    latestUpdateInfo = info;
-    var banner = document.getElementById('updateBanner');
-    var text = document.getElementById('updateBannerText');
-    text.textContent = '🎉 يتوفر إصدار جديد v' + info.version + ' من البرنامج';
-    banner.classList.add('show');
-    // BUG FIX: push the sidebar (brand name + version badge) down below the
-    // now-visible fixed banner instead of letting it render underneath/behind
-    // it — see the body.has-update-banner CSS rule for the full explanation.
-    document.body.classList.add('has-update-banner');
-    requestAnimationFrame(function(){
-      document.documentElement.style.setProperty('--update-banner-h', banner.offsetHeight + 'px');
-    });
-  }
-
   document.getElementById('updateBannerClose').addEventListener('click', function(){
     document.getElementById('updateBanner').classList.remove('show');
     document.body.classList.remove('has-update-banner');
   });
-
-  // BUG FIX (real, confirmed defect — clicking this literally did nothing):
-  // this link used to set link.href = info.downloadUrl, but version.json's
-  // actual schema has never had a downloadUrl field — only rawUrl (see
-  // lib/updater.js and the checkForUpdates() function above) — so href
-  // always fell back to the placeholder '#' and the click was a no-op on
-  // every build. Desktop now reuses the exact same tested one-click
-  // self-update flow the "🌐 فحص التحديثات الآن" button already uses
-  // (download → sha256 verify → install → relaunch) instead of trying to
-  // navigate anywhere. The browser/PWA build still cannot self-replace its
-  // own file, so it keeps the old "open a link" behavior — just pointed at
-  // the field version.json actually provides.
-  document.getElementById('updateBannerLink').addEventListener('click', function(e){
+  document.getElementById('updateBannerLink').addEventListener('click', async function(e){
     e.preventDefault();
     document.getElementById('updateBanner').classList.remove('show');
     document.body.classList.remove('has-update-banner');
-    if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop && typeof checkForUpdates === 'function'){
-      checkForUpdates(true);
-    }else if(latestUpdateInfo){
-      var link = latestUpdateInfo.rawUrl || latestUpdateInfo.url || latestUpdateInfo.downloadUrl;
-      if(link) window.open(link, '_blank');
-    }
+    if(typeof runAboutUpdateCheck==='function') runAboutUpdateCheck(true);
   });
-
-  fetch(VERSION_CHECK_URL + '?t=' + Date.now())
-    .then(function(res){ return res.ok ? res.json() : null; })
-    .then(function(info){
-      if (info && info.version && cmpVersions(info.version, CURRENT_VERSION) > 0){
-        showBanner(info);
-      }
-    })
-    .catch(function(){ /* لا إنترنت أو الملف غير متاح - تجاهل بصمت */ });
 })();
 </script>
 <script>
@@ -23110,6 +22974,23 @@ initAppFileHandle();
   stroke:#4b5563 !important;
   stroke-width:1.7 !important;
 }
+
+  .about-gold-modal{max-width:680px; overflow:hidden;}
+  .about-gold-hero{position:relative; overflow:hidden; border-radius:18px; padding:24px 18px 20px; text-align:center; color:#fff; background:linear-gradient(135deg,#7b5310 0%,#c9942d 25%,#f3d27a 50%,#b87a16 75%,#6d470c 100%); box-shadow:0 12px 30px rgba(125,83,16,.25);}
+  .about-gold-hero:before{content:'';position:absolute;inset:-40% -20%;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.25) 48%,transparent 60%);transform:rotate(8deg);pointer-events:none;}
+  .about-gold-mark{position:relative;width:54px;height:54px;margin:0 auto 10px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:27px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 0 18px rgba(255,255,255,.12);}
+  .about-gold-title{position:relative;font-size:22px;font-weight:900;letter-spacing:.2px;}
+  .about-gold-subtitle{position:relative;margin-top:5px;font-size:12.5px;font-weight:700;opacity:.92;}
+  .about-gold-version{position:relative;display:inline-block;margin-top:12px;padding:5px 13px;border-radius:999px;background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.28);font-size:12px;font-weight:900;}
+  .about-update-card,.about-changelog-card{margin-top:14px;padding:15px;border-radius:14px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(246,239,220,.88));border:1px solid rgba(188,139,47,.34);box-shadow:0 5px 18px rgba(80,60,20,.08);}
+  .about-card-title{font-size:14px;font-weight:900;margin-bottom:7px;color:#805914;}
+  .about-changelog-list{max-height:250px;overflow:auto;padding-inline-end:3px;}
+  .about-release{padding:11px 12px;border:1px solid rgba(188,139,47,.24);border-radius:11px;background:rgba(255,255,255,.65);margin-bottom:8px;}
+  .about-release:last-child{margin-bottom:0;}
+  .about-release-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:5px;}
+  .about-release-version{font-weight:900;color:#7b5310;}
+  .about-release-date{font-size:11px;color:var(--ink-dim);}
+  .about-release ul{margin:6px 0 0;padding-inline-start:19px;line-height:1.75;font-size:12px;}
 </style>
 
 

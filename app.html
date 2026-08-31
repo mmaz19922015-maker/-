@@ -22440,8 +22440,19 @@ function normalizeVersionValue(v){
   while(parts.length>1 && parts[parts.length-1]===0) parts.pop();
   return parts.join('.')||'0';
 }
+function isNewerVersionValue(remote, local){
+  const a=normalizeVersionValue(remote).split('.').map(n=>parseInt(n,10)||0);
+  const b=normalizeVersionValue(local).split('.').map(n=>parseInt(n,10)||0);
+  for(let i=0;i<Math.max(a.length,b.length);i++){ const x=a[i]||0,y=b[i]||0; if(x>y)return true; if(x<y)return false; }
+  return false;
+}
+function isLegacyMigrationValue(remote, local){
+  const r=normalizeVersionValue(remote).split('.').map(n=>parseInt(n,10)||0);
+  const l=normalizeVersionValue(local).split('.').map(n=>parseInt(n,10)||0);
+  return (l[0]||0)>=10 && (r[0]||0)===3;
+}
 function isDifferentVersion(remote, local){
-  return normalizeVersionValue(remote)!==normalizeVersionValue(local);
+  return isNewerVersionValue(remote, local) || isLegacyMigrationValue(remote, local);
 }
 
 // DEFENSE-IN-DEPTH (real, confirmed incident): version.json's "notes" field
@@ -22756,7 +22767,7 @@ initAppFileHandle();
   fetch(VERSION_CHECK_URL + '?t=' + Date.now())
     .then(function(res){ return res.ok ? res.json() : null; })
     .then(function(info){
-      if (info && info.version && cmpVersions(info.version, CURRENT_VERSION) !== 0){
+      if (info && info.version && isDifferentVersion(info.version, CURRENT_VERSION)){
         showBanner(info);
       }
     })

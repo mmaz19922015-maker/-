@@ -22433,8 +22433,13 @@ async function checkForUpdates(manual){
           // of being installed and relaunched into.
           const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null);
           if(result && result.ok){
-            showToast('تم تثبيت التحديث، جارٍ إعادة فتح البرنامج...', 'success');
-            setTimeout(()=> window.ekhlasDesktop.relaunchApp(), 1200);
+            // Keep the Electron process alive. Reload only the updated HTML;
+            // this avoids the restart/storage-picker race and leaves SQLite
+            // and data-location.json untouched.
+            showToast('تم تثبيت التحديث بنجاح، جارٍ تطبيقه...', 'success');
+            setTimeout(()=> location.reload(), 500);
+          }else if(result && result.reason === 'storage-not-configured'){
+            setStatus('تم إيقاف التحديث لحماية البيانات: مكان حفظ البيانات غير مضبوط. لم يتم تغيير أي ملف.', 'var(--red)');
           }else if(result && result.reason === 'checksum-mismatch'){
             setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (sha256). لم يُثبَّت شيء.', 'var(--red)');
           }else{

@@ -831,9 +831,16 @@
        gap between buttons (below, inline style) were both trimmed a touch
        to make room for a taller min-height floor on .sidebar-btn without
        forcing the list to overflow/scroll at a normal window height —
-       the whole point of this list is that it must NOT need scrolling. */
+       the whole point of this list is that it must NOT need scrolling.
+       FOLLOW-UP direct feedback ("ابدأ بصف الزرار من الاسفل للاعلى بالقائمة
+       الجانبية"): the buttons themselves no longer stretch to fill this
+       container (see .sidebar-btn's flex below) so justify-content:flex-end
+       packs the whole compact group against the BOTTOM of this space —
+       any leftover room now shows as empty space above the first button
+       instead of being distributed as extra height inside every button. */
     padding:7px 16px; border-bottom:1px solid var(--line);
     flex:1; min-height:0; overflow-y:auto;
+    justify-content:flex-end;
   }
   .doctor-list{ flex:1; overflow-y:auto; padding:8px; }
   /* Sidebar brand strip — the logo + app name. Moved back to the very top of
@@ -953,12 +960,16 @@
     width:100%; margin-inline:0; text-align:start; font-size:15.5px; font-weight:800;
     padding:0 12px !important; line-height:1.4;
     border-radius:8px!important;
-    /* min-height is a genuine last-resort FLOOR, not the everyday size: at a
-       normal screen height the 17 buttons' flex-shrink naturally settles well
-       above this (e.g. ~27px each at a 720px-tall window), so this only
-       kicks in and forces .sidebar-actions' own overflow-y:auto to take over
-       on a pathologically short window where even that isn't enough room. */
-    flex:1 1 0; min-height:29px; display:flex; align-items:center; justify-content:flex-start;
+    /* FOLLOW-UP direct feedback ("ابدأ بصف الزرار من الاسفل للاعلى"): each
+       button used to flex-grow (flex:1 1 0) to fill whatever vertical room
+       was left, stretching every button taller on a normal window. Buttons
+       now keep their natural compact height (flex:0 0 auto) — min-height
+       is still a floor so a button is never unreadably short — and
+       .sidebar-actions' own justify-content:flex-end (see above) packs the
+       whole now-compact group against the bottom instead. overflow-y:auto
+       up on .sidebar-actions still catches a pathologically short window
+       exactly as before. */
+    flex:0 0 auto; min-height:29px; display:flex; align-items:center; justify-content:flex-start;
     position:relative; transition: background .16s ease, color .16s ease, transform .16s ease;
     border:1.5px solid transparent !important;
     background:transparent !important;
@@ -1292,10 +1303,11 @@
        (a little vertical squeeze), but keeps every part of the image
        visible — nothing is cropped or hidden. */
     display:block; width:100%; height:100%; object-fit:fill;
-    /* Direct feedback ("صورة البانر اعطيها شفافية بنسبة 10 بالمية نقلل من
-       حدة ظهورها"): 10% transparency to soften how strong/sharp the image
-       reads, nothing else about it (size/position/crop) changed. */
-    opacity:0.9;
+    /* Direct feedback, asked twice — first 10%, then a follow-up
+       ("وشفافية للبانر كمان مرة بنسبة 15 بالمية"): now at 15% transparency
+       total (not additive on top of the first 10%) to soften how
+       strong/sharp the image reads; nothing else about it changed. */
+    opacity:0.85;
   }
   /* Everything below (.home-hero-text/-art/-tagline and their children) is
      unused now that the banner is a single full image, kept only so nothing
@@ -1522,35 +1534,94 @@
      scoped ONLY to .home-editlog-panel-body .due-item so every OTHER
      screen that reuses the shared .due-item class (statements, debts, the
      full #editLogOverlay history) is completely untouched. */
+  /* FOLLOW-UP direct feedback ("انقل سجل التعديلات لجهة اليسار من الشاشة
+     وصغر حجمو شوي عرضيا وليس الارتفاع"): moved to the LEFT side of the
+     screen — margin-inline-start:auto pushes a not-full-width block to the
+     END edge (left, in this app's RTL default) instead of its normal
+     START-edge position, the same trick as margin-left:auto in LTR — and
+     narrowed further (40% -> 32%), width only, height/row styling
+     untouched. */
+  /* FOLLOW-UP direct feedback with a reference image ("هاد مثال عن شكل
+     السجل بدي اياه يكون هيك تمامًا نفس ترتيب شكل الشاشة والالوان بس لا
+     تستخدم المسميات او المعلومات من الصورة فقط شكل"): the panel is
+     rebuilt to match the reference image's layout — an icon+title header
+     with a small "⋯" corner control on the opposite side, a real table
+     (#, date, operation, a colour-coded status pill, user) instead of the
+     old boxed/divided list, and a footer "view all" link with an icon.
+     Only the LAYOUT/shape from the image is used — every field shown is
+     one of this app's own existing edit-log fields (description, date,
+     time, enteredBy); no label or data from the reference image itself. */
   .home-editlog-panel{
     background:#ffffff; border:1px solid var(--line); border-radius:14px;
-    box-shadow:var(--shadow-sm); padding:14px 16px; margin:0 0 28px;
-    max-width:40%; min-width:280px;
+    box-shadow:var(--shadow-sm); padding:16px 18px 12px; margin:0 0 28px;
+    max-width:32%; min-width:280px; margin-inline-start:auto;
   }
   :root[data-theme="dark"] .home-editlog-panel{ background:var(--panel); }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]) .home-editlog-panel{ background:var(--panel); }
   }
   @media (max-width:820px){
-    /* A 40%-width card would be too cramped once the stat-card grid itself
-       drops to 3 columns (see the matching breakpoint above) — back to a
-       full-width card on narrow windows, same as before this change. */
+    /* A narrow-width card would be too cramped once the stat-card grid
+       itself drops to 3 columns (see the matching breakpoint above) —
+       back to a full-width card on narrow windows, same as before. */
     .home-editlog-panel{ max-width:none; }
   }
   .home-editlog-panel-head{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    margin-bottom:8px;
+    margin-bottom:10px;
   }
-  .home-editlog-panel-title{ font-size:15.5px; font-weight:800; color:var(--ink); }
-  .home-editlog-panel-body{ max-height:238px; overflow-y:auto; }
-  .home-editlog-panel-body .due-item{
-    cursor:default; display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:8px 2px; margin-bottom:0; border:none; border-inline-start:none;
-    border-radius:0; background:transparent; box-shadow:none;
-    border-bottom:1px solid var(--line);
+  .home-editlog-panel-title{
+    display:flex; align-items:center; gap:8px;
+    font-size:15.5px; font-weight:800; color:var(--ink);
   }
-  .home-editlog-panel-body .due-item:last-child{ border-bottom:none; }
-  .home-editlog-panel-body .due-item:hover{ background:transparent; transform:none; box-shadow:none; border-color:var(--line); }
+  .home-editlog-panel-title-icon{
+    width:30px; height:30px; border-radius:9px; flex-shrink:0;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--teal-tint); color:var(--teal); font-size:15px;
+  }
+  /* The "⋯" corner element from the reference image is made a real,
+     functional control here (not a decorative dead button) — it opens the
+     same full edit-log screen as the footer link, per the standing rule
+     against adding non-functional UI. */
+  .home-editlog-panel-more{
+    background:transparent; border:none; cursor:pointer;
+    font-size:20px; font-weight:900; line-height:1; color:var(--ink-dim);
+    padding:4px 9px; border-radius:8px;
+  }
+  .home-editlog-panel-more:hover{ background:var(--teal-tint); color:var(--teal); }
+  .home-editlog-panel-body{ max-height:238px; overflow-y:auto; overflow-x:auto; }
+  .home-editlog-table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .home-editlog-table th{
+    text-align:start; font-size:11px; font-weight:800; color:var(--ink-dim);
+    padding:0 4px 6px; border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  .home-editlog-table td{
+    padding:8px 4px; border-bottom:1px solid var(--line); vertical-align:middle; color:var(--ink);
+  }
+  .home-editlog-table tbody tr:last-child td{ border-bottom:none; }
+  .home-editlog-table tbody tr.is-clickable{ cursor:pointer; }
+  .home-editlog-table tbody tr.is-clickable:hover td{ background:var(--teal-tint); }
+  .home-editlog-table .col-num{ color:var(--ink-dim); font-weight:700; font-family:'Segoe UI', Arial, Helvetica, sans-serif; }
+  .home-editlog-table .col-date{ color:var(--ink-dim); white-space:nowrap; font-size:11.5px; }
+  .home-editlog-table .col-desc{
+    font-weight:700; max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  /* Status pills for the edit-log table: a purely display-time colour
+     classification of each entry's existing description text (add/delete/
+     edit/other) — nothing new is stored, this reuses the same
+     .status-pill sizing already used across the app and just adds four
+     new colour modifiers next to the existing status-* ones. */
+  .status-log-add{ background:var(--green-tint); color:var(--green-ink); }
+  .status-log-delete{ background:var(--red-tint); color:var(--red-ink); }
+  .status-log-edit{ background:var(--teal-tint); color:var(--teal-ink); }
+  .status-log-other{ background:var(--panel-2); color:var(--ink-dim); border:1px solid var(--line); }
+  .home-editlog-panel-foot{ margin-top:6px; padding-top:9px; border-top:1px solid var(--line); text-align:start; }
+  .home-editlog-panel-seeall{
+    background:transparent; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    color:var(--teal); font-weight:800; font-size:12.5px; padding:2px 0;
+  }
+  .home-editlog-panel-seeall:hover{ text-decoration:underline; }
+  .home-editlog-panel-seeall-icon{ font-size:14px; }
   .home-editlog-empty{ padding:14px 4px; color:var(--ink-dim); font-size:13.5px; text-align:center; }
 
   /* Calculator + Notification center + Notebook feature cards — bigger,
@@ -2004,6 +2075,10 @@
   .status-ready{ background:var(--green-tint); color:var(--green-ink); }
   .status-delivered{ background:var(--green-tint); color:var(--green-ink); }
   .status-returned{ background:var(--red-tint); color:var(--red-ink); }
+  /* "سجل المبالغ المستحقة" redesign — direction pill, reusing the same
+     .status-pill sizing as every other status/state pill in the app. */
+  .status-owed-to-me{ background:var(--green-tint); color:var(--green-ink); }
+  .status-i-owe{ background:var(--red-tint); color:var(--red-ink); }
   /* flex-shrink:0 + flex-wrap:nowrap: the تعديل/حذف pair always stays on one
      line together — the whole group may still drop to its own row on a very
      narrow card (fine, and now consistent across every card), but the two
@@ -2015,6 +2090,21 @@
   }
   .icon-btn:hover{ background:var(--teal-tint); color:var(--teal); }
   .icon-btn.danger:hover{ background:var(--red-tint); color:var(--red); }
+  /* Direct feedback ("ايقونة زر طباعة خليها ايقونة طابعة ملونة وكبيرة
+     وواضحة بدل الموجود"): the plain small icon-only print buttons
+     (printSelected*RecentTxBtn — next to each statement's "📜 سجل
+     الدفعات" header) get a bigger, coloured, clearer look. Scoped to this
+     one modifier class rather than restyling .icon-btn itself, so every
+     OTHER icon-only button that shares .icon-btn (edit/delete/etc.
+     elsewhere) is completely untouched. */
+  .icon-btn-print{
+    width:38px; height:38px; padding:0; border-radius:9px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:19px; line-height:1; flex-shrink:0;
+    background:var(--teal-tint); border:1.5px solid var(--teal-dim); color:var(--teal);
+    box-shadow:var(--shadow-sm);
+  }
+  .icon-btn-print:hover{ background:var(--accent-grad); border-color:transparent; color:#fff; }
 
   .empty{ text-align:center; padding:50px 20px; color:var(--ink-dim); }
   .months-wrap{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow: var(--shadow); }
@@ -3385,28 +3475,32 @@ input:focus, select:focus, textarea:focus {
         <div id="brandTagline" style="font-size:10.5px; font-weight:700; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">لإدارة العيادات والمختبرات السنية</div>
       </div>
     </div>
-    <!-- Direct feedback ("قلل شوي المسافات بين الازرار بالقائمة الجانبية"):
-         gap trimmed 3px -> 2px. -->
-    <div class="sidebar-actions" style="display:flex; flex-direction:column; gap:2px;">
+    <!-- Direct feedback ("قلل شوي المسافات بين الازرار بالقائمة الجانبية"),
+         asked twice: gap trimmed 3px -> 2px -> 1px. -->
+    <div class="sidebar-actions" style="display:flex; flex-direction:column; gap:1px;">
       <button type="button" class="btn-ghost sidebar-btn sidebar-btn-home" id="homeBtn">🏠 الرئيسية</button>
       <button type="button" class="btn-ghost sidebar-btn" id="addPatientCaseBtn">➕ إضافة حالة مرضية</button>
       <div class="sidebar-sep" aria-hidden="true"></div>
       <button type="button" class="btn-ghost sidebar-btn" id="incomingPaymentsBtn">💰 دفعة واردة</button>
       <button type="button" class="btn-ghost sidebar-btn" id="expensePaymentsBtn">📤 إنشاء دفعة صادرة</button>
       <button type="button" class="btn-ghost sidebar-btn" id="cancelPaymentSidebarBtn">❌ إلغاء دفعة</button>
-      <button type="button" class="btn-ghost sidebar-btn" id="accountStatementSidebarBtn">🧾 كشف حساب</button>
-      <!-- Direct feedback: "مربع الديون وكل ما يتعلق به قم بالغائه ومسح هذه
-           الوظيفة بالكامل" — the private/manual "➕ إضافة دين" feature (and
-           its whole entry flow: collectDebtTypeOverlay/collectDebtPickOverlay/
-           debtsLogOverlay/debtEntryOverlay/otherDebtEntryOverlay) is removed.
-           This is DISTINCT from "💰 المبالغ المستحقة" below (auto-computed
-           from cases/payments) which the user explicitly wants kept — see
-           its own comment further down. Data compatibility: the underlying
-           otherDebts/entity.debts[] arrays, their load/save code, and the
-           notification engine that reads them are all left untouched so any
-           EXISTING saved debt data keeps loading/saving/showing reminders
-           correctly — only the screens to add MORE of it are gone. -->
-      <button type="button" class="btn-ghost sidebar-btn" id="debtsLogSidebarBtn">💰 المبالغ المستحقة</button>
+      <!-- "🧾 كشف حساب" (accountStatementSidebarBtn) and "💰 المبالغ المستحقة"
+           (debtsLogSidebarBtn) removed from here per direct feedback ("امسح
+           زر المبالغ المستحقة من القائمة الجانبية-امسح زر كشف حساب من
+           القائمة الجانبية") — both screens/functions (openDuesReport(),
+           acctTypeOverlay's picker flow) are completely untouched and still
+           fully reachable elsewhere (the home "💰 المبالغ المستحقة" card for
+           dues; every doctor/lab/company/agent/staff's own كشف حساب button
+           for statements) — only these two sidebar shortcuts are gone.
+           Their now-orphaned click listeners were removed too (see near
+           openDuesReport() and near acctTypeOverlay below) since
+           getElementById() on a removed id would otherwise throw. The old
+           "مربع الديون" comment that used to sit here (about the fully
+           deleted manual-debt-entry feature: collectDebtTypeOverlay/
+           collectDebtPickOverlay/debtsLogOverlay/debtEntryOverlay/
+           otherDebtEntryOverlay) is preserved in spirit — that feature
+           stays deleted, its otherDebts/entity.debts[] data/load/save code
+           stays untouched, exactly as before. -->
       <div class="sidebar-sep" aria-hidden="true"></div>
       <button type="button" class="btn-ghost sidebar-btn" id="checksRegisterSidebarBtn">🧾 سجل الشيكات</button>
       <button type="button" class="btn-ghost sidebar-btn" id="workLogSidebarBtn">📋 سجل الموظفين</button>
@@ -3649,11 +3743,20 @@ input:focus, select:focus, textarea:focus {
            renderHomeDashboard()'s existing counter-writing line. -->
       <div class="home-editlog-panel" id="homeEditLogPanel">
         <div class="home-editlog-panel-head">
-          <div class="home-editlog-panel-title">📝 آخر التعديلات <span class="num" id="homeStatEditLog" style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">0</span></div>
-          <button type="button" class="btn-ghost" id="homeEditLogSeeAllBtn">عرض الكل ▶</button>
+          <div class="home-editlog-panel-title">
+            <span class="home-editlog-panel-title-icon">🕐</span>
+            <span>آخر العمليات <span class="num" id="homeStatEditLog" style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">0</span></span>
+          </div>
+          <button type="button" class="home-editlog-panel-more" id="homeEditLogMoreBtn" title="عرض جميع العمليات" aria-label="عرض جميع العمليات">⋯</button>
         </div>
         <div class="home-editlog-panel-body" id="homeEditLogPanelBody">
           <div class="home-editlog-empty" id="homeEditLogPanelEmpty">لا توجد تعديلات مسجلة بعد.</div>
+        </div>
+        <div class="home-editlog-panel-foot">
+          <button type="button" class="home-editlog-panel-seeall" id="homeEditLogSeeAllBtn">
+            <span class="home-editlog-panel-seeall-icon">↻</span>
+            عرض جميع العمليات
+          </button>
         </div>
       </div>
 
@@ -3949,17 +4052,17 @@ input:focus, select:focus, textarea:focus {
 
 <!-- Add note dialog -->
 <div class="overlay" id="notesOverlay">
-  <!-- Direct feedback ("قالب الملاحظة كبرو شوي"), a follow-up on an earlier
-       enlargement round: the modal itself is widened a touch beyond the
-       shared .modal.narrow cap (inline override only, so every OTHER modal
-       still using .narrow is untouched) and the textarea grew taller +
-       slightly bigger text. maxlength/character-limit logic is unchanged —
-       purely a visual sizing change. -->
-  <div class="modal narrow" style="max-width:460px;">
+  <!-- Direct feedback ("قالب الملاحظة كبرو شوي"), asked twice now: the
+       modal is widened beyond the shared .modal.narrow cap each round
+       (inline override only, so every OTHER modal still using .narrow is
+       untouched) and the textarea grows taller + bigger text each time.
+       maxlength/character-limit logic is unchanged — purely a visual
+       sizing change. -->
+  <div class="modal narrow" style="max-width:520px;">
     <h2><span>📌 إضافة ملاحظة</span><button type="button" class="btn-ghost btn-small" id="closeNotesBtn">إغلاق</button></h2>
     <div class="field">
       <label style="font-size:12px; color:var(--ink-dim);">نص الملاحظة</label>
-      <textarea id="noteText" rows="6" maxlength="40" placeholder="اكتب ملاحظتك هنا..." style="width:100%; font-size:16px; line-height:1.8; resize:vertical; padding:14px; border-radius:7px;"></textarea>
+      <textarea id="noteText" rows="8" maxlength="40" placeholder="اكتب ملاحظتك هنا..." style="width:100%; font-size:18px; line-height:1.8; resize:vertical; padding:16px; border-radius:7px;"></textarea>
       <div id="noteCharCount" style="font-size:11px; color:var(--ink-dim); text-align:left; margin-top:4px;">0/40</div>
     </div>
     <div class="field">
@@ -4238,17 +4341,43 @@ input:focus, select:focus, textarea:focus {
 <div class="overlay" id="duesReportOverlay">
   <div class="modal wide">
     <h2><span>💰 المبالغ المستحقة</span><button type="button" class="btn-ghost btn-small" id="closeDuesReportBtn">إغلاق</button></h2>
-    <div class="muted" style="margin-bottom:12px; font-size:12.5px; line-height:1.8; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:10px 14px;">
+    <div class="muted" style="margin-bottom:14px; font-size:12.5px; line-height:1.8; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:10px 14px;">
       ℹ️ كل مبلغ مستحق من/على أي فئة (طبيب/مختبر/شركة/مندوب) محسوب تلقائيًا من الحالات والبضاعة والدفعات — لا علاقة له بالديون الخاصة المسجَّلة عبر «➕ إضافة دين». اضغط على أي اسم لمعرفة سبب المبلغ بالتفصيل.
     </div>
+
+    <!-- Redesign per direct, repeated feedback ("طلبت منك 10 مرات تغيير
+         شكل شاشة السجل تبع المبالغ المستحقة"): reuses the exact same
+         KPI-strip design already shipped and accepted for "سجل الدفعات
+         الواردة"/"الصادرة" (.ipr-stats/.ipr-stat) instead of a new,
+         unproven look — same data/columns as before (name, category,
+         direction, amount), only the visual presentation changed. -->
+    <div class="ipr-stats">
+      <div class="ipr-stat ipr-stat-blue">
+        <span class="ipr-stat-icon">🧾</span>
+        <div><div class="ipr-stat-num" id="duesStatCount">0</div><div class="ipr-stat-lbl">عدد الجهات المستحقة</div></div>
+      </div>
+      <div class="ipr-stat ipr-stat-green">
+        <span class="ipr-stat-icon">⬅️</span>
+        <div><div class="ipr-stat-num" id="duesStatOwedToMe">0</div><div class="ipr-stat-lbl">إجمالي المستحق لي</div></div>
+      </div>
+      <div class="ipr-stat ipr-stat-amber">
+        <span class="ipr-stat-icon">➡️</span>
+        <div><div class="ipr-stat-num" id="duesStatIOwe">0</div><div class="ipr-stat-lbl">إجمالي المستحق عليّ</div></div>
+      </div>
+      <div class="ipr-stat ipr-stat-violet">
+        <span class="ipr-stat-icon">⚖️</span>
+        <div><div class="ipr-stat-num" id="duesStatNet">0</div><div class="ipr-stat-lbl">الصافي</div></div>
+      </div>
+    </div>
+
     <div style="overflow-x:auto; border:1px solid var(--line); border-radius:7px;">
-      <table style="width:100%; border-collapse:collapse; font-size:14.5px; font-weight:700;">
+      <table style="width:100%; border-collapse:collapse; font-size:13.5px; font-weight:700;">
         <thead>
           <tr style="background:var(--panel-2);">
             <th style="padding:10px 12px; text-align:right; border-bottom:1px solid var(--line);">الاسم</th>
             <th style="padding:10px 12px; text-align:right; border-bottom:1px solid var(--line);">الفئة</th>
             <th style="padding:10px 12px; text-align:center; border-bottom:1px solid var(--line);">الاتجاه</th>
-            <th style="padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); color:var(--red);">المبلغ</th>
+            <th style="padding:10px 12px; text-align:left; border-bottom:1px solid var(--line);">المبلغ</th>
           </tr>
         </thead>
         <tbody id="duesReportBody"></tbody>
@@ -4711,7 +4840,7 @@ input:focus, select:focus, textarea:focus {
          "🧾 الكشوفات" already uses for its own print-selected button). -->
     <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn" id="printSelectedDoctorRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <button type="button" class="icon-btn icon-btn-print" id="printSelectedDoctorRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
     </div>
     <div id="doctorRecentTxBody" style="margin-bottom:18px;"></div>
 
@@ -5030,7 +5159,7 @@ input:focus, select:focus, textarea:focus {
     <!-- Item 6 — see the identical doctor-screen comment above. -->
     <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn" id="printSelectedLabRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <button type="button" class="icon-btn icon-btn-print" id="printSelectedLabRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
     </div>
     <div id="labRecentTxBody" style="margin-bottom:18px;"></div>
 
@@ -5139,7 +5268,7 @@ input:focus, select:focus, textarea:focus {
     <!-- Item 6 — see the identical doctor-screen comment above. -->
     <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn" id="printSelectedCompanyRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <button type="button" class="icon-btn icon-btn-print" id="printSelectedCompanyRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
     </div>
     <div id="companyRecentTxBody" style="margin-bottom:18px;"></div>
 
@@ -5279,7 +5408,7 @@ input:focus, select:focus, textarea:focus {
     <!-- Item 6 — see the identical doctor-screen comment above. -->
     <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn" id="printSelectedAgentRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <button type="button" class="icon-btn icon-btn-print" id="printSelectedAgentRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
     </div>
     <div id="agentRecentTxBody" style="margin-bottom:18px;"></div>
 
@@ -6115,8 +6244,10 @@ input:focus, select:focus, textarea:focus {
     white-space:nowrap;
   }
   .ipr-phone-link:hover{ text-decoration:underline; }
-  #incomingPaymentsReportBody tr.ipr-row-clickable{ cursor:pointer; transition:background .12s ease; }
-  #incomingPaymentsReportBody tr.ipr-row-clickable:hover{ background:var(--teal-tint); }
+  #incomingPaymentsReportBody tr.ipr-row-clickable,
+  #duesReportBody tr.ipr-row-clickable{ cursor:pointer; transition:background .12s ease; }
+  #incomingPaymentsReportBody tr.ipr-row-clickable:hover,
+  #duesReportBody tr.ipr-row-clickable:hover{ background:var(--teal-tint); }
   .ipr-purpose-chip{
     display:inline-block; padding:2px 9px; border-radius:20px;
     font-size:11.5px; font-weight:700; white-space:nowrap;
@@ -6547,7 +6678,7 @@ input:focus, select:focus, textarea:focus {
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '12.2.0';
+const APP_VERSION = '12.3.0';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -14361,20 +14492,38 @@ function collectDuesRows(){
 function totalDuesAcrossAllCategories(){
   return collectDuesRows().reduce((s,r)=> s + r.amount, 0);
 }
+// Redesign per direct, repeated feedback: the same KPI strip already
+// shipped for "سجل الدفعات الواردة/الصادرة" (.ipr-stats), fed from the
+// exact same collectDuesRows() this screen already used — no new data,
+// purely a display-time summary of what the table below already lists.
+function renderDuesReportStats(rows){
+  const count = document.getElementById('duesStatCount');
+  const owedToMeEl = document.getElementById('duesStatOwedToMe');
+  const iOweEl = document.getElementById('duesStatIOwe');
+  const netEl = document.getElementById('duesStatNet');
+  if(!count || !owedToMeEl || !iOweEl || !netEl) return;
+  const owedToMe = rows.filter(r=> r.direction === 'owedToMe').reduce((s,r)=> s + r.amount, 0);
+  const iOwe = rows.filter(r=> r.direction === 'iOwe').reduce((s,r)=> s + r.amount, 0);
+  count.textContent = rows.length;
+  owedToMeEl.textContent = fmtMoney(owedToMe);
+  iOweEl.textContent = fmtMoney(iOwe);
+  netEl.textContent = fmtMoney(owedToMe - iOwe);
+}
 function renderDuesReportPage(){
   const rows = collectDuesRows();
+  renderDuesReportStats(rows);
   duesReportPage = renderPaginatedRows(rows, duesReportPage, 'duesReportBody', 'duesReportEmpty', 'duesReportPageText', (r)=>{
     const tr = document.createElement('tr');
     tr.style.borderBottom = '1px solid var(--line)';
-    tr.style.cursor = 'pointer';
+    tr.className = 'ipr-row-clickable';
     const dirHtml = r.direction === 'owedToMe'
-      ? '<span style="color:var(--green); font-weight:800;">⬅️ مستحق لي</span>'
-      : '<span style="color:var(--red); font-weight:800;">➡️ مستحق عليّ</span>';
+      ? '<span class="status-pill status-owed-to-me">⬅️ مستحق لي</span>'
+      : '<span class="status-pill status-i-owe">➡️ مستحق عليّ</span>';
     tr.innerHTML = `
-      <td style="padding:9px 12px; font-weight:700;">${escapeHtml(r.name)}</td>
-      <td style="padding:9px 12px;">${r.typeLabel}</td>
-      <td style="padding:9px 12px; text-align:center;">${dirHtml}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;" dir="ltr">${fmtMoney(r.amount)}</td>
+      <td style="padding:10px 12px; font-weight:800; color:var(--teal);">${escapeHtml(r.name)}</td>
+      <td style="padding:10px 12px;"><span class="ipr-purpose-chip">${r.typeLabel}</span></td>
+      <td style="padding:10px 12px; text-align:center;">${dirHtml}</td>
+      <td style="padding:10px 12px; text-align:left; color:var(--ink); font-weight:800;" dir="ltr">${fmtMoney(r.amount)}</td>
     `;
     tr.addEventListener('click', ()=>{
       openDueReasonDetail(r.type, r.id);
@@ -14591,7 +14740,9 @@ function collectAllDebts(){
   });
   return out;
 }
-document.getElementById('debtsLogSidebarBtn').addEventListener('click', openDuesReport);
+// debtsLogSidebarBtn removed from the sidebar (see its comment there) — its
+// click listener is gone too; openDuesReport() itself is untouched and is
+// still called from the home "💰 المبالغ المستحقة" card.
 
 let debtsReportPage = 0;
 /* ================== Calculator ================== */
@@ -14844,9 +14995,9 @@ const ACCT_TYPE_META = {
 };
 let acctType = null, acctEntity = null, acctPickPage = 0, acctLedgerPage = 0;
 
-document.getElementById('accountStatementSidebarBtn').addEventListener('click', ()=>{
-  document.getElementById('acctTypeOverlay').classList.add('open');
-});
+// accountStatementSidebarBtn removed from the sidebar (see its comment
+// there) — its click listener is gone too; acctTypeOverlay and the rest of
+// this picker flow are untouched, just currently unreachable from here.
 document.getElementById('closeAcctTypeBtn').addEventListener('click', ()=> document.getElementById('acctTypeOverlay').classList.remove('open'));
 document.getElementById('closeAcctPickBtn').addEventListener('click', ()=> document.getElementById('acctPickOverlay').classList.remove('open'));
 document.getElementById('closeAcctLedgerBtn').addEventListener('click', ()=> document.getElementById('acctLedgerOverlay').classList.remove('open'));
@@ -16008,6 +16159,25 @@ function renderEditLogPage(){
 // recent entries inline (newest first, editLog is already unshift()-ordered),
 // with the body's own overflow-y:auto giving a scroll for anything beyond
 // that. "عرض الكل" opens the existing full #editLogOverlay modal unchanged.
+// Purely display-time classification of an entry's existing description
+// text into one of 4 colours (add/delete/edit/other) — no new data is
+// stored anywhere, this only picks which .status-log-* pill class + label
+// to show for that row, matching the reference image's coloured "النمط"
+// column using this app's own wording instead of the image's.
+function classifyEditLogEntry(description){
+  const text = String(description || '');
+  if(/حذف/.test(text)) return {cls:'status-log-delete', label:'حذف'};
+  if(/(إضافة|اضافة|إنشاء|انشاء)/.test(text)) return {cls:'status-log-add', label:'إضافة'};
+  if(/تعديل/.test(text)) return {cls:'status-log-edit', label:'تعديل'};
+  return {cls:'status-log-other', label:'عملية'};
+}
+// Item 8 / follow-up (reference-image redesign): the home screen's compact
+// edit-log card — shows just the 5 most recent entries inline (newest
+// first, editLog is already unshift()-ordered) as a real table (# / date /
+// operation / status pill / user), with the body's own overflow-y:auto
+// giving a scroll for anything beyond that. Both the "⋯" corner control
+// and the footer link open the existing full #editLogOverlay modal
+// unchanged — same screen/data, only the inline preview's look changed.
 function renderHomeEditLogPanel(){
   const body = document.getElementById('homeEditLogPanelBody');
   const empty = document.getElementById('homeEditLogPanelEmpty');
@@ -16018,26 +16188,48 @@ function renderHomeEditLogPanel(){
     if(empty) body.appendChild(empty);
     return;
   }
-  recent.forEach(entry=>{
-    const row = document.createElement('div');
-    row.className = 'due-item';
+  const table = document.createElement('table');
+  table.className = 'home-editlog-table';
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>التاريخ</th>
+        <th>العملية</th>
+        <th>الحالة</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector('tbody');
+  recent.forEach((entry, idx)=>{
     const clickable = !!(entry.context && entry.context.type);
+    const tag = classifyEditLogEntry(entry.description);
+    const row = document.createElement('tr');
+    if(clickable) row.className = 'is-clickable';
+    // "المستخدم" (enteredBy) is folded into this row's tooltip rather than
+    // its own table column — a 5th text column didn't fit this panel's
+    // narrower (~32% width, per direct feedback) card cleanly; the detail
+    // is still surfaced on hover, and remains fully visible in the full
+    // #editLogOverlay history screen either way.
+    const fullTitle = entry.description + (entry.enteredBy ? ' — 👤 ' + entry.enteredBy : '');
     row.innerHTML = `
-      <div>
-        <div class="who">${escapeHtml(entry.description)}</div>
-        <div class="what">${escapeHtml(entry.date||'-')} — ${escapeHtml(entry.time ? to12Hour(entry.time) : '-')}${entry.enteredBy ? ' — 👤 ' + escapeHtml(entry.enteredBy) : ''}</div>
-      </div>
-      ${clickable ? '<span class="d-match-tag">فتح العملية ▶</span>' : ''}
+      <td class="col-num">${idx + 1}</td>
+      <td class="col-date">${escapeHtml(entry.date||'-')}${entry.time ? ' — ' + escapeHtml(to12Hour(entry.time)) : ''}</td>
+      <td class="col-desc" title="${escapeHtml(fullTitle)}">${escapeHtml(entry.description)}</td>
+      <td><span class="status-pill ${tag.cls}">${tag.label}</span></td>
     `;
     if(clickable){
-      row.style.cursor = 'pointer';
       row.addEventListener('click', ()=> navigateToEditLogEntry(entry.context));
     }
-    body.appendChild(row);
+    tbody.appendChild(row);
   });
+  body.appendChild(table);
 }
 const homeEditLogSeeAllBtnEl = document.getElementById('homeEditLogSeeAllBtn');
 if(homeEditLogSeeAllBtnEl) homeEditLogSeeAllBtnEl.addEventListener('click', openEditLog);
+const homeEditLogMoreBtnEl = document.getElementById('homeEditLogMoreBtn');
+if(homeEditLogMoreBtnEl) homeEditLogMoreBtnEl.addEventListener('click', openEditLog);
 document.getElementById('closeEditLogBtn').addEventListener('click', ()=> document.getElementById('editLogOverlay').classList.remove('open'));
 document.getElementById('editLogPrevBtn').addEventListener('click', ()=>{ if(editLogPage>0){ editLogPage--; renderEditLogPage(); } });
 document.getElementById('editLogNextBtn').addEventListener('click', ()=>{ editLogPage++; renderEditLogPage(); });

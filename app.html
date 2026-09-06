@@ -7696,7 +7696,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '14.0.9';
+const APP_VERSION = '14.0.10';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -27112,6 +27112,64 @@ html[dir="ltr"] .stats-home .stat-arrow-chip{inset-inline-end:12px !important;in
 /* Calculator topbar icon is visibly a calculator, not a generic document icon. */
 #openCalcCard svg{width:25px !important;height:25px !important;}
 #openCalcCard{font-weight:900 !important;}
+
+/* ===== 14.0.10 — FINAL DARK-MODE FIX: Home recent operations =====
+   The recent-operations card had older high-specificity rules that forced
+   near-black text/borders. Keep the existing layout and data untouched, but
+   make every visual token theme-aware in the final cascade. */
+:root[data-theme="dark"] #homeEditLogPanel,
+:root:not([data-theme="light"]) #homeEditLogPanel{
+  background:var(--panel)!important;
+  border-color:var(--line)!important;
+  color:var(--ink)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-panel-title,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-panel-title{
+  color:var(--ink)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-panel-more,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-panel-more{
+  color:var(--ink-dim)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-table th,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-table th{
+  color:var(--ink-dim)!important;
+  background:var(--panel)!important;
+  border-color:var(--line)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-table td,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-table td{
+  color:var(--ink)!important;
+  background:transparent!important;
+  border-color:var(--line)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-table tbody tr,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-table tbody tr{
+  color:var(--ink)!important;
+  background:transparent!important;
+  border-color:var(--line)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-table tbody tr td.col-num,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-table tbody tr td.col-num,
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-table tbody tr td.col-date,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-table tbody tr td.col-date{
+  color:var(--ink-dim)!important;
+}
+:root[data-theme="dark"] #homeEditLogPanel .status-log-add,
+:root:not([data-theme="light"]) #homeEditLogPanel .status-log-add{color:#5ee6a0!important;}
+:root[data-theme="dark"] #homeEditLogPanel .status-log-delete,
+:root:not([data-theme="light"]) #homeEditLogPanel .status-log-delete{color:#ff8f9d!important;}
+:root[data-theme="dark"] #homeEditLogPanel .status-log-edit,
+:root:not([data-theme="light"]) #homeEditLogPanel .status-log-edit{color:#c2cdd3!important;}
+:root[data-theme="dark"] #homeEditLogPanel .status-log-payment,
+:root:not([data-theme="light"]) #homeEditLogPanel .status-log-payment{color:#5ee6a0!important;}
+:root[data-theme="dark"] #homeEditLogPanel .status-log-warning,
+:root:not([data-theme="light"]) #homeEditLogPanel .status-log-warning{color:#ffc56b!important;}
+:root[data-theme="dark"] #homeEditLogPanel .status-log-other,
+:root:not([data-theme="light"]) #homeEditLogPanel .status-log-other{color:#c2cdd3!important;}
+:root[data-theme="dark"] #homeEditLogPanel .home-editlog-empty,
+:root:not([data-theme="light"]) #homeEditLogPanel .home-editlog-empty{color:var(--ink-dim)!important;}
+
 </style>
 <script id="visual-refresh-1300-interactions">
 (function(){

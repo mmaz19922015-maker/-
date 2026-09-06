@@ -5102,18 +5102,8 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
   </div>
 </div>
 
-<!-- Update available — confirm dialog (#optional-updates-popup, "المطلوب اعادة
-     التحديثات اختيارية تظهر رسالة سوال عن التحديث في منتصف الشاشة اثناء
-     تشغيل البرنامج مع زر قبول او رفض وعداد ثواني لمدة 30 ثانية في حال عدم
-     اختيار قرار قم بالتحديث اجباري"): shown, centered, whenever a silent
-     automatic check finds an update while autoUpdateCheckToggle is off (see
-     checkForUpdates() further down) — same reuse-existing-classes pattern
-     as confirmOverlay/promptOverlay above, so it never needs its own theme
-     handling in light OR dark mode. Accept installs right away; Reject
-     dismisses for this app session only (checked again on the next
-     automatic check/launch, never nagging endlessly in the same run); no
-     choice within the 30-second countdown installs it anyway, exactly like
-     an accept. -->
+<!-- Update available dialog: centered, Accept/Reject, 40-second countdown.
+     No response within 40 seconds forces installation. -->
 <div class="overlay" id="updateConfirmOverlay" style="align-items:center;">
   <div class="modal narrow">
     <div class="confirm-icon">🔄</div>
@@ -7460,31 +7450,13 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
            it always agrees with what the lock screen itself would say. -->
       <div id="aboutLicenseStatus" style="display:inline-block; margin-bottom:14px; padding:6px 16px; border-radius:13px; font-size:12.5px; font-weight:800; background:var(--panel-2); border:1px solid var(--line);"></div>
 
-      <!-- 🔄 تحديث البرنامج: relocated here from its own removed Settings
-           tab, per direct feedback ("انقل زر تحديث البرنام حطو فيها"). Same
-           element ids as before (updateTabVersionText, checkUpdatesNowBtn,
-           onlineUpdateStatusText, rollbackUpdateField/Btn/StatusText) —
-           none of the update-check JS elsewhere in the page had to change;
-           it is fully id-driven and never assumed a fixed container.
-           autoUpdateCheckToggle (the on/off control) was removed once, then
-           brought BACK per a later direct request ("رجع نظام التحديثات
-           اختياري") after a real bug made the fully-automatic version get
-           stuck endlessly reinstalling the same update on every launch (see
-           the update:check fix in main.js) — restoring the ability to turn
-           automatic INSTALLING off gives a way out if that, or anything
-           like it, ever happens again. The automatic CHECK itself (which
-           also carries the license-directives security check on its back)
-           always still runs on schedule regardless of this toggle — see
-           checkForUpdates() for exactly what it does and does not skip.
-           Default is ON (checked) so behavior for everyone stays exactly
-           as it already was unless this is deliberately switched off;
-           "فحص التحديثات الآن" always installs whatever it finds right
-           away, since that is an explicit request, not an automatic one. -->
-      <div class="about-pro-section" style="margin-bottom:14px;">
+      <!-- 🔄 تحديث البرنامج: automatic checking is mandatory. The program checks
+           at startup and every hour while running. There is no option to
+           disable these automatic checks. -->
+<div class="about-pro-section" style="margin-bottom:14px;">
         <div style="font-size:13.5px; font-weight:800; margin-bottom:10px; text-align:center;">🔄 تحديث البرنامج</div>
         <div style="font-size:13px; margin-bottom:10px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
-        <label class="modern-toggle" style="margin-bottom:10px;"><input type="checkbox" id="autoUpdateCheckToggle" checked><span></span><b>التثبيت التلقائي للتحديثات</b></label>
-        <div class="muted" style="font-size:12px; margin-bottom:10px; line-height:1.7;">عند التفعيل، يثبّت البرنامج أي إصدار جديد بنفسه فور توفره عند كل فتح وكل ساعة. عند الإيقاف، يعرض عليك سؤالًا بقبول التحديث أو رفضه مع عدّاد 30 ثانية — إن لم تختر، يتم التثبيت تلقائيًا؛ ويبقى بإمكانك أيضًا تثبيته يدويًا في أي وقت بالزر أدناه.</div>
+        <div class="muted" style="font-size:12px; margin-bottom:10px; line-height:1.7;">يبحث البرنامج عن التحديثات تلقائيًا وبشكل إجباري عند كل فتح للبرنامج، وكذلك بعد كل ساعة من الاستخدام. عند توفر تحديث يظهر تنبيه في منتصف الشاشة مع خياري القبول أو الرفض وعدّاد 40 ثانية. إذا لم يتم اختيار أي قرار خلال 40 ثانية، يتم تثبيت التحديث تلقائيًا.</div>
         <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="width:100%;">🌐 فحص التحديثات الآن</button>
         <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12.5px;"></div>
         <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
@@ -7696,7 +7668,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '14.0.10';
+const APP_VERSION = '14.0.11';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -25707,43 +25679,11 @@ function formatUpdateNotesForDialog(notes){
   return '\n' + clipped + '\n';
 }
 
-// #optional-updates ("رجع نظام التحديثات اختياري"): a real, confirmed bug
-// (see main.js's update:check fix) could get the fully-automatic version
-// stuck endlessly reinstalling the same update on every launch, with no
-// way to log in — automatic INSTALLING is now switchable off as a way out
-// of that, or anything like it. This deliberately does NOT skip the check
-// itself on the automatic schedule: checkForUpdate() also piggybacks the
-// license-directives (revoke/shorten) fetch (see main.js's update:check),
-// a security check that must keep running on schedule regardless of this
-// toggle — only the actual download-and-install step that follows a found
-// update is skipped for a silent automatic check while this is off. Same
-// simple on/off-in-localStorage pattern the dhikr toggle already uses.
-// Default true (on) so nothing changes for anyone unless this is
-// deliberately switched off.
-const AUTO_UPDATE_CHECK_KEY = 'dental_lab_auto_update_check_v1';
-function autoUpdateCheckEnabled(){
-  return localStorage.getItem(AUTO_UPDATE_CHECK_KEY) !== 'false';
-}
-const autoUpdateCheckToggleEl = document.getElementById('autoUpdateCheckToggle');
-if(autoUpdateCheckToggleEl){
-  autoUpdateCheckToggleEl.checked = autoUpdateCheckEnabled();
-  autoUpdateCheckToggleEl.addEventListener('change', (e)=>{
-    localStorage.setItem(AUTO_UPDATE_CHECK_KEY, e.target.checked ? 'true' : 'false');
-  });
-}
-
-// #optional-updates-popup ("تظهر رسالة سوال عن التحديث في منتصف الشاشة ...
-// مع زر قبول او رفض وعداد ثواني لمدة 30 ثانية في حال عدم اختيار قرار قم
-// بالتحديث اجباري"): the interactive ask-then-force-after-30s dialog for a
-// silent automatic check (autoUpdateCheckToggle off) finding an update —
-// replaces the previous passive "click the button yourself" status text for
-// that one case. Resolves true (install) on an explicit accept OR once the
-// 30-second countdown reaches zero with no answer (forced, per the direct
-// request); resolves false (skip, just for this running session) only on an
-// explicit reject — remembered in memory only (updateDialogSkippedVersions),
-// never in localStorage, so the next launch or automatic check asks again
-// rather than silently forgetting a real update forever.
-const updateDialogSkippedVersions = new Set();
+// Automatic update checking is mandatory; there is no user setting to disable it.
+// Update-available dialog: shown in the center whenever an automatic
+// check finds a newer version. The user can accept or reject. If no choice
+// is made within 40 seconds, installation is forced. Rejecting does not
+// disable update checks; the next launch/hourly check will ask again.
 function showUpdateConfirmDialog(info){
   return new Promise((resolve)=>{
     const overlay = document.getElementById('updateConfirmOverlay');
@@ -25760,7 +25700,7 @@ function showUpdateConfirmDialog(info){
     msgEl.textContent = 'يتوفر إصدار جديد من البرنامج (' + info.version + ').' +
       formatUpdateNotesForDialog(info.notes) +
       '\nهل تريد تثبيته الآن؟';
-    let secondsLeft = 30;
+    let secondsLeft = 40;
     const renderCountdown = ()=>{
       countdownEl.textContent = 'سيتم التثبيت تلقائيًا خلال ' + secondsLeft + ' ثانية إن لم يتم اختيار قرار...';
     };
@@ -25783,7 +25723,7 @@ function showUpdateConfirmDialog(info){
     intervalId = setInterval(()=>{
       secondsLeft -= 1;
       if(secondsLeft <= 0){
-        finish(true); // no decision within 30 seconds — force the update
+        finish(true); // no decision within 40 seconds — force the update
         return;
       }
       renderCountdown();
@@ -25817,29 +25757,24 @@ async function checkForUpdates(manual){
         // #optional-updates-popup: a silent automatic check (manual is
         // false) with the toggle off no longer just posts a status line the
         // user has to notice themselves — it now asks directly, via a
-        // centered dialog with Accept/Reject and a 30-second countdown that
+        // centered dialog with Accept/Reject and a 40-second countdown that
         // installs anyway if nobody answers (see showUpdateConfirmDialog()
         // above and the direct request quoted on its own comment). An
         // explicit "فحص التحديثات الآن" click still always installs whatever
         // it finds right away with no dialog, same as before, regardless of
         // the toggle — that click is already the user's own decision.
-        if(!manual && !autoUpdateCheckEnabled()){
-          if(updateDialogSkippedVersions.has(info.version)){
-            // Already rejected this exact version once this session — don't
-            // nag again on every hourly automatic check; it will be asked
-            // again on the next real launch.
-            setStatus('يتوفر إصدار جديد (' + info.version + ') — تم تأجيله. اضغط "فحص التحديثات الآن" لتثبيته يدويًا.', 'var(--teal)');
-            return;
-          }
+        if(!manual){
+          // Mandatory automatic update behavior: every automatic check that
+          // finds a newer release presents the centered decision dialog.
+          // Reject only dismisses this occurrence; the next launch/hourly
+          // check will ask again. No setting can disable the check.
           setStatus('يتوفر إصدار جديد (' + info.version + ')...', 'var(--teal)');
           const accepted = await showUpdateConfirmDialog(info);
           if(!accepted){
-            updateDialogSkippedVersions.add(info.version);
-            setStatus('تم تأجيل التحديث (' + info.version + ') بناءً على اختيارك.', 'var(--ink-dim)');
+            setStatus('تم رفض التحديث (' + info.version + ') مؤقتًا. سيُعاد التحقق منه في الفحص القادم.', 'var(--ink-dim)');
             return;
           }
-          // accepted (explicit "قبول" OR the 30-second countdown ran out —
-          // both fall through identically into the same install path below).
+          // Accepted explicitly OR the 40-second timeout forced installation.
         }
         // sha256 (integrity) AND sig (authenticity — an ECDSA signature
         // made with the same key pair as activation codes, see
@@ -25878,17 +25813,19 @@ async function checkForUpdates(manual){
     try{ localStorage.setItem(LAST_UPDATE_CHECK_KEY, String(getTrustedNow())); }catch(e){}
     if(info && info.version && isDifferentVersion(info.version, APP_VERSION)){
       setStatus('يتوفر تحديث جديد: الإصدار ' + info.version, 'var(--green)');
-      // Same fix as the desktop branch above: only an explicit manual click
-      // opens the confirm dialog — a silent/automatic check just updates the
-      // status text (the banner already covers unprompted notification).
-      if(!manual) return;
-      const ok = await customConfirm(
-        'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
-        formatUpdateNotesForDialog(info.notes) +
-        '\nهل تريد فتح صفحة التحديث الآن؟'
-      );
-      const link = info.url || info.downloadUrl;
-      if(ok && link){ window.open(link, '_blank'); }
+      if(!manual){
+        const ok = await showUpdateConfirmDialog(info);
+        const link = info.url || info.downloadUrl;
+        if(ok && link){ window.open(link, '_blank'); }
+      }else{
+        const ok = await customConfirm(
+          'يتوفر تحديث جديد للبرنامج (الإصدار ' + info.version + ').\n' +
+          formatUpdateNotesForDialog(info.notes) +
+          '\nهل تريد فتح صفحة التحديث الآن؟'
+        );
+        const link = info.url || info.downloadUrl;
+        if(ok && link){ window.open(link, '_blank'); }
+      }
     }else{
       setStatus(tr('أنت تستخدم أحدث إصدار') + ' (' + APP_VERSION + ').', 'var(--green)');
     }
@@ -25954,14 +25891,9 @@ if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
   });
 }
 
-/* Automatic check on every startup, and hourly while the program stays
-   open — always runs (it also carries the license-directives security
-   check), but when autoUpdateCheckToggle is off, a found update now opens
-   the centered Accept/Reject/30-second-countdown dialog instead of
-   installing silently (see the #optional-updates-popup guard and
-   showUpdateConfirmDialog() inside/above checkForUpdates()); see
-   checkForUpdates() above for the install step itself (still integrity-
-   and signature-verified either way). */
+/* MANDATORY automatic update checks: every startup and every hour while the
+   program remains open. A newer release always opens the centered
+   Accept/Reject dialog; no decision for 40 seconds forces installation. */
 setTimeout(()=>{
   checkForUpdates(false);
 }, 3500);

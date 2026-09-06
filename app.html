@@ -4206,7 +4206,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    (bottom/inset-inline-end stay fixed), and overflow-y:auto is kept here
    as a fallback if even the expanded height still isn't enough rows. */
 .home-editlog-panel-body,#homeEditLogPanelBody{
-  max-height:210px!important;
+  max-height:168px!important;
   overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;
   scrollbar-gutter:stable!important;scroll-behavior:auto!important;
   transition:max-height .18s ease!important;
@@ -4296,7 +4296,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    special-casing left to remember. */
 @media(max-width:820px){
   .home-editlog-panel,#homeEditLogPanel{position:relative!important;left:auto!important;bottom:auto!important;width:100%!important;max-width:none!important;min-width:0!important;margin:10px 0 0!important;}
-  .home-editlog-panel-body,#homeEditLogPanelBody{height:132px!important;min-height:132px!important;max-height:132px!important;}
+  .home-editlog-panel-body,#homeEditLogPanelBody{height:106px!important;min-height:106px!important;max-height:106px!important;}
   .stats-home{grid-template-columns:repeat(2,minmax(0,.82fr))!important;}
 }
 </style>
@@ -7668,7 +7668,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '14.0.11';
+const APP_VERSION = '14.0.12';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة

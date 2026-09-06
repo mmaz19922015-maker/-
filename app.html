@@ -2354,7 +2354,7 @@
      that keep the OLD blocking-modal behavior — a real decision the user
      cannot route around by clicking elsewhere, exactly like a native OS
      message box stays modal even when regular app windows do not. */
-  #confirmOverlay, #promptOverlay, #storageSetupOverlay{
+  #confirmOverlay, #promptOverlay, #storageSetupOverlay, #updateConfirmOverlay{
     z-index:600000; background:rgba(12,28,34,0.5); pointer-events:auto;
   }
   .modal{
@@ -5102,6 +5102,30 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
   </div>
 </div>
 
+<!-- Update available — confirm dialog (#optional-updates-popup, "المطلوب اعادة
+     التحديثات اختيارية تظهر رسالة سوال عن التحديث في منتصف الشاشة اثناء
+     تشغيل البرنامج مع زر قبول او رفض وعداد ثواني لمدة 30 ثانية في حال عدم
+     اختيار قرار قم بالتحديث اجباري"): shown, centered, whenever a silent
+     automatic check finds an update while autoUpdateCheckToggle is off (see
+     checkForUpdates() further down) — same reuse-existing-classes pattern
+     as confirmOverlay/promptOverlay above, so it never needs its own theme
+     handling in light OR dark mode. Accept installs right away; Reject
+     dismisses for this app session only (checked again on the next
+     automatic check/launch, never nagging endlessly in the same run); no
+     choice within the 30-second countdown installs it anyway, exactly like
+     an accept. -->
+<div class="overlay" id="updateConfirmOverlay" style="align-items:center;">
+  <div class="modal narrow">
+    <div class="confirm-icon">🔄</div>
+    <div class="confirm-message" id="updateConfirmMessage" style="white-space:pre-line;"></div>
+    <div class="muted" id="updateConfirmCountdownText" style="text-align:center; font-size:12.5px; margin-bottom:10px;"></div>
+    <div class="confirm-actions">
+      <button type="button" class="btn-ghost btn-small" id="updateConfirmRejectBtn">❌ رفض</button>
+      <button type="button" class="btn-primary btn-small" id="updateConfirmAcceptBtn">✅ قبول وتثبيت</button>
+    </div>
+  </div>
+</div>
+
 <!-- Add/edit doctor modal -->
 <!-- Doctors directory modal (search doctors or cases) -->
 <!-- Case count filter (waiting / in progress / ready) -->
@@ -7460,7 +7484,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
         <div style="font-size:13.5px; font-weight:800; margin-bottom:10px; text-align:center;">🔄 تحديث البرنامج</div>
         <div style="font-size:13px; margin-bottom:10px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
         <label class="modern-toggle" style="margin-bottom:10px;"><input type="checkbox" id="autoUpdateCheckToggle" checked><span></span><b>التثبيت التلقائي للتحديثات</b></label>
-        <div class="muted" style="font-size:12px; margin-bottom:10px; line-height:1.7;">عند التفعيل، يثبّت البرنامج أي إصدار جديد بنفسه فور توفره عند كل فتح وكل ساعة. عند الإيقاف، يكتفي بإعلامك أن تحديثًا متوفرًا دون تثبيته تلقائيًا — ويبقى بإمكانك تثبيته يدويًا في أي وقت بالزر أدناه.</div>
+        <div class="muted" style="font-size:12px; margin-bottom:10px; line-height:1.7;">عند التفعيل، يثبّت البرنامج أي إصدار جديد بنفسه فور توفره عند كل فتح وكل ساعة. عند الإيقاف، يعرض عليك سؤالًا بقبول التحديث أو رفضه مع عدّاد 30 ثانية — إن لم تختر، يتم التثبيت تلقائيًا؛ ويبقى بإمكانك أيضًا تثبيته يدويًا في أي وقت بالزر أدناه.</div>
         <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="width:100%;">🌐 فحص التحديثات الآن</button>
         <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12.5px;"></div>
         <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
@@ -7672,7 +7696,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '14.0.8';
+const APP_VERSION = '14.0.9';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -14151,7 +14175,7 @@ let __overlayTopZ = 10000;
 // actually the thing keeping it on top, which made the guarantee fragile
 // rather than real. These three IDs are excluded here so their z-index
 // always comes from CSS alone, permanently immune to the stacking counter.
-const ALWAYS_TOP_OVERLAY_IDS = ['confirmOverlay', 'promptOverlay', 'storageSetupOverlay'];
+const ALWAYS_TOP_OVERLAY_IDS = ['confirmOverlay', 'promptOverlay', 'storageSetupOverlay', 'updateConfirmOverlay'];
 (function installOverlayStacking(){
   function raise(el){
     if(!el || !el.classList || !el.classList.contains('overlay')) return;
@@ -25708,6 +25732,66 @@ if(autoUpdateCheckToggleEl){
   });
 }
 
+// #optional-updates-popup ("تظهر رسالة سوال عن التحديث في منتصف الشاشة ...
+// مع زر قبول او رفض وعداد ثواني لمدة 30 ثانية في حال عدم اختيار قرار قم
+// بالتحديث اجباري"): the interactive ask-then-force-after-30s dialog for a
+// silent automatic check (autoUpdateCheckToggle off) finding an update —
+// replaces the previous passive "click the button yourself" status text for
+// that one case. Resolves true (install) on an explicit accept OR once the
+// 30-second countdown reaches zero with no answer (forced, per the direct
+// request); resolves false (skip, just for this running session) only on an
+// explicit reject — remembered in memory only (updateDialogSkippedVersions),
+// never in localStorage, so the next launch or automatic check asks again
+// rather than silently forgetting a real update forever.
+const updateDialogSkippedVersions = new Set();
+function showUpdateConfirmDialog(info){
+  return new Promise((resolve)=>{
+    const overlay = document.getElementById('updateConfirmOverlay');
+    const msgEl = document.getElementById('updateConfirmMessage');
+    const countdownEl = document.getElementById('updateConfirmCountdownText');
+    const acceptBtn = document.getElementById('updateConfirmAcceptBtn');
+    const rejectBtn = document.getElementById('updateConfirmRejectBtn');
+    if(!overlay || !msgEl || !countdownEl || !acceptBtn || !rejectBtn){
+      // Markup missing for some reason — never block a real update behind a
+      // dialog that can't render; fail safe by installing, same as timeout.
+      resolve(true);
+      return;
+    }
+    msgEl.textContent = 'يتوفر إصدار جديد من البرنامج (' + info.version + ').' +
+      formatUpdateNotesForDialog(info.notes) +
+      '\nهل تريد تثبيته الآن؟';
+    let secondsLeft = 30;
+    const renderCountdown = ()=>{
+      countdownEl.textContent = 'سيتم التثبيت تلقائيًا خلال ' + secondsLeft + ' ثانية إن لم يتم اختيار قرار...';
+    };
+    renderCountdown();
+    let settled = false;
+    let intervalId = null;
+    const finish = (accepted)=>{
+      if(settled) return;
+      settled = true;
+      if(intervalId) clearInterval(intervalId);
+      overlay.classList.remove('open');
+      acceptBtn.removeEventListener('click', onAccept);
+      rejectBtn.removeEventListener('click', onReject);
+      resolve(accepted);
+    };
+    const onAccept = ()=> finish(true);
+    const onReject = ()=> finish(false);
+    acceptBtn.addEventListener('click', onAccept);
+    rejectBtn.addEventListener('click', onReject);
+    intervalId = setInterval(()=>{
+      secondsLeft -= 1;
+      if(secondsLeft <= 0){
+        finish(true); // no decision within 30 seconds — force the update
+        return;
+      }
+      renderCountdown();
+    }, 1000);
+    overlay.classList.add('open');
+  });
+}
+
 async function checkForUpdates(manual){
   const statusEl = document.getElementById('onlineUpdateStatusText');
   const setStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
@@ -25730,14 +25814,32 @@ async function checkForUpdates(manual){
         return;
       }
       if(info.available){
-        // Only the ACTUAL install is gated: a silent automatic check
-        // (manual is false) with the toggle off stops here and just says
-        // an update exists, instead of downloading and installing it —
-        // an explicit "فحص التحديثات الآن" click always installs whatever
-        // it finds right away, same as before, regardless of the toggle.
+        // #optional-updates-popup: a silent automatic check (manual is
+        // false) with the toggle off no longer just posts a status line the
+        // user has to notice themselves — it now asks directly, via a
+        // centered dialog with Accept/Reject and a 30-second countdown that
+        // installs anyway if nobody answers (see showUpdateConfirmDialog()
+        // above and the direct request quoted on its own comment). An
+        // explicit "فحص التحديثات الآن" click still always installs whatever
+        // it finds right away with no dialog, same as before, regardless of
+        // the toggle — that click is already the user's own decision.
         if(!manual && !autoUpdateCheckEnabled()){
-          setStatus('يتوفر إصدار جديد (' + info.version + ') — التثبيت التلقائي متوقف؛ اضغط "فحص التحديثات الآن" لتثبيته.', 'var(--teal)');
-          return;
+          if(updateDialogSkippedVersions.has(info.version)){
+            // Already rejected this exact version once this session — don't
+            // nag again on every hourly automatic check; it will be asked
+            // again on the next real launch.
+            setStatus('يتوفر إصدار جديد (' + info.version + ') — تم تأجيله. اضغط "فحص التحديثات الآن" لتثبيته يدويًا.', 'var(--teal)');
+            return;
+          }
+          setStatus('يتوفر إصدار جديد (' + info.version + ')...', 'var(--teal)');
+          const accepted = await showUpdateConfirmDialog(info);
+          if(!accepted){
+            updateDialogSkippedVersions.add(info.version);
+            setStatus('تم تأجيل التحديث (' + info.version + ') بناءً على اختيارك.', 'var(--ink-dim)');
+            return;
+          }
+          // accepted (explicit "قبول" OR the 30-second countdown ran out —
+          // both fall through identically into the same install path below).
         }
         // sha256 (integrity) AND sig (authenticity — an ECDSA signature
         // made with the same key pair as activation codes, see
@@ -25854,9 +25956,10 @@ if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
 
 /* Automatic check on every startup, and hourly while the program stays
    open — always runs (it also carries the license-directives security
-   check), but stops short of actually installing a found update when
-   autoUpdateCheckToggle is off (see the #optional-updates guard inside
-   checkForUpdates() above); see
+   check), but when autoUpdateCheckToggle is off, a found update now opens
+   the centered Accept/Reject/30-second-countdown dialog instead of
+   installing silently (see the #optional-updates-popup guard and
+   showUpdateConfirmDialog() inside/above checkForUpdates()); see
    checkForUpdates() above for the install step itself (still integrity-
    and signature-verified either way). */
 setTimeout(()=>{

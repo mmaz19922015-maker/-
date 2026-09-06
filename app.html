@@ -4036,7 +4036,10 @@ body{font-family:var(--app-font,'Tajawal','Segoe UI',sans-serif);}
    rule of the same importance, so if positioning also touched `transform`
    it would permanently freeze out the `.show` lift animation the moment
    the JS ran once. */
-#dhikrPopup{inset-inline-start:250px!important;inset-inline-end:0!important;width:fit-content!important;margin-inline:auto!important;top:220px!important;bottom:auto!important;transform:translateY(0)!important;max-width:min(420px,34vw)!important;font-size:15.5px!important;padding:13px 20px!important;border-radius:15px!important;box-shadow:0 14px 34px rgba(15,35,45,.16)!important;}
+/* #234: "الاذكار تكبر كمان شوي" — a further, explicitly-requested size bump
+   on top of #232's repositioning (font-size/padding/max-width only; the
+   positioning rules above are untouched). */
+#dhikrPopup{inset-inline-start:250px!important;inset-inline-end:0!important;width:fit-content!important;margin-inline:auto!important;top:220px!important;bottom:auto!important;transform:translateY(0)!important;max-width:min(480px,38vw)!important;font-size:17px!important;padding:15px 24px!important;border-radius:16px!important;box-shadow:0 14px 34px rgba(15,35,45,.16)!important;}
 #dhikrPopup.show{transform:translateY(-5px)!important}
 /* Modern invoice designer */
 #invoicesListOverlay .modal{max-width:860px!important;border-radius:18px!important}#invoicesListBody{display:grid;gap:8px;max-height:calc(100vh - 220px);overflow:auto;padding:2px}.invoice-history-row,.invoice-list-row{border:1px solid var(--line)!important;border-radius:12px!important;background:var(--panel)!important;box-shadow:0 5px 16px rgba(20,40,50,.06)!important;padding:10px 12px!important;transition:.15s ease}.invoice-history-row:hover,.invoice-list-row:hover{transform:translateY(-1px);border-color:var(--teal)!important;box-shadow:0 9px 20px rgba(20,40,50,.10)!important}#invoicesListOverlay table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}#invoicesListOverlay th{position:sticky;top:0;z-index:2;background:var(--panel-2);padding:9px;font-weight:900;color:var(--ink-dim);white-space:nowrap}#invoicesListOverlay td{padding:9px;border-bottom:1px solid var(--line);font-weight:750;color:var(--ink)}
@@ -4241,6 +4244,31 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
 :root[data-theme="dark"] .home-editlog-table th,:root[data-theme="dark"] .home-editlog-table td,
 :root:not([data-theme="light"]) .home-editlog-table th,:root:not([data-theme="light"]) .home-editlog-table td{color:var(--ink)!important;border-color:var(--line)!important;}
 :root[data-theme="dark"] .home-editlog-table th,:root:not([data-theme="light"]) .home-editlog-table th{color:var(--ink-dim)!important;background:var(--panel)!important;}
+/* #235 ("مع الوضع الليلي محتواها يتخرب"): the rule just above only reaches
+   a PLAIN `.home-editlog-table td`, but every real body cell also carries
+   a `tr.log-row-*` class (see the near-black `#1b2024`/`#171b1e` hardcoded
+   text-color rules earlier in this file, one per row kind) — that compound
+   selector (class+class+3 type steps) is MORE SPECIFIC than the dark-mode
+   fix above regardless of source order, so it kept winning and the table
+   text stayed hardcoded near-black — unreadable on the dark panel
+   background. Matching the same compound selectors here, but themed, wins
+   outright (equal class-count, higher type-count on both sides is now
+   irrelevant since these are literally the same selectors prefixed with
+   the theme attribute, so a strict superset of specificity). */
+:root[data-theme="dark"] .home-editlog-table tbody tr td,
+:root[data-theme="dark"] .home-editlog-table tbody tr.log-row-add td,
+:root[data-theme="dark"] .home-editlog-table tbody tr.log-row-delete td,
+:root[data-theme="dark"] .home-editlog-table tbody tr.log-row-edit td,
+:root[data-theme="dark"] .home-editlog-table tbody tr.log-row-payment td,
+:root[data-theme="dark"] .home-editlog-table tbody tr.log-row-warning td,
+:root[data-theme="dark"] .home-editlog-table tbody tr.log-row-other td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr.log-row-add td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr.log-row-delete td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr.log-row-edit td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr.log-row-payment td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr.log-row-warning td,
+:root:not([data-theme="light"]) .home-editlog-table tbody tr.log-row-other td{color:var(--ink)!important;background:transparent!important;}
 /* Text-only clock above الرئيسية — no box, no seconds. margin-top:auto
    (#217) makes this the first child of .sidebar-actions that soaks up any
    leftover space above it, packing the clock+buttons group against the
@@ -5797,13 +5825,21 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
          one print icon here now prints whichever rows are checked in the
          list itself (printSelectedFromPayLog → the same real-invoice layout
          "🧾 الكشوفات" already uses for its own print-selected button). -->
-    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
+    <!-- #237 ("انقل هذا الزر من اسفل الشاشة وحطو جنب زر الطباعة مع ايقونة
+         طابعة جنبه ايضاً"): the "كشف مخصص" button used to sit alone at the
+         very bottom of the screen, far from the print action it actually
+         leads to (it opens a period/columns picker that ends in printing).
+         Moved up into this same section-head row, right beside the print
+         icon, with its own printer icon so it visually reads as another
+         printing entry point instead of an unrelated settings button. -->
+    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn icon-btn-print" id="printSelectedDoctorRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-ghost btn-small" data-custom-statement="doctor"><span aria-hidden="true" style="margin-inline-end:4px;">🖨</span>🧾 كشف مخصص — اختر الفترة والأعمدة</button>
+        <button type="button" class="icon-btn icon-btn-print" id="printSelectedDoctorRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      </div>
     </div>
     <div id="doctorRecentTxBody" style="margin-bottom:18px;"></div>
-
-    <button type="button" class="btn-ghost btn-small" data-custom-statement="doctor" style="width:100%; margin-top:8px;">🧾 كشف مخصص — اختر الفترة والأعمدة</button>
   </div>
 </div>
 
@@ -6114,14 +6150,17 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
       <button type="button" class="btn-ghost btn-small danger" data-purge-records="lab" style="color:var(--red); border-color:var(--red);">🧹 تفريغ السجل</button>
     </div>
 
-    <!-- Item 6 — see the identical doctor-screen comment above. -->
-    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
+    <!-- Item 6 — see the identical doctor-screen comment above. #237 — see
+         the identical doctor-screen comment above too: moved next to print. -->
+    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn icon-btn-print" id="printSelectedLabRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-ghost btn-small" data-custom-statement="lab"><span aria-hidden="true" style="margin-inline-end:4px;">🖨</span>🧾 كشف مخصص — اختر الفترة والأعمدة</button>
+        <button type="button" class="icon-btn icon-btn-print" id="printSelectedLabRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      </div>
     </div>
     <div id="labRecentTxBody" style="margin-bottom:18px;"></div>
 
-    <button type="button" class="btn-ghost btn-small" data-custom-statement="lab" style="width:100%; margin-top:8px;">🧾 كشف مخصص — اختر الفترة والأعمدة</button>
     <div class="muted" style="text-align:center; margin-top:10px; font-size:12px;">لإضافة حالة جديدة من هذا المختبر، استخدم "➕ إضافة حالة مرضية" واختر المصدر "مختبر"</div>
   </div>
 </div>
@@ -6223,14 +6262,16 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
       <button type="button" class="btn-ghost btn-small" id="companyGoodsCancelBtn">إلغاء</button>
     </form>
 
-    <!-- Item 6 — see the identical doctor-screen comment above. -->
-    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
+    <!-- Item 6 — see the identical doctor-screen comment above. #237 — see
+         the identical doctor-screen comment above too: moved next to print. -->
+    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn icon-btn-print" id="printSelectedCompanyRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-ghost btn-small" data-custom-statement="company"><span aria-hidden="true" style="margin-inline-end:4px;">🖨</span>🧾 كشف مخصص — اختر الفترة والأعمدة</button>
+        <button type="button" class="icon-btn icon-btn-print" id="printSelectedCompanyRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      </div>
     </div>
     <div id="companyRecentTxBody" style="margin-bottom:18px;"></div>
-
-    <button type="button" class="btn-ghost btn-small" data-custom-statement="company" style="width:100%; margin-top:8px;">🧾 كشف مخصص — اختر الفترة والأعمدة</button>
   </div>
 </div>
 
@@ -6363,14 +6404,16 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
       <button type="button" class="btn-ghost btn-small danger" id="deleteAgentFromStatementBtn" style="color:var(--red); border-color:var(--red);">🗑️ حذف المندوب</button>
       <button type="button" class="btn-ghost btn-small danger" data-purge-records="agent" style="color:var(--red); border-color:var(--red);">🧹 تفريغ السجل</button>
     </div>
-    <!-- Item 6 — see the identical doctor-screen comment above. -->
-    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between;">
+    <!-- Item 6 — see the identical doctor-screen comment above. #237 — see
+         the identical doctor-screen comment above too: moved next to print. -->
+    <div class="section-head" style="margin:0 0 10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
       <h2 style="font-size:14px;">📜 سجل الدفعات</h2>
-      <button type="button" class="icon-btn icon-btn-print" id="printSelectedAgentRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn-ghost btn-small" data-custom-statement="agent"><span aria-hidden="true" style="margin-inline-end:4px;">🖨</span>🧾 كشف مخصص — اختر الفترة والأعمدة</button>
+        <button type="button" class="icon-btn icon-btn-print" id="printSelectedAgentRecentTxBtn" title="طباعة الحركات المحددة">🖨</button>
+      </div>
     </div>
     <div id="agentRecentTxBody" style="margin-bottom:18px;"></div>
-
-    <button type="button" class="btn-ghost btn-small" data-custom-statement="agent" style="width:100%; margin-top:8px;">🧾 كشف مخصص — اختر الفترة والأعمدة</button>
   </div>
 </div>
 
@@ -7625,7 +7668,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '14.0.6';
+const APP_VERSION = '14.0.7';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -14461,6 +14504,18 @@ document.addEventListener('pointerdown', function(e){
     // `transform` fully back to this code immediately; resetOnOpen() below
     // clears the override so the pop animation replays normally next time.
     modal.style.animation = 'none';
+    // #236 (re-verification of #219): .overlay .modal carries its own
+    // pre-existing 0.22s transition on background-color/border-color/
+    // box-shadow (the smooth screen-color-theme switch, unrelated to
+    // maximizing). Confirmed this still settles correctly on its own —
+    // the geometry (position/width/height) already snaps instantly while
+    // the shadow/background used to visibly fade out over that same
+    // 0.22s, reading as slightly unfinished next to the rest of the
+    // instant maximize. Killing the transition here — the exact same
+    // technique already used for the entrance animation above — makes
+    // the whole maximize, shadow and background included, snap in
+    // together in one frame. clearMaximized() hands it back below.
+    modal.style.setProperty('transition', 'none', 'important');
     modal.style.position = 'fixed';
     modal.style.margin = '0';
     modal.style.transform = 'none';
@@ -14520,6 +14575,7 @@ document.addEventListener('pointerdown', function(e){
     modal.style.removeProperty('border-radius');
     modal.style.removeProperty('box-shadow');
     modal.style.removeProperty('background');
+    modal.style.removeProperty('transition'); // hand the theme-color transition back
     setMaxBtnState(modal, false);
   }
   function toggleMaximized(modal){
@@ -26641,6 +26697,49 @@ initAppFileHandle();
   }
 
   setInterval(tick, INTERVAL_MS);
+})();
+</script>
+
+<script id="editlog-hover-cap">
+/* #235: "بدي تقفل ارتفاعها عند ما توصل حجمها تحت المربعات الرئيسية وبلف
+   بالماوس عشان تعرض باقي محتواها" — hovering #homeEditLogPanel used to
+   grow it to a static min(60vh,480px) regardless of where the card
+   actually sits, which could grow it up UNDER (behind/over) the main home
+   stat cards (.stats-home). Computed dynamically instead: the cap is
+   however much room genuinely exists between the card's fixed bottom
+   anchor and the bottom edge of .stats-home, so the card's top can never
+   pass that boundary — anything beyond that cap is still fully reachable,
+   just by scrolling the card's own body (already `overflow-y:auto`)
+   instead of growing further. Set as an inline 'important' style (beats
+   the plain stylesheet hover rule the same way this file already relies
+   on elsewhere) only while the pointer is actually over the card, and
+   removed on mouseleave so the CSS ":hover" rule's own fallback value
+   never gets fought once the pointer leaves. Skipped under the same
+   width the CSS hover-expand rule itself is scoped to (@media(min-width:
+   821px)) — narrower layouts use a plain fixed-height card with no
+   hover-expand at all. */
+(function(){
+  var GAP = 10, BOTTOM_OFFSET = 18, MIN_CAP = 90, MAX_CAP = 480;
+  function capEditLogHoverHeight(){
+    if(window.innerWidth <= 820) return;
+    var body = document.getElementById('homeEditLogPanelBody');
+    var statsHome = document.querySelector('.stats-home');
+    if(!body || !statsHome) return;
+    var statsBottom = statsHome.getBoundingClientRect().bottom;
+    var available = window.innerHeight - BOTTOM_OFFSET - statsBottom - GAP;
+    var cap = Math.max(MIN_CAP, Math.min(MAX_CAP, available));
+    body.style.setProperty('max-height', Math.round(cap) + 'px', 'important');
+  }
+  function releaseEditLogHoverHeight(){
+    var body = document.getElementById('homeEditLogPanelBody');
+    if(body) body.style.removeProperty('max-height');
+  }
+  window.__capEditLogHoverHeight_forTests__ = capEditLogHoverHeight; // test-only hook
+  var panel = document.getElementById('homeEditLogPanel');
+  if(panel){
+    panel.addEventListener('mouseenter', capEditLogHoverHeight);
+    panel.addEventListener('mouseleave', releaseEditLogHoverHeight);
+  }
 })();
 </script>
 

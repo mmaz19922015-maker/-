@@ -7442,21 +7442,25 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
            onlineUpdateStatusText, rollbackUpdateField/Btn/StatusText) —
            none of the update-check JS elsewhere in the page had to change;
            it is fully id-driven and never assumed a fixed container.
-           (autoUpdateCheckToggle, the manual on/off control, was removed
-           entirely afterwards — updates are now always automatic.) -->
+           autoUpdateCheckToggle (the on/off control) was removed once, then
+           brought BACK per a later direct request ("رجع نظام التحديثات
+           اختياري") after a real bug made the fully-automatic version get
+           stuck endlessly reinstalling the same update on every launch (see
+           the update:check fix in main.js) — restoring the ability to turn
+           automatic INSTALLING off gives a way out if that, or anything
+           like it, ever happens again. The automatic CHECK itself (which
+           also carries the license-directives security check on its back)
+           always still runs on schedule regardless of this toggle — see
+           checkForUpdates() for exactly what it does and does not skip.
+           Default is ON (checked) so behavior for everyone stays exactly
+           as it already was unless this is deliberately switched off;
+           "فحص التحديثات الآن" always installs whatever it finds right
+           away, since that is an explicit request, not an automatic one. -->
       <div class="about-pro-section" style="margin-bottom:14px;">
         <div style="font-size:13.5px; font-weight:800; margin-bottom:10px; text-align:center;">🔄 تحديث البرنامج</div>
         <div style="font-size:13px; margin-bottom:10px;">الإصدار الحالي: <b id="updateTabVersionText">—</b></div>
-        <!-- Direct feedback: "بدي الابديت يكون اتوماتيكي اجباري لما يفتح
-             البرنامج يحدث حالو والغي زر التحكم بالتحديثات انو يحدث او لا" —
-             the on/off control that used to live here (autoUpdateCheckToggle)
-             is removed entirely, not just hidden: the program now always
-             checks for and installs updates automatically, on every launch
-             and periodically while open (see checkForUpdates() below), with
-             no setting anywhere that can turn that off. This button remains
-             only so the update can also be triggered on demand, right now,
-             instead of waiting for the next automatic check. -->
-        <div class="muted" style="font-size:12px; margin-bottom:10px; line-height:1.7;">التحديث تلقائي وإجباري — يتحقق البرنامج من وجود إصدار جديد ويثبّته بنفسه عند كل فتح للبرنامج.</div>
+        <label class="modern-toggle" style="margin-bottom:10px;"><input type="checkbox" id="autoUpdateCheckToggle" checked><span></span><b>التثبيت التلقائي للتحديثات</b></label>
+        <div class="muted" style="font-size:12px; margin-bottom:10px; line-height:1.7;">عند التفعيل، يثبّت البرنامج أي إصدار جديد بنفسه فور توفره عند كل فتح وكل ساعة. عند الإيقاف، يكتفي بإعلامك أن تحديثًا متوفرًا دون تثبيته تلقائيًا — ويبقى بإمكانك تثبيته يدويًا في أي وقت بالزر أدناه.</div>
         <button type="button" class="btn-ghost btn-small" id="checkUpdatesNowBtn" style="width:100%;">🌐 فحص التحديثات الآن</button>
         <div class="muted" id="onlineUpdateStatusText" style="margin-top:8px; line-height:1.6; font-size:12.5px;"></div>
         <!-- Follow-up request ("بدي كمان لو رفعت تحديث غلط اقدر ارجع
@@ -7668,7 +7672,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '14.0.7';
+const APP_VERSION = '14.0.8';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -14432,14 +14436,25 @@ document.addEventListener('pointerdown', function(e){
 
      Follow-up request ("لما كبر الشاشات احصر حجمها بالفراغ يلي بالشاشة
      الرئيسة تبلش من عند القائمة الرئيسة ومن تحت المربعات"): a maximized
-     window's TOP edge should also stop short of the home screen's own top
+     window's TOP edge used to also stop short of the home screen's own top
      rows (the big stat-count boxes + the calculator/lock/notes tool-card
-     row) instead of touching y=0, so that "desktop" strip stays visible
+     row) instead of touching y=0, so that "desktop" strip stayed visible
      even with something maximized — same spirit as leaving the sidebar
-     alone. This only applies while #homeView is actually the screen behind
-     everything (its rows only occupy real space when it isn't display:none);
-     on any other main-area view there is nothing to protect, so maximize
-     still reaches all the way to the top exactly as before. */
+     alone. This only applied while #homeView was actually the screen behind
+     everything (its rows only occupy real space when it isn't display:none).
+
+     REVERSED per a later, explicit direct request ("اتاكد انو الشاشات بس
+     دوس تكبير تبلش كمان من عند البار العلوي للبرنامج وتحت مش من تحت
+     المربعات - قارن شاشة اضافة حالة جديدة شوف مبدأ العرض تبعها وطبق نفس
+     النظام عالشاشات يلي منبثقة"): maximized popup screens must now start
+     right at the program's own top bar and extend downward, exactly like
+     the "إضافة حالة جديدة" (#caseFormView) screen's own display principle —
+     that screen is a plain in-flow docked view, not an overlay, and starts
+     right under the top bar with no awareness of the home screen's stat
+     cards at all. homeScreenTopGuard() below is kept (not deleted) purely as
+     history/documentation of the earlier request — it is no longer called
+     from sidebarAvoidingBounds()'s top calculation below, which now uses
+     topBarGuard() alone. */
   function homeScreenTopGuard(){
     const homeView = document.getElementById('homeView');
     if(!homeView || homeView.style.display === 'none') return 0;
@@ -14453,9 +14468,10 @@ document.addEventListener('pointerdown', function(e){
   // New persistent top bar (search/notifications/settings/account/date) sits
   // above EVERY screen now, not just the home screen — so it needs the same
   // "don't let a maximized window cover it" treatment homeScreenTopGuard
-  // above already gives the home screen's own top rows. Real, measured
-  // position every time (sticky, so it never actually leaves the top of
-  // #mainArea), never a hardcoded pixel value.
+  // above USED TO also give the home screen's own top rows (now reversed —
+  // see the comment above homeScreenTopGuard()). Real, measured position
+  // every time (sticky, so it never actually leaves the top of #mainArea),
+  // never a hardcoded pixel value.
   function topBarGuard(){
     const bar = document.getElementById('appTopbar');
     if(!bar) return 0;
@@ -14481,7 +14497,12 @@ document.addEventListener('pointerdown', function(e){
     // sidebar's centre falls in is the side it occupies, and the maximized
     // area fills everything on the OTHER side of it, top to bottom.
     const sidebarOnLeft = (r.left + r.right) / 2 < vw / 2;
-    const rawTop = Math.max(topBarGuard(), homeScreenTopGuard());
+    // #maximize-top-reversal: topBarGuard() ONLY — homeScreenTopGuard() used
+    // to also be included here (see the comment above its definition) but a
+    // later explicit request reversed that, so a maximized popup screen now
+    // starts right at the program's top bar exactly like #caseFormView does,
+    // never stopping short at the home screen's stat-card row.
+    const rawTop = topBarGuard();
     const top = Math.min(rawTop, Math.max(0, vh - MIN_MAXIMIZED_HEIGHT));
     return {
       left: sidebarOnLeft ? r.right : 0,
@@ -25618,12 +25639,12 @@ document.getElementById('dbBannerResumeBtn').addEventListener('click', async ()=
    Nothing is downloaded or installed automatically — the user must approve. */
 const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/mmaz19922015-maker/-/main/version.json';
 const LAST_UPDATE_CHECK_KEY = 'dental_lab_last_update_check_v1';
-// AUTO_UPDATE_ENABLED_KEY / autoUpdateEnabled() (the manual on/off toggle
-// backing autoUpdateCheckToggle) were removed per direct feedback ("بدي
-// الابديت يكون اتوماتيكي اجباري ... والغي زر التحكم بالتحديثات انو يحدث او
-// لا") — updates are now always automatic with no setting that can disable
-// that, so the startup timer and hourly interval below call
-// checkForUpdates() unconditionally.
+// The old AUTO_UPDATE_ENABLED_KEY / autoUpdateEnabled() toggle backing
+// autoUpdateCheckToggle was removed once (updates ran fully automatically,
+// no setting to disable that), then reinstated per a later direct request
+// ("رجع نظام التحديثات اختياري") after a real endless-reinstall-loop bug —
+// see AUTO_UPDATE_CHECK_KEY / autoUpdateCheckEnabled() further down, which
+// the startup timer and hourly interval below now actually consult.
 
 function isDifferentVersion(remote, local){
   /* Only a genuinely newer semantic version is an update. */
@@ -25662,6 +25683,31 @@ function formatUpdateNotesForDialog(notes){
   return '\n' + clipped + '\n';
 }
 
+// #optional-updates ("رجع نظام التحديثات اختياري"): a real, confirmed bug
+// (see main.js's update:check fix) could get the fully-automatic version
+// stuck endlessly reinstalling the same update on every launch, with no
+// way to log in — automatic INSTALLING is now switchable off as a way out
+// of that, or anything like it. This deliberately does NOT skip the check
+// itself on the automatic schedule: checkForUpdate() also piggybacks the
+// license-directives (revoke/shorten) fetch (see main.js's update:check),
+// a security check that must keep running on schedule regardless of this
+// toggle — only the actual download-and-install step that follows a found
+// update is skipped for a silent automatic check while this is off. Same
+// simple on/off-in-localStorage pattern the dhikr toggle already uses.
+// Default true (on) so nothing changes for anyone unless this is
+// deliberately switched off.
+const AUTO_UPDATE_CHECK_KEY = 'dental_lab_auto_update_check_v1';
+function autoUpdateCheckEnabled(){
+  return localStorage.getItem(AUTO_UPDATE_CHECK_KEY) !== 'false';
+}
+const autoUpdateCheckToggleEl = document.getElementById('autoUpdateCheckToggle');
+if(autoUpdateCheckToggleEl){
+  autoUpdateCheckToggleEl.checked = autoUpdateCheckEnabled();
+  autoUpdateCheckToggleEl.addEventListener('change', (e)=>{
+    localStorage.setItem(AUTO_UPDATE_CHECK_KEY, e.target.checked ? 'true' : 'false');
+  });
+}
+
 async function checkForUpdates(manual){
   const statusEl = document.getElementById('onlineUpdateStatusText');
   const setStatus = (msg, color)=>{ if(statusEl){ statusEl.textContent = msg; statusEl.style.color = color || 'var(--ink-dim)'; } };
@@ -25674,24 +25720,31 @@ async function checkForUpdates(manual){
   /* Desktop app: real one-click self-update (download + replace + restart). */
   if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
     try{
+      // Always called, even with auto-install off — this is also what
+      // carries the license-directives (revoke/shorten) security check on
+      // its back (see main.js's update:check), which must never be gated
+      // behind an update preference.
       const info = await window.ekhlasDesktop.checkForUpdate();
       if(!info){
         if(manual) setStatus('تعذّر الوصول لخادم التحديثات. تأكد من الاتصال أو من وجود ملف version.json في المستودع.', 'var(--red)');
         return;
       }
       if(info.available){
-        // Direct feedback: "بدي الابديت يكون اتوماتيكي اجباري لما يفتح
-        // البرنامج يحدث حالو والغي زر التحكم بالتحديثات انو يحدث او لا" —
-        // no confirmation gate any more, and no on/off setting exists to
-        // skip this: ANY check that finds a newer build (the automatic one
-        // at startup, the hourly one, or a manual "فحص التحديثات الآن"
-        // click) downloads and installs it right away. sha256 (integrity)
-        // AND sig (authenticity — an ECDSA signature made with the same key
-        // pair as activation codes, see lib/updater.js's file header) are
-        // both still independently verified against the downloaded bytes by
-        // the main process before anything on disk is touched — mandatory
-        // does not mean unverified; a corrupted or tampered/unsigned-when-
-        // expected download is still rejected instead of being installed.
+        // Only the ACTUAL install is gated: a silent automatic check
+        // (manual is false) with the toggle off stops here and just says
+        // an update exists, instead of downloading and installing it —
+        // an explicit "فحص التحديثات الآن" click always installs whatever
+        // it finds right away, same as before, regardless of the toggle.
+        if(!manual && !autoUpdateCheckEnabled()){
+          setStatus('يتوفر إصدار جديد (' + info.version + ') — التثبيت التلقائي متوقف؛ اضغط "فحص التحديثات الآن" لتثبيته.', 'var(--teal)');
+          return;
+        }
+        // sha256 (integrity) AND sig (authenticity — an ECDSA signature
+        // made with the same key pair as activation codes, see
+        // lib/updater.js's file header) are both still independently
+        // verified against the downloaded bytes by the main process before
+        // anything on disk is touched; a corrupted or tampered/unsigned-
+        // when-expected download is still rejected instead of installed.
         if(!info.rawUrl){ if(manual) showToast('رابط التحديث غير مضبوط في version.json (rawUrl).', 'error'); return; }
         setStatus('يتوفر إصدار جديد (' + info.version + ') — جارٍ التحديث تلقائيًا...', 'var(--teal)');
         const result = await window.ekhlasDesktop.installUpdate(info.rawUrl, info.sha256 || null, info.sig || null, info.version || null);
@@ -25799,10 +25852,13 @@ if(window.ekhlasDesktop && window.ekhlasDesktop.isDesktop){
   });
 }
 
-/* Automatic and mandatory check on every startup, and hourly while the
-   program stays open — per direct feedback there is no setting anywhere
-   that can skip or disable this; see checkForUpdates() above for the
-   install step itself (still integrity- and signature-verified). */
+/* Automatic check on every startup, and hourly while the program stays
+   open — always runs (it also carries the license-directives security
+   check), but stops short of actually installing a found update when
+   autoUpdateCheckToggle is off (see the #optional-updates guard inside
+   checkForUpdates() above); see
+   checkForUpdates() above for the install step itself (still integrity-
+   and signature-verified either way). */
 setTimeout(()=>{
   checkForUpdates(false);
 }, 3500);

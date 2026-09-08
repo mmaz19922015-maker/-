@@ -9265,7 +9265,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.69';
+const APP_VERSION = '15.0.70';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -26450,7 +26450,10 @@ async function checkForUpdates(manual){
       }
     }catch(e){
       console.error('desktop update check failed', e);
-      if(manual) setStatus('تعذّر الوصول لخادم التحديثات.', 'var(--red)');
+      if(manual){
+        const detail = String(e && e.message || '').trim();
+        setStatus(detail ? ('تعذّر الوصول لخادم التحديثات: ' + detail) : 'تعذّر الوصول لخادم التحديثات.', 'var(--red)');
+      }
     }
     return;
   }

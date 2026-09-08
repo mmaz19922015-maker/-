@@ -74,6 +74,7 @@ globalThis.AppArchitecture = Object.freeze({
       if(typeof globalThis.__ekhlasOnUpdateProgress === 'function') return globalThis.__ekhlasOnUpdateProgress(callback);
       return ()=>{};
     },
+    printHtml: (html, title)=>invoke('printHtml', html, title),
     installUpdateInstaller: (setupUrl, setupSha256, setupSig, version)=>invoke('installUpdateInstaller', setupUrl, setupSha256, setupSig, version),
     installUpdate: (rawUrl, sha256, sig, version)=>invoke('installUpdate', rawUrl, sha256, sig, version),
     rollbackUpdate: ()=>invoke('rollbackUpdate')
@@ -1584,6 +1585,20 @@ globalThis.AppLocalization = Object.freeze({
      (was a light teal tint) added to echo the reference dashboard image's
      own sidebar, where the active/home nav item is a solid filled pill —
      colour/shape only, same button, same text, same position. */
+  .home-editlog-table .col-icon{ width:46px; text-align:center; padding-inline:6px; }
+  .home-editlog-semantic-icon{ width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:9px; border:1px solid currentColor; }
+  .home-editlog-semantic-icon svg{ width:19px; height:19px; display:block; }
+  .home-editlog-semantic-icon.log-icon-money-in{ color:#1d8a5a; background:rgba(29,138,90,.10); }
+  .home-editlog-semantic-icon.log-icon-money-out{ color:#b36a08; background:rgba(179,106,8,.10); }
+  .home-editlog-semantic-icon.log-icon-money-delete{ color:#c43d48; background:rgba(196,61,72,.10); }
+  .home-editlog-semantic-icon.log-icon-case{ color:#7a58b6; background:rgba(122,88,182,.10); }
+  .home-editlog-semantic-icon.log-icon-add{ color:#15806b; background:rgba(21,128,107,.10); }
+  .home-editlog-semantic-icon.log-icon-edit{ color:#4b63b7; background:rgba(75,99,183,.10); }
+  .home-editlog-semantic-icon.log-icon-delete{ color:#c43d48; background:rgba(196,61,72,.10); }
+  .home-editlog-semantic-icon.log-icon-invoice{ color:#9a6a15; background:rgba(154,106,21,.10); }
+  .home-editlog-semantic-icon.log-icon-warning{ color:#a86b00; background:rgba(168,107,0,.10); }
+  .home-editlog-semantic-icon.log-icon-other{ color:var(--teal); background:var(--teal-tint); }
+
   .sidebar-btn-home{
     /* #227 ("تكبير زر الرئيسية قليلًا لأنه أساسي"): a modest bump on top of
        its already-larger 19px/900-weight text and solid fill — a taller
@@ -9291,7 +9306,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.75';
+const APP_VERSION = '15.0.76';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -17599,10 +17614,24 @@ AppEventController.on(AppDOMController.getById('closeInvoiceTypeChooserBtn'), 'c
   AppOverlayController.close('invoiceTypeChooserOverlay');
 });
 AppEventController.on(AppDOMController.getById('invoiceTypeSimpleBtn'), 'click', ()=>{
-  AppFeatureController.invoke('invoice','create');
+  AppOverlayController.close('invoiceTypeChooserOverlay');
+  try{
+    if(typeof openCreateInvoiceOverlay === 'function') openCreateInvoiceOverlay();
+    else AppFeatureController.invoke('invoice','create');
+  }catch(err){
+    console.error('invoice create navigation failed', err);
+    showToast('تعذّر فتح شاشة إنشاء الفاتورة.', 'error');
+  }
 });
 AppEventController.on(AppDOMController.getById('invoiceTypeStatementBtn'), 'click', ()=>{
-  AppFeatureController.invoke('accountStatement','open');
+  AppOverlayController.close('invoiceTypeChooserOverlay');
+  try{
+    if(typeof openAccountStatement === 'function') openAccountStatement();
+    else AppFeatureController.invoke('accountStatement','open');
+  }catch(err){
+    console.error('invoice statement navigation failed', err);
+    try{ AppFeatureController.invoke('accountStatement','open'); }catch(e){}
+  }
 });
 
 // Shortcut from "إنشاء فاتورة" to the existing case-invoice printer.
@@ -17636,11 +17665,18 @@ AppEventController.on(AppDOMController.getById('caseInvoiceShortcutContinueBtn')
 // #invoiceAppearanceOverlay screen — see openInvoiceAppearanceOverlay()
 // below — reached from its own sidebar button, not from in here.
 function openCreateInvoiceOverlay(){
-  AppDOMController.getById('createInvoiceForm').reset();
+  const form = AppDOMController.getById('createInvoiceForm');
+  if(!form || !createInvoiceOverlay){
+    showToast('تعذّر تجهيز شاشة إنشاء الفاتورة.', 'error');
+    return false;
+  }
+  form.reset();
   AppDOMState.set(AppDOMController.getById('invRecipientType'), 'value', 'doctor');
   renderInvoiceRecipientPicker();
   renderInvoiceCurrencyOptions();
+  AppOverlayController.close('invoiceTypeChooserOverlay');
   AppOverlayController.open(createInvoiceOverlay.id);
+  return true;
 }
 AppEventController.on(AppDOMController.getById('closeCreateInvoiceBtn'), 'click', ()=> AppOverlayController.close(createInvoiceOverlay.id));
 AppEventController.on(AppDOMController.getById('cancelCreateInvoiceBtn'), 'click', ()=> AppOverlayController.close(createInvoiceOverlay.id));
@@ -18267,6 +18303,19 @@ function classifyEditLogEntry(description){
   if(/(فشل|خطأ|تنبيه|تحذير)/.test(text)) return {cls:'status-log-warning', label:'تنبيه'};
   return {cls:'status-log-other', label:'عملية'};
 }
+function editLogSemanticIcon(description){
+  const text = String(description || '');
+  if(/حذف.*دفعة|إلغاء.*دفعة/.test(text)) return {cls:'log-icon-money-delete', label:'حذف دفعة', svg:'<path d="M3 7h18v13H3zM3 10h18M7 16h3"/><path d="m15 14 5 5M20 14l-5 5"/>'};
+  if(/دفعة صادرة|صادرة|مصروف|مصاريف/.test(text)) return {cls:'log-icon-money-out', label:'دفعة صادرة', svg:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M16 15h2"/><path d="M12 10V3M9 6l3-3 3 3"/>'};
+  if(/دفعة واردة|واردة|قبض|تحصيل/.test(text)) return {cls:'log-icon-money-in', label:'دفعة واردة', svg:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M16 15h2"/><path d="M12 3v7M9 7l3 3 3-3"/>'};
+  if(/حالة|حالات/.test(text)) return {cls:'log-icon-case', label:'حالة', svg:'<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h6M8 16h4"/>'};
+  if(/إضافة|اضافة|إنشاء|انشاء|تسجيل/.test(text)) return {cls:'log-icon-add', label:'إضافة', svg:'<path d="M12 5v14M5 12h14"/>'};
+  if(/تعديل|تحديث|تغيير/.test(text)) return {cls:'log-icon-edit', label:'تعديل', svg:'<path d="M5 19h4L19 9l-4-4L5 15z"/><path d="m13 6 4 4"/>'};
+  if(/حذف/.test(text)) return {cls:'log-icon-delete', label:'حذف', svg:'<path d="M6 7h12M9 7V4h6v3M8 7l1 13h6l1-13M10 10v7M14 10v7"/>'};
+  if(/فاتورة/.test(text)) return {cls:'log-icon-invoice', label:'فاتورة', svg:'<path d="M6 3h9l3 3v15H6zM15 3v4h3M9 11h6M9 15h6"/>'};
+  if(/(فشل|خطأ|تنبيه|تحذير)/.test(text)) return {cls:'log-icon-warning', label:'تنبيه', svg:'<path d="M12 4 21 20H3z"/><path d="M12 9v5M12 17v.2"/>'};
+  return {cls:'log-icon-other', label:'عملية', svg:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'};
+}
 // Item 8 / follow-up (reference-image redesign): the home screen's compact
 // edit-log panel — shows the newest entries inline (newest first, editLog is
 // already unshift()-ordered) as a real table. The body is wheel-scrollable,
@@ -18290,6 +18339,7 @@ function renderHomeEditLogPanel(){
   recent.forEach((entry)=>{
     const clickable = !!(entry.context && entry.context.type);
     const row = AppDOMController.create('tr');
+    const semanticIcon = editLogSemanticIcon(entry.description);
     row.className = 'log-row-' + classifyEditLogEntry(entry.description).cls.replace('status-log-','');
     if(clickable) {
       AppClassState.add(row, 'is-clickable');
@@ -18299,7 +18349,8 @@ function renderHomeEditLogPanel(){
     }
     const when = (entry.date || '-') + (entry.time ? ' — ' + to12Hour(entry.time) : '');
     const actor = entry.enteredBy || 'الأدمن';
-    AppDOMState.set(row, 'innerHTML', '<td class="col-date">' + escapeHtml(when) + '</td>' +
+    AppDOMState.set(row, 'innerHTML', '<td class="col-icon"><span class="home-editlog-semantic-icon '+semanticIcon.cls+'" title="'+escapeHtml(semanticIcon.label)+'" aria-label="'+escapeHtml(semanticIcon.label)+'"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+semanticIcon.svg+'</svg></span></td>' +
+      '<td class="col-date">' + escapeHtml(when) + '</td>' +
       '<td class="col-actor">' + escapeHtml(actor) + '</td>' +
       '<td class="col-desc" title="' + escapeHtml(entry.description || '') + '">' + escapeHtml(entry.description || '—') + '</td>');
     // Bind the row directly as well as keeping the delegated listener below.
@@ -18827,6 +18878,10 @@ function openCaseIdCard(ownerType, ownerId, caseId){
 AppEventController.on(AppDOMController.getById('closeCaseIdCardBtn'), 'click', ()=> AppOverlayController.close('caseIdCardOverlay'));
 AppEventController.on(AppDOMController.getById('caseIdCardEditBtn'), 'click', ()=>{
   if(!caseIdCardRef) return;
+  // Editing is a destination screen; close the source lookup cards first.
+  AppOverlayController.close('caseIdCardOverlay');
+  AppOverlayController.close('caseTypePickerOverlay');
+  AppOverlayController.close('caseFilterOverlay');
   openEditCaseModal(caseIdCardRef.ownerType, caseIdCardRef.ownerId, caseIdCardRef.caseId);
 });
 AppEventController.on(AppDOMController.getById('caseIdCardHistoryBtn'), 'click', ()=>{
@@ -20325,7 +20380,13 @@ function printViaHiddenFrame(html){
 
 /* Opens a print window with the given document, falling back to the hidden
    frame when no window can be opened. */
-function openPrintWindow(html, blockedMessage){
+async function openPrintWindow(html, blockedMessage){
+  try{
+    if(typeof AppDesktopService !== 'undefined' && AppDesktopService.isDesktop && typeof AppDesktopService.printHtml === 'function'){
+      const result = await AppDesktopService.printHtml(html, blockedMessage || '');
+      if(result && result.ok) return true;
+    }
+  }catch(e){ console.error('native print bridge failed', e); }
   const w = window.open('', '_blank');
   if(!w){
     if(printViaHiddenFrame(html)) return true;
@@ -20335,8 +20396,6 @@ function openPrintWindow(html, blockedMessage){
   AppDOMDocument.write(w.document, html);
   AppDOMDocument.close(w.document);
   AppDOMInteraction.focus(w);
-  // Give the webfont and layout a moment; printing too early prints a
-  // half-styled page on a cold font cache.
   setTimeout(()=>{ try{ w.print(); }catch(e){ console.error(e); } }, 450);
   return true;
 }
@@ -28845,16 +28904,19 @@ if(global.AppFeatureController){
   }
   window.AL95Toast=showAL95Toast;
 
-  // Tooth selection: remove rectangular visual selection and use the tooth itself.
-  // We only add a class; existing application selection logic remains authoritative.
+  // Keep the visual helper class synchronized with the real `.selected` state.
+  // Never leave a ghost highlight on the last clicked tooth after deselection.
+  function syncToothHighlight(){
+    document.querySelectorAll('[data-tooth]').forEach(function(tooth){
+      AppClassState.toggle(tooth, 'al95-tooth-selected', tooth.classList.contains('selected'));
+    });
+  }
   AppEventController.on(document, 'click', function(e){
     var tooth=e.target.closest('.tooth,.tooth-icon,.dental-tooth,[data-tooth]');
     if(!tooth) return;
-    document.querySelectorAll('.al95-tooth-selected').forEach(function(x){
-      AppClassState.remove(x, 'al95-tooth-selected');
-    });
-    AppClassState.add(tooth, 'al95-tooth-selected');
+    setTimeout(syncToothHighlight, 0);
   });
+  syncToothHighlight();
 })();
 
 </script>
@@ -29469,6 +29531,20 @@ if(global.AppFeatureController){
     const badge = document.createElement('span');
     badge.className = 'btn-icon-badge ' + colorFor(el);
     const key = ((el.id||'') + ' ' + rest).toLowerCase();
+    const SIDEBAR_ICONS = {
+      homeBtn:'<path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-5.5h5V20"/>',
+      addPatientCaseBtn:'<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8 13h8M12 9v8"/>',
+      incomingPaymentsBtn:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M16 15h2"/><path d="M12 3v7M9 7l3 3 3-3"/>',
+      expensePaymentsBtn:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M16 15h2"/><path d="M12 10V3M9 6l3-3 3 3"/>',
+      cancelPaymentSidebarBtn:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M8 14l8 8M16 14l-8 8"/>',
+      checksRegisterSidebarBtn:'<path d="M4 5h16v14H4z"/><path d="M7 9h10M7 13h6M7 16h4"/><circle cx="17" cy="16" r="2"/>',
+      workLogSidebarBtn:'<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+      createInvoiceSidebarBtn:'<path d="M6 3.5h9l3 3V21H6z"/><path d="M15 3.5v4h3M9 11h6M9 15h6M9 19h4"/>',
+      invoiceAppearanceSidebarBtn:'<path d="M12 3a9 9 0 1 0 0 18h1.5a2 2 0 0 0 0-4H12a2 2 0 0 1 0-4h3a6 6 0 0 0 0-10z"/><circle cx="8" cy="8" r="1" fill="currentColor"/><circle cx="6.5" cy="12" r="1" fill="currentColor"/>',
+      themeToggleSidebarBtn:'<path d="M19 15.2A7.5 7.5 0 1 1 8.8 5 6 6 0 0 0 19 15.2z"/>',
+      manageUsersSidebarBtn:'<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M15.5 19a4 4 0 0 1 5 0"/>',
+      aboutSidebarBtn:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8.2v.2"/>',
+    };
     const ICONS = [
       [/الرئيسية|home/, 'M3 11.5 12 4l9 7.5M5.5 10v9h13v-9M9 19v-5h6v5'],
       [/إضافة|اضافة|جديد|add/, 'M12 5v14M5 12h14'],
@@ -29494,8 +29570,13 @@ if(global.AppFeatureController){
       [/آلة|حاسبة|calculator/, 'M6 3h12v18H6zM9 7h6M9 11h2M13 11h2M9 15h2M13 15h2'],
     ];
     let path='M12 3v18M3 12h18';
-    for(const [re,p] of ICONS){ if(re.test(key)){ path=p; break; } }
-    badge.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="'+path+'" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+    if(el.closest('.sidebar')){
+      path = SIDEBAR_ICONS[el.id] || path;
+      badge.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';
+    }else{
+      for(const [re,p] of ICONS){ if(re.test(key)){ path=p; break; } }
+      badge.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="'+path+'" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+    }
     const label = document.createElement('span');
     label.className = 'btn-label';
     label.textContent = rest;

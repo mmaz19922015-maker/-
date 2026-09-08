@@ -1586,18 +1586,18 @@ globalThis.AppLocalization = Object.freeze({
      own sidebar, where the active/home nav item is a solid filled pill —
      colour/shape only, same button, same text, same position. */
   .home-editlog-table .col-icon{ width:46px; text-align:center; padding-inline:6px; }
-  .home-editlog-semantic-icon{ width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:9px; border:1px solid currentColor; }
-  .home-editlog-semantic-icon svg{ width:19px; height:19px; display:block; }
-  .home-editlog-semantic-icon.log-icon-money-in{ color:#1d8a5a; background:rgba(29,138,90,.10); }
-  .home-editlog-semantic-icon.log-icon-money-out{ color:#b36a08; background:rgba(179,106,8,.10); }
-  .home-editlog-semantic-icon.log-icon-money-delete{ color:#c43d48; background:rgba(196,61,72,.10); }
-  .home-editlog-semantic-icon.log-icon-case{ color:#7a58b6; background:rgba(122,88,182,.10); }
-  .home-editlog-semantic-icon.log-icon-add{ color:#15806b; background:rgba(21,128,107,.10); }
-  .home-editlog-semantic-icon.log-icon-edit{ color:#4b63b7; background:rgba(75,99,183,.10); }
-  .home-editlog-semantic-icon.log-icon-delete{ color:#c43d48; background:rgba(196,61,72,.10); }
-  .home-editlog-semantic-icon.log-icon-invoice{ color:#9a6a15; background:rgba(154,106,21,.10); }
-  .home-editlog-semantic-icon.log-icon-warning{ color:#a86b00; background:rgba(168,107,0,.10); }
-  .home-editlog-semantic-icon.log-icon-other{ color:var(--teal); background:var(--teal-tint); }
+  .home-editlog-semantic-icon{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:11px; border:0; color:#fff; box-shadow:0 4px 10px rgba(16,36,43,.14); overflow:hidden; }
+  .home-editlog-semantic-icon svg{ width:23px; height:23px; display:block; }
+  .home-editlog-semantic-icon.log-icon-money-in{ background:#1d9b68; }
+  .home-editlog-semantic-icon.log-icon-money-out{ background:#d48812; }
+  .home-editlog-semantic-icon.log-icon-money-delete{ background:#d34855; }
+  .home-editlog-semantic-icon.log-icon-case{ background:#8661c5; }
+  .home-editlog-semantic-icon.log-icon-add{ background:#159a80; }
+  .home-editlog-semantic-icon.log-icon-edit{ background:#5270c8; }
+  .home-editlog-semantic-icon.log-icon-delete{ background:#d34855; }
+  .home-editlog-semantic-icon.log-icon-invoice{ background:#b47b16; }
+  .home-editlog-semantic-icon.log-icon-warning{ background:#d28a08; }
+  .home-editlog-semantic-icon.log-icon-other{ background:#168f83; }
 
   .sidebar-btn-home{
     /* #227 ("تكبير زر الرئيسية قليلًا لأنه أساسي"): a modest bump on top of
@@ -9306,7 +9306,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.76';
+const APP_VERSION = '15.0.78';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -17614,24 +17614,10 @@ AppEventController.on(AppDOMController.getById('closeInvoiceTypeChooserBtn'), 'c
   AppOverlayController.close('invoiceTypeChooserOverlay');
 });
 AppEventController.on(AppDOMController.getById('invoiceTypeSimpleBtn'), 'click', ()=>{
-  AppOverlayController.close('invoiceTypeChooserOverlay');
-  try{
-    if(typeof openCreateInvoiceOverlay === 'function') openCreateInvoiceOverlay();
-    else AppFeatureController.invoke('invoice','create');
-  }catch(err){
-    console.error('invoice create navigation failed', err);
-    showToast('تعذّر فتح شاشة إنشاء الفاتورة.', 'error');
-  }
+  AppFeatureController.invoke('invoice','create');
 });
 AppEventController.on(AppDOMController.getById('invoiceTypeStatementBtn'), 'click', ()=>{
-  AppOverlayController.close('invoiceTypeChooserOverlay');
-  try{
-    if(typeof openAccountStatement === 'function') openAccountStatement();
-    else AppFeatureController.invoke('accountStatement','open');
-  }catch(err){
-    console.error('invoice statement navigation failed', err);
-    try{ AppFeatureController.invoke('accountStatement','open'); }catch(e){}
-  }
+  AppFeatureController.invoke('accountStatement','open');
 });
 
 // Shortcut from "إنشاء فاتورة" to the existing case-invoice printer.
@@ -17674,7 +17660,6 @@ function openCreateInvoiceOverlay(){
   AppDOMState.set(AppDOMController.getById('invRecipientType'), 'value', 'doctor');
   renderInvoiceRecipientPicker();
   renderInvoiceCurrencyOptions();
-  AppOverlayController.close('invoiceTypeChooserOverlay');
   AppOverlayController.open(createInvoiceOverlay.id);
   return true;
 }
@@ -18305,16 +18290,17 @@ function classifyEditLogEntry(description){
 }
 function editLogSemanticIcon(description){
   const text = String(description || '');
-  if(/حذف.*دفعة|إلغاء.*دفعة/.test(text)) return {cls:'log-icon-money-delete', label:'حذف دفعة', svg:'<path d="M3 7h18v13H3zM3 10h18M7 16h3"/><path d="m15 14 5 5M20 14l-5 5"/>'};
-  if(/دفعة صادرة|صادرة|مصروف|مصاريف/.test(text)) return {cls:'log-icon-money-out', label:'دفعة صادرة', svg:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M16 15h2"/><path d="M12 10V3M9 6l3-3 3 3"/>'};
-  if(/دفعة واردة|واردة|قبض|تحصيل/.test(text)) return {cls:'log-icon-money-in', label:'دفعة واردة', svg:'<rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17M16 15h2"/><path d="M12 3v7M9 7l3 3 3-3"/>'};
-  if(/حالة|حالات/.test(text)) return {cls:'log-icon-case', label:'حالة', svg:'<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h6M8 16h4"/>'};
-  if(/إضافة|اضافة|إنشاء|انشاء|تسجيل/.test(text)) return {cls:'log-icon-add', label:'إضافة', svg:'<path d="M12 5v14M5 12h14"/>'};
-  if(/تعديل|تحديث|تغيير/.test(text)) return {cls:'log-icon-edit', label:'تعديل', svg:'<path d="M5 19h4L19 9l-4-4L5 15z"/><path d="m13 6 4 4"/>'};
-  if(/حذف/.test(text)) return {cls:'log-icon-delete', label:'حذف', svg:'<path d="M6 7h12M9 7V4h6v3M8 7l1 13h6l1-13M10 10v7M14 10v7"/>'};
-  if(/فاتورة/.test(text)) return {cls:'log-icon-invoice', label:'فاتورة', svg:'<path d="M6 3h9l3 3v15H6zM15 3v4h3M9 11h6M9 15h6"/>'};
-  if(/(فشل|خطأ|تنبيه|تحذير)/.test(text)) return {cls:'log-icon-warning', label:'تنبيه', svg:'<path d="M12 4 21 20H3z"/><path d="M12 9v5M12 17v.2"/>'};
-  return {cls:'log-icon-other', label:'عملية', svg:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'};
+  const icon = (cls,label,svg)=>({cls,label,svg});
+  if(/حذف.*دفعة|إلغاء.*دفعة/.test(text)) return icon('log-icon-money-delete','حذف دفعة','<rect x="4" y="7" width="16" height="12" rx="3" fill="#e5484d"/><rect x="7" y="5" width="10" height="3" rx="1.5" fill="#ffb020"/><circle cx="9" cy="13" r="1.5" fill="#fff"/><path d="m13 11 4 4m0-4-4 4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>');
+  if(/دفعة صادرة|صادرة|مصروف|مصاريف/.test(text)) return icon('log-icon-money-out','دفعة صادرة','<rect x="4" y="6" width="16" height="12" rx="3" fill="#ff9f1c"/><rect x="7" y="9" width="10" height="2.5" rx="1" fill="#fff"/><path d="M12 2.8v7m-2.8-2.7L12 9.9l2.8-2.8" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="15" r="2" fill="#3b82f6"/>');
+  if(/دفعة واردة|واردة|قبض|تحصيل/.test(text)) return icon('log-icon-money-in','دفعة واردة','<rect x="4" y="6" width="16" height="12" rx="3" fill="#16a36a"/><rect x="7" y="9" width="10" height="2.5" rx="1" fill="#fff"/><path d="M12 2.8v7m-2.8-2.7L12 9.9l2.8-2.8" fill="none" stroke="#ffd166" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="15" r="2" fill="#ffd166"/>');
+  if(/حالة|حالات/.test(text)) return icon('log-icon-case','حالة','<path d="M6 3.5h9l3 3V20a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 5 20V5a1.5 1.5 0 0 1 1-1.5Z" fill="#8b5cf6"/><path d="M15 3.5v4h3" fill="#c4b5fd"/><path d="M8.5 12h7M8.5 15.5h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="17" r="3.2" fill="#ec4899"/><path d="M17 15.3v3.4m-1.7-1.7h3.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>');
+  if(/إضافة|اضافة|إنشاء|انشاء|تسجيل/.test(text)) return icon('log-icon-add','إضافة','<circle cx="9" cy="8" r="4" fill="#22c55e"/><path d="M3.5 19.5c.7-3.5 2.5-5.3 5.5-5.3s4.8 1.8 5.5 5.3" fill="#22c55e"/><circle cx="17.5" cy="16.5" r="4" fill="#3b82f6"/><path d="M17.5 14.2v4.6m-2.3-2.3h4.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>');
+  if(/تعديل|تحديث|تغيير/.test(text)) return icon('log-icon-edit','تعديل','<path d="M5 18.5 6 14 15.8 4.2a2.3 2.3 0 0 1 3.2 0l.8.8a2.3 2.3 0 0 1 0 3.2L10 18H5Z" fill="#3b82f6"/><path d="m14.8 5.2 4 4" stroke="#ffd166" stroke-width="2.5" stroke-linecap="round"/><path d="M5 18.5h4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>');
+  if(/حذف/.test(text)) return icon('log-icon-delete','حذف','<path d="M6 7h12l-1 13H7L6 7Z" fill="#ef4444"/><path d="M9 7V4h6v3M4.5 7h15" fill="none" stroke="#b91c1c" stroke-width="1.8" stroke-linecap="round"/><path d="M10 10v7m4-7v7" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>');
+  if(/فاتورة/.test(text)) return icon('log-icon-invoice','فاتورة','<path d="M6 3.5h9l3 3V20.5H6V3.5Z" fill="#2563eb"/><path d="M15 3.5v4h3" fill="#93c5fd"/><path d="M9 11h6M9 14.5h6M9 18h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="17.5" r="2.6" fill="#f59e0b"/>');
+  if(/(فشل|خطأ|تنبيه|تحذير)/.test(text)) return icon('log-icon-warning','تنبيه','<path d="M12 3 21 20H3L12 3Z" fill="#fbbf24"/><path d="M12 8v6" stroke="#b45309" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2" fill="#b45309"/>');
+  return icon('log-icon-other','عملية','<circle cx="12" cy="12" r="9" fill="#14b8a6"/><path d="M12 7v5l3 2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" fill="#67e8f9"/>');
 }
 // Item 8 / follow-up (reference-image redesign): the home screen's compact
 // edit-log panel — shows the newest entries inline (newest first, editLog is
@@ -18349,7 +18335,7 @@ function renderHomeEditLogPanel(){
     }
     const when = (entry.date || '-') + (entry.time ? ' — ' + to12Hour(entry.time) : '');
     const actor = entry.enteredBy || 'الأدمن';
-    AppDOMState.set(row, 'innerHTML', '<td class="col-icon"><span class="home-editlog-semantic-icon '+semanticIcon.cls+'" title="'+escapeHtml(semanticIcon.label)+'" aria-label="'+escapeHtml(semanticIcon.label)+'"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+semanticIcon.svg+'</svg></span></td>' +
+    AppDOMState.set(row, 'innerHTML', '<td class="col-icon"><span class="home-editlog-semantic-icon '+semanticIcon.cls+'" title="'+escapeHtml(semanticIcon.label)+'" aria-label="'+escapeHtml(semanticIcon.label)+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+semanticIcon.svg+'</svg></span></td>' +
       '<td class="col-date">' + escapeHtml(when) + '</td>' +
       '<td class="col-actor">' + escapeHtml(actor) + '</td>' +
       '<td class="col-desc" title="' + escapeHtml(entry.description || '') + '">' + escapeHtml(entry.description || '—') + '</td>');
@@ -30730,10 +30716,10 @@ html,body,button,input,select,textarea{font-family:var(--app-font)!important;}
 
 /* Main dashboard card icons: slightly larger without changing card geometry. */
 .stats-home .stat-icon-circle{
-  width:42px !important;
-  height:42px !important;
-  min-width:42px !important;
-  font-size:23px !important;
+  width:55px !important;
+  height:55px !important;
+  min-width:55px !important;
+  font-size:30.5px !important;
 }
 
 /* Sidebar icons: larger, cleaner vector badges; the SVGs are generated locally

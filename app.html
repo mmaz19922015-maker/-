@@ -70,6 +70,10 @@ globalThis.AppArchitecture = Object.freeze({
     setObject: (name,value,revision)=>invoke('setObject', name,value,revision),
     relaunchApp: ()=>invoke('relaunchApp'),
     checkForUpdate: ()=>invoke('checkForUpdate'),
+    onUpdateProgress: (callback)=>{
+      if(typeof globalThis.__ekhlasOnUpdateProgress === 'function') return globalThis.__ekhlasOnUpdateProgress(callback);
+      return ()=>{};
+    },
     installUpdateInstaller: (setupUrl, setupSha256, setupSig, version)=>invoke('update:install-installer', setupUrl, setupSha256, setupSig, version),
     installUpdate: (rawUrl, sha256, sig, version)=>invoke('installUpdate', rawUrl, sha256, sig, version),
     rollbackUpdate: ()=>invoke('rollbackUpdate')
@@ -9265,7 +9269,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.70';
+const APP_VERSION = '15.0.71';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -26376,9 +26380,74 @@ function showUpdateConfirmDialog(info){
   });
 }
 
+let __updateDownloadInProgress = false;
+let __updateProgressUnsubscribe = null;
+
+function ensureUpdateProgressUI(){
+  const statusEl = AppDOMController.getById('onlineUpdateStatusText');
+  if(!statusEl) return null;
+  let box = AppDOMController.getById('updateDownloadProgressBox');
+  if(box) return box;
+  box = AppDOMController.create('div');
+  box.id = 'updateDownloadProgressBox';
+  box.className = 'update-download-progress';
+  AppDOMState.set(box, 'innerHTML',
+    '<div class="update-download-progress-top">' +
+      '<span id="updateDownloadProgressLabel">جاري تنزيل المثبّت الآمن…</span>' +
+      '<strong id="updateDownloadProgressPercent">0%</strong>' +
+    '</div>' +
+    '<div class="update-download-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
+      '<span id="updateDownloadProgressBar"></span>' +
+    '</div>' +
+    '<div id="updateDownloadProgressBytes" class="update-download-progress-bytes"></div>');
+  AppDOMTree.insertBefore(statusEl.parentNode, box, statusEl.nextSibling);
+  return box;
+}
+
+function setUpdateProgress(progress){
+  const box = ensureUpdateProgressUI();
+  if(!box) return;
+  const pctEl = AppDOMController.getById('updateDownloadProgressPercent');
+  const bar = AppDOMController.getById('updateDownloadProgressBar');
+  const bytes = AppDOMController.getById('updateDownloadProgressBytes');
+  const label = AppDOMController.getById('updateDownloadProgressLabel');
+  const track = box.querySelector('.update-download-progress-track');
+  if(progress && Number.isFinite(progress.percent)){
+    const pct=Math.max(0,Math.min(100,Math.round(progress.percent)));
+    if(pctEl) AppDOMState.set(pctEl, 'textContent', pct+'%');
+    if(bar) AppDOMStyle.set(bar, 'width', pct+'%');
+    if(track) AppDOMMutation.setAttribute(track, 'aria-valuenow', String(pct));
+  }
+  if(progress && Number.isFinite(progress.received)){
+    const mb=(progress.received/1048576).toFixed(1);
+    const total=(Number(progress.total)||0)/1048576;
+    if(bytes) AppDOMState.set(bytes, 'textContent', total>0 ? ('تم تنزيل '+mb+' من '+total.toFixed(1)+' ميجابايت') : ('تم تنزيل '+mb+' ميجابايت'));
+  }
+  if(label && progress && progress.phase==='download-complete') AppDOMState.set(label, 'textContent', 'اكتمل التنزيل، جارٍ تشغيل المثبّت…');
+  AppDOMStyle.set(box, 'display', 'block');
+}
+
+function setUpdateBusy(busy){
+  __updateDownloadInProgress = !!busy;
+  const btn = AppDOMController.getById('checkUpdatesNowBtn');
+  if(btn){
+    AppDOMState.set(btn, 'disabled', !!busy);
+    AppDOMMutation.setAttribute(btn, 'aria-busy', busy ? 'true' : 'false');
+  }
+  if(busy) ensureUpdateProgressUI();
+}
+
+if(AppServices.desktop && AppServices.desktop.isDesktop && typeof AppServices.desktop.onUpdateProgress === 'function' && !__updateProgressUnsubscribe){
+  __updateProgressUnsubscribe = AppServices.desktop.onUpdateProgress(setUpdateProgress);
+}
+
 async function checkForUpdates(manual){
   const statusEl = AppDOMController.getById('onlineUpdateStatusText');
   const setStatus = (msg, color)=>{ if(statusEl){ AppDOMState.set(statusEl, 'textContent', msg); AppDOMStyle.set(statusEl, 'color', color || 'var(--ink-dim)'); } };
+  if(__updateDownloadInProgress){
+    if(manual) setStatus('التحديث قيد التنزيل بالفعل. يرجى الانتظار حتى يكتمل.', 'var(--teal)');
+    return;
+  }
   if(!navigator.onLine){
     if(manual) setStatus('لا يوجد اتصال بالإنترنت حاليًا.', 'var(--red)');
     return;
@@ -26434,9 +26503,17 @@ async function checkForUpdates(manual){
           return;
         }
         setStatus('يتوفر إصدار كامل جديد (' + info.version + ') — جارٍ تنزيل المثبّت الآمن...', 'var(--teal)');
-        const result = await AppServices.desktop.installUpdateInstaller(info.setupUrl, info.setupSha256, info.setupSig, info.version || null);
+        setUpdateBusy(true);
+        setUpdateProgress({phase:'download',received:0,total:0,percent:0});
+        let result;
+        try{
+          result = await AppServices.desktop.installUpdateInstaller(info.setupUrl, info.setupSha256, info.setupSig, info.version || null);
+        }finally{
+          setUpdateBusy(false);
+        }
         if(result && result.ok){
-          showCenterFlash('تم تثبيت التحديث (الإصدار ' + info.version + ')، جارٍ إعادة فتح البرنامج...', '🔄');
+          setUpdateProgress({phase:'download-complete',received:1,total:1,percent:100});
+          showCenterFlash('اكتمل تنزيل التحديث والتحقق منه، جارٍ تشغيل المثبّت وإعادة فتح البرنامج...', '🔄');
           setTimeout(()=> AppServices.desktop.relaunchApp(), 1200);
         }else if(result && result.reason === 'checksum-mismatch'){
           setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (sha256). لم يُثبَّت شيء.', 'var(--red)');
@@ -26975,6 +27052,85 @@ AppEventController.on(window, 'load', ()=> fitHomeScreenToViewport());
     e.preventDefault();
   }
 
+  function rectAt(panel,left,top){
+    const r=panel.getBoundingClientRect();
+    return {left,top,right:left+r.width,bottom:top+r.height,width:r.width,height:r.height};
+  }
+
+  function intersects(a,b,gap=14){
+    return !(a.right + gap <= b.left || b.right + gap <= a.left ||
+             a.bottom + gap <= b.top || b.bottom + gap <= a.top);
+  }
+
+  function resolveNonOverlap(panel, desiredLeft, desiredTop){
+    const vw = window.innerWidth || 1280;
+    const vh = window.innerHeight || 800;
+    const others = PANELS.map(spec=>panelById(spec.id))
+      .filter(p=>p && p !== panel && !p.classList.contains('is-collapsed'));
+    let left = desiredLeft, top = desiredTop;
+    const clamp = (l,t)=>{
+      return {
+        left:Math.max(H_MARGIN-panel.offsetWidth, Math.min(l, vw-H_MARGIN)),
+        top:Math.max(V_MARGIN-panel.offsetHeight, Math.min(t, vh-V_MARGIN))
+      };
+    };
+    for(let pass=0; pass<4; pass++){
+      let changed=false;
+      const me=rectAt(panel,left,top);
+      for(const other of others){
+        const or=other.getBoundingClientRect();
+        const ob={left:or.left,top:or.top,right:or.right,bottom:or.bottom};
+        if(!intersects(me,ob)) continue;
+
+        // Push in the direction of the user's drag first; if there is not
+        // enough room, choose the closest side with the smallest movement.
+        const candidates=[
+          {left:ob.right+18, top:me.top},
+          {left:ob.left-me.width-18, top:me.top},
+          {left:me.left, top:ob.bottom+18},
+          {left:me.left, top:ob.top-me.height-18}
+        ].map(c=>clamp(c.left,c.top));
+        candidates.sort((a,b)=>{
+          const da=Math.hypot(a.left-desiredLeft,a.top-desiredTop);
+          const db=Math.hypot(b.left-desiredLeft,b.top-desiredTop);
+          return da-db;
+        });
+        let placed=null;
+        for(const c of candidates){
+          const cr=rectAt(panel,c.left,c.top);
+          if(!intersects(cr,ob)){placed=c;break;}
+        }
+        if(!placed){
+          // Last resort: move the OTHER panel away instead of ever allowing
+          // the two cards to occupy the same pixels.
+          const target=others.find(x=>x===other);
+          if(target){
+            const tr=target.getBoundingClientRect();
+            const moveCandidates=[
+              {left:me.right+18,top:tr.top},
+              {left:me.left-tr.width-18,top:tr.top},
+              {left:tr.left,top:me.bottom+18},
+              {left:tr.left,top:me.top-tr.height-18}
+            ];
+            for(const c of moveCandidates){
+              const cc=clamp(c.left,c.top);
+              const rr=rectAt(target,cc.left,cc.top);
+              if(!intersects(rr,me)){
+                applyPosition(target,cc);
+                savePosition(target);
+                break;
+              }
+            }
+          }
+        }else{
+          left=placed.left; top=placed.top; changed=true;
+        }
+      }
+      if(!changed) break;
+    }
+    return {left,top};
+  }
+
   function moveDrag(e){
     if(!dragging || e.pointerId !== dragging.pointerId) return;
     const dx = e.clientX - dragging.startX;
@@ -26984,13 +27140,12 @@ AppEventController.on(window, 'load', ()=> fitHomeScreenToViewport());
     let newLeft = dragging.rectLeft + dx;
     let newTop = dragging.rectTop + dy;
 
-    // Same reachability rule as the application's existing draggable modals:
-    // most of the window may move beyond an edge, but a usable grip remains.
     newLeft = Math.max(H_MARGIN - dragging.rectWidth, Math.min(newLeft, vw - H_MARGIN));
     newTop = Math.max(V_MARGIN - dragging.rectHeight, Math.min(newTop, vh - V_MARGIN));
 
-    const usedDx = newLeft - dragging.rectLeft;
-    const usedDy = newTop - dragging.rectTop;
+    const safe=resolveNonOverlap(dragging.panel,newLeft,newTop);
+    const usedDx = safe.left - dragging.rectLeft;
+    const usedDy = safe.top - dragging.rectTop;
     dragging.panel.style.setProperty('transform',
       'translate(' + (dragging.baseX + usedDx) + 'px, ' + (dragging.baseY + usedDy) + 'px)', 'important');
   }
@@ -27014,6 +27169,7 @@ AppEventController.on(window, 'load', ()=> fitHomeScreenToViewport());
     positions[panel.id] = {left:r.left, top:r.top};
     saveJson(POS_KEY, positions);
     dragging = null;
+    separateVisiblePanels();
   }
 
   function onEye(e){
@@ -27036,6 +27192,7 @@ AppEventController.on(window, 'load', ()=> fitHomeScreenToViewport());
       applyPosition(panel, {left:r.left, top:r.top});
       savePosition(panel);
     });
+    separateVisiblePanels();
   }
 
   function init(){
@@ -30348,6 +30505,110 @@ html,body,button,input,select,textarea{font-family:var(--app-font)!important;}
 
 /* Collapsed state is only a deliberate eye-button action. */
 .home-floating-panel.is-collapsed{height:56px!important;min-height:56px!important;max-height:56px!important;}
+
+
+/* 15.0.71 — real installer download progress and stable floating dashboard windows.
+ * All visual assets remain bundled into the renderer build; this layer only
+ * controls presentation and interaction state. */
+.update-download-progress{
+  display:none;
+  margin-top:10px;
+  padding:10px 11px;
+  border:1px solid var(--line,rgba(120,145,158,.18));
+  border-radius:10px;
+  background:var(--panel-2,rgba(242,247,249,.88));
+}
+.update-download-progress-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:11.5px;
+  font-weight:800;
+  color:var(--ink,#21343d);
+}
+.update-download-progress-top strong{font-size:13px;}
+.update-download-progress-track{
+  height:9px;
+  margin-top:8px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(120,145,158,.16);
+}
+.update-download-progress-track > span{
+  display:block;
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:var(--teal,#1ea86c);
+  transition:width .12s linear;
+}
+.update-download-progress-bytes{
+  margin-top:5px;
+  font-size:10px;
+  color:var(--ink-dim,#71828a);
+  text-align:center;
+}
+
+/* Equal, content-safe height for the two dashboard floating windows. */
+#homeStatusPanel,
+#homeEditLogPanel{
+  height:300px !important;
+  min-height:300px !important;
+  max-height:300px !important;
+}
+#homeStatusPanel .home-status-body,
+#homeEditLogPanel .home-editlog-panel-body{
+  max-height:none !important;
+}
+#homeStatusPanel .home-status-body{
+  height:calc(300px - 56px) !important;
+  min-height:244px !important;
+  overflow:hidden !important;
+}
+#homeEditLogPanel .home-editlog-panel-body{
+  height:calc(300px - 56px - 42px) !important;
+  min-height:0 !important;
+  max-height:none !important;
+}
+#homeStatusPanel .home-status-chart-area{
+  min-height:160px !important;
+}
+#homeStatusPanel .home-status-donut{
+  width:154px !important;
+  height:154px !important;
+}
+
+/* Main dashboard card icons: slightly larger without changing card geometry. */
+.stats-home .stat-icon-circle{
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+  font-size:23px !important;
+}
+
+/* Sidebar icons: larger, cleaner vector badges; the SVGs are generated locally
+ * by 13-button-icon-badges.js and are therefore present inside app.html. */
+.sidebar-btn .btn-icon-badge{
+  width:40px !important;
+  height:40px !important;
+  min-width:40px !important;
+  border-radius:12px !important;
+}
+.sidebar-btn .btn-icon-badge svg{
+  width:21px !important;
+  height:21px !important;
+}
+.sidebar-btn-home{
+  min-height:46px !important;
+  font-size:15.5px !important;
+  font-weight:950 !important;
+}
+.sidebar-btn-home .btn-icon-badge{
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+}
 
 </style>
 <!-- SOURCE-JS: src/renderer/scripts/14-visual-refresh-13-0.js -->

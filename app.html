@@ -4743,6 +4743,42 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
 }
 
 </style>
+<style data-source="../styles/26-visual-refresh-15-0-73.css">
+/* 15.0.73 — visual refresh for navigation, dashboard and recent operations. */
+/* Sidebar icons: the icon is the colored shape itself — no colored circle/tile behind it. */
+.sidebar-btn .btn-icon-badge{
+  width:42px !important;height:42px !important;min-width:42px !important;
+  border:0 !important;background:transparent !important;box-shadow:none !important;
+  border-radius:0 !important;padding:0 !important;margin-inline-end:10px !important;
+  display:inline-flex !important;align-items:center !important;justify-content:center !important;
+  color:var(--teal) !important;transition:transform .16s ease,filter .16s ease !important;
+}
+.sidebar-btn .btn-icon-badge svg{width:30px !important;height:30px !important;display:block !important;filter:drop-shadow(0 2px 4px rgba(0,0,0,.16));}
+.sidebar-btn .btn-icon-badge.c-teal{color:#20c7b5 !important;}
+.sidebar-btn .btn-icon-badge.c-people{color:#4b9cff !important;}
+.sidebar-btn .btn-icon-badge.c-violet{color:#a06cff !important;}
+.sidebar-btn .btn-icon-badge.c-orange,.sidebar-btn .btn-icon-badge.c-out{color:#ff9d2e !important;}
+.sidebar-btn .btn-icon-badge.c-in,.sidebar-btn .btn-icon-badge.c-cases{color:#22c987 !important;}
+.sidebar-btn .btn-icon-badge.c-invoice,.sidebar-btn .btn-icon-badge.c-gold{color:#f2c34f !important;}
+.sidebar-btn .btn-icon-badge.c-doc{color:#36b9ee !important;}
+.sidebar-btn .btn-icon-badge.c-blue{color:#4b91ff !important;}
+.sidebar-btn .btn-icon-badge.c-red{color:#ff5b65 !important;}
+.sidebar-btn:hover .btn-icon-badge{transform:scale(1.10);filter:saturate(1.12) !important;}
+.stats-home .stat-icon-circle{
+  width:52.5px !important;height:52.5px !important;min-width:52.5px !important;font-size:28.75px !important;
+}
+.home-editlog-table .col-type{white-space:nowrap;font-weight:900;}
+.home-editlog-type-icon{width:30px;height:30px;border-radius:0;display:inline-flex;align-items:center;justify-content:center;margin-inline-end:5px;vertical-align:middle;background:transparent !important;box-shadow:none !important;}
+.home-editlog-type-icon svg{width:15px;height:15px;}
+.home-editlog-table .status-log-add .home-editlog-type-icon{color:#0f9d55;}
+.home-editlog-table .status-log-payment .home-editlog-type-icon{color:#087f5b;}
+.home-editlog-table .status-log-edit .home-editlog-type-icon{color:#596772;}
+.home-editlog-table .status-log-delete .home-editlog-type-icon{color:#d1293b;}
+.home-editlog-table .status-log-warning .home-editlog-type-icon{color:#c97700;}
+.home-editlog-table .status-log-other .home-editlog-type-icon{color:#3478d4;}
+@media(max-width:900px){.home-editlog-table .col-type{font-size:11px}.home-editlog-type-icon{width:27px;height:27px;border-radius:0}.home-editlog-type-icon svg{width:13px;height:13px}}
+
+</style>
 </head>
 <body>
 
@@ -9269,7 +9305,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.71';
+const APP_VERSION = '15.0.73';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -18238,12 +18274,12 @@ function renderEditLogPage(){
 // column using this app's own wording instead of the image's.
 function classifyEditLogEntry(description){
   const text = String(description || '');
-  if(/حذف/.test(text)) return {cls:'status-log-delete', label:'حذف'};
-  if(/(دفعة واردة|دفعة منه|قبض|تحصيل)/.test(text)) return {cls:'status-log-payment', label:'دفعة واردة'};
-  if(/(إضافة|اضافة|إنشاء|انشاء|تسجيل)/.test(text)) return {cls:'status-log-add', label:'إضافة'};
-  if(/تعديل|تحديث|تغيير/.test(text)) return {cls:'status-log-edit', label:'تعديل'};
-  if(/(فشل|خطأ|تنبيه|تحذير)/.test(text)) return {cls:'status-log-warning', label:'تنبيه'};
-  return {cls:'status-log-other', label:'عملية'};
+  if(/حذف/.test(text)) return {cls:'status-log-delete', label:'حذف', icon:'M6 6l12 12M18 6 6 18'};
+  if(/(دفعة واردة|دفعة منه|قبض|تحصيل)/.test(text)) return {cls:'status-log-payment', label:'دفعة واردة', icon:'M4 7.5h16v12H4zM4 10.5h16M16 15.5h2'};
+  if(/(إضافة|اضافة|إنشاء|انشاء|تسجيل)/.test(text)) return {cls:'status-log-add', label:'إضافة', icon:'M12 5v14M5 12h14'};
+  if(/تعديل|تحديث|تغيير/.test(text)) return {cls:'status-log-edit', label:'تعديل', icon:'M4 17.5V20h2.5L18 8.5 15.5 6zM14 7.5l2.5 2.5'};
+  if(/(فشل|خطأ|تنبيه|تحذير)/.test(text)) return {cls:'status-log-warning', label:'تنبيه', icon:'M12 4l9 16H3zM12 10v4M12 17v.2'};
+  return {cls:'status-log-other', label:'عملية', icon:'M5 5h14v14H5zM8 9h8M8 13h6'};
 }
 // Item 8 / follow-up (reference-image redesign): the home screen's compact
 // edit-log panel — shows the newest entries inline (newest first, editLog is
@@ -18263,7 +18299,7 @@ function renderHomeEditLogPanel(){
   }
   const table = AppDOMController.create('table');
   table.className = 'home-editlog-table';
-  AppDOMState.set(table, 'innerHTML', '<thead><tr><th>التاريخ</th><th>نفذ التعديل</th><th>التعديل</th></tr></thead><tbody></tbody>');
+  AppDOMState.set(table, 'innerHTML', '<thead><tr><th>التاريخ</th><th>نفذ التعديل</th><th>النوع</th><th>التعديل</th></tr></thead><tbody></tbody>');
   const tbody = table.querySelector('tbody');
   recent.forEach((entry)=>{
     const clickable = !!(entry.context && entry.context.type);
@@ -18277,8 +18313,11 @@ function renderHomeEditLogPanel(){
     }
     const when = (entry.date || '-') + (entry.time ? ' — ' + to12Hour(entry.time) : '');
     const actor = entry.enteredBy || 'الأدمن';
+    const type = classifyEditLogEntry(entry.description);
+    const iconSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + type.icon + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
     AppDOMState.set(row, 'innerHTML', '<td class="col-date">' + escapeHtml(when) + '</td>' +
       '<td class="col-actor">' + escapeHtml(actor) + '</td>' +
+      '<td class="col-type ' + type.cls + '"><span class="home-editlog-type-icon">' + iconSvg + '</span><span>' + escapeHtml(type.label) + '</span></td>' +
       '<td class="col-desc" title="' + escapeHtml(entry.description || '') + '">' + escapeHtml(entry.description || '—') + '</td>');
     // Bind the row directly as well as keeping the delegated listener below.
     // This prevents a dashboard re-render/event-boundary change from making
@@ -29370,6 +29409,25 @@ if(global.AppFeatureController){
     [/حالة|حالات|سن\b|case/i, 'c-cases'],
   ];
   const ROTATION = ['c-teal','c-people','c-violet','c-doc','c-cases','c-people'];
+  // Sidebar-only icon language: modern outline glyphs with a deliberate
+  // colour per navigation function. These are local SVG paths, so nothing
+  // depends on an icon CDN or an installed font.
+  const SIDEBAR_ICON_SET = [
+    [/الرئيسية|home/, ['c-teal','M3 10.8 12 3.8l9 7M5.5 10v9.5h13V10M9.2 19.5v-5.2h5.6v5.2']],
+    [/الطلاب|طالب|students?/, ['c-people','M16.5 20v-1.4a4.2 4.2 0 0 0-4.2-4.2H7.2A4.2 4.2 0 0 0 3 18.6V20M9.7 10.8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM16 4.8a3 3 0 0 1 0 5.9M16.2 14.5a4.1 4.1 0 0 1 4.8 4V20']],
+    [/الدورات|دورة|courses?/, ['c-violet','M5 4.5h14v15H5zM8 8h8M8 12h6M8 16h5M9.5 4.5v-1h5v1']],
+    [/المدربين|مدرب|trainers?/, ['c-orange','M15.5 20v-1.2a4.2 4.2 0 0 0-4.2-4.2H7.2A4.2 4.2 0 0 0 3 18.8V20M9.4 10.8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM16 11l2 2 4-4']],
+    [/الدفعات الواردة|وارد|المقبوضات|income/, ['c-in','M4 7.5h16v12H4zM4 10.5h16M16.5 15.5h1.5M7 4.5h10']],
+    [/المستحقات|دفعات صادرة|مصروف|outgoing|expense/, ['c-out','M4 7.5h16v12H4zM4 10.5h16M7 15.5h2M17 4.5l-5 4']],
+    [/الفواتير|فاتورة|invoice/, ['c-invoice','M6 3.5h9l3 3v14H6zM9 11h6M9 15h6M9 18h4']],
+    [/الشهادات|شهادة|certificates?/, ['c-gold','M6 4h12v12H6zM9 8h6M9 11h5M9 16l3 3 3-3']],
+    [/التقارير|تقرير|reports?/, ['c-doc','M5 4h14v16H5zM8 16v-4M12 16V8M16 16v-7']],
+    [/الإعدادات|إعداد|settings?/, ['c-teal','M12 3.5l1.1 2.4 2.6.4-1.9 1.9.4 2.6-2.2-1.2-2.2 1.2.4-2.6-1.9-1.9 2.6-.4L12 3.5zM12 11a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4z']],
+    [/الموظفين|مستخدم|الصلاحيات|users?/, ['c-people','M16.5 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20M9.7 10a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM16 11a2.6 2.6 0 1 0 0-5.2']],
+    [/السجل|آخر العمليات|سجل|log/, ['c-cases','M5 4h14v16H5zM8 8h8M8 12h8M8 16h5']],
+    [/نسخ احتياطي|التخزين|database|backup/, ['c-blue','M4 6.5c0-2 16-2 16 0v11c0 2-16 2-16 0zM4 6.5c0 2 16 2 16 0M4 12c0 2 16 2 16 0']],
+    [/حول|معلومات|about|info/, ['c-violet','M12 17v-5M12 8.5v-.2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z']]
+  ];
   function hashStr(s){
     let h = 0;
     for(let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) | 0; }
@@ -29395,6 +29453,10 @@ if(global.AppFeatureController){
   function isCloseButton(el){
     return /close/i.test(el.id || '') || (el.textContent || '').includes('إغلاق');
   }
+  function sidebarIconFor(key){
+    for(const [re, data] of SIDEBAR_ICON_SET){ if(re.test(key)) return data; }
+    return ['c-blue','M5 4h14v16H5zM8 9h8M8 13h6'];
+  }
   function applyIconBadge(el){
     if(!el || el.dataset.iconBadged === '1') return;
     if(isCloseButton(el)){ el.dataset.iconBadged = '1'; return; }
@@ -29408,8 +29470,9 @@ if(global.AppFeatureController){
     const extraNodes = Array.from(el.childNodes).filter(n => n.nodeType === 1);
     el.textContent = '';
     const badge = document.createElement('span');
-    badge.className = 'btn-icon-badge ' + colorFor(el);
     const key = ((el.id||'') + ' ' + rest).toLowerCase();
+    const sidebarData = el.classList && el.classList.contains('sidebar-btn') ? sidebarIconFor(key) : null;
+    badge.className = 'btn-icon-badge ' + (sidebarData ? sidebarData[0] : colorFor(el));
     const ICONS = [
       [/الرئيسية|home/, 'M3 11.5 12 4l9 7.5M5.5 10v9h13v-9M9 19v-5h6v5'],
       [/إضافة|اضافة|جديد|add/, 'M12 5v14M5 12h14'],
@@ -29435,7 +29498,7 @@ if(global.AppFeatureController){
       [/آلة|حاسبة|calculator/, 'M6 3h12v18H6zM9 7h6M9 11h2M13 11h2M9 15h2M13 15h2'],
     ];
     let path='M12 3v18M3 12h18';
-    for(const [re,p] of ICONS){ if(re.test(key)){ path=p; break; } }
+    if(sidebarData){ path=sidebarData[1]; } else { for(const [re,p] of ICONS){ if(re.test(key)){ path=p; break; } } }
     badge.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="'+path+'" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
     const label = document.createElement('span');
     label.className = 'btn-label';

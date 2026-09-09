@@ -1,9 +1,9 @@
 {
-    "version":  "15.0.78",
-    "notes":  "AL EKHLAS 15.0.78 full signed release",
+    "version":  "15.0.79",
+    "notes":  "AL EKHLAS 15.0.79 full signed release",
     "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-    "sha256":  "a6656ae019694fe286baa6e164018095b04f6eac5416c33155b105a2cf0e06ca",
-    "setupUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v15.0.78/AL-EKHLAS-Setup-15.0.78.exe",
-    "setupSha256":  "24c548bc47ce94f3a9db5efa4388f9300e401b2cdae740e26ee5588a0c17c0ee",
-    "setupSig":  "D1MJaRyzt0GxjpYBpYPp/MojNm2l9UcvCF9CDrFsh1kbcIVZj+D9pkOu85vlJa9Wv8fsZh8OZZIqsyJHpJUyKw=="
+    "sha256":  "8c1c9edb2e496434e8dab36789d0603017ce8596ec2c0ae5a122a6db94fc1240",
+    "setupUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v15.0.79/AL-EKHLAS-Setup-15.0.79.exe",
+    "setupSha256":  "342551321d5490e0b0fcf38e4bc02735f1c810629fc7167ce9611b2a33e4259b",
+    "setupSig":  "ht+hn1Jk+iLftR/uJc+bUpzTSsIIXN3c3wXtuE+WGdW7WDFgS8ECm48m0Lqfj2nV9Wr/dbPJGU1m9M+O2V+Hmg=="
 }

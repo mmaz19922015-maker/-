@@ -465,6 +465,7 @@ globalThis.AppLocalization = Object.freeze({
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="AL EKHLAS">
 <!-- Offline production build: no external web font dependency. Bundled/local font assets must be supplied by the release package. -->
+<style id="al-local-fonts">@font-face{font-family:"AL Noto Arabic";src:url("fonts/NotoSansArabic-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap;}@font-face{font-family:"AL Noto Arabic";src:url("fonts/NotoSansArabic-Medium.ttf") format("truetype");font-weight:500;font-style:normal;font-display:swap;}@font-face{font-family:"AL Noto Arabic";src:url("fonts/NotoSansArabic-Bold.ttf") format("truetype");font-weight:700;font-style:normal;font-display:swap;}@font-face{font-family:"AL Noto Arabic";src:url("fonts/NotoSansArabic-Black.ttf") format("truetype");font-weight:900;font-style:normal;font-display:swap;}</style>
 <!-- SOURCE-CSS: src/renderer/styles/01-base.css -->
 <style data-source="../styles/01-base.css">
 :root{
@@ -734,7 +735,7 @@ globalThis.AppLocalization = Object.freeze({
     color: var(--ink);
     /* --app-font is set by the appearance screen; the literal stack is the
        fallback for the very first paint before that runs. */
-    font-family: var(--app-font, 'Tajawal', 'Segoe UI', sans-serif);
+    font-family: var(--app-font, 'AL Noto Arabic', 'Segoe UI', sans-serif);
     font-weight: 700;
     font-size: 1rem;
     min-height:100vh;
@@ -751,7 +752,7 @@ globalThis.AppLocalization = Object.freeze({
      Figures keep their own token so they still line up in a column, but that
      token is built from the chosen face too. */
   body, body *:not(svg):not(svg *){
-    font-family: var(--app-font, 'Tajawal', 'Segoe UI', sans-serif) !important;
+    font-family: var(--app-font, 'AL Noto Arabic', 'Segoe UI', sans-serif) !important;
   }
   input[type="number"], input[type="date"], .num, .amt, .money,
   .doctor-remaining, .case-figs b, .case-num, .stat .num,
@@ -908,7 +909,7 @@ globalThis.AppLocalization = Object.freeze({
     position:fixed; top:0; left:0; right:0; z-index:3000000;
     background:var(--accent-grad); color:#fff; display:none;
     align-items:center; justify-content:center; gap:14px;
-    padding:10px 16px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:13.5px;
+    padding:10px 16px; font-family:'AL Noto Arabic',sans-serif; font-weight:800; font-size:13.5px;
     box-shadow:0 4px 14px rgba(14,124,158,0.3);
   }
   #updateBanner.show{ display:flex; }
@@ -1263,7 +1264,7 @@ globalThis.AppLocalization = Object.freeze({
     background:linear-gradient(135deg, #a5281b 0%, #c0392b 100%); color:#fff;
     display:none; align-items:center; justify-content:center;
     gap:14px; flex-wrap:wrap;
-    padding:11px 18px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:13.5px;
+    padding:11px 18px; font-family:'AL Noto Arabic',sans-serif; font-weight:800; font-size:13.5px;
     box-shadow:0 6px 20px rgba(120,20,10,0.42);
   }
   #saveProblemBar.show{ display:flex; }
@@ -1274,7 +1275,7 @@ globalThis.AppLocalization = Object.freeze({
   #saveProblemBar button{
     background:#fff; color:#a5281b; border:0;
     border-radius:100px; padding:6px 15px; cursor:pointer;
-    font-family:'Tajawal',sans-serif; font-size:12.5px; font-weight:800;
+    font-family:'AL Noto Arabic',sans-serif; font-size:12.5px; font-weight:800;
   }
   #saveProblemBar button.ghost{
     background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.55);
@@ -2583,12 +2584,12 @@ globalThis.AppLocalization = Object.freeze({
   .page-num-btn.active{ background: var(--accent-grad); color:#fff; border-color:transparent; box-shadow: 0 3px 9px rgba(14,124,158,0.3); }
 
   .toolbar{ display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; align-items:center; }
-  .btn-primary{ background: var(--accent-grad); color:#fff; border:none; padding:11px 18px; border-radius:7px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:13.5px; cursor:pointer; box-shadow: 0 3px 10px rgba(14,124,158,0.28); transition: transform .13s ease, box-shadow .18s ease, filter .18s ease; }
+  .btn-primary{ background: var(--accent-grad); color:#fff; border:none; padding:11px 18px; border-radius:7px; font-family:'AL Noto Arabic',sans-serif; font-weight:800; font-size:13.5px; cursor:pointer; box-shadow: 0 3px 10px rgba(14,124,158,0.28); transition: transform .13s ease, box-shadow .18s ease, filter .18s ease; }
   .btn-primary:hover{ box-shadow: 0 8px 20px rgba(14,124,158,0.36); filter:brightness(1.05); transform:translateY(-1px); }
   .btn-primary:active{ transform:translateY(0); box-shadow: 0 2px 6px rgba(14,124,158,0.3); }
   .btn-primary:focus-visible{ outline:none; box-shadow: var(--ring), 0 3px 10px rgba(14,124,158,0.28); }
   .btn-primary.btn-small{ padding:8px 14px; font-size:12.5px; }
-  .btn-ghost{ background:var(--panel); border:1px solid var(--line); color:var(--ink); padding:11px 18px; border-radius:7px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:13.5px; cursor:pointer; box-shadow: var(--shadow-sm); transition: transform .13s ease, background .18s ease, border-color .18s ease; }
+  .btn-ghost{ background:var(--panel); border:1px solid var(--line); color:var(--ink); padding:11px 18px; border-radius:7px; font-family:'AL Noto Arabic',sans-serif; font-weight:800; font-size:13.5px; cursor:pointer; box-shadow: var(--shadow-sm); transition: transform .13s ease, background .18s ease, border-color .18s ease; }
   .btn-ghost:hover{ border-color: var(--teal-dim); background:var(--teal-tint); transform:translateY(-1px); }
   .btn-ghost:active{ transform:translateY(0); }
   .btn-ghost:focus-visible{ outline:none; box-shadow: var(--ring); }
@@ -3273,7 +3274,7 @@ globalThis.AppLocalization = Object.freeze({
   .invoice-col-move:disabled{ opacity:.35; cursor:default; }
   .invoice-col-label{
     flex:1; min-width:0; padding:7px 10px; border:1px solid var(--line); border-radius:5px;
-    background:var(--panel); font-size:12.5px; font-weight:700; color:var(--ink); font-family:'Tajawal',sans-serif;
+    background:var(--panel); font-size:12.5px; font-weight:700; color:var(--ink); font-family:'AL Noto Arabic',sans-serif;
   }
   /* Per-column WIDTH control (direct feedback: "مع امكانية التحكم بعرض كل
      شي داخلها" — control the width of everything inside the invoice table).
@@ -3301,7 +3302,7 @@ globalThis.AppLocalization = Object.freeze({
   .field label{ display:block; font-size:12.5px; color:var(--ink-dim); margin-bottom:6px; font-weight:700; }
   .field input, .field select, .field textarea{
     width:100%; padding:11px 13px; background:var(--panel-2); border:1.5px solid var(--line); border-radius:7px;
-    font-family:'Tajawal',sans-serif; font-size:13.5px; font-weight:700; color:var(--ink);
+    font-family:'AL Noto Arabic',sans-serif; font-size:13.5px; font-weight:700; color:var(--ink);
     transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
   }
   /* Every input/textarea's PLACEHOLDER text in the whole program, not just its
@@ -4163,6 +4164,16 @@ html[dir='ltr'] .sidebar-btn{transform-origin:left center;}
 <style data-source="../styles/08-icon-svg-size.css">
 .btn-icon-badge svg{width:65%;height:65%;display:block;}
 
+/* Unified icon treatment: no decorative square around icon buttons. */
+.icon-btn, .app-topbar-icon-btn, .btn-icon-badge, .stat-eye-btn,
+.home-floating-panel-eye, .home-editlog-panel-more {
+  border: 0 !important; box-shadow: none !important; background: transparent !important;
+}
+.icon-btn:hover, .app-topbar-icon-btn:hover, .btn-icon-badge:hover,
+.stat-eye-btn:hover, .home-floating-panel-eye:hover, .home-editlog-panel-more:hover {
+  border: 0 !important; box-shadow: none !important; background: var(--teal-tint) !important;
+}
+
 </style>
 <!-- SOURCE-CSS: src/renderer/styles/09-visual-refresh-12-7.css -->
 <style data-source="../styles/09-visual-refresh-12-7.css">
@@ -4450,7 +4461,7 @@ html[dir='ltr'] .card-style-mode.active .card-mode-switch i{transform:translateX
 <style data-source="../styles/14-modern-design-14-0-1.css">
 /* ===== AL EKHLAS 14.0.1 — unified compact modern visual layer ===== */
 html,body{overflow:hidden!important;}
-body{font-family:var(--app-font,'Tajawal','Segoe UI',sans-serif);}
+body{font-family:var(--app-font,'AL Noto Arabic','Segoe UI',sans-serif);}
 .main-area{overflow:hidden!important;}
 .app-topbar{min-height:48px!important;height:48px!important;padding-block:6px!important;backdrop-filter:blur(12px);}
 .home-hero{height:190px!important;opacity:.88;}
@@ -7300,6 +7311,12 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
     <div class="invoice-appearance-layout">
       <div class="invoice-studio">
         <div class="field">
+          <label>عملة البرنامج</label>
+          <select id="invGlobalCurrencySelect" dir="rtl"></select>
+          <div class="muted" style="font-size:10.5px; margin-top:4px;">العملة المختارة تُستخدم في الحسابات والمبالغ المستحقة والفواتير والتقارير والطباعة.</div>
+        </div>
+
+        <div class="field">
           <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
           <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
         </div>
@@ -9110,8 +9127,8 @@ function renderAcctLedger(){
   const inEl = AppDOMController.getById('acctLedgerInTotal');
   const outEl = AppDOMController.getById('acctLedgerOutTotal');
   const allEl = AppDOMController.getById('acctLedgerAllCount');
-  if(inEl) AppDOMState.set(inEl, 'textContent', fmtMoney(totalIn));
-  if(outEl) AppDOMState.set(outEl, 'textContent', fmtMoney(totalOut));
+  if(inEl) AppDOMState.set(inEl, 'textContent', fmtAppMoney(totalIn));
+  if(outEl) AppDOMState.set(outEl, 'textContent', fmtAppMoney(totalOut));
   if(allEl) AppDOMState.set(allEl, 'textContent', allRows.length);
   const rows = acctLedgerFilter === 'all' ? allRows : allRows.filter(r=> r.dir === acctLedgerFilter);
 
@@ -9135,19 +9152,19 @@ function renderAcctLedger(){
   // direction of the debt backwards.
   const isPayable = (acctType === 'company' || acctType === 'agent');
   if(acctType === 'technician'){
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', balance >= 0 ? 'var(--ink)' : 'var(--red)');
     AppDOMState.set(lblEl, 'textContent', balance >= 0 ? '✅ الراتب المتبقي' : '📉 صار عليه ديون');
   }else if(balance >= 0){
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(balance));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(balance));
     AppDOMStyle.set(dueEl, 'color', balance > 0 ? 'var(--red)' : 'var(--green)');
     AppDOMState.set(lblEl, 'textContent', isPayable ? '💰 المبلغ المستحق عليّ له' : '💰 المبلغ المستحق لي');
   }else{
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', 'var(--teal)');
     AppDOMState.set(lblEl, 'textContent', isPayable ? '↩️ دفعتُ له أكثر من المطلوب' : '↩️ دفع لي أكثر من المطلوب');
   }
-  AppDOMState.set(AppDOMController.getById('acctLedgerPaid'), 'textContent', fmtMoney(paid));
+  AppDOMState.set(AppDOMController.getById('acctLedgerPaid'), 'textContent', fmtAppMoney(paid));
   AppDOMState.set(AppDOMController.getById('acctLedgerCount'), 'textContent', rows.length);
 
   // Give every row a stable key so selection survives paging.
@@ -9169,7 +9186,7 @@ function renderAcctLedger(){
           <div class="what">${escapeHtml(r.date || '-')} — ${escapeHtml(r.note || 'بدون ملاحظة')}</div>
         </div>
       </div>
-      <div class="amt" style="color:${isIn ? 'var(--green)' : 'var(--red)'};">${isIn ? '+' : '−'} ${fmtMoney(r.amount)}</div>
+      <div class="amt" style="color:${isIn ? 'var(--green)' : 'var(--red)'};">${isIn ? '+' : '−'} ${fmtAppMoney(r.amount)}</div>
     `);
     return div;
   }, 'acctLedgerPrevBtn', 'acctLedgerNextBtn', 12, 12, (p)=>{ acctLedgerPage = p; renderAcctLedger(); });
@@ -9306,7 +9323,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.78';
+const APP_VERSION = '15.0.79';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -9421,7 +9438,7 @@ const BASE_FONT_PX = 15;
 /* Only faces that ship with Windows, plus the webfont the app already loads.
    A list of names the machine does not have would silently do nothing. */
 const FONT_CHOICES = [
-  { id:'tajawal', label:'Tajawal (الافتراضي)', stack:"'Tajawal','Segoe UI',sans-serif" },
+  { id:'tajawal', label:'Noto Arabic (محلي)', stack:"'AL Noto Arabic','Segoe UI',sans-serif" },
   { id:'segoe',   label:'Segoe UI',            stack:"'Segoe UI',Tahoma,Arial,sans-serif" },
   { id:'tahoma',  label:'Tahoma',              stack:"Tahoma,Arial,sans-serif" },
   { id:'arial',   label:'Arial',               stack:"Arial,Helvetica,sans-serif" },
@@ -17575,9 +17592,31 @@ const INVOICE_CURRENCIES = [
   { code:'TND', country:'تونس',          name:'دينار تونسي',   frac:'مليم' },
   { code:'DZD', country:'الجزائر',       name:'دينار جزائري',  frac:'سنتيم' },
   { code:'MAD', country:'المغرب',        name:'درهم مغربي',    frac:'سنتيم' },
+  { code:'SDG', country:'السودان',       name:'جنيه سوداني',   frac:'قرش' },
+  { code:'MRU', country:'موريتانيا',     name:'أوقية موريتانية', frac:'خمس' },
+  { code:'DJF', country:'جيبوتي',        name:'فرنك جيبوتي',   frac:'—' },
+  { code:'KMF', country:'جزر القمر',     name:'فرنك قمري',      frac:'—' },
+  { code:'SOS', country:'الصومال',       name:'شلن صومالي',    frac:'سنت' },
+  { code:'YER', country:'اليمن',         name:'ريال يمني',     frac:'فلس' },
+  { code:'ILS', country:'فلسطين / إسرائيل', name:'شيكل',        frac:'أغورة' },
   { code:'TRY', country:'تركيا',         name:'ليرة تركية',    frac:'قرش' },
   { code:'GBP', country:'بريطانيا',      name:'جنيه إسترليني', frac:'بنس' },
 ];
+function currentAppCurrency(){
+  const code = (typeof invoiceSettings !== 'undefined' && invoiceSettings && invoiceSettings.lastCurrency) || 'JOD';
+  return INVOICE_CURRENCIES.find(c=>c.code===code) || INVOICE_CURRENCIES[0];
+}
+function fmtAppMoney(n){
+  const c=currentAppCurrency();
+  return fmtMoney(n) + ' ' + c.name;
+}
+function renderGlobalCurrencySelector(id){
+  const sel=AppDOMController.getById(id);
+  if(!sel) return;
+  const remembered=(invoiceSettings&&invoiceSettings.lastCurrency)||'JOD';
+  AppDOMState.set(sel,'innerHTML',INVOICE_CURRENCIES.map(c=>`<option value=\"${escapeHtml(c.code)}\">${escapeHtml(c.country)} — ${escapeHtml(c.name)} (${escapeHtml(c.code)})</option>`).join(''));
+  AppDOMState.set(sel,'value',INVOICE_CURRENCIES.some(c=>c.code===remembered)?remembered:'JOD');
+}
 function renderInvoiceCurrencyOptions(){
   const sel = AppDOMController.getById('invCurrency');
   if(!sel) return;
@@ -17607,8 +17646,13 @@ const createInvoiceOverlay = AppDOMController.getById('createInvoiceOverlay');
 // "🧾 إنشاء فاتورة" now opens a small type-chooser first (فاتورة عادية vs
 // كشف حساب) instead of jumping straight to the simple invoice form — per
 // direct feedback, both invoice types should be reachable from one place.
-AppEventController.on(AppDOMController.getById('createInvoiceSidebarBtn'), 'click', ()=>{
-  AppOverlayController.open('invoiceTypeChooserOverlay');
+AppEventController.setHandler(AppDOMController.getById('createInvoiceSidebarBtn'), 'click', ()=>{
+  // Guard the navigation at runtime. If the chooser fragment is unavailable
+  // in a packaged build, fall back to the real invoice screen instead of a
+  // silent no-op.
+  const chooser=AppDOMController.getById('invoiceTypeChooserOverlay');
+  if(chooser){ AppOverlayController.open('invoiceTypeChooserOverlay'); return; }
+  if(typeof openCreateInvoiceOverlay === 'function') openCreateInvoiceOverlay();
 });
 AppEventController.on(AppDOMController.getById('closeInvoiceTypeChooserBtn'), 'click', ()=>{
   AppOverlayController.close('invoiceTypeChooserOverlay');
@@ -17672,7 +17716,7 @@ AppEventController.on(AppDOMController.getById('invRecipientType'), 'change', re
    see openInvoiceSetupDirect() further down), fully separate from the
    create-invoice form above. */
 const invoiceAppearanceOverlay = AppDOMController.getById('invoiceAppearanceOverlay');
-AppEventController.on(AppDOMController.getById('invoiceAppearanceSidebarBtn'), 'click', ()=> AppFeatureController.invoke('invoice','appearance'));
+AppEventController.setHandler(AppDOMController.getById('invoiceAppearanceSidebarBtn'), 'click', ()=>{ if(typeof openInvoiceAppearanceOverlay === 'function') openInvoiceAppearanceOverlay(); });
 function openInvoiceAppearanceOverlay(opts){
   opts = opts || {};
   renderInvoiceSettingsPanel();
@@ -17808,15 +17852,20 @@ AppEventController.on(AppDOMController.getById('createInvoiceForm'), 'submit', (
     date: localDateStr(getTrustedNow()),
     time: localTimeStr(getTrustedNow()),
   };
-  invoices.unshift(invoice);
-  logEdit(`إنشاء فاتورة رقم ${invoice.serial} لـ ${recipientLabel} بمبلغ ${fmtMoney(amount)}`);
-  saveDatabase();
-  AppOverlayController.close(createInvoiceOverlay.id);
-  AppFeatureController.invoke('dashboard','render');
-  // Preview first — same pattern as every other invoice/report in the app —
-  // so a typo in the amount or reason is caught before anything is printed.
-  // The preview window's own "🖨 طباعة" button prints it.
-  printInvoice(invoice, {previewOnly:true});
+  try{
+    invoices.unshift(invoice);
+    logEdit(`إنشاء فاتورة رقم ${invoice.serial} لـ ${recipientLabel} بمبلغ ${fmtMoney(amount)} ${currency.name}`);
+    saveDatabase();
+    AppFeatureController.invoke('dashboard','render');
+    const previewResult=printInvoice(invoice,{previewOnly:true});
+    AppOverlayController.close(createInvoiceOverlay.id);
+    return previewResult;
+  }catch(err){
+    console.error('create invoice failed',err);
+    const idx=invoices.indexOf(invoice);
+    if(idx>=0) invoices.splice(idx,1);
+    showToast('تعذّر إنشاء أو معاينة الفاتورة: '+(err&&err.message?err.message:'خطأ غير معروف'),'error');
+  }
 });
 
 /* Which optional fields show on the simple receipt-style invoice (printInvoice
@@ -17894,7 +17943,7 @@ function printInvoice(invoice, opts){
     <style>
       @page{ size:A4; margin:14mm 12mm; }
       @media print{ body{ padding:0 !important; } }
-      body{font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif; background:#ffffff; font-weight:700; padding:40px; color:#1c2b33; font-size:${fontSize}px; font-variant-numeric:lining-nums tabular-nums; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+      body{font-family:'AL Noto Arabic','Segoe UI',Tahoma,Arial,sans-serif; background:#ffffff; font-weight:700; padding:40px; color:#1c2b33; font-size:${fontSize}px; font-variant-numeric:lining-nums tabular-nums; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
       .inv-header{display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid ${cHeader}; padding-bottom:14px; margin-bottom:20px;}
       .inv-title{font-size:${fontSize + 12}px; font-weight:900; color:${cHeader}; line-height:1.1;}
       .inv-sub{font-size:${Math.max(9, fontSize - 5)}px; font-weight:600; color:#9aa8ae; letter-spacing:1.4px; direction:ltr; margin-top:3px;}
@@ -18857,18 +18906,25 @@ function openCaseIdCard(ownerType, ownerId, caseId){
     <div><b>الجهة:</b> ${escapeHtml(ownerLabel)}</div>
     <div><b>نوع العمل:</b> ${escapeHtml(c.workType || '—')}</div>
     <div><b>الحالة:</b> ${STATUS_LABELS[c.status]||c.status||'—'}</div>
-    <div><b>التكلفة:</b> ${fmtMoney(c.cost)}</div>
+    <div><b>التكلفة:</b> ${fmtAppMoney(c.cost)}</div>
   `);
   AppOverlayController.open('caseIdCardOverlay');
 }
 AppEventController.on(AppDOMController.getById('closeCaseIdCardBtn'), 'click', ()=> AppOverlayController.close('caseIdCardOverlay'));
-AppEventController.on(AppDOMController.getById('caseIdCardEditBtn'), 'click', ()=>{
+AppEventController.setHandler(AppDOMController.getById('caseIdCardEditBtn'), 'click', (ev)=>{
+  ev && ev.preventDefault && ev.preventDefault();
+  ev && ev.stopPropagation && ev.stopPropagation();
   if(!caseIdCardRef) return;
-  // Editing is a destination screen; close the source lookup cards first.
+  const ref={ownerType:caseIdCardRef.ownerType,ownerId:caseIdCardRef.ownerId,caseId:caseIdCardRef.caseId};
   AppOverlayController.close('caseIdCardOverlay');
   AppOverlayController.close('caseTypePickerOverlay');
   AppOverlayController.close('caseFilterOverlay');
-  openEditCaseModal(caseIdCardRef.ownerType, caseIdCardRef.ownerId, caseIdCardRef.caseId);
+  setTimeout(()=>{
+    const owner=findCaseOwner(ref.ownerType,ref.ownerId);
+    const c=owner && (owner.cases||[]).find(x=>x.id===ref.caseId);
+    if(!owner || !c){ showToast('تعذّر العثور على الحالة المحددة للتعديل.','error'); return; }
+    openEditCaseModal(ref.ownerType,ref.ownerId,ref.caseId);
+  },0);
 });
 AppEventController.on(AppDOMController.getById('caseIdCardHistoryBtn'), 'click', ()=>{
   if(!caseIdCardRef) return;
@@ -18900,7 +18956,7 @@ function renderCaseGrid(d){
         <div class="case-sub">${c.technician ? '🧑‍🔧 '+escapeHtml(c.technician) : ''} ${(c.teeth&&c.teeth.length) ? ' · 🦷 '+c.teeth.length+' سن' : (c.toothColor ? ' · 🦷 '+escapeHtml(c.toothColor) : '')} ${c.expectedDate ? ' · 📅 التسليم: '+escapeHtml(c.expectedDate) : ''}</div>
       </div>
       <div class="case-figs">
-        <span>التكلفة: <b>${fmtMoney(c.cost)}</b></span>
+        <span>التكلفة: <b>${fmtAppMoney(c.cost)}</b></span>
       </div>
       <span class="status-pill status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
       <div class="case-actions">
@@ -19163,7 +19219,7 @@ function renderDirectoryResults(query){
           <div class="d-sub">${(r.doctor.cases||[]).length} حالة${r.doctor.phone ? ' — '+escapeHtml(r.doctor.phone) : ''}</div>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(due)}</div>
+          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtAppMoney(due)}</div>
           <button type="button" class="icon-btn" data-view-details="${r.doctor.id}" title="عرض التفاصيل">👁 عرض التفاصيل</button>
         </div>
       `);
@@ -19189,7 +19245,7 @@ function renderDirectoryResults(query){
           <div class="d-sub">${(r.lab.cases||[]).length} حالة${r.lab.phone ? ' — '+escapeHtml(r.lab.phone) : ''}</div>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(due)}</div>
+          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtAppMoney(due)}</div>
           <button type="button" class="icon-btn" data-view-lab-details="${r.lab.id}" title="عرض التفاصيل">👁 عرض التفاصيل</button>
         </div>
       `);
@@ -19766,9 +19822,9 @@ const CS_COLUMNS = [
   { key:'label',      label:'البيان',            cls:'',           get:(r)=> r.label || '—' },
   { key:'patient',    label:'المريض',            cls:'',           get:(r)=> r.patient || '—' },
   { key:'technician', label:'الفني',             cls:'',           get:(r)=> r.technician || '—' },
-  { key:'debit',      label:'مدين',              cls:'num debit',  get:(r)=> r.dir === 'debit' ? fmtMoney(r.amount) : '' },
-  { key:'credit',     label:'دائن',              cls:'num credit', get:(r)=> r.dir === 'credit' ? fmtMoney(r.amount) : '' },
-  { key:'balance',    label:'الرصيد التراكمي',   cls:'num',        get:(r)=> fmtMoney(r.running) },
+  { key:'debit',      label:'مدين',              cls:'num debit',  get:(r)=> r.dir === 'debit' ? fmtAppMoney(r.amount) : '' },
+  { key:'credit',     label:'دائن',              cls:'num credit', get:(r)=> r.dir === 'credit' ? fmtAppMoney(r.amount) : '' },
+  { key:'balance',    label:'الرصيد التراكمي',   cls:'num',        get:(r)=> fmtAppMoney(r.running) },
 ];
 /* Which movement kinds each party type can actually produce, so the builder
    greys out choices that would always come back empty. */
@@ -19835,9 +19891,9 @@ function csRenderPreview(){
   const totals = csTotals(rows);
 
   AppDOMState.set(AppDOMController.getById('csRowCount'), 'textContent', rows.length);
-  AppDOMState.set(AppDOMController.getById('csPreviewTotals'), 'innerHTML', `<span>مدين <b class="money debit">${fmtMoney(totals.debit)}</b></span>` +
-    `<span>دائن <b class="money credit">${fmtMoney(totals.credit)}</b></span>` +
-    `<span>الصافي <b class="money">${fmtMoney(totals.net)}</b></span>`);
+  AppDOMState.set(AppDOMController.getById('csPreviewTotals'), 'innerHTML', `<span>مدين <b class="money debit">${fmtAppMoney(totals.debit)}</b></span>` +
+    `<span>دائن <b class="money credit">${fmtAppMoney(totals.credit)}</b></span>` +
+    `<span>الصافي <b class="money">${fmtAppMoney(totals.net)}</b></span>`);
 
   if(!rows.length || !cols.length){
     AppDOMState.set(host, 'innerHTML', `<div class="cs-preview-empty">${
@@ -19928,9 +19984,9 @@ function csPrint(){
   let tfoot = '';
   if(AppDOMState.getById('csShowTotals', "checked") && rows.length){
     const cells = cols.map(c=>{
-      if(c.key === 'debit')   return `<td class="num debit">${fmtMoney(totals.debit)}</td>`;
-      if(c.key === 'credit')  return `<td class="num credit">${fmtMoney(totals.credit)}</td>`;
-      if(c.key === 'balance') return `<td class="num">${fmtMoney(totals.net)}</td>`;
+      if(c.key === 'debit')   return `<td class="num debit">${fmtAppMoney(totals.debit)}</td>`;
+      if(c.key === 'credit')  return `<td class="num credit">${fmtAppMoney(totals.credit)}</td>`;
+      if(c.key === 'balance') return `<td class="num">${fmtAppMoney(totals.net)}</td>`;
       return '<td></td>';
     });
     // Put the label in the first non-money column that exists.
@@ -20282,7 +20338,7 @@ function scaleToFitPreviewScript(){
   }
   function fitSettled(){
     // A single pass right at 'load' can be measured before the Arabic web
-    // font (Tajawal, loaded via a separate stylesheet link rather than
+    // font (AL Noto Arabic, loaded via a separate stylesheet link rather than
     // inlined) finishes swapping in — that reflows text a moment later and
     // can leave the page a hair taller/shorter than what was just measured,
     // just enough to need a scroll again. document.fonts.ready re-fits once
@@ -21197,17 +21253,17 @@ function getIncomingPaymentCaseLinkSource(type, id){
   if(type === 'doctor'){
     const d = doctors.find(x=>x.id===id);
     if(!d) return null;
-    return { kind:'case', items: (d.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtMoney(Number(c.cost)||0)})` })) };
+    return { kind:'case', items: (d.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtAppMoney(Number(c.cost)||0)})` })) };
   }
   if(type === 'lab'){
     const l = labs.find(x=>x.id===id);
     if(!l) return null;
-    return { kind:'case', items: (l.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtMoney(Number(c.cost)||0)})` })) };
+    return { kind:'case', items: (l.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtAppMoney(Number(c.cost)||0)})` })) };
   }
   if(type === 'company'){
     const c = companies.find(x=>x.id===id);
     if(!c) return null;
-    return { kind:'shipment', items: (c.shipments||[]).map(sh=> ({ id:sh.id, label:`${sh.description||'بضاعة'} — ${sh.date||'—'} (${fmtMoney(Number(sh.cost)||0)})` })) };
+    return { kind:'shipment', items: (c.shipments||[]).map(sh=> ({ id:sh.id, label:`${sh.description||'بضاعة'} — ${sh.date||'—'} (${fmtAppMoney(Number(sh.cost)||0)})` })) };
   }
   return null;
 }
@@ -21282,17 +21338,17 @@ function updateCaseAllocationRemaining(cfg){
   explicitSum = Math.round(explicitSum * 100) / 100;
   if(!checked.length){ cfg.AppDOMState.set(remainingEl, 'textContent', ''); return; }
   if(explicitSum > total + 0.004){
-    cfg.AppDOMState.set(remainingEl, 'textContent', '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtMoney(explicitSum - total));
+    cfg.AppDOMState.set(remainingEl, 'textContent', '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtAppMoney(explicitSum - total));
     AppDOMStyle.set(cfg.remainingEl, 'color', 'var(--red)');
     return;
   }
   const remaining = Math.round((total - explicitSum) * 100) / 100;
   if(autoCount > 0){
     const share = Math.round((remaining / autoCount) * 100) / 100;
-    cfg.AppDOMState.set(remainingEl, 'textContent', '✅ ' + autoCount + ' ' + tr('حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها') + ' ' + fmtMoney(Math.max(0, remaining)) + ' ' + tr('بالتساوي') + ' (' + fmtMoney(share) + ' ' + tr('لكل حالة') + ')');
+    cfg.AppDOMState.set(remainingEl, 'textContent', '✅ ' + autoCount + ' ' + tr('حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها') + ' ' + fmtAppMoney(Math.max(0, remaining)) + ' ' + tr('بالتساوي') + ' (' + fmtAppMoney(share) + ' ' + tr('لكل حالة') + ')');
     AppDOMStyle.set(cfg.remainingEl, 'color', 'var(--green)');
   }else if(remaining > 0.004){
-    cfg.AppDOMState.set(remainingEl, 'textContent', tr('المتبقي غير مُخصَّص لحالة معيّنة') + ': ' + fmtMoney(remaining));
+    cfg.AppDOMState.set(remainingEl, 'textContent', tr('المتبقي غير مُخصَّص لحالة معيّنة') + ': ' + fmtAppMoney(remaining));
     AppDOMStyle.set(cfg.remainingEl, 'color', 'var(--ink-dim)');
   }else{
     cfg.AppDOMState.set(remainingEl, 'textContent', '✅ ' + tr('تم تخصيص كامل المبلغ على الحالات المُعلَّمة'));
@@ -21496,14 +21552,14 @@ function renderChecksRegister(){
   AppDOMState.set(body, 'innerHTML', ''); AppViewState.setDisplay(empty, rows.length?'none':'');
   rows.forEach(p=>{
     const tr=AppDOMController.create('tr');
-    AppDOMState.set(tr, 'innerHTML', `<td>${p.direction==='incoming'?'وارد':'صادر'}</td><td>${escapeHtml(p.party)}</td><td dir="ltr">${escapeHtml(p.checkNumber||'—')}</td><td>${escapeHtml(p.checkBank||'—')}</td><td>${fmtMoney(p.amount)}</td><td dir="ltr">${escapeHtml(p.checkDueDate||'—')}</td><td><span class="check-pill">${escapeHtml(checkStatusLabel(p.checkStatus))}</span></td><td style="display:flex; gap:6px;"><button class="icon-btn" data-check-id="${escapeHtml(p.id)}" data-check-direction="${p.direction}">تعديل الحالة</button><button class="icon-btn danger" data-del-check-id="${escapeHtml(p.id)}">🗑 حذف</button></td>`);
+    AppDOMState.set(tr, 'innerHTML', `<td>${p.direction==='incoming'?'وارد':'صادر'}</td><td>${escapeHtml(p.party)}</td><td dir="ltr">${escapeHtml(p.checkNumber||'—')}</td><td>${escapeHtml(p.checkBank||'—')}</td><td>${fmtAppMoney(p.amount)}</td><td dir="ltr">${escapeHtml(p.checkDueDate||'—')}</td><td><span class="check-pill">${escapeHtml(checkStatusLabel(p.checkStatus))}</span></td><td style="display:flex; gap:6px;"><button class="icon-btn" data-check-id="${escapeHtml(p.id)}" data-check-direction="${p.direction}">تعديل الحالة</button><button class="icon-btn danger" data-del-check-id="${escapeHtml(p.id)}">🗑 حذف</button></td>`);
     AppDOMTree.appendChild(body, tr);
   });
   const all=collectAllChecks();
   const incoming=all.filter(x=>x.direction==='incoming').reduce((s,x)=>s+normalizeMoneyValue(x.amount),0);
   const outgoing=all.filter(x=>x.direction==='outgoing').reduce((s,x)=>s+normalizeMoneyValue(x.amount),0);
   const overdue=all.filter(x=>x.checkDueDate&&x.checkDueDate<today&&!['cleared','returned'].includes(x.checkStatus)).reduce((s,x)=>s+normalizeMoneyValue(x.amount),0);
-  AppDOMState.set(AppDOMController.getById('checksRegisterSummary'), 'innerHTML', `<div class="stat"><small>شيكات واردة</small>${fmtMoney(incoming)}</div><div class="stat"><small>شيكات صادرة</small>${fmtMoney(outgoing)}</div><div class="stat"><small>شيكات متأخرة</small>${fmtMoney(overdue)}</div><div class="stat"><small>عدد الشيكات</small>${all.length}</div>`);
+  AppDOMState.set(AppDOMController.getById('checksRegisterSummary'), 'innerHTML', `<div class="stat"><small>شيكات واردة</small>${fmtAppMoney(incoming)}</div><div class="stat"><small>شيكات صادرة</small>${fmtAppMoney(outgoing)}</div><div class="stat"><small>شيكات متأخرة</small>${fmtAppMoney(overdue)}</div><div class="stat"><small>عدد الشيكات</small>${all.length}</div>`);
 }
 function updateCheckRecordStatus(id,direction,status){
   const find=(arr)=>arr.find(p=>p.id===id); let p=null;
@@ -21599,10 +21655,10 @@ function updateIncomingPaymentBalanceDisplay(){
     if(!d){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = doctorBalance(d);
     if(bal >= 0){
-      AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name}: ${fmtMoney(bal)}`);
+      AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name}: ${fmtAppMoney(bal)}`);
       AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
     }else{
-      AppDOMState.set(el, 'textContent', `صار يستحق منا د. ${d.name}: ${fmtMoney(Math.abs(bal))}`);
+      AppDOMState.set(el, 'textContent', `صار يستحق منا د. ${d.name}: ${fmtAppMoney(Math.abs(bal))}`);
       AppDOMStyle.set(el, 'color', 'var(--teal)');
     }
   }else if(type === 'lab'){
@@ -21610,23 +21666,23 @@ function updateIncomingPaymentBalanceDisplay(){
     if(!l){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = labBalance(l);
     if(bal >= 0){
-      AppDOMState.set(el, 'textContent', `المتبقي على مختبر ${l.name}: ${fmtMoney(bal)}`);
+      AppDOMState.set(el, 'textContent', `المتبقي على مختبر ${l.name}: ${fmtAppMoney(bal)}`);
       AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
     }else{
-      AppDOMState.set(el, 'textContent', `صار يستحق منا مختبر ${l.name}: ${fmtMoney(Math.abs(bal))}`);
+      AppDOMState.set(el, 'textContent', `صار يستحق منا مختبر ${l.name}: ${fmtAppMoney(Math.abs(bal))}`);
       AppDOMStyle.set(el, 'color', 'var(--teal)');
     }
   }else if(type === 'company'){
     const c = companies.find(x=>x.id===id);
     if(!c){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = companyBalance(c);
-    AppDOMState.set(el, 'textContent', `رصيد شركة ${c.name} الحالي: ${fmtMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `رصيد شركة ${c.name} الحالي: ${fmtAppMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else if(type === 'agent'){
     const a = agents.find(x=>x.id===id);
     if(!a){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = agentBalance(a);
-    AppDOMState.set(el, 'textContent', `رصيد المندوب ${a.name} الحالي: ${fmtMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `رصيد المندوب ${a.name} الحالي: ${fmtAppMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }
 }
@@ -21674,7 +21730,7 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!d.payments) d.payments = [];
     d.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, dueDate: '', paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'د. ' + d.name;
-    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من د. ${d.name}`, {type:'doctor', doctorId: d.id});
+    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من د. ${d.name}`, {type:'doctor', doctorId: d.id});
     saveDoctors();
     renderDoctorList();
     renderDoctorView();
@@ -21685,7 +21741,7 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!l.payments) l.payments = [];
     l.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'مختبر ' + l.name;
-    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من مختبر ${l.name}`, {type:'lab', labId: l.id});
+    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من مختبر ${l.name}`, {type:'lab', labId: l.id});
     saveLabs();
   }else if(type === 'company'){
     const id = AppDOMState.getById('incomingPaymentDoctorSelect', "value");
@@ -21700,7 +21756,7 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!c.payments) c.payments = [];
     c.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'شركة ' + c.name;
-    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من شركة ${c.name}`, {type:'company', companyId: c.id});
+    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من شركة ${c.name}`, {type:'company', companyId: c.id});
     saveCompanies();
   }else if(type === 'agent'){
     const id = AppDOMState.getById('incomingPaymentDoctorSelect', "value");
@@ -21711,14 +21767,14 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!a.payments) a.payments = [];
     a.payments.push({ id: uid('pay'), amount, date, note, purpose, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'المندوب ' + a.name;
-    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من المندوب ${a.name}`, {type:'agent', agentId: a.id});
+    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من المندوب ${a.name}`, {type:'agent', agentId: a.id});
     saveAgents();
   }else{
     const name = AppDOMState.getById('incomingPaymentOtherNameInput', "value").trim();
     if(!name){ showToast('الرجاء إدخال اسم الجهة.', 'error'); return; }
     otherPayments.push({ id: uid('pay'), amount, date, note, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'', sourceName: name });
     sourceLabel = name;
-    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من ${name}`);
+    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من ${name}`);
     saveDatabase();
   }
 
@@ -21774,7 +21830,7 @@ function renderIncomingPaymentsLog(){
       <td style="padding:9px 12px; white-space:nowrap;">${escapeHtml(p.date || '—')}</td>
       <td style="padding:9px 12px;">${escapeHtml(p.sourceLabel)}</td>
       <td style="padding:9px 12px;">${escapeHtml(p.note||'-')} ${p.paymentMethod==='check' ? '<span class="check-pill">'+paymentMethodLabel(p)+'</span>' : ''}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtMoney(p.amount)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtAppMoney(p.amount)}</td>
       <td style="padding:9px 12px; text-align:center;"><button type="button" class="icon-btn danger" data-del-incoming-payment="${p.id}" data-source-type="${p.sourceType}" data-source-id="${p.sourceId}">حذف</button></td>
     `);
     return tr;
@@ -21886,7 +21942,7 @@ const PRINT_STYLES = `
   @page{ size:A4; margin:14mm 12mm 16mm; }
   *{ box-sizing:border-box; }
   body{
-    font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;
+    font-family:'AL Noto Arabic','Segoe UI',Tahoma,Arial,sans-serif;
     /* Paper is white. Without this the preview window inherits the machine's
        dark colour scheme and shows dark ink on a dark page before printing. */
     background:#ffffff;
@@ -22632,16 +22688,16 @@ AppEventController.on(AppDOMController.getById('editAgentInfoBtn'), 'click', ()=
 function renderAgentStatementStat(a){
   const payments = expensePayments.filter(exp=> exp.recipientType==='agent' && exp.recipientId===a.id);
   const total = payments.reduce((s,p)=> s + (Number(p.amount)||0), 0);
-  AppDOMState.set(AppDOMController.getById('agentStatTotal'), 'textContent', fmtMoney(total));
+  AppDOMState.set(AppDOMController.getById('agentStatTotal'), 'textContent', fmtAppMoney(total));
   const balance = agentBalance(a);
   const dueEl = AppDOMController.getById('agentStatDue');
   const lblEl = dueEl.parentElement.querySelector('.lbl');
   if(balance >= 0){
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(balance));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(balance));
     AppDOMStyle.set(dueEl, 'color', balance > 0 ? 'var(--red)' : 'var(--green)');
     if(lblEl) setI18nText(lblEl, '💰 المستحق عليّ');
   }else{
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', 'var(--teal)');
     if(lblEl) setI18nText(lblEl, '↩️ عجز (دفع لي أكثر من المطلوب)');
   }
@@ -22684,7 +22740,7 @@ function renderAgentStatement(a){
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <div class="amt" style="color:var(--red);">${fmtMoney(p.amount)}</div>
+        <div class="amt" style="color:var(--red);">${fmtAppMoney(p.amount)}</div>
         <button type="button" class="icon-btn danger" data-del-agent-payment="${p.id}" title="حذف هذه الدفعة نهائيًا">🗑 حذف</button>
       </div>
     `);
@@ -22891,9 +22947,9 @@ function renderStaffReportPage(){
     advancesGrandTotal += advancesTotal;
     netGrandTotal += (salary - advancesTotal);
   });
-  AppDOMState.set(AppDOMController.getById('srSalariesTotal'), 'textContent', fmtMoney(salariesTotal));
-  AppDOMState.set(AppDOMController.getById('srAdvancesTotal'), 'textContent', fmtMoney(advancesGrandTotal));
-  AppDOMState.set(AppDOMController.getById('srNetTotal'), 'textContent', fmtMoney(netGrandTotal));
+  AppDOMState.set(AppDOMController.getById('srSalariesTotal'), 'textContent', fmtAppMoney(salariesTotal));
+  AppDOMState.set(AppDOMController.getById('srAdvancesTotal'), 'textContent', fmtAppMoney(advancesGrandTotal));
+  AppDOMState.set(AppDOMController.getById('srNetTotal'), 'textContent', fmtAppMoney(netGrandTotal));
 
   staffReportPage = renderPaginatedRows(rows, staffReportPage, 'staffReportBody', 'staffReportEmpty', 'staffReportPageText', (t)=>{
     const advancesTotal = (t.advances||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
@@ -22907,9 +22963,9 @@ function renderStaffReportPage(){
         <div style="font-weight:700;">${escapeHtml(t.name)}</div>
         <div class="muted" style="font-size:11px;">${escapeHtml(t.phone || '—')}</div>
       </td>
-      <td style="padding:9px 12px; text-align:left;">${fmtMoney(salary)}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--red);">${fmtMoney(advancesTotal)}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtMoney(net)}</td>
+      <td style="padding:9px 12px; text-align:left;">${fmtAppMoney(salary)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--red);">${fmtAppMoney(advancesTotal)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtAppMoney(net)}</td>
       <td style="padding:9px 12px; text-align:center;">${(t.absences||[]).length}</td>
       <td style="padding:9px 12px; text-align:center; font-weight:700; color:var(--teal);">${technicianCaseCountLast30Days(t)}</td>
     `);
@@ -22967,7 +23023,7 @@ function openStaffDetails(id){
   const advancesTotal = advances.reduce((s,a)=> s + (Number(a.amount)||0), 0);
 
   const advancesHtml = advances.length
-    ? advances.map(a=> `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line);"><span>${escapeHtml(a.note||'-')} — ${escapeHtml(a.date||'-')}</span><span style="color:var(--red); font-weight:700;">${fmtMoney(a.amount)}</span></div>`).join('')
+    ? advances.map(a=> `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line);"><span>${escapeHtml(a.note||'-')} — ${escapeHtml(a.date||'-')}</span><span style="color:var(--red); font-weight:700;">${fmtAppMoney(a.amount)}</span></div>`).join('')
     : '<div class="muted">لا توجد سلف مسجّلة</div>';
 
   const absencesHtml = absences.length
@@ -22981,9 +23037,9 @@ function openStaffDetails(id){
     <div><b>التخصص:</b> ${escapeHtml(t.specialty || '—')}</div>
     <div><b>تاريخ بدء العمل:</b> ${escapeHtml(t.startDate || '—')}</div>
     <div><b>ملاحظات:</b> ${escapeHtml(t.notes || '—')}</div>
-    <div><b>الراتب الشهري:</b> ${fmtMoney(t.salary||0)}</div>
+    <div><b>الراتب الشهري:</b> ${fmtAppMoney(t.salary||0)}</div>
     <div><b>عدد الحالات:</b> <span id="staffDetailsCaseCountLink" style="color:var(--teal); text-decoration:underline; cursor:pointer;">${technicianCaseCount(t)} (عرض الحالات)</span></div>
-    <div style="margin-top:14px;"><b>💸 السلف (الإجمالي: ${fmtMoney(advancesTotal)})</b><div style="margin-top:6px;">${advancesHtml}</div></div>
+    <div style="margin-top:14px;"><b>💸 السلف (الإجمالي: ${fmtAppMoney(advancesTotal)})</b><div style="margin-top:6px;">${advancesHtml}</div></div>
     <div style="margin-top:14px;"><b>🚫 الغياب</b><div style="margin-top:6px;">${absencesHtml}</div></div>
   `);
   AppEventController.on(AppDOMController.getById('staffDetailsCaseCountLink'), 'click', ()=>{
@@ -23045,20 +23101,20 @@ function renderStaffActionsStats(t){
   const advancesTotal = (t.advances||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
   const net = (Number(t.salary)||0) - advancesTotal;
   const salaryEl = AppDOMController.getById('saSalaryStat');
-  AppDOMState.set(salaryEl, 'textContent', fmtMoney(t.salary||0));
+  AppDOMState.set(salaryEl, 'textContent', fmtAppMoney(t.salary||0));
   AppDOMStyle.set(salaryEl, 'color', 'var(--green)');
   const advEl = AppDOMController.getById('saAdvancesStat');
-  AppDOMState.set(advEl, 'textContent', fmtMoney(advancesTotal));
+  AppDOMState.set(advEl, 'textContent', fmtAppMoney(advancesTotal));
   AppDOMStyle.set(advEl, 'color', 'var(--ink)');
   // If advances exceed the salary the employee now owes us — flip the card.
   const netEl = AppDOMController.getById('saNetStat');
   const netLbl = AppDOMController.getById('saNetStatLbl');
   if(net >= 0){
-    AppDOMState.set(netEl, 'textContent', fmtMoney(net));
+    AppDOMState.set(netEl, 'textContent', fmtAppMoney(net));
     AppDOMStyle.set(netEl, 'color', 'var(--ink)');
     setI18nText(netLbl, '✅ الراتب المتبقي');
   }else{
-    AppDOMState.set(netEl, 'textContent', fmtMoney(Math.abs(net)));
+    AppDOMState.set(netEl, 'textContent', fmtAppMoney(Math.abs(net)));
     AppDOMStyle.set(netEl, 'color', 'var(--red)');
     setI18nText(netLbl, '📉 صار عليه ديون');
   }
@@ -23096,7 +23152,7 @@ function renderStaffActionsLog(t){
     if(en.kind === 'advance'){
       AppDOMState.set(row, 'innerHTML', `
         <div>
-          <div class="who" style="color:var(--red);">💸 سلفة — ${fmtMoney(en.amount)}</div>
+          <div class="who" style="color:var(--red);">💸 سلفة — ${fmtAppMoney(en.amount)}</div>
           <div class="what">${escapeHtml(en.note||'-')} — ${escapeHtml(en.date||'-')}</div>
         </div>
         <button type="button" class="icon-btn danger" data-del-advance="${en.id}">حذف</button>
@@ -23143,13 +23199,13 @@ AppEventController.on(AppDOMController.getById('staffAdvancesLogNextBtn'), 'clic
 function renderStaffAdvancesLog(t){
   const advances = (t.advances||[]).slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
   const total = advances.reduce((s,a)=> s + (Number(a.amount)||0), 0);
-  AppDOMState.set(AppDOMController.getById('staffAdvancesLogTotal'), 'textContent', fmtMoney(total));
+  AppDOMState.set(AppDOMController.getById('staffAdvancesLogTotal'), 'textContent', fmtAppMoney(total));
   staffAdvancesLogPage = renderPaginatedRows(advances, staffAdvancesLogPage, 'staffAdvancesLogBody', 'staffAdvancesLogEmpty', 'staffAdvancesLogPageText', (a)=>{
     const row = AppDOMController.create('div');
     row.className = 'due-item';
     AppDOMState.set(row, 'innerHTML', `
       <div>
-        <div class="who" style="color:var(--red);">💸 سلفة — ${fmtMoney(a.amount)}</div>
+        <div class="who" style="color:var(--red);">💸 سلفة — ${fmtAppMoney(a.amount)}</div>
         <div class="what">${escapeHtml(a.note||'-')} — ${escapeHtml(a.date||'-')}</div>
       </div>
       <button type="button" class="icon-btn danger" data-del-advance-log="${a.id}">حذف</button>
@@ -23257,7 +23313,7 @@ AppEventController.on(AppDOMController.getById('saSalaryCard'), 'click', async (
   const v = parseFloat(raw);
   if(!(v >= 0)){ showToast('أدخل مبلغًا صحيحًا.', 'error'); return; }
   t.salary = v;
-  logEdit(`تعديل راتب الموظف "${t.name}" إلى ${fmtMoney(t.salary)}`, {type:'technician', techId: t.id});
+  logEdit(`تعديل راتب الموظف "${t.name}" إلى ${fmtAppMoney(t.salary)}`, {type:'technician', techId: t.id});
   saveTechnicians();
   renderStaffActionsStats(t);
   AppFeatureController.invoke('dashboard','render');
@@ -23296,7 +23352,7 @@ AppEventController.on(AppDOMController.getById('staffAdvanceForm'), 'submit', (e
     date: AppDOMState.getById('saDate', "value") || localDateStr(),
     note: AppDOMState.getById('saNote', "value").trim(),
   });
-  logEdit(`تسجيل سلفة ${fmtMoney(amount)} للفني "${t.name}"`, {type:'technician', techId: t.id});
+  logEdit(`تسجيل سلفة ${fmtAppMoney(amount)} للفني "${t.name}"`, {type:'technician', techId: t.id});
   saveTechnicians();
   AppDOMController.getById('staffAdvanceForm').reset();
   AppDOMState.set(AppDOMController.getById('saDate'), 'value', localDateStr());
@@ -24466,7 +24522,7 @@ function renderCompaniesPickerResults(query){
         <div class="d-sub">${escapeHtml(c.address || '—')}${selectedCompanyRowId===c.id ? ' — اضغط مرة أخرى لفتح كشف الحساب' : ''}</div>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
-        <div style="color:${balance>0?'var(--red)':'var(--green)'}; font-weight:700;">${fmtMoney(balance)}</div>
+        <div style="color:${balance>0?'var(--red)':'var(--green)'}; font-weight:700;">${fmtAppMoney(balance)}</div>
         <button type="button" class="icon-btn" data-view-company-details="${c.id}" title="عرض التفاصيل">👁 عرض التفاصيل</button>
       </div>
     `);
@@ -24496,7 +24552,7 @@ function openCompanyDetails(id){
     <div><b>العنوان:</b> ${escapeHtml(c.address || '—')}</div>
     <div><b>الهاتف:</b> ${escapeHtml(c.phone || '—')}</div>
     <div><b>ملاحظات:</b> ${escapeHtml(c.notes || '—')}</div>
-    <div><b>الرصيد الحالي:</b> ${fmtMoney(companyBalance(c))}</div>
+    <div><b>الرصيد الحالي:</b> ${fmtAppMoney(companyBalance(c))}</div>
   `);
   AppOverlayController.open('companyDetailsOverlay');
 }
@@ -24568,15 +24624,15 @@ function renderCompanyStatement(c){
   const dueEl = AppDOMController.getById('companyStatDue');
   const lblEl = AppDOMController.getById('companyStatDueLbl');
   if(balance >= 0){
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(balance));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(balance));
     AppDOMStyle.set(dueEl, 'color', balance > 0 ? 'var(--red)' : 'var(--green)');
     setI18nText(lblEl, '💰 المستحق عليّ');
   }else{
-    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', 'var(--teal)');
     setI18nText(lblEl, '↩️ عجز (دفع لي أكثر من المطلوب)');
   }
-  AppDOMState.set(AppDOMController.getById('companyStatPaid'), 'textContent', fmtMoney(companyPaidTotal(c)));
+  AppDOMState.set(AppDOMController.getById('companyStatPaid'), 'textContent', fmtAppMoney(companyPaidTotal(c)));
   AppDOMState.set(AppDOMController.getById('companyStatGoodsCount'), 'textContent', (c.shipments||[]).length);
   // viaExpense payments are a MIRROR of an outgoing expense record (see the
   // identical exclusion/comment in renderIncomingPaymentsReportPage()) —
@@ -24617,7 +24673,7 @@ function renderCompanyTransactionsLog(c){
           <div class="what">${escapeHtml(en.date || '-')}</div>
         </div></div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <div class="amt" style="color:var(--green);">${fmtMoney(en.amount)}</div>
+          <div class="amt" style="color:var(--green);">${fmtAppMoney(en.amount)}</div>
           <button type="button" class="icon-btn danger" data-del-company-payment="${en.id}">حذف</button>
         </div>
       `);
@@ -24627,7 +24683,7 @@ function renderCompanyTransactionsLog(c){
           <div class="who">📦 ${escapeHtml(en.description || 'بضاعة واردة')}</div>
           <div class="what">${escapeHtml(en.date || '-')}</div>
         </div></div>
-        <div class="amt" style="color:var(--red);">${fmtMoney(en.cost)}</div>
+        <div class="amt" style="color:var(--red);">${fmtAppMoney(en.cost)}</div>
       `);
     }
     row._txData = en;
@@ -24680,7 +24736,7 @@ AppEventController.on(AppDOMController.getById('companyGoodsForm'), 'submit', (e
     date: AppDOMState.getById('cgDate', "value") || localDateStr(),
     cost,
   });
-  logEdit(`تسجيل بضاعة واردة من شركة "${c.name}" بتكلفة ${fmtMoney(cost)}`, {type:'company', companyId: c.id});
+  logEdit(`تسجيل بضاعة واردة من شركة "${c.name}" بتكلفة ${fmtAppMoney(cost)}`, {type:'company', companyId: c.id});
   saveCompanies();
   AppDOMController.getById('companyGoodsForm').reset();
   AppDOMState.set(AppDOMController.getById('cgDate'), 'value', localDateStr());
@@ -24720,7 +24776,7 @@ function renderCompanyGoodsList(c){
         <div class="what">${escapeHtml(sh.date || '-')}</div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <div class="amt" style="color:var(--red);">${fmtMoney(sh.cost)}</div>
+        <div class="amt" style="color:var(--red);">${fmtAppMoney(sh.cost)}</div>
         <button type="button" class="icon-btn danger" data-del-goods="${sh.id}">حذف</button>
       </div>
     `);
@@ -26579,53 +26635,61 @@ async function checkForUpdates(manual){
           }
           // Accepted explicitly OR the 40-second timeout forced installation.
         }
-        // sha256 (integrity) AND sig (authenticity — an ECDSA signature
-        // made with the dedicated release-signing key pair in the desktop updater) are both still independently
-        // verified against the downloaded bytes by the main process before
-        // anything on disk is touched; a corrupted or tampered/unsigned-
-        // when-expected download is still rejected instead of installed.
-        // Desktop updates MUST be complete signed installers. Updating only
-        // app.html leaves main.js/preload/lib/native dependencies at the old
-        // version and can create a mixed installation. A release without all
-        // three trust anchors (setupUrl + sha256 + setupSig) is rejected.
-        if(!info.setupUrl || !info.setupSha256 || !info.setupSig){
-          setStatus('رُفض التحديث: هذا الإصدار لا يحتوي على مثبت كامل موقّع وبصمة SHA-256 — لم يُثبَّت شيء.', 'var(--red)');
-          return;
-        }
-        setStatus('يتوفر إصدار كامل جديد (' + info.version + ') — جارٍ تنزيل المثبّت الآمن...', 'var(--teal)');
+        // Prefer a complete signed Windows installer when the release manifest
+        // provides all three trust anchors. For compatibility with the proven
+        // 15.0.55 release channel, older manifests may publish only rawUrl +
+        // sha256 (and optionally sig); those are handled by the hardened
+        // runtime-file updater instead of being incorrectly reported as a
+        // server failure. Missing installer checksum is reported as
+        // 'missing-installer-checksum' when a release attempts to use the
+        // installer path without a checksum.
+        let result;
         setUpdateBusy(true);
         setUpdateProgress({phase:'download',received:0,total:0,percent:0});
-        let result;
         try{
-          result = await AppServices.desktop.installUpdateInstaller(info.setupUrl, info.setupSha256, info.setupSig, info.version || null);
+          if(info.setupUrl && info.setupSha256 && info.setupSig &&
+             AppServices.desktop && typeof AppServices.desktop.installUpdateInstaller === 'function'){
+            setStatus('يتوفر إصدار كامل جديد (' + info.version + ') — جارٍ تنزيل المثبّت الآمن...', 'var(--teal)');
+            result = await AppServices.desktop.installUpdateInstaller(info.setupUrl, info.setupSha256, info.setupSig, info.version || null);
+            if(result && result.ok){
+              setUpdateProgress({phase:'download-complete',received:1,total:1,percent:100});
+              const msg = AppDOMController.getById('updateProgressMessage');
+              if(msg) AppDOMState.set(msg, 'textContent', 'تم التحقق من التحديث. جارٍ تشغيل المثبّت وإغلاق النسخة الحالية بأمان…');
+              // main.js owns the installer launch and application shutdown.
+              // The renderer must never relaunch after a successful installer handoff.
+              return;
+            }
+          }else{
+            if(!info.rawUrl){
+              result = {ok:false,reason:'missing-update-url'};
+            }else if(!info.sha256){
+              result = {ok:false,reason:'missing-checksum'};
+            }else{
+              setStatus('يتوفر تحديث للبرنامج — جارٍ تنزيل النسخة الجديدة بأمان...', 'var(--teal)');
+              result = await AppServices.desktop.installUpdate(info.rawUrl, info.sha256, info.sig || null, info.version || null);
+              if(result && result.ok){
+                const msg = AppDOMController.getById('updateProgressMessage');
+                if(msg) AppDOMState.set(msg, 'textContent', 'تم تثبيت التحديث. جارٍ إعادة تشغيل البرنامج…');
+                await new Promise(r=>setTimeout(r, 250));
+                if(typeof AppServices.desktop.relaunchApp === 'function') await AppServices.desktop.relaunchApp();
+                return;
+              }
+            }
+          }
         }catch(e){
-          console.error('installer update invocation failed', e);
-          result = {ok:false,reason:'installer-launch-failed'};
-        }
-        if(result && result.ok){
-          setUpdateProgress({phase:'download-complete',received:1,total:1,percent:100});
-          const msg = AppDOMController.getById('updateProgressMessage');
-          if(msg) AppDOMState.set(msg, 'textContent', 'تم التحقق من التحديث. جارٍ تشغيل المثبّت وإغلاق النسخة الحالية بأمان…');
-          // main.js owns the installer launch and application shutdown.
-          // Do NOT call relaunchApp here: doing so can race the NSIS installer
-          // and reopen the old build before Windows has replaced it.
-          return;
+          console.error('update installation invocation failed', e);
+          result = {ok:false,reason:'update-failed'};
         }
         setUpdateBusy(false);
         hideGlobalUpdateProgress();
-        if(result && result.reason === 'checksum-mismatch'){
-          setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة المتوقعة (SHA-256). لم يُثبَّت شيء.', 'var(--red)');
-        }else if(result && (result.reason === 'signature-mismatch' || result.reason === 'missing-installer-signature')){
-          setStatus('رُفض التحديث: توقيع الإصدار غير صالح أو مفقود — لم يُثبَّت شيء.', 'var(--red)');
-        }else if(result && result.reason === 'missing-installer-checksum'){
-          setStatus('رُفض التحديث: بصمة SHA-256 للمثبّت مفقودة — لم يُثبَّت شيء.', 'var(--red)');
-        }else if(result && result.reason === 'invalid-installer'){
-          setStatus('رُفض التحديث: الملف الذي تم تنزيله ليس مثبّت Windows صالحًا.', 'var(--red)');
-        }else if(result && result.reason === 'download-failed'){
-          setStatus('تعذّر تنزيل المثبّت بعد عدة محاولات. لم يُثبَّت شيء.', 'var(--red)');
-        }else{
-          setStatus('تعذّر تثبيت التحديث الآن. لم يُغيّر البرنامج النسخة الحالية.', 'var(--red)');
-        }
+        const reason = result && result.reason;
+        if(reason === 'checksum-mismatch') setStatus('رُفض التحديث: الملف الذي تم تحميله لا يطابق البصمة SHA-256 المتوقعة. لم يُثبَّت شيء.', 'var(--red)');
+        else if(reason === 'signature-mismatch') setStatus('رُفض التحديث: توقيع الإصدار غير صالح. لم يُثبَّت شيء.', 'var(--red)');
+        else if(reason === 'invalid-content' || reason === 'invalid-installer') setStatus('رُفض التحديث: الملف الذي تم تنزيله غير صالح.', 'var(--red)');
+        else if(reason === 'missing-checksum' || reason === 'missing-installer-checksum') setStatus('رُفض التحديث: بصمة SHA-256 مفقودة من ملف الإصدار.', 'var(--red)');
+        else if(reason === 'older-version' || reason === 'same-version' || reason === 'version-mismatch') setStatus('رُفض التحديث: النسخة المنشورة لا تتوافق مع رقم الإصدار المطلوب.', 'var(--red)');
+        else if(reason === 'download-failed') setStatus('تعذّر تنزيل التحديث بعد عدة محاولات. لم يُغيّر البرنامج النسخة الحالية.', 'var(--red)');
+        else setStatus('تعذّر تثبيت التحديث الآن. لم يُغيّر البرنامج النسخة الحالية.', 'var(--red)');
       }else{
         setStatus(tr('أنت تستخدم الإصدار الحالي') + ' (' + APP_VERSION + ').', 'var(--green)');
       }
@@ -27783,9 +27847,9 @@ function renderDuesReportStats(rows){
   const owedToMe = rows.filter(r=> r.direction === 'owedToMe').reduce((s,r)=> s + r.amount, 0);
   const iOwe = rows.filter(r=> r.direction === 'iOwe').reduce((s,r)=> s + r.amount, 0);
   AppDOMState.set(count, 'textContent', rows.length);
-  AppDOMState.set(owedToMeEl, 'textContent', fmtMoney(owedToMe));
-  AppDOMState.set(iOweEl, 'textContent', fmtMoney(iOwe));
-  AppDOMState.set(netEl, 'textContent', fmtMoney(owedToMe - iOwe));
+  AppDOMState.set(owedToMeEl, 'textContent', fmtAppMoney(owedToMe));
+  AppDOMState.set(iOweEl, 'textContent', fmtAppMoney(iOwe));
+  AppDOMState.set(netEl, 'textContent', fmtAppMoney(owedToMe - iOwe));
 }
 function renderDuesReportPage(){
   const rows = collectDuesRows();
@@ -27801,7 +27865,7 @@ function renderDuesReportPage(){
       <td style="padding:10px 12px; font-weight:800; color:var(--teal);">${escapeHtml(r.name)}</td>
       <td style="padding:10px 12px;"><span class="ipr-purpose-chip">${r.typeLabel}</span></td>
       <td style="padding:10px 12px; text-align:center;">${dirHtml}</td>
-      <td style="padding:10px 12px; text-align:left; color:var(--ink); font-weight:800;" dir="ltr">${fmtMoney(r.amount)}</td>
+      <td style="padding:10px 12px; text-align:left; color:var(--ink); font-weight:800;" dir="ltr">${fmtAppMoney(r.amount)}</td>
     `);
     AppEventController.on(tr, 'click', ()=>{
       openDueReasonDetail(r.type, r.id);
@@ -27912,8 +27976,8 @@ function openDueReasonDetail(type, id){
     itemsLabel = 'تفاصيل الدفعات التي خُصمت من الرصيد الافتتاحي:';
   }
 
-  let summaryHtml = summaryRows.map(r=> `<div style="display:flex; justify-content:space-between;"><span>${r.sign} ${escapeHtml(tr(r.label))}</span><span dir="ltr">${fmtMoney(Math.abs(r.value))}</span></div>`).join('');
-  summaryHtml += `<div style="display:flex; justify-content:space-between; border-top:1px solid var(--line); margin-top:6px; padding-top:6px; color:var(--red);"><span>${tr('= المبلغ المستحق')}</span><span dir="ltr">${fmtMoney(Math.abs(balance))}</span></div>`;
+  let summaryHtml = summaryRows.map(r=> `<div style="display:flex; justify-content:space-between;"><span>${r.sign} ${escapeHtml(tr(r.label))}</span><span dir="ltr">${fmtAppMoney(Math.abs(r.value))}</span></div>`).join('');
+  summaryHtml += `<div style="display:flex; justify-content:space-between; border-top:1px solid var(--line); margin-top:6px; padding-top:6px; color:var(--red);"><span>${tr('= المبلغ المستحق')}</span><span dir="ltr">${fmtAppMoney(Math.abs(balance))}</span></div>`;
   AppDOMState.set(AppDOMController.getById('dueReasonSummary'), 'innerHTML', summaryHtml);
 
   const itemsLabelEl = AppDOMController.getById('dueReasonItemsLabel');
@@ -27935,13 +27999,13 @@ function openDueReasonDetail(type, id){
     if(allocMap && it.id){
       const paid = allocMap[it.id] || 0;
       const remaining = Math.round((it.amount - paid) * 100) / 100;
-      paidCell = paid ? fmtMoney(paid) : naText;
-      remainingCell = `<span style="color:${remaining > 0.004 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(remaining)}</span>`;
+      paidCell = paid ? fmtAppMoney(paid) : naText;
+      remainingCell = `<span style="color:${remaining > 0.004 ? 'var(--red)' : 'var(--green)'};">${fmtAppMoney(remaining)}</span>`;
     }
     AppDOMState.set(rowEl, 'innerHTML', `
       <td style="padding:8px 12px;">${escapeHtml(it.label)}</td>
       <td style="padding:8px 12px;">${escapeHtml(it.date||'—')}</td>
-      <td style="padding:8px 12px; text-align:left;" dir="ltr">${fmtMoney(it.amount)}</td>
+      <td style="padding:8px 12px; text-align:left;" dir="ltr">${fmtAppMoney(it.amount)}</td>
       <td style="padding:8px 12px; text-align:left;" dir="ltr">${paidCell}</td>
       <td style="padding:8px 12px; text-align:left;" dir="ltr">${remainingCell}</td>
     `);
@@ -28123,26 +28187,26 @@ function updateExpenseRecipientBalance(){
     const l = labs.find(x=>x.id===id);
     if(!l){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = labBalance(l);
-    AppDOMState.set(el, 'textContent', `الضايل عليّ لمختبر ${l.name}: ${fmtMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `الضايل عليّ لمختبر ${l.name}: ${fmtAppMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else if(type === 'company'){
     const c = companies.find(x=>x.id===id);
     if(!c){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = companyBalance(c);
-    AppDOMState.set(el, 'textContent', `الضايل عليّ لشركة ${c.name}: ${fmtMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `الضايل عليّ لشركة ${c.name}: ${fmtAppMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else if(type === 'employee'){
     const t = technicians.find(x=>x.id===id);
     if(!t){ AppDOMState.set(el, 'textContent', ''); return; }
     const advTotal = (t.advances||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
     const net = (Number(t.salary)||0) - advTotal;
-    AppDOMState.set(el, 'textContent', `الراتب المتبقي للموظف ${t.name} بعد خصم السلف: ${fmtMoney(net)}`);
+    AppDOMState.set(el, 'textContent', `الراتب المتبقي للموظف ${t.name} بعد خصم السلف: ${fmtAppMoney(net)}`);
     AppDOMStyle.set(el, 'color', 'var(--teal)');
   }else if(type === 'doctor'){
     const d = doctors.find(x=>x.id===id);
     if(!d){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = doctorBalance(d);
-    AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name} (له لدينا): ${fmtMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name} (له لدينا): ${fmtAppMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else{
     AppDOMState.set(el, 'textContent', '');
@@ -28280,7 +28344,7 @@ AppEventController.on(expensePaymentForm, 'submit', (e)=>{
     : type === 'doctor' ? {type:'doctor', doctorId: recipientId}
     : type === 'company' ? {type:'company', companyId: recipientId}
     : null;
-  logEdit(`تسجيل مدفوعات ${fmtMoney(amount)} لـ ${EXPENSE_RECIPIENT_LABELS[type]||''} ${recipientLabel}`, expenseCtx);
+  logEdit(`تسجيل مدفوعات ${fmtAppMoney(amount)} لـ ${EXPENSE_RECIPIENT_LABELS[type]||''} ${recipientLabel}`, expenseCtx);
   saveDatabase();
   expensePaymentForm.reset();
   AppDOMState.set(AppDOMController.getById('epDate'), 'value', localDateStr());
@@ -28320,7 +28384,7 @@ function renderExpensePaymentsLog(){
       <td style="padding:9px 12px; white-space:nowrap;">${escapeHtml(exp.date || '—')}</td>
       <td style="padding:9px 12px;">${EXPENSE_RECIPIENT_LABELS[exp.recipientType]||''} ${escapeHtml(exp.recipientLabel||'')}</td>
       <td style="padding:9px 12px;">${escapeHtml(exp.note||'-')} ${exp.paymentMethod==='check' ? '<span class="check-pill">'+paymentMethodLabel(exp)+'</span>' : ''}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtMoney(exp.amount)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtAppMoney(exp.amount)}</td>
       <td style="padding:9px 12px; text-align:center;"><button type="button" class="icon-btn danger" data-del-expense="${exp.id}">حذف</button></td>
     `);
     return tr;
@@ -28348,7 +28412,7 @@ AppEventController.on(AppDOMController.getById('expensePaymentsLogBody'), 'click
     const delExpenseCtx = exp.recipientType === 'employee' ? {type:'technician', techId: exp.recipientId}
       : exp.recipientType === 'doctor' ? {type:'doctor', doctorId: exp.recipientId}
       : exp.recipientType === 'company' ? {type:'company', companyId: exp.recipientId} : null;
-    logEdit(`حذف مدفوعات ${fmtMoney(exp.amount)} لـ ${exp.recipientLabel||''}`, delExpenseCtx);
+    logEdit(`حذف مدفوعات ${fmtAppMoney(exp.amount)} لـ ${exp.recipientLabel||''}`, delExpenseCtx);
     saveDatabase();
     renderExpensePaymentsLog();
     AppFeatureController.invoke('dashboard','render');
@@ -29671,7 +29735,7 @@ html[dir="ltr"] .stats-home .stat-arrow-chip{inset-inline-end:12px !important;in
 .password-eye-btn svg{width:20px;height:20px;display:block;}
 /* Clearer printer icon + soft label underneath for icon-only print actions. */
 .icon-btn-print{width:60px !important;height:58px !important;min-width:60px !important;padding:6px 4px 4px !important;border-radius:12px !important;display:inline-flex !important;flex-direction:column !important;gap:2px !important;font-size:0 !important;line-height:1 !important;justify-content:center !important;}
-.icon-btn-print .print-label{font-family:'Tajawal','Segoe UI',sans-serif;font-size:10px;font-weight:700;line-height:1;color:currentColor;}
+.icon-btn-print .print-label{font-family:'AL Noto Arabic','Segoe UI',sans-serif;font-size:10px;font-weight:700;line-height:1;color:currentColor;}
 .icon-btn-print .print-svg{width:28px;height:28px;display:block;}
 /* Calculator topbar icon is visibly a calculator, not a generic document icon. */
 #openCalcCard svg{width:25px !important;height:25px !important;}
@@ -30161,7 +30225,7 @@ html[dir="ltr"] .stats-home .stat-arrow-chip{inset-inline-end:12px !important;in
   display:inline-flex; align-items:center; gap:6px;
   border:1px solid var(--line); background:var(--panel); color:var(--ink);
   border-radius:9px; padding:6px 9px; min-height:30px;
-  font:800 11.5px/1 'Tajawal','Segoe UI',sans-serif; cursor:pointer;
+  font:800 11.5px/1 'AL Noto Arabic','Segoe UI',sans-serif; cursor:pointer;
   transition:transform .14s ease,background .14s ease,border-color .14s ease,box-shadow .14s ease;
 }
 .home-hidden-stat-restore:hover,.home-hidden-stat-restore:focus-visible{
@@ -30716,9 +30780,9 @@ html,body,button,input,select,textarea{font-family:var(--app-font)!important;}
 
 /* Main dashboard card icons: slightly larger without changing card geometry. */
 .stats-home .stat-icon-circle{
-  width:55px !important;
-  height:55px !important;
-  min-width:55px !important;
+  width:48px !important;
+  height:48px !important;
+  min-width:48px !important;
   font-size:30.5px !important;
 }
 

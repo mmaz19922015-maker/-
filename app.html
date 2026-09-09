@@ -4164,16 +4164,6 @@ html[dir='ltr'] .sidebar-btn{transform-origin:left center;}
 <style data-source="../styles/08-icon-svg-size.css">
 .btn-icon-badge svg{width:65%;height:65%;display:block;}
 
-/* Unified icon treatment: no decorative square around icon buttons. */
-.icon-btn, .app-topbar-icon-btn, .btn-icon-badge, .stat-eye-btn,
-.home-floating-panel-eye, .home-editlog-panel-more {
-  border: 0 !important; box-shadow: none !important; background: transparent !important;
-}
-.icon-btn:hover, .app-topbar-icon-btn:hover, .btn-icon-badge:hover,
-.stat-eye-btn:hover, .home-floating-panel-eye:hover, .home-editlog-panel-more:hover {
-  border: 0 !important; box-shadow: none !important; background: var(--teal-tint) !important;
-}
-
 </style>
 <!-- SOURCE-CSS: src/renderer/styles/09-visual-refresh-12-7.css -->
 <style data-source="../styles/09-visual-refresh-12-7.css">
@@ -7311,12 +7301,6 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
     <div class="invoice-appearance-layout">
       <div class="invoice-studio">
         <div class="field">
-          <label>عملة البرنامج</label>
-          <select id="invGlobalCurrencySelect" dir="rtl"></select>
-          <div class="muted" style="font-size:10.5px; margin-top:4px;">العملة المختارة تُستخدم في الحسابات والمبالغ المستحقة والفواتير والتقارير والطباعة.</div>
-        </div>
-
-        <div class="field">
           <label>اسم العيادة (يظهر أعلى الفاتورة)</label>
           <input type="text" id="invClinicNameInput" placeholder="مثال: عيادة الإخلاص لطب الأسنان">
         </div>
@@ -9127,8 +9111,8 @@ function renderAcctLedger(){
   const inEl = AppDOMController.getById('acctLedgerInTotal');
   const outEl = AppDOMController.getById('acctLedgerOutTotal');
   const allEl = AppDOMController.getById('acctLedgerAllCount');
-  if(inEl) AppDOMState.set(inEl, 'textContent', fmtAppMoney(totalIn));
-  if(outEl) AppDOMState.set(outEl, 'textContent', fmtAppMoney(totalOut));
+  if(inEl) AppDOMState.set(inEl, 'textContent', fmtMoney(totalIn));
+  if(outEl) AppDOMState.set(outEl, 'textContent', fmtMoney(totalOut));
   if(allEl) AppDOMState.set(allEl, 'textContent', allRows.length);
   const rows = acctLedgerFilter === 'all' ? allRows : allRows.filter(r=> r.dir === acctLedgerFilter);
 
@@ -9152,19 +9136,19 @@ function renderAcctLedger(){
   // direction of the debt backwards.
   const isPayable = (acctType === 'company' || acctType === 'agent');
   if(acctType === 'technician'){
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', balance >= 0 ? 'var(--ink)' : 'var(--red)');
     AppDOMState.set(lblEl, 'textContent', balance >= 0 ? '✅ الراتب المتبقي' : '📉 صار عليه ديون');
   }else if(balance >= 0){
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(balance));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(balance));
     AppDOMStyle.set(dueEl, 'color', balance > 0 ? 'var(--red)' : 'var(--green)');
     AppDOMState.set(lblEl, 'textContent', isPayable ? '💰 المبلغ المستحق عليّ له' : '💰 المبلغ المستحق لي');
   }else{
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', 'var(--teal)');
     AppDOMState.set(lblEl, 'textContent', isPayable ? '↩️ دفعتُ له أكثر من المطلوب' : '↩️ دفع لي أكثر من المطلوب');
   }
-  AppDOMState.set(AppDOMController.getById('acctLedgerPaid'), 'textContent', fmtAppMoney(paid));
+  AppDOMState.set(AppDOMController.getById('acctLedgerPaid'), 'textContent', fmtMoney(paid));
   AppDOMState.set(AppDOMController.getById('acctLedgerCount'), 'textContent', rows.length);
 
   // Give every row a stable key so selection survives paging.
@@ -9186,7 +9170,7 @@ function renderAcctLedger(){
           <div class="what">${escapeHtml(r.date || '-')} — ${escapeHtml(r.note || 'بدون ملاحظة')}</div>
         </div>
       </div>
-      <div class="amt" style="color:${isIn ? 'var(--green)' : 'var(--red)'};">${isIn ? '+' : '−'} ${fmtAppMoney(r.amount)}</div>
+      <div class="amt" style="color:${isIn ? 'var(--green)' : 'var(--red)'};">${isIn ? '+' : '−'} ${fmtMoney(r.amount)}</div>
     `);
     return div;
   }, 'acctLedgerPrevBtn', 'acctLedgerNextBtn', 12, 12, (p)=>{ acctLedgerPage = p; renderAcctLedger(); });
@@ -9323,7 +9307,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '15.0.79';
+const APP_VERSION = '15.0.80';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -17592,31 +17576,9 @@ const INVOICE_CURRENCIES = [
   { code:'TND', country:'تونس',          name:'دينار تونسي',   frac:'مليم' },
   { code:'DZD', country:'الجزائر',       name:'دينار جزائري',  frac:'سنتيم' },
   { code:'MAD', country:'المغرب',        name:'درهم مغربي',    frac:'سنتيم' },
-  { code:'SDG', country:'السودان',       name:'جنيه سوداني',   frac:'قرش' },
-  { code:'MRU', country:'موريتانيا',     name:'أوقية موريتانية', frac:'خمس' },
-  { code:'DJF', country:'جيبوتي',        name:'فرنك جيبوتي',   frac:'—' },
-  { code:'KMF', country:'جزر القمر',     name:'فرنك قمري',      frac:'—' },
-  { code:'SOS', country:'الصومال',       name:'شلن صومالي',    frac:'سنت' },
-  { code:'YER', country:'اليمن',         name:'ريال يمني',     frac:'فلس' },
-  { code:'ILS', country:'فلسطين / إسرائيل', name:'شيكل',        frac:'أغورة' },
   { code:'TRY', country:'تركيا',         name:'ليرة تركية',    frac:'قرش' },
   { code:'GBP', country:'بريطانيا',      name:'جنيه إسترليني', frac:'بنس' },
 ];
-function currentAppCurrency(){
-  const code = (typeof invoiceSettings !== 'undefined' && invoiceSettings && invoiceSettings.lastCurrency) || 'JOD';
-  return INVOICE_CURRENCIES.find(c=>c.code===code) || INVOICE_CURRENCIES[0];
-}
-function fmtAppMoney(n){
-  const c=currentAppCurrency();
-  return fmtMoney(n) + ' ' + c.name;
-}
-function renderGlobalCurrencySelector(id){
-  const sel=AppDOMController.getById(id);
-  if(!sel) return;
-  const remembered=(invoiceSettings&&invoiceSettings.lastCurrency)||'JOD';
-  AppDOMState.set(sel,'innerHTML',INVOICE_CURRENCIES.map(c=>`<option value=\"${escapeHtml(c.code)}\">${escapeHtml(c.country)} — ${escapeHtml(c.name)} (${escapeHtml(c.code)})</option>`).join(''));
-  AppDOMState.set(sel,'value',INVOICE_CURRENCIES.some(c=>c.code===remembered)?remembered:'JOD');
-}
 function renderInvoiceCurrencyOptions(){
   const sel = AppDOMController.getById('invCurrency');
   if(!sel) return;
@@ -17646,13 +17608,8 @@ const createInvoiceOverlay = AppDOMController.getById('createInvoiceOverlay');
 // "🧾 إنشاء فاتورة" now opens a small type-chooser first (فاتورة عادية vs
 // كشف حساب) instead of jumping straight to the simple invoice form — per
 // direct feedback, both invoice types should be reachable from one place.
-AppEventController.setHandler(AppDOMController.getById('createInvoiceSidebarBtn'), 'click', ()=>{
-  // Guard the navigation at runtime. If the chooser fragment is unavailable
-  // in a packaged build, fall back to the real invoice screen instead of a
-  // silent no-op.
-  const chooser=AppDOMController.getById('invoiceTypeChooserOverlay');
-  if(chooser){ AppOverlayController.open('invoiceTypeChooserOverlay'); return; }
-  if(typeof openCreateInvoiceOverlay === 'function') openCreateInvoiceOverlay();
+AppEventController.on(AppDOMController.getById('createInvoiceSidebarBtn'), 'click', ()=>{
+  AppOverlayController.open('invoiceTypeChooserOverlay');
 });
 AppEventController.on(AppDOMController.getById('closeInvoiceTypeChooserBtn'), 'click', ()=>{
   AppOverlayController.close('invoiceTypeChooserOverlay');
@@ -17716,7 +17673,7 @@ AppEventController.on(AppDOMController.getById('invRecipientType'), 'change', re
    see openInvoiceSetupDirect() further down), fully separate from the
    create-invoice form above. */
 const invoiceAppearanceOverlay = AppDOMController.getById('invoiceAppearanceOverlay');
-AppEventController.setHandler(AppDOMController.getById('invoiceAppearanceSidebarBtn'), 'click', ()=>{ if(typeof openInvoiceAppearanceOverlay === 'function') openInvoiceAppearanceOverlay(); });
+AppEventController.on(AppDOMController.getById('invoiceAppearanceSidebarBtn'), 'click', ()=> AppFeatureController.invoke('invoice','appearance'));
 function openInvoiceAppearanceOverlay(opts){
   opts = opts || {};
   renderInvoiceSettingsPanel();
@@ -17852,20 +17809,15 @@ AppEventController.on(AppDOMController.getById('createInvoiceForm'), 'submit', (
     date: localDateStr(getTrustedNow()),
     time: localTimeStr(getTrustedNow()),
   };
-  try{
-    invoices.unshift(invoice);
-    logEdit(`إنشاء فاتورة رقم ${invoice.serial} لـ ${recipientLabel} بمبلغ ${fmtMoney(amount)} ${currency.name}`);
-    saveDatabase();
-    AppFeatureController.invoke('dashboard','render');
-    const previewResult=printInvoice(invoice,{previewOnly:true});
-    AppOverlayController.close(createInvoiceOverlay.id);
-    return previewResult;
-  }catch(err){
-    console.error('create invoice failed',err);
-    const idx=invoices.indexOf(invoice);
-    if(idx>=0) invoices.splice(idx,1);
-    showToast('تعذّر إنشاء أو معاينة الفاتورة: '+(err&&err.message?err.message:'خطأ غير معروف'),'error');
-  }
+  invoices.unshift(invoice);
+  logEdit(`إنشاء فاتورة رقم ${invoice.serial} لـ ${recipientLabel} بمبلغ ${fmtMoney(amount)}`);
+  saveDatabase();
+  AppOverlayController.close(createInvoiceOverlay.id);
+  AppFeatureController.invoke('dashboard','render');
+  // Preview first — same pattern as every other invoice/report in the app —
+  // so a typo in the amount or reason is caught before anything is printed.
+  // The preview window's own "🖨 طباعة" button prints it.
+  printInvoice(invoice, {previewOnly:true});
 });
 
 /* Which optional fields show on the simple receipt-style invoice (printInvoice
@@ -18906,25 +18858,18 @@ function openCaseIdCard(ownerType, ownerId, caseId){
     <div><b>الجهة:</b> ${escapeHtml(ownerLabel)}</div>
     <div><b>نوع العمل:</b> ${escapeHtml(c.workType || '—')}</div>
     <div><b>الحالة:</b> ${STATUS_LABELS[c.status]||c.status||'—'}</div>
-    <div><b>التكلفة:</b> ${fmtAppMoney(c.cost)}</div>
+    <div><b>التكلفة:</b> ${fmtMoney(c.cost)}</div>
   `);
   AppOverlayController.open('caseIdCardOverlay');
 }
 AppEventController.on(AppDOMController.getById('closeCaseIdCardBtn'), 'click', ()=> AppOverlayController.close('caseIdCardOverlay'));
-AppEventController.setHandler(AppDOMController.getById('caseIdCardEditBtn'), 'click', (ev)=>{
-  ev && ev.preventDefault && ev.preventDefault();
-  ev && ev.stopPropagation && ev.stopPropagation();
+AppEventController.on(AppDOMController.getById('caseIdCardEditBtn'), 'click', ()=>{
   if(!caseIdCardRef) return;
-  const ref={ownerType:caseIdCardRef.ownerType,ownerId:caseIdCardRef.ownerId,caseId:caseIdCardRef.caseId};
+  // Editing is a destination screen; close the source lookup cards first.
   AppOverlayController.close('caseIdCardOverlay');
   AppOverlayController.close('caseTypePickerOverlay');
   AppOverlayController.close('caseFilterOverlay');
-  setTimeout(()=>{
-    const owner=findCaseOwner(ref.ownerType,ref.ownerId);
-    const c=owner && (owner.cases||[]).find(x=>x.id===ref.caseId);
-    if(!owner || !c){ showToast('تعذّر العثور على الحالة المحددة للتعديل.','error'); return; }
-    openEditCaseModal(ref.ownerType,ref.ownerId,ref.caseId);
-  },0);
+  openEditCaseModal(caseIdCardRef.ownerType, caseIdCardRef.ownerId, caseIdCardRef.caseId);
 });
 AppEventController.on(AppDOMController.getById('caseIdCardHistoryBtn'), 'click', ()=>{
   if(!caseIdCardRef) return;
@@ -18956,7 +18901,7 @@ function renderCaseGrid(d){
         <div class="case-sub">${c.technician ? '🧑‍🔧 '+escapeHtml(c.technician) : ''} ${(c.teeth&&c.teeth.length) ? ' · 🦷 '+c.teeth.length+' سن' : (c.toothColor ? ' · 🦷 '+escapeHtml(c.toothColor) : '')} ${c.expectedDate ? ' · 📅 التسليم: '+escapeHtml(c.expectedDate) : ''}</div>
       </div>
       <div class="case-figs">
-        <span>التكلفة: <b>${fmtAppMoney(c.cost)}</b></span>
+        <span>التكلفة: <b>${fmtMoney(c.cost)}</b></span>
       </div>
       <span class="status-pill status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
       <div class="case-actions">
@@ -19219,7 +19164,7 @@ function renderDirectoryResults(query){
           <div class="d-sub">${(r.doctor.cases||[]).length} حالة${r.doctor.phone ? ' — '+escapeHtml(r.doctor.phone) : ''}</div>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtAppMoney(due)}</div>
+          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(due)}</div>
           <button type="button" class="icon-btn" data-view-details="${r.doctor.id}" title="عرض التفاصيل">👁 عرض التفاصيل</button>
         </div>
       `);
@@ -19245,7 +19190,7 @@ function renderDirectoryResults(query){
           <div class="d-sub">${(r.lab.cases||[]).length} حالة${r.lab.phone ? ' — '+escapeHtml(r.lab.phone) : ''}</div>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtAppMoney(due)}</div>
+          <div class="doctor-remaining" style="color:${due>0 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(due)}</div>
           <button type="button" class="icon-btn" data-view-lab-details="${r.lab.id}" title="عرض التفاصيل">👁 عرض التفاصيل</button>
         </div>
       `);
@@ -19822,9 +19767,9 @@ const CS_COLUMNS = [
   { key:'label',      label:'البيان',            cls:'',           get:(r)=> r.label || '—' },
   { key:'patient',    label:'المريض',            cls:'',           get:(r)=> r.patient || '—' },
   { key:'technician', label:'الفني',             cls:'',           get:(r)=> r.technician || '—' },
-  { key:'debit',      label:'مدين',              cls:'num debit',  get:(r)=> r.dir === 'debit' ? fmtAppMoney(r.amount) : '' },
-  { key:'credit',     label:'دائن',              cls:'num credit', get:(r)=> r.dir === 'credit' ? fmtAppMoney(r.amount) : '' },
-  { key:'balance',    label:'الرصيد التراكمي',   cls:'num',        get:(r)=> fmtAppMoney(r.running) },
+  { key:'debit',      label:'مدين',              cls:'num debit',  get:(r)=> r.dir === 'debit' ? fmtMoney(r.amount) : '' },
+  { key:'credit',     label:'دائن',              cls:'num credit', get:(r)=> r.dir === 'credit' ? fmtMoney(r.amount) : '' },
+  { key:'balance',    label:'الرصيد التراكمي',   cls:'num',        get:(r)=> fmtMoney(r.running) },
 ];
 /* Which movement kinds each party type can actually produce, so the builder
    greys out choices that would always come back empty. */
@@ -19891,9 +19836,9 @@ function csRenderPreview(){
   const totals = csTotals(rows);
 
   AppDOMState.set(AppDOMController.getById('csRowCount'), 'textContent', rows.length);
-  AppDOMState.set(AppDOMController.getById('csPreviewTotals'), 'innerHTML', `<span>مدين <b class="money debit">${fmtAppMoney(totals.debit)}</b></span>` +
-    `<span>دائن <b class="money credit">${fmtAppMoney(totals.credit)}</b></span>` +
-    `<span>الصافي <b class="money">${fmtAppMoney(totals.net)}</b></span>`);
+  AppDOMState.set(AppDOMController.getById('csPreviewTotals'), 'innerHTML', `<span>مدين <b class="money debit">${fmtMoney(totals.debit)}</b></span>` +
+    `<span>دائن <b class="money credit">${fmtMoney(totals.credit)}</b></span>` +
+    `<span>الصافي <b class="money">${fmtMoney(totals.net)}</b></span>`);
 
   if(!rows.length || !cols.length){
     AppDOMState.set(host, 'innerHTML', `<div class="cs-preview-empty">${
@@ -19984,9 +19929,9 @@ function csPrint(){
   let tfoot = '';
   if(AppDOMState.getById('csShowTotals', "checked") && rows.length){
     const cells = cols.map(c=>{
-      if(c.key === 'debit')   return `<td class="num debit">${fmtAppMoney(totals.debit)}</td>`;
-      if(c.key === 'credit')  return `<td class="num credit">${fmtAppMoney(totals.credit)}</td>`;
-      if(c.key === 'balance') return `<td class="num">${fmtAppMoney(totals.net)}</td>`;
+      if(c.key === 'debit')   return `<td class="num debit">${fmtMoney(totals.debit)}</td>`;
+      if(c.key === 'credit')  return `<td class="num credit">${fmtMoney(totals.credit)}</td>`;
+      if(c.key === 'balance') return `<td class="num">${fmtMoney(totals.net)}</td>`;
       return '<td></td>';
     });
     // Put the label in the first non-money column that exists.
@@ -21253,17 +21198,17 @@ function getIncomingPaymentCaseLinkSource(type, id){
   if(type === 'doctor'){
     const d = doctors.find(x=>x.id===id);
     if(!d) return null;
-    return { kind:'case', items: (d.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtAppMoney(Number(c.cost)||0)})` })) };
+    return { kind:'case', items: (d.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtMoney(Number(c.cost)||0)})` })) };
   }
   if(type === 'lab'){
     const l = labs.find(x=>x.id===id);
     if(!l) return null;
-    return { kind:'case', items: (l.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtAppMoney(Number(c.cost)||0)})` })) };
+    return { kind:'case', items: (l.cases||[]).map(c=> ({ id:c.id, label:`ID ${c.caseNumber||''} — ${c.patientName||'بدون اسم'} (${fmtMoney(Number(c.cost)||0)})` })) };
   }
   if(type === 'company'){
     const c = companies.find(x=>x.id===id);
     if(!c) return null;
-    return { kind:'shipment', items: (c.shipments||[]).map(sh=> ({ id:sh.id, label:`${sh.description||'بضاعة'} — ${sh.date||'—'} (${fmtAppMoney(Number(sh.cost)||0)})` })) };
+    return { kind:'shipment', items: (c.shipments||[]).map(sh=> ({ id:sh.id, label:`${sh.description||'بضاعة'} — ${sh.date||'—'} (${fmtMoney(Number(sh.cost)||0)})` })) };
   }
   return null;
 }
@@ -21338,17 +21283,17 @@ function updateCaseAllocationRemaining(cfg){
   explicitSum = Math.round(explicitSum * 100) / 100;
   if(!checked.length){ cfg.AppDOMState.set(remainingEl, 'textContent', ''); return; }
   if(explicitSum > total + 0.004){
-    cfg.AppDOMState.set(remainingEl, 'textContent', '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtAppMoney(explicitSum - total));
+    cfg.AppDOMState.set(remainingEl, 'textContent', '⚠️ ' + tr('المُخصَّص أكبر من مبلغ الدفعة بمقدار') + ' ' + fmtMoney(explicitSum - total));
     AppDOMStyle.set(cfg.remainingEl, 'color', 'var(--red)');
     return;
   }
   const remaining = Math.round((total - explicitSum) * 100) / 100;
   if(autoCount > 0){
     const share = Math.round((remaining / autoCount) * 100) / 100;
-    cfg.AppDOMState.set(remainingEl, 'textContent', '✅ ' + autoCount + ' ' + tr('حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها') + ' ' + fmtAppMoney(Math.max(0, remaining)) + ' ' + tr('بالتساوي') + ' (' + fmtAppMoney(share) + ' ' + tr('لكل حالة') + ')');
+    cfg.AppDOMState.set(remainingEl, 'textContent', '✅ ' + autoCount + ' ' + tr('حالة مُعلَّمة بلا مبلغ محدد — سيُوزَّع عليها') + ' ' + fmtMoney(Math.max(0, remaining)) + ' ' + tr('بالتساوي') + ' (' + fmtMoney(share) + ' ' + tr('لكل حالة') + ')');
     AppDOMStyle.set(cfg.remainingEl, 'color', 'var(--green)');
   }else if(remaining > 0.004){
-    cfg.AppDOMState.set(remainingEl, 'textContent', tr('المتبقي غير مُخصَّص لحالة معيّنة') + ': ' + fmtAppMoney(remaining));
+    cfg.AppDOMState.set(remainingEl, 'textContent', tr('المتبقي غير مُخصَّص لحالة معيّنة') + ': ' + fmtMoney(remaining));
     AppDOMStyle.set(cfg.remainingEl, 'color', 'var(--ink-dim)');
   }else{
     cfg.AppDOMState.set(remainingEl, 'textContent', '✅ ' + tr('تم تخصيص كامل المبلغ على الحالات المُعلَّمة'));
@@ -21552,14 +21497,14 @@ function renderChecksRegister(){
   AppDOMState.set(body, 'innerHTML', ''); AppViewState.setDisplay(empty, rows.length?'none':'');
   rows.forEach(p=>{
     const tr=AppDOMController.create('tr');
-    AppDOMState.set(tr, 'innerHTML', `<td>${p.direction==='incoming'?'وارد':'صادر'}</td><td>${escapeHtml(p.party)}</td><td dir="ltr">${escapeHtml(p.checkNumber||'—')}</td><td>${escapeHtml(p.checkBank||'—')}</td><td>${fmtAppMoney(p.amount)}</td><td dir="ltr">${escapeHtml(p.checkDueDate||'—')}</td><td><span class="check-pill">${escapeHtml(checkStatusLabel(p.checkStatus))}</span></td><td style="display:flex; gap:6px;"><button class="icon-btn" data-check-id="${escapeHtml(p.id)}" data-check-direction="${p.direction}">تعديل الحالة</button><button class="icon-btn danger" data-del-check-id="${escapeHtml(p.id)}">🗑 حذف</button></td>`);
+    AppDOMState.set(tr, 'innerHTML', `<td>${p.direction==='incoming'?'وارد':'صادر'}</td><td>${escapeHtml(p.party)}</td><td dir="ltr">${escapeHtml(p.checkNumber||'—')}</td><td>${escapeHtml(p.checkBank||'—')}</td><td>${fmtMoney(p.amount)}</td><td dir="ltr">${escapeHtml(p.checkDueDate||'—')}</td><td><span class="check-pill">${escapeHtml(checkStatusLabel(p.checkStatus))}</span></td><td style="display:flex; gap:6px;"><button class="icon-btn" data-check-id="${escapeHtml(p.id)}" data-check-direction="${p.direction}">تعديل الحالة</button><button class="icon-btn danger" data-del-check-id="${escapeHtml(p.id)}">🗑 حذف</button></td>`);
     AppDOMTree.appendChild(body, tr);
   });
   const all=collectAllChecks();
   const incoming=all.filter(x=>x.direction==='incoming').reduce((s,x)=>s+normalizeMoneyValue(x.amount),0);
   const outgoing=all.filter(x=>x.direction==='outgoing').reduce((s,x)=>s+normalizeMoneyValue(x.amount),0);
   const overdue=all.filter(x=>x.checkDueDate&&x.checkDueDate<today&&!['cleared','returned'].includes(x.checkStatus)).reduce((s,x)=>s+normalizeMoneyValue(x.amount),0);
-  AppDOMState.set(AppDOMController.getById('checksRegisterSummary'), 'innerHTML', `<div class="stat"><small>شيكات واردة</small>${fmtAppMoney(incoming)}</div><div class="stat"><small>شيكات صادرة</small>${fmtAppMoney(outgoing)}</div><div class="stat"><small>شيكات متأخرة</small>${fmtAppMoney(overdue)}</div><div class="stat"><small>عدد الشيكات</small>${all.length}</div>`);
+  AppDOMState.set(AppDOMController.getById('checksRegisterSummary'), 'innerHTML', `<div class="stat"><small>شيكات واردة</small>${fmtMoney(incoming)}</div><div class="stat"><small>شيكات صادرة</small>${fmtMoney(outgoing)}</div><div class="stat"><small>شيكات متأخرة</small>${fmtMoney(overdue)}</div><div class="stat"><small>عدد الشيكات</small>${all.length}</div>`);
 }
 function updateCheckRecordStatus(id,direction,status){
   const find=(arr)=>arr.find(p=>p.id===id); let p=null;
@@ -21655,10 +21600,10 @@ function updateIncomingPaymentBalanceDisplay(){
     if(!d){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = doctorBalance(d);
     if(bal >= 0){
-      AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name}: ${fmtAppMoney(bal)}`);
+      AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name}: ${fmtMoney(bal)}`);
       AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
     }else{
-      AppDOMState.set(el, 'textContent', `صار يستحق منا د. ${d.name}: ${fmtAppMoney(Math.abs(bal))}`);
+      AppDOMState.set(el, 'textContent', `صار يستحق منا د. ${d.name}: ${fmtMoney(Math.abs(bal))}`);
       AppDOMStyle.set(el, 'color', 'var(--teal)');
     }
   }else if(type === 'lab'){
@@ -21666,23 +21611,23 @@ function updateIncomingPaymentBalanceDisplay(){
     if(!l){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = labBalance(l);
     if(bal >= 0){
-      AppDOMState.set(el, 'textContent', `المتبقي على مختبر ${l.name}: ${fmtAppMoney(bal)}`);
+      AppDOMState.set(el, 'textContent', `المتبقي على مختبر ${l.name}: ${fmtMoney(bal)}`);
       AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
     }else{
-      AppDOMState.set(el, 'textContent', `صار يستحق منا مختبر ${l.name}: ${fmtAppMoney(Math.abs(bal))}`);
+      AppDOMState.set(el, 'textContent', `صار يستحق منا مختبر ${l.name}: ${fmtMoney(Math.abs(bal))}`);
       AppDOMStyle.set(el, 'color', 'var(--teal)');
     }
   }else if(type === 'company'){
     const c = companies.find(x=>x.id===id);
     if(!c){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = companyBalance(c);
-    AppDOMState.set(el, 'textContent', `رصيد شركة ${c.name} الحالي: ${fmtAppMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `رصيد شركة ${c.name} الحالي: ${fmtMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else if(type === 'agent'){
     const a = agents.find(x=>x.id===id);
     if(!a){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = agentBalance(a);
-    AppDOMState.set(el, 'textContent', `رصيد المندوب ${a.name} الحالي: ${fmtAppMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `رصيد المندوب ${a.name} الحالي: ${fmtMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }
 }
@@ -21730,7 +21675,7 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!d.payments) d.payments = [];
     d.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, dueDate: '', paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'د. ' + d.name;
-    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من د. ${d.name}`, {type:'doctor', doctorId: d.id});
+    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من د. ${d.name}`, {type:'doctor', doctorId: d.id});
     saveDoctors();
     renderDoctorList();
     renderDoctorView();
@@ -21741,7 +21686,7 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!l.payments) l.payments = [];
     l.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'مختبر ' + l.name;
-    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من مختبر ${l.name}`, {type:'lab', labId: l.id});
+    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من مختبر ${l.name}`, {type:'lab', labId: l.id});
     saveLabs();
   }else if(type === 'company'){
     const id = AppDOMState.getById('incomingPaymentDoctorSelect', "value");
@@ -21756,7 +21701,7 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!c.payments) c.payments = [];
     c.payments.push({ id: uid('pay'), amount, date, note, purpose, linkedCaseIds, caseAllocations, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'شركة ' + c.name;
-    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من شركة ${c.name}`, {type:'company', companyId: c.id});
+    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من شركة ${c.name}`, {type:'company', companyId: c.id});
     saveCompanies();
   }else if(type === 'agent'){
     const id = AppDOMState.getById('incomingPaymentDoctorSelect', "value");
@@ -21767,14 +21712,14 @@ AppEventController.on(incomingPaymentForm, 'submit', (e)=>{
     if(!a.payments) a.payments = [];
     a.payments.push({ id: uid('pay'), amount, date, note, purpose, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'' });
     sourceLabel = 'المندوب ' + a.name;
-    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من المندوب ${a.name}`, {type:'agent', agentId: a.id});
+    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من المندوب ${a.name}`, {type:'agent', agentId: a.id});
     saveAgents();
   }else{
     const name = AppDOMState.getById('incomingPaymentOtherNameInput', "value").trim();
     if(!name){ showToast('الرجاء إدخال اسم الجهة.', 'error'); return; }
     otherPayments.push({ id: uid('pay'), amount, date, note, paymentMethod: paymentInfo.method, checkNumber: paymentInfo.checkNumber||'', checkBank: paymentInfo.checkBank||'', checkDueDate: paymentInfo.checkDueDate||'', checkStatus: paymentInfo.checkStatus||'', sourceName: name });
     sourceLabel = name;
-    logEdit(`تسجيل دفعة واردة ${fmtAppMoney(amount)} من ${name}`);
+    logEdit(`تسجيل دفعة واردة ${fmtMoney(amount)} من ${name}`);
     saveDatabase();
   }
 
@@ -21830,7 +21775,7 @@ function renderIncomingPaymentsLog(){
       <td style="padding:9px 12px; white-space:nowrap;">${escapeHtml(p.date || '—')}</td>
       <td style="padding:9px 12px;">${escapeHtml(p.sourceLabel)}</td>
       <td style="padding:9px 12px;">${escapeHtml(p.note||'-')} ${p.paymentMethod==='check' ? '<span class="check-pill">'+paymentMethodLabel(p)+'</span>' : ''}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtAppMoney(p.amount)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtMoney(p.amount)}</td>
       <td style="padding:9px 12px; text-align:center;"><button type="button" class="icon-btn danger" data-del-incoming-payment="${p.id}" data-source-type="${p.sourceType}" data-source-id="${p.sourceId}">حذف</button></td>
     `);
     return tr;
@@ -22688,16 +22633,16 @@ AppEventController.on(AppDOMController.getById('editAgentInfoBtn'), 'click', ()=
 function renderAgentStatementStat(a){
   const payments = expensePayments.filter(exp=> exp.recipientType==='agent' && exp.recipientId===a.id);
   const total = payments.reduce((s,p)=> s + (Number(p.amount)||0), 0);
-  AppDOMState.set(AppDOMController.getById('agentStatTotal'), 'textContent', fmtAppMoney(total));
+  AppDOMState.set(AppDOMController.getById('agentStatTotal'), 'textContent', fmtMoney(total));
   const balance = agentBalance(a);
   const dueEl = AppDOMController.getById('agentStatDue');
   const lblEl = dueEl.parentElement.querySelector('.lbl');
   if(balance >= 0){
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(balance));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(balance));
     AppDOMStyle.set(dueEl, 'color', balance > 0 ? 'var(--red)' : 'var(--green)');
     if(lblEl) setI18nText(lblEl, '💰 المستحق عليّ');
   }else{
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', 'var(--teal)');
     if(lblEl) setI18nText(lblEl, '↩️ عجز (دفع لي أكثر من المطلوب)');
   }
@@ -22740,7 +22685,7 @@ function renderAgentStatement(a){
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <div class="amt" style="color:var(--red);">${fmtAppMoney(p.amount)}</div>
+        <div class="amt" style="color:var(--red);">${fmtMoney(p.amount)}</div>
         <button type="button" class="icon-btn danger" data-del-agent-payment="${p.id}" title="حذف هذه الدفعة نهائيًا">🗑 حذف</button>
       </div>
     `);
@@ -22947,9 +22892,9 @@ function renderStaffReportPage(){
     advancesGrandTotal += advancesTotal;
     netGrandTotal += (salary - advancesTotal);
   });
-  AppDOMState.set(AppDOMController.getById('srSalariesTotal'), 'textContent', fmtAppMoney(salariesTotal));
-  AppDOMState.set(AppDOMController.getById('srAdvancesTotal'), 'textContent', fmtAppMoney(advancesGrandTotal));
-  AppDOMState.set(AppDOMController.getById('srNetTotal'), 'textContent', fmtAppMoney(netGrandTotal));
+  AppDOMState.set(AppDOMController.getById('srSalariesTotal'), 'textContent', fmtMoney(salariesTotal));
+  AppDOMState.set(AppDOMController.getById('srAdvancesTotal'), 'textContent', fmtMoney(advancesGrandTotal));
+  AppDOMState.set(AppDOMController.getById('srNetTotal'), 'textContent', fmtMoney(netGrandTotal));
 
   staffReportPage = renderPaginatedRows(rows, staffReportPage, 'staffReportBody', 'staffReportEmpty', 'staffReportPageText', (t)=>{
     const advancesTotal = (t.advances||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
@@ -22963,9 +22908,9 @@ function renderStaffReportPage(){
         <div style="font-weight:700;">${escapeHtml(t.name)}</div>
         <div class="muted" style="font-size:11px;">${escapeHtml(t.phone || '—')}</div>
       </td>
-      <td style="padding:9px 12px; text-align:left;">${fmtAppMoney(salary)}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--red);">${fmtAppMoney(advancesTotal)}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtAppMoney(net)}</td>
+      <td style="padding:9px 12px; text-align:left;">${fmtMoney(salary)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--red);">${fmtMoney(advancesTotal)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--green); font-weight:700;">${fmtMoney(net)}</td>
       <td style="padding:9px 12px; text-align:center;">${(t.absences||[]).length}</td>
       <td style="padding:9px 12px; text-align:center; font-weight:700; color:var(--teal);">${technicianCaseCountLast30Days(t)}</td>
     `);
@@ -23023,7 +22968,7 @@ function openStaffDetails(id){
   const advancesTotal = advances.reduce((s,a)=> s + (Number(a.amount)||0), 0);
 
   const advancesHtml = advances.length
-    ? advances.map(a=> `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line);"><span>${escapeHtml(a.note||'-')} — ${escapeHtml(a.date||'-')}</span><span style="color:var(--red); font-weight:700;">${fmtAppMoney(a.amount)}</span></div>`).join('')
+    ? advances.map(a=> `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line);"><span>${escapeHtml(a.note||'-')} — ${escapeHtml(a.date||'-')}</span><span style="color:var(--red); font-weight:700;">${fmtMoney(a.amount)}</span></div>`).join('')
     : '<div class="muted">لا توجد سلف مسجّلة</div>';
 
   const absencesHtml = absences.length
@@ -23037,9 +22982,9 @@ function openStaffDetails(id){
     <div><b>التخصص:</b> ${escapeHtml(t.specialty || '—')}</div>
     <div><b>تاريخ بدء العمل:</b> ${escapeHtml(t.startDate || '—')}</div>
     <div><b>ملاحظات:</b> ${escapeHtml(t.notes || '—')}</div>
-    <div><b>الراتب الشهري:</b> ${fmtAppMoney(t.salary||0)}</div>
+    <div><b>الراتب الشهري:</b> ${fmtMoney(t.salary||0)}</div>
     <div><b>عدد الحالات:</b> <span id="staffDetailsCaseCountLink" style="color:var(--teal); text-decoration:underline; cursor:pointer;">${technicianCaseCount(t)} (عرض الحالات)</span></div>
-    <div style="margin-top:14px;"><b>💸 السلف (الإجمالي: ${fmtAppMoney(advancesTotal)})</b><div style="margin-top:6px;">${advancesHtml}</div></div>
+    <div style="margin-top:14px;"><b>💸 السلف (الإجمالي: ${fmtMoney(advancesTotal)})</b><div style="margin-top:6px;">${advancesHtml}</div></div>
     <div style="margin-top:14px;"><b>🚫 الغياب</b><div style="margin-top:6px;">${absencesHtml}</div></div>
   `);
   AppEventController.on(AppDOMController.getById('staffDetailsCaseCountLink'), 'click', ()=>{
@@ -23101,20 +23046,20 @@ function renderStaffActionsStats(t){
   const advancesTotal = (t.advances||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
   const net = (Number(t.salary)||0) - advancesTotal;
   const salaryEl = AppDOMController.getById('saSalaryStat');
-  AppDOMState.set(salaryEl, 'textContent', fmtAppMoney(t.salary||0));
+  AppDOMState.set(salaryEl, 'textContent', fmtMoney(t.salary||0));
   AppDOMStyle.set(salaryEl, 'color', 'var(--green)');
   const advEl = AppDOMController.getById('saAdvancesStat');
-  AppDOMState.set(advEl, 'textContent', fmtAppMoney(advancesTotal));
+  AppDOMState.set(advEl, 'textContent', fmtMoney(advancesTotal));
   AppDOMStyle.set(advEl, 'color', 'var(--ink)');
   // If advances exceed the salary the employee now owes us — flip the card.
   const netEl = AppDOMController.getById('saNetStat');
   const netLbl = AppDOMController.getById('saNetStatLbl');
   if(net >= 0){
-    AppDOMState.set(netEl, 'textContent', fmtAppMoney(net));
+    AppDOMState.set(netEl, 'textContent', fmtMoney(net));
     AppDOMStyle.set(netEl, 'color', 'var(--ink)');
     setI18nText(netLbl, '✅ الراتب المتبقي');
   }else{
-    AppDOMState.set(netEl, 'textContent', fmtAppMoney(Math.abs(net)));
+    AppDOMState.set(netEl, 'textContent', fmtMoney(Math.abs(net)));
     AppDOMStyle.set(netEl, 'color', 'var(--red)');
     setI18nText(netLbl, '📉 صار عليه ديون');
   }
@@ -23152,7 +23097,7 @@ function renderStaffActionsLog(t){
     if(en.kind === 'advance'){
       AppDOMState.set(row, 'innerHTML', `
         <div>
-          <div class="who" style="color:var(--red);">💸 سلفة — ${fmtAppMoney(en.amount)}</div>
+          <div class="who" style="color:var(--red);">💸 سلفة — ${fmtMoney(en.amount)}</div>
           <div class="what">${escapeHtml(en.note||'-')} — ${escapeHtml(en.date||'-')}</div>
         </div>
         <button type="button" class="icon-btn danger" data-del-advance="${en.id}">حذف</button>
@@ -23199,13 +23144,13 @@ AppEventController.on(AppDOMController.getById('staffAdvancesLogNextBtn'), 'clic
 function renderStaffAdvancesLog(t){
   const advances = (t.advances||[]).slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
   const total = advances.reduce((s,a)=> s + (Number(a.amount)||0), 0);
-  AppDOMState.set(AppDOMController.getById('staffAdvancesLogTotal'), 'textContent', fmtAppMoney(total));
+  AppDOMState.set(AppDOMController.getById('staffAdvancesLogTotal'), 'textContent', fmtMoney(total));
   staffAdvancesLogPage = renderPaginatedRows(advances, staffAdvancesLogPage, 'staffAdvancesLogBody', 'staffAdvancesLogEmpty', 'staffAdvancesLogPageText', (a)=>{
     const row = AppDOMController.create('div');
     row.className = 'due-item';
     AppDOMState.set(row, 'innerHTML', `
       <div>
-        <div class="who" style="color:var(--red);">💸 سلفة — ${fmtAppMoney(a.amount)}</div>
+        <div class="who" style="color:var(--red);">💸 سلفة — ${fmtMoney(a.amount)}</div>
         <div class="what">${escapeHtml(a.note||'-')} — ${escapeHtml(a.date||'-')}</div>
       </div>
       <button type="button" class="icon-btn danger" data-del-advance-log="${a.id}">حذف</button>
@@ -23313,7 +23258,7 @@ AppEventController.on(AppDOMController.getById('saSalaryCard'), 'click', async (
   const v = parseFloat(raw);
   if(!(v >= 0)){ showToast('أدخل مبلغًا صحيحًا.', 'error'); return; }
   t.salary = v;
-  logEdit(`تعديل راتب الموظف "${t.name}" إلى ${fmtAppMoney(t.salary)}`, {type:'technician', techId: t.id});
+  logEdit(`تعديل راتب الموظف "${t.name}" إلى ${fmtMoney(t.salary)}`, {type:'technician', techId: t.id});
   saveTechnicians();
   renderStaffActionsStats(t);
   AppFeatureController.invoke('dashboard','render');
@@ -23352,7 +23297,7 @@ AppEventController.on(AppDOMController.getById('staffAdvanceForm'), 'submit', (e
     date: AppDOMState.getById('saDate', "value") || localDateStr(),
     note: AppDOMState.getById('saNote', "value").trim(),
   });
-  logEdit(`تسجيل سلفة ${fmtAppMoney(amount)} للفني "${t.name}"`, {type:'technician', techId: t.id});
+  logEdit(`تسجيل سلفة ${fmtMoney(amount)} للفني "${t.name}"`, {type:'technician', techId: t.id});
   saveTechnicians();
   AppDOMController.getById('staffAdvanceForm').reset();
   AppDOMState.set(AppDOMController.getById('saDate'), 'value', localDateStr());
@@ -24522,7 +24467,7 @@ function renderCompaniesPickerResults(query){
         <div class="d-sub">${escapeHtml(c.address || '—')}${selectedCompanyRowId===c.id ? ' — اضغط مرة أخرى لفتح كشف الحساب' : ''}</div>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
-        <div style="color:${balance>0?'var(--red)':'var(--green)'}; font-weight:700;">${fmtAppMoney(balance)}</div>
+        <div style="color:${balance>0?'var(--red)':'var(--green)'}; font-weight:700;">${fmtMoney(balance)}</div>
         <button type="button" class="icon-btn" data-view-company-details="${c.id}" title="عرض التفاصيل">👁 عرض التفاصيل</button>
       </div>
     `);
@@ -24552,7 +24497,7 @@ function openCompanyDetails(id){
     <div><b>العنوان:</b> ${escapeHtml(c.address || '—')}</div>
     <div><b>الهاتف:</b> ${escapeHtml(c.phone || '—')}</div>
     <div><b>ملاحظات:</b> ${escapeHtml(c.notes || '—')}</div>
-    <div><b>الرصيد الحالي:</b> ${fmtAppMoney(companyBalance(c))}</div>
+    <div><b>الرصيد الحالي:</b> ${fmtMoney(companyBalance(c))}</div>
   `);
   AppOverlayController.open('companyDetailsOverlay');
 }
@@ -24624,15 +24569,15 @@ function renderCompanyStatement(c){
   const dueEl = AppDOMController.getById('companyStatDue');
   const lblEl = AppDOMController.getById('companyStatDueLbl');
   if(balance >= 0){
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(balance));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(balance));
     AppDOMStyle.set(dueEl, 'color', balance > 0 ? 'var(--red)' : 'var(--green)');
     setI18nText(lblEl, '💰 المستحق عليّ');
   }else{
-    AppDOMState.set(dueEl, 'textContent', fmtAppMoney(Math.abs(balance)));
+    AppDOMState.set(dueEl, 'textContent', fmtMoney(Math.abs(balance)));
     AppDOMStyle.set(dueEl, 'color', 'var(--teal)');
     setI18nText(lblEl, '↩️ عجز (دفع لي أكثر من المطلوب)');
   }
-  AppDOMState.set(AppDOMController.getById('companyStatPaid'), 'textContent', fmtAppMoney(companyPaidTotal(c)));
+  AppDOMState.set(AppDOMController.getById('companyStatPaid'), 'textContent', fmtMoney(companyPaidTotal(c)));
   AppDOMState.set(AppDOMController.getById('companyStatGoodsCount'), 'textContent', (c.shipments||[]).length);
   // viaExpense payments are a MIRROR of an outgoing expense record (see the
   // identical exclusion/comment in renderIncomingPaymentsReportPage()) —
@@ -24673,7 +24618,7 @@ function renderCompanyTransactionsLog(c){
           <div class="what">${escapeHtml(en.date || '-')}</div>
         </div></div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <div class="amt" style="color:var(--green);">${fmtAppMoney(en.amount)}</div>
+          <div class="amt" style="color:var(--green);">${fmtMoney(en.amount)}</div>
           <button type="button" class="icon-btn danger" data-del-company-payment="${en.id}">حذف</button>
         </div>
       `);
@@ -24683,7 +24628,7 @@ function renderCompanyTransactionsLog(c){
           <div class="who">📦 ${escapeHtml(en.description || 'بضاعة واردة')}</div>
           <div class="what">${escapeHtml(en.date || '-')}</div>
         </div></div>
-        <div class="amt" style="color:var(--red);">${fmtAppMoney(en.cost)}</div>
+        <div class="amt" style="color:var(--red);">${fmtMoney(en.cost)}</div>
       `);
     }
     row._txData = en;
@@ -24736,7 +24681,7 @@ AppEventController.on(AppDOMController.getById('companyGoodsForm'), 'submit', (e
     date: AppDOMState.getById('cgDate', "value") || localDateStr(),
     cost,
   });
-  logEdit(`تسجيل بضاعة واردة من شركة "${c.name}" بتكلفة ${fmtAppMoney(cost)}`, {type:'company', companyId: c.id});
+  logEdit(`تسجيل بضاعة واردة من شركة "${c.name}" بتكلفة ${fmtMoney(cost)}`, {type:'company', companyId: c.id});
   saveCompanies();
   AppDOMController.getById('companyGoodsForm').reset();
   AppDOMState.set(AppDOMController.getById('cgDate'), 'value', localDateStr());
@@ -24776,7 +24721,7 @@ function renderCompanyGoodsList(c){
         <div class="what">${escapeHtml(sh.date || '-')}</div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <div class="amt" style="color:var(--red);">${fmtAppMoney(sh.cost)}</div>
+        <div class="amt" style="color:var(--red);">${fmtMoney(sh.cost)}</div>
         <button type="button" class="icon-btn danger" data-del-goods="${sh.id}">حذف</button>
       </div>
     `);
@@ -27847,9 +27792,9 @@ function renderDuesReportStats(rows){
   const owedToMe = rows.filter(r=> r.direction === 'owedToMe').reduce((s,r)=> s + r.amount, 0);
   const iOwe = rows.filter(r=> r.direction === 'iOwe').reduce((s,r)=> s + r.amount, 0);
   AppDOMState.set(count, 'textContent', rows.length);
-  AppDOMState.set(owedToMeEl, 'textContent', fmtAppMoney(owedToMe));
-  AppDOMState.set(iOweEl, 'textContent', fmtAppMoney(iOwe));
-  AppDOMState.set(netEl, 'textContent', fmtAppMoney(owedToMe - iOwe));
+  AppDOMState.set(owedToMeEl, 'textContent', fmtMoney(owedToMe));
+  AppDOMState.set(iOweEl, 'textContent', fmtMoney(iOwe));
+  AppDOMState.set(netEl, 'textContent', fmtMoney(owedToMe - iOwe));
 }
 function renderDuesReportPage(){
   const rows = collectDuesRows();
@@ -27865,7 +27810,7 @@ function renderDuesReportPage(){
       <td style="padding:10px 12px; font-weight:800; color:var(--teal);">${escapeHtml(r.name)}</td>
       <td style="padding:10px 12px;"><span class="ipr-purpose-chip">${r.typeLabel}</span></td>
       <td style="padding:10px 12px; text-align:center;">${dirHtml}</td>
-      <td style="padding:10px 12px; text-align:left; color:var(--ink); font-weight:800;" dir="ltr">${fmtAppMoney(r.amount)}</td>
+      <td style="padding:10px 12px; text-align:left; color:var(--ink); font-weight:800;" dir="ltr">${fmtMoney(r.amount)}</td>
     `);
     AppEventController.on(tr, 'click', ()=>{
       openDueReasonDetail(r.type, r.id);
@@ -27976,8 +27921,8 @@ function openDueReasonDetail(type, id){
     itemsLabel = 'تفاصيل الدفعات التي خُصمت من الرصيد الافتتاحي:';
   }
 
-  let summaryHtml = summaryRows.map(r=> `<div style="display:flex; justify-content:space-between;"><span>${r.sign} ${escapeHtml(tr(r.label))}</span><span dir="ltr">${fmtAppMoney(Math.abs(r.value))}</span></div>`).join('');
-  summaryHtml += `<div style="display:flex; justify-content:space-between; border-top:1px solid var(--line); margin-top:6px; padding-top:6px; color:var(--red);"><span>${tr('= المبلغ المستحق')}</span><span dir="ltr">${fmtAppMoney(Math.abs(balance))}</span></div>`;
+  let summaryHtml = summaryRows.map(r=> `<div style="display:flex; justify-content:space-between;"><span>${r.sign} ${escapeHtml(tr(r.label))}</span><span dir="ltr">${fmtMoney(Math.abs(r.value))}</span></div>`).join('');
+  summaryHtml += `<div style="display:flex; justify-content:space-between; border-top:1px solid var(--line); margin-top:6px; padding-top:6px; color:var(--red);"><span>${tr('= المبلغ المستحق')}</span><span dir="ltr">${fmtMoney(Math.abs(balance))}</span></div>`;
   AppDOMState.set(AppDOMController.getById('dueReasonSummary'), 'innerHTML', summaryHtml);
 
   const itemsLabelEl = AppDOMController.getById('dueReasonItemsLabel');
@@ -27999,13 +27944,13 @@ function openDueReasonDetail(type, id){
     if(allocMap && it.id){
       const paid = allocMap[it.id] || 0;
       const remaining = Math.round((it.amount - paid) * 100) / 100;
-      paidCell = paid ? fmtAppMoney(paid) : naText;
-      remainingCell = `<span style="color:${remaining > 0.004 ? 'var(--red)' : 'var(--green)'};">${fmtAppMoney(remaining)}</span>`;
+      paidCell = paid ? fmtMoney(paid) : naText;
+      remainingCell = `<span style="color:${remaining > 0.004 ? 'var(--red)' : 'var(--green)'};">${fmtMoney(remaining)}</span>`;
     }
     AppDOMState.set(rowEl, 'innerHTML', `
       <td style="padding:8px 12px;">${escapeHtml(it.label)}</td>
       <td style="padding:8px 12px;">${escapeHtml(it.date||'—')}</td>
-      <td style="padding:8px 12px; text-align:left;" dir="ltr">${fmtAppMoney(it.amount)}</td>
+      <td style="padding:8px 12px; text-align:left;" dir="ltr">${fmtMoney(it.amount)}</td>
       <td style="padding:8px 12px; text-align:left;" dir="ltr">${paidCell}</td>
       <td style="padding:8px 12px; text-align:left;" dir="ltr">${remainingCell}</td>
     `);
@@ -28187,26 +28132,26 @@ function updateExpenseRecipientBalance(){
     const l = labs.find(x=>x.id===id);
     if(!l){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = labBalance(l);
-    AppDOMState.set(el, 'textContent', `الضايل عليّ لمختبر ${l.name}: ${fmtAppMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `الضايل عليّ لمختبر ${l.name}: ${fmtMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else if(type === 'company'){
     const c = companies.find(x=>x.id===id);
     if(!c){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = companyBalance(c);
-    AppDOMState.set(el, 'textContent', `الضايل عليّ لشركة ${c.name}: ${fmtAppMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `الضايل عليّ لشركة ${c.name}: ${fmtMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else if(type === 'employee'){
     const t = technicians.find(x=>x.id===id);
     if(!t){ AppDOMState.set(el, 'textContent', ''); return; }
     const advTotal = (t.advances||[]).reduce((s,a)=> s + (Number(a.amount)||0), 0);
     const net = (Number(t.salary)||0) - advTotal;
-    AppDOMState.set(el, 'textContent', `الراتب المتبقي للموظف ${t.name} بعد خصم السلف: ${fmtAppMoney(net)}`);
+    AppDOMState.set(el, 'textContent', `الراتب المتبقي للموظف ${t.name} بعد خصم السلف: ${fmtMoney(net)}`);
     AppDOMStyle.set(el, 'color', 'var(--teal)');
   }else if(type === 'doctor'){
     const d = doctors.find(x=>x.id===id);
     if(!d){ AppDOMState.set(el, 'textContent', ''); return; }
     const bal = doctorBalance(d);
-    AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name} (له لدينا): ${fmtAppMoney(bal)}`);
+    AppDOMState.set(el, 'textContent', `المتبقي على د. ${d.name} (له لدينا): ${fmtMoney(bal)}`);
     AppDOMStyle.set(el, 'color', bal > 0 ? 'var(--red)' : 'var(--green)');
   }else{
     AppDOMState.set(el, 'textContent', '');
@@ -28344,7 +28289,7 @@ AppEventController.on(expensePaymentForm, 'submit', (e)=>{
     : type === 'doctor' ? {type:'doctor', doctorId: recipientId}
     : type === 'company' ? {type:'company', companyId: recipientId}
     : null;
-  logEdit(`تسجيل مدفوعات ${fmtAppMoney(amount)} لـ ${EXPENSE_RECIPIENT_LABELS[type]||''} ${recipientLabel}`, expenseCtx);
+  logEdit(`تسجيل مدفوعات ${fmtMoney(amount)} لـ ${EXPENSE_RECIPIENT_LABELS[type]||''} ${recipientLabel}`, expenseCtx);
   saveDatabase();
   expensePaymentForm.reset();
   AppDOMState.set(AppDOMController.getById('epDate'), 'value', localDateStr());
@@ -28384,7 +28329,7 @@ function renderExpensePaymentsLog(){
       <td style="padding:9px 12px; white-space:nowrap;">${escapeHtml(exp.date || '—')}</td>
       <td style="padding:9px 12px;">${EXPENSE_RECIPIENT_LABELS[exp.recipientType]||''} ${escapeHtml(exp.recipientLabel||'')}</td>
       <td style="padding:9px 12px;">${escapeHtml(exp.note||'-')} ${exp.paymentMethod==='check' ? '<span class="check-pill">'+paymentMethodLabel(exp)+'</span>' : ''}</td>
-      <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtAppMoney(exp.amount)}</td>
+      <td style="padding:9px 12px; text-align:left; color:var(--red); font-weight:700;">${fmtMoney(exp.amount)}</td>
       <td style="padding:9px 12px; text-align:center;"><button type="button" class="icon-btn danger" data-del-expense="${exp.id}">حذف</button></td>
     `);
     return tr;
@@ -28412,7 +28357,7 @@ AppEventController.on(AppDOMController.getById('expensePaymentsLogBody'), 'click
     const delExpenseCtx = exp.recipientType === 'employee' ? {type:'technician', techId: exp.recipientId}
       : exp.recipientType === 'doctor' ? {type:'doctor', doctorId: exp.recipientId}
       : exp.recipientType === 'company' ? {type:'company', companyId: exp.recipientId} : null;
-    logEdit(`حذف مدفوعات ${fmtAppMoney(exp.amount)} لـ ${exp.recipientLabel||''}`, delExpenseCtx);
+    logEdit(`حذف مدفوعات ${fmtMoney(exp.amount)} لـ ${exp.recipientLabel||''}`, delExpenseCtx);
     saveDatabase();
     renderExpensePaymentsLog();
     AppFeatureController.invoke('dashboard','render');
@@ -30780,9 +30725,9 @@ html,body,button,input,select,textarea{font-family:var(--app-font)!important;}
 
 /* Main dashboard card icons: slightly larger without changing card geometry. */
 .stats-home .stat-icon-circle{
-  width:48px !important;
-  height:48px !important;
-  min-width:48px !important;
+  width:55px !important;
+  height:55px !important;
+  min-width:55px !important;
   font-size:30.5px !important;
 }
 

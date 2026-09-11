@@ -1,19 +1,19 @@
 {
-    "version":  "15.0.67",
-    "notes":  "AL EKHLAS 15.0.67 update",
+    "version":  "15.0.68",
+    "notes":  "AL EKHLAS 15.0.68 update",
     "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-    "sha256":  "9d7cc3356539d190b2580203426e2a5b39e49c293e974ac3155f3362f72d6d1d",
+    "sha256":  "4275a5cf3c2915c5409470904b823b1619aa7548d7c0587ada36c94482295553",
     "fullUpdate":  {
                        "files":  [
                                      {
                                          "path":  "app.asar",
                                          "url":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.asar",
-                                         "sha256":  "442cf55e9088750642e7f8ee922f129a962452ff55c0d37421348a874e5d33c6"
+                                         "sha256":  "cf0466e9ede3dee7e7f02bd367248bb808f480e781eb88250b563d96e6e31873"
                                      },
                                      {
                                          "path":  "app.html",
                                          "url":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-                                         "sha256":  "9d7cc3356539d190b2580203426e2a5b39e49c293e974ac3155f3362f72d6d1d"
+                                         "sha256":  "4275a5cf3c2915c5409470904b823b1619aa7548d7c0587ada36c94482295553"
                                      }
                                  ]
                    }

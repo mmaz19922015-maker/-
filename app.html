@@ -2864,9 +2864,29 @@ globalThis.AppLocalization = Object.freeze({
   /* An arch is one row, always: wrapping split a jaw across two lines and the
      chart stopped reading as a mouth. The teeth take their full size when the
      pane allows it and shrink to fit when it does not. */
-  .tooth-arch-row{ display:flex; justify-content:center; align-items:flex-end; gap:3px; flex-wrap:nowrap; }
-  .tooth-arch-row.arch-lower{ align-items:flex-start; }
-  .tooth-arch-row + .tooth-arch-row{ margin-top:10px; }
+  /* Direct follow-up feedback: "خلي طريقة العرض و كأنها صورة مثلا ملتقطة من
+     فم" — a real intraoral view always shows teeth set into pink gum
+     tissue, never floating on plain white; this is the practical way to
+     evoke that context purely in CSS (no photo assets available/licensed
+     for this — see the fuller explanation in CONTINUITY-LOG.md), alongside
+     the per-tooth SVG realism work below. A soft pink gradient block with
+     the gumline edge rounded and the tooth-row edge flat, matching each
+     arch's own orientation (gum is ABOVE the upper teeth, BELOW the lower
+     teeth) — teeth still slightly overlap out of the top/bottom of it via
+     negative margin, exactly like a crown emerging from the gumline. */
+  .tooth-arch-row{
+    display:flex; justify-content:center; align-items:flex-end; gap:3px; flex-wrap:nowrap;
+    padding:14px 10px 4px; border-radius:16px 16px 6px 6px;
+    background:linear-gradient(180deg, #f3c6c2 0%, #eeb3ae 55%, #e9a29c 100%);
+    box-shadow:inset 0 -2px 4px rgba(120,40,40,.10);
+  }
+  .tooth-arch-row.arch-lower{
+    align-items:flex-start; padding:4px 10px 14px;
+    border-radius:6px 6px 16px 16px;
+    background:linear-gradient(0deg, #f3c6c2 0%, #eeb3ae 55%, #e9a29c 100%);
+    box-shadow:inset 0 2px 4px rgba(120,40,40,.10);
+  }
+  .tooth-arch-row + .tooth-arch-row{ margin-top:6px; }
   .tooth-arch-midline{ width:10px; flex-shrink:0; }
   /* Teeth are click targets first and pictures second — enlarged so they are
      easier to hit and easier to tell apart. */
@@ -2884,14 +2904,18 @@ globalThis.AppLocalization = Object.freeze({
        ... بدل الرسم المسطّح" — a single flat drop-shadow read as a sticker
        cutout, not a rounded object; a tighter contact shadow plus a wider,
        softer ambient one underneath fakes a tooth actually sitting proud
-       of the gum line instead of pasted flat on the page. */
-    filter:drop-shadow(0 1px 1px rgba(18,38,45,0.28)) drop-shadow(0 3px 5px rgba(18,38,45,0.16));
+       of the gum line instead of pasted flat on the page. Kept warm/neutral
+       (not the cool-blue tint tried briefly for a glossy/glass look) to
+       match the realistic ivory enamel palette below (direct follow-up:
+       "سوي الاسنان ملونة اقرب للواقع"), just deepened slightly for more
+       presence than the original subtle version. */
+    filter:drop-shadow(0 1px 1.5px rgba(28,22,16,0.32)) drop-shadow(0 4px 7px rgba(28,22,16,0.20));
   }
   /* The lower arch is the same tooth stood on its head: crowns meet in the
      middle of the mouth, roots point away from it. */
   .arch-lower .tooth-svg{ transform:scaleY(-1); }
   .tooth-svg .tooth-body{
-    fill:url(#toothEnamel); stroke:#b7beb8; stroke-width:1.05; stroke-linejoin:round;
+    fill:url(#toothEnamel); stroke:#b7a58c; stroke-width:1.05; stroke-linejoin:round;
     transition:stroke .2s ease, filter .2s ease;
   }
   /* Volumetric shading (direct follow-up feedback: "ثلاثي الأبعاد 3D
@@ -2911,9 +2935,17 @@ globalThis.AppLocalization = Object.freeze({
      TOOTH_GRADIENTS comment): clipped to the tooth's own silhouette via
      clip-path, angled like light catching the curve of real enamel. */
   .tooth-svg .tooth-shine{
-    fill:url(#toothShine); opacity:.55; pointer-events:none;
+    fill:url(#toothShine); opacity:.68; pointer-events:none;
     transform:rotate(18deg); transform-origin:50% 50%;
   }
+  /* Direct follow-up: "خلي طريقة العرض و كأنها صورة ملتقطة من فم" — see
+     the fuller comment on #toothContact/#toothIncisal in cases-feature.js.
+     Contact shadow darkens both side edges (where a real neighboring
+     tooth would fall into shadow); incisal translucency cools the very
+     tip. Both painted ON TOP of the shine so they read as real depth/
+     material cues, not washed out by it. */
+  .tooth-svg .tooth-contact{ fill:url(#toothContact); pointer-events:none; }
+  .tooth-svg .tooth-incisal{ fill:url(#toothIncisal); pointer-events:none; }
   .tooth-svg .tooth-detail{
     fill:none; stroke:#8a7250; stroke-width:0.85; stroke-linecap:round; opacity:.55;
     transition:stroke .2s ease;
@@ -3831,6 +3863,12 @@ body{background:linear-gradient(135deg,var(--screen-bg-top),var(--screen-bg)) !i
 </style>
 <!-- SOURCE-CSS: src/renderer/styles/11-card-style-switch.css -->
 <style data-source="../styles/11-card-style-switch.css">
+/* Direct feedback: "يصير سويتش 1 ب بدل 2 جنب بعض" — #cardStyleModePresets
+   now holds a single toggle button instead of two mode-cards, so the
+   2-column grid earlier files set for it (e.g. 10-visual-refresh-12-8.css,
+   `!important`) would otherwise leave an empty, wasted second column next
+   to it. This file loads after that one, so this wins at equal specificity. */
+#cardStyleModePresets.card-style-mode-grid{grid-template-columns:1fr !important;}
 .card-style-mode{position:relative;text-align:start !important;}
 .card-mode-switch{width:42px;height:23px;min-width:42px;border-radius:999px;background:#cfd8dd;display:inline-flex;align-items:center;padding:3px;box-shadow:inset 0 1px 3px rgba(0,0,0,.16);transition:background .18s ease,box-shadow .18s ease;}
 .card-mode-switch i{display:block;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.22);transform:translateX(0);transition:transform .2s cubic-bezier(.2,.9,.3,1.2);}
@@ -4908,10 +4946,12 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
            to this class) in 26-home-status-overview.css. Each card's own
            real 👁 (never a monkey/face icon) HIDES that ONE card entirely
            (.home-card-hidden — see applyHomeBigCardHiddenStates() in
-           dashboard-feature.js), turning into a small pill in
-           #homeCardsHiddenTabs right below the stack, exactly like the
-           small stat cards' own #statsHiddenTabs; the other card just
-           moves up/down to fill the freed space as a plain side effect of
+           dashboard-feature.js), turning into a small pill in that card's
+           own dedicated slot right below itself (.home-card-pill-slot,
+           see the comments further down this file and on
+           applyHomeBigCardHiddenStates() for why it's per-card and not a
+           shared tray); the other card just moves up/down to fill the freed
+           space as a plain side effect of
            the column layout. Direct feedback ("لا أريد أن يؤدي الضغط على
            العين إلى إخفاء محتوى الشاشة ... اعرف ما الذي يفترض أن تتحكم
            به") reverted this from an earlier "collapse in place to a
@@ -4969,6 +5009,16 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
             <div class="home-status-legend" id="homeStatusLegend"></div>
           </div>
         </div>
+        <!-- ROOT FIX (direct user report: "لما اخفي الشاشتين خلي يصير مستطيل
+             الشاشة المسكرة بنفس مكانها محل تفتح" — the "bring it back" pill
+             must appear in this card's OWN spot, not collected into a shared
+             tray at the end of the stack): each big card now gets its own
+             dedicated, always-in-flow placeholder slot immediately after
+             itself, instead of both cards sharing one #homeCardsHiddenTabs
+             tray after both. Filled by renderHiddenHomeBigCardTabs() in
+             dashboard-feature.js; empty and collapsed (.home-card-pill-slot
+             CSS, 26-home-status-overview.css) whenever this card is visible. -->
+        <div class="home-card-pill-slot" id="homeStatusCardPillSlot"></div>
 
         <!-- Item 8 (direct feedback: "استبدال مربع سجل التعديلات بمستطيل عريض
              يعرض آخر خمس تعديلات مع تمرير لرؤية الباقي") — the old small square
@@ -5009,19 +5059,9 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
             </button>
           </div>
         </div>
+        <!-- Same dedicated in-place slot as homeStatusCard's own, just above. -->
+        <div class="home-card-pill-slot" id="homeEditLogPanelPillSlot"></div>
       </div>
-      <!-- Direct feedback: "لا أريد أن يؤدي الضغط على العين إلى إخفاء محتوى
-           الشاشة ... اعرف ما الذي يفترض أن تتحكم به الأيقونة" — restores
-           the card's own 👁 to what its title/aria-label always said
-           ("إخفاء البطاقة" — hide the CARD, not just its data): the eye now
-           hides the whole card entirely (reusing the exact same
-           hide-into-a-pill pattern already proven on the small stat cards
-           just above — #statsHiddenTabs) instead of collapsing it down to
-           a header-only bar. See applyHomeBigCardHiddenStates() in
-           dashboard-feature.js. Reuses .stats-hidden-tabs/.stats-hidden-tab
-           CSS as-is (26-home-status-overview.css) — same pill look, no new
-           styling needed. -->
-      <div class="stats-hidden-tabs" id="homeCardsHiddenTabs"></div>
 
       <!-- The tools-row (الآلة الحاسبة / إضافة ملاحظة tool-cards, and
            before them the 🔒 قفل البرنامج card) is gone from the home
@@ -7379,6 +7419,7 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
         <button type="button" class="screen-style-card" data-screen-style="burgundy"><span class="screen-style-swatch" style="--style-preview:#743747;"></span><span><strong>عنابي راقٍ</strong><small>Burgundy</small></span></button>
         <button type="button" class="screen-style-card" data-screen-style="indigo"><span class="screen-style-swatch" style="--style-preview:#443d83;"></span><span><strong>نيلي داكن</strong><small>Indigo</small></span></button>
         <button type="button" class="screen-style-card" data-screen-style="charcoal"><span class="screen-style-swatch" style="--style-preview:#3f4a52;"></span><span><strong>فحمي أنيق</strong><small>Charcoal</small></span></button>
+        <button type="button" class="screen-style-card" data-screen-style="silver"><span class="screen-style-swatch" style="--style-preview:#8f99a3;"></span><span><strong>فضي فاقع</strong><small>Silver</small></span></button>
       </div>
       <div class="screen-style-preview" style="margin-top:14px;"><div class="screen-style-preview-bar">معاينة شريط عنوان الشاشة</div><div class="screen-style-preview-body"><div class="screen-style-preview-row">لون خفيف من نفس الستايل</div><div class="screen-style-preview-row">القوائم والبطاقات تتلوّن تلقائيًا</div></div></div>
       <div class="style-control-section">
@@ -7394,9 +7435,16 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
       </div>
       <div class="style-control-section">
         <div class="style-control-title"><span class="style-control-icon">▣</span><div><strong>طريقة عرض مربعات الشاشة الرئيسية</strong><small>اختر شكل المربع عند الوقوف عليه بالماوس</small></div></div>
+        <!-- Direct feedback: "غير شكل الستويش تبع التحكم بالوان المربعات
+             الرئيسية يصير سويتش 1 ب بدل 2 جنب بعض" — this used to be TWO
+             separate switch-styled buttons side by side, one per mode
+             (confusingly just labeled "سويتش 1"/"سويتش 2", neither describing
+             what it actually did), which is really a single binary choice.
+             Now ONE real toggle switch: clicking it flips between the two
+             modes, and its own label always names the CURRENTLY active one
+             (see applyCards() in 14-visual-refresh-13-0.js). -->
         <div class="card-style-mode-grid" id="cardStyleModePresets">
-          <button type="button" class="card-style-mode" role="switch" aria-checked="false" data-card-mode="solid-hover"><span class="card-mode-switch"><i></i></span><span><strong>سويتش 1</strong></span></button>
-          <button type="button" class="card-style-mode" role="switch" aria-checked="true" data-card-mode="white-hover"><span class="card-mode-switch"><i></i></span><span><strong>سويتش 2</strong></span></button>
+          <button type="button" class="card-style-mode active" role="switch" aria-checked="true" id="cardStyleModeToggle"><span class="card-mode-switch"><i></i></span><span><strong id="cardStyleModeToggleLabel">مربعات بيضاء تتلوّن عند المرور</strong></span></button>
         </div>
       </div>
     </div>
@@ -7528,7 +7576,13 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
         <section class="settings-modern-card activation-card">
           <div class="settings-card-title"><span class="settings-card-icon">🔑</span><div><strong>حالة التفعيل</strong><small>معلومات هذا الجهاز وإدارة مفتاح التفعيل</small></div></div>
           <div class="activation-info-grid">
-            <div class="activation-info-item"><span>رمز الجهاز</span><b id="lockTabDeviceIdText" dir="ltr">—</b></div>
+            <!-- Direct feedback: "ضيف لي زر نسخ رقم الجهاز بشاشة الضبط والاعدادات
+                 مكان التفعيل عند رقم الجهاز" — #copySettingsDeviceIdBtn/#settingsDeviceIdText
+                 were already fully wired in 05-license-activation.js (from an
+                 earlier session that built the lock-screen quick-activation
+                 modal) but never actually had a matching element here, so
+                 they'd been dead markup-less code until now. -->
+            <div class="activation-info-item"><span>رمز الجهاز</span><span style="display:flex; align-items:center; gap:8px;"><b id="settingsDeviceIdText" dir="ltr">—</b><button type="button" class="btn-ghost btn-small" id="copySettingsDeviceIdBtn">📋 نسخ</button></span></div>
             <div class="activation-info-item"><span>حالة التفعيل</span><b id="lockTabActivationStatusText">—</b></div>
           </div>
           <div class="activation-actions">
@@ -7565,22 +7619,30 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
      with a subtle diagonal sheen for polish instead of a flat fill. -->
 <!-- SOURCE-CSS: src/renderer/styles/17-about-pro.css -->
 <style data-source="../styles/17-about-pro.css">
+/* Direct feedback: "شاشة حول البرنامج قم بتصميمها بتدرج ألوان أجمل من
+     المستخدم الآن" — the old gradient was a very pale, low-contrast
+     teal-to-violet wash (#f3fbfd/#e9f6fa/#eef0fc, all near-white). Richer
+     4-stop diagonal (teal -> sky-blue -> soft violet -> warm pink) with a
+     visibly stronger top accent bar and a slightly bolder shine sweep —
+     still a light/pale card (never a dark tile, per the project's standing
+     "never dark backgrounds" rule), just genuinely colorful instead of
+     nearly-white with a hint of tint. */
 .about-pro-card{
     position:relative; overflow:hidden;
-    border:1px solid rgba(14,124,158,.28)!important;
+    border:1px solid rgba(101,96,196,.30)!important;
     background:
-      linear-gradient(155deg, rgba(101,96,196,.10) 0%, transparent 46%),
-      linear-gradient(145deg, #f3fbfd 0%, #e9f6fa 42%, #eef0fc 100%)!important;
-    box-shadow:0 24px 60px rgba(14,124,158,.20), inset 0 1px 0 rgba(255,255,255,.9);
+      linear-gradient(155deg, rgba(101,96,196,.16) 0%, transparent 50%),
+      linear-gradient(135deg, #e3f7fb 0%, #d9edfb 32%, #e6e6fa 64%, #fbe9f3 100%)!important;
+    box-shadow:0 26px 64px rgba(101,96,196,.22), inset 0 1px 0 rgba(255,255,255,.9);
   }
   .about-pro-card:before{
     content:""; position:absolute; inset:-40% -20%;
-    background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.55) 50%, transparent 62%);
+    background:linear-gradient(115deg, transparent 35%, rgba(255,255,255,.6) 50%, transparent 65%);
     transform:rotate(4deg); pointer-events:none;
   }
   .about-pro-card:after{
-    content:""; position:absolute; inset:0 0 auto 0; height:5px;
-    background:linear-gradient(90deg, var(--teal), var(--violet));
+    content:""; position:absolute; inset:0 0 auto 0; height:6px;
+    background:linear-gradient(90deg, var(--teal), #4f8fe0, var(--violet), #d1568f);
   }
   .about-pro-card>*{ position:relative; z-index:1; }
   .about-pro-title{ color:#0b5a72!important; border-bottom-color:rgba(14,124,158,.22)!important; }
@@ -9071,7 +9133,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '20.2.0';
+const APP_VERSION = '20.2.2';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -9298,71 +9360,138 @@ function setFontFamily(id){
 
 /* ================== Screen colors / styles ================== */
 const SCREEN_STYLE_KEY='ekhlas_screen_style_v1', SCREEN_ACCENT_KEY='ekhlas_screen_accent_v1';
+/* ROOT-CAUSE REDESIGN, 2026-09-18 (direct feedback: "خلي الثيمات هي ثيم
+   مستقل مش مطموس مع الوضع الليلي ... في بعض الثيمات مو واضحة ابدا مع الوضع
+   الليلي ... كل ثيم هو تلوين خاص بالبرنامج بيقلب كل الوان الشاشات" — themes
+   must be genuinely independent per light/dark mode, not one formula
+   blended live against whichever mode happens to be active). Each style
+   below used to be just {accent, accent2, tint}, and applyScreenStyle()
+   computed backgrounds on the fly via a small, FIXED color-mix % of that
+   SAME light-tuned accent for both modes — a few percent of an already
+   muted accent mixed into a dark base reads as barely-there, which is
+   exactly why some styles (slate/charcoal's muted grays, silver's very
+   light accent) looked flat/unclear once dark mode was on. Each style is
+   now two FULLY hand-specified palettes (light/dark) — dark is not a live
+   mix of the light values, it has its own brighter accent and stronger
+   background tint, tuned on its own so every style stays identifiable and
+   legible in EITHER mode. "white" stays the deliberate exception in BOTH
+   modes: flat/plain, zero accent wash on the background — a plain dark
+   background in dark mode too, matching its own "ابيض ساطع سادة" intent
+   symmetrically rather than just in light mode. */
 const SCREEN_STYLES={
- /* "white" = plain light-white, per direct feedback: "الوان التطبيق كاملة
-    تكون ابيض فاتح لكل الشاشات والنوافذ ك لون افتراضي بهدين ببدل الستايل انا
-    لو حبيت" (every screen/window plain light-white AS THE DEFAULT — with
-    that in place, I'll switch styles myself if I want). This is now the
-    DEFAULT key (see currentScreenStyle() below) instead of "teal", and it
-    is the only entry with wash:0 — applyScreenStyle() skips the
-    background color-mix tinting entirely for it, so screens/modals render
-    on the plain --style-*-base colors with no accent wash. Buttons/links
-    still use its accent (same teal as before) so functional highlights
-    stay colorful — only the screen/window BACKGROUND wash is removed.
-    Every other named style below is completely unchanged (same accent,
-    same tint, same wash:1 background blend) so anyone who already picked
-    one keeps exactly the same look as before. */
- white:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.06)',wash:0},
- teal:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.08)'},
- blue:{accent:'#2563a8',accent2:'#3b82d0',tint:'rgba(37,99,168,.09)'},
- purple:{accent:'#6d55b7',accent2:'#8a72d1',tint:'rgba(109,85,183,.10)'},
- green:{accent:'#2b8a63',accent2:'#43b985',tint:'rgba(43,138,99,.10)'},
- slate:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.10)'},
- navy:{accent:'#1f4f78',accent2:'#316f9f',tint:'rgba(31,79,120,.12)'},
- forest:{accent:'#1f654d',accent2:'#2f8a69',tint:'rgba(31,101,77,.12)'},
- burgundy:{accent:'#743747',accent2:'#9a4c60',tint:'rgba(116,55,71,.12)'},
- indigo:{accent:'#443d83',accent2:'#6258a5',tint:'rgba(68,61,131,.12)'},
- charcoal:{accent:'#3f4a52',accent2:'#596873',tint:'rgba(63,74,82,.13)'}
+ white:{
+   light:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.08)',bg:'#f7fafc',bgTop:'#ffffff',surface:'#ffffff',surface2:'#f7fafc'},
+   dark: {accent:'#3fb8dc',accent2:'#6fd3ef',tint:'rgba(63,184,220,.14)',bg:'#263944',bgTop:'#304955',surface:'#344956',surface2:'#3c5361'}
+ },
+ teal:{
+   light:{accent:'#0e7c9e',accent2:'#16a8cf',tint:'rgba(14,124,158,.08)',bg:'#e7f1f5',bgTop:'#e2eff3',surface:'#f5fafb',surface2:'#e2eff4'},
+   dark: {accent:'#4399b3',accent2:'#40b8d8',tint:'rgba(67,153,179,.14)',bg:'#224452',bgTop:'#285567',surface:'#304f5e',surface2:'#335b6d'}
+ },
+ blue:{
+   light:{accent:'#2563a8',accent2:'#3b82d0',tint:'rgba(37,99,168,.08)',bg:'#e8eff6',bgTop:'#e5ecf5',surface:'#f6f9fc',surface2:'#e4ecf4'},
+   dark: {accent:'#5585bb',accent2:'#5e99d8',tint:'rgba(85,133,187,.14)',bg:'#264054',bgTop:'#2d4f69',surface:'#324c5f',surface2:'#37566f'}
+ },
+ purple:{
+   light:{accent:'#6d55b7',accent2:'#8a72d1',tint:'rgba(109,85,183,.08)',bg:'#edeef7',bgTop:'#edebf6',surface:'#f9f8fc',surface2:'#ebebf6'},
+   dark: {accent:'#8d7ac7',accent2:'#9f8bd9',tint:'rgba(141,122,199,.14)',bg:'#313d56',bgTop:'#3f4c6d',surface:'#3a4a61',surface2:'#465372'}
+ },
+ green:{
+   light:{accent:'#2b8a63',accent2:'#43b985',tint:'rgba(43,138,99,.08)',bg:'#e9f2f1',bgTop:'#e6f1ec',surface:'#f7faf9',surface2:'#e5f0ee'},
+   dark: {accent:'#5aa485',accent2:'#65c69b',tint:'rgba(90,164,133,.14)',bg:'#274649',bgTop:'#2f5958',surface:'#335057',surface2:'#395e61'}
+ },
+ slate:{
+   light:{accent:'#536b78',accent2:'#718995',tint:'rgba(83,107,120,.08)',bg:'#ecf0f3',bgTop:'#eaedef',surface:'#f8f9fa',surface2:'#e8edf0'},
+   dark: {accent:'#798c96',accent2:'#8b9ea8',tint:'rgba(121,140,150,.14)',bg:'#2d414c',bgTop:'#38515d',surface:'#374d5a',surface2:'#415866'}
+ },
+ navy:{
+   light:{accent:'#1f4f78',accent2:'#316f9f',tint:'rgba(31,79,120,.08)',bg:'#e8eef3',bgTop:'#e4eaef',surface:'#f6f8fa',surface2:'#e4ebf0'},
+   dark: {accent:'#507696',accent2:'#5689b0',tint:'rgba(80,118,150,.14)',bg:'#253d4c',bgTop:'#2c4a5d',surface:'#324a5a',surface2:'#365266'}
+ },
+ forest:{
+   light:{accent:'#1f654d',accent2:'#2f8a69',tint:'rgba(31,101,77,.08)',bg:'#e8f0f0',bgTop:'#e4edea',surface:'#f6f9f8',surface2:'#e4edec'},
+   dark: {accent:'#508774',accent2:'#549f84',tint:'rgba(80,135,116,.14)',bg:'#254045',bgTop:'#2c5053',surface:'#324c55',surface2:'#36575d'}
+ },
+ burgundy:{
+   light:{accent:'#743747',accent2:'#9a4c60',tint:'rgba(116,55,71,.08)',bg:'#eeecef',bgTop:'#eee7e9',surface:'#f9f7f8',surface2:'#ebe8ec'},
+   dark: {accent:'#93636f',accent2:'#ac6c7d',tint:'rgba(147,99,111,.14)',bg:'#323944',bgTop:'#404552',surface:'#3b4754',surface2:'#474d5c'}
+ },
+ indigo:{
+   light:{accent:'#443d83',accent2:'#6258a5',tint:'rgba(68,61,131,.08)',bg:'#eaedf4',bgTop:'#e9e8f0',surface:'#f8f7fa',surface2:'#e7e9f1'},
+   dark: {accent:'#6d689e',accent2:'#7e76b5',tint:'rgba(109,104,158,.14)',bg:'#2b3a4e',bgTop:'#354660',surface:'#36485b',surface2:'#3e4f68'}
+ },
+ charcoal:{
+   light:{accent:'#3f4a52',accent2:'#596873',tint:'rgba(63,74,82,.08)',bg:'#eaeef0',bgTop:'#e8e9ea',surface:'#f7f8f8',surface2:'#e6eaed'},
+   dark: {accent:'#697278',accent2:'#77838c',tint:'rgba(105,114,120,.14)',bg:'#2a3c46',bgTop:'#344954',surface:'#354956',surface2:'#3d515e'}
+ },
+ // "فضي فاقع" — added by direct request. accent2 stays much lighter than
+ // accent in BOTH modes (unlike every other style, where the two stay
+ // close in tone) for a brighter metallic-shine gradient, distinct from
+ // the darker, flatter "slate"/"charcoal" grays.
+ silver:{
+   light:{accent:'#8f99a3',accent2:'#e3e8ec',tint:'rgba(143,153,163,.08)',bg:'#f0f3f6',bgTop:'#f2f3f4',surface:'#fbfbfb',surface2:'#eef1f4'},
+   dark: {accent:'#a8afb7',accent2:'#e8ecef',tint:'rgba(168,175,183,.14)',bg:'#374853',bgTop:'#475c68',surface:'#3e525e',surface2:'#4d616e'}
+ }
+};
+// Direct feedback: "خلي الثيم لما يتغير يبدل معه القائمة الجانبية لكن يكون
+// لون واضح ليها" — a sensible, always-legible sidebar-color pairing per
+// style, applied automatically by setScreenStyle() below via
+// setRecommendedSidebarColor() (14-visual-refresh-13-0.js). Mapped to the
+// closest existing sidebar hue family (sidebar colors are their own,
+// smaller, separate list — navy/blue/purple/green/burgundy/white).
+const SCREEN_STYLE_SIDEBAR={
+ white:'navy', teal:'blue', blue:'blue', purple:'purple', green:'green',
+ slate:'navy', navy:'navy', forest:'green', burgundy:'burgundy',
+ indigo:'purple', charcoal:'navy', silver:'white'
 };
 function currentScreenStyle(){try{return localStorage.getItem(SCREEN_STYLE_KEY)||'white';}catch(e){return'white';}}
 function applyScreenStyle(){
- const key=currentScreenStyle(), p=SCREEN_STYLES[key]||SCREEN_STYLES.white; let accent=p.accent;
- try{const c=localStorage.getItem(SCREEN_ACCENT_KEY);if(/^#[0-9a-f]{6}$/i.test(c||''))accent=c;}catch(e){}
+ const key=currentScreenStyle();
+ const table=SCREEN_STYLES[key]||SCREEN_STYLES.white;
+ const mode=effectiveTheme()==='dark'?'dark':'light';
+ const p=table[mode];
+ let accent=p.accent, accent2=p.accent2, tint=p.tint;
+ let bg=p.bg, bgTop=p.bgTop, surface=p.surface, surface2=p.surface2;
+ // A custom hand-picked accent (the color-well next to the presets) has no
+ // hand-authored per-mode palette of its own — it always falls back to a
+ // live color-mix, same idea as the old formula, with the same stronger
+ // dark-mode amounts the table above uses so a custom pick isn't washed
+ // out in dark mode either.
+ try{
+   const c=localStorage.getItem(SCREEN_ACCENT_KEY);
+   if(/^#[0-9a-f]{6}$/i.test(c||'')){
+     accent=c; tint=`color-mix(in srgb, ${c} 12%, transparent)`;
+     const mix=(amount, base)=>`color-mix(in srgb, ${c} ${amount}%, ${base})`;
+     if(mode==='light'){ bg=mix(7,'#f7fafc'); bgTop=mix(12,'#ffffff'); surface=mix(4,'#ffffff'); surface2=mix(9,'#f7fafc'); }
+     else{ bg=mix(16,'#263944'); bgTop=mix(24,'#304955'); surface=mix(11,'#344956'); surface2=mix(20,'#3c5361'); }
+   }
+ }catch(e){}
  const root=document.documentElement.style;
  root.setProperty('--teal',accent);
  root.setProperty('--teal-dim',accent);
- root.setProperty('--teal-tint',p.tint);
- root.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
- /* Direct feedback: "الخلفيات والفراغات والباك غراوند لكل الشاشات تكون
-    ابيض ساطع سادة بكل البرنامج والشاشات" (backgrounds/empty space on every
-    screen should be plain bright white across the whole program) — the
-    background color-mix wash below used to tint the page/panel background
-    with a slice of the chosen accent color for every style except "white".
-    That wash is now skipped for ALL styles, not just "white": every style
-    still keeps its own accent color on buttons/links/icons/titlebars via
-    --teal/--accent-grad above, but the screen/panel BACKGROUND itself
-    always stays the plain --style-*-base white, no matter which style is
-    selected. (p.wash is left in SCREEN_STYLES only so this is a one-line
-    revert if ever needed; it is no longer read here.) */
- {
-   /* Each preset now controls the actual visual atmosphere of the app —
-      background, panels and title surfaces — while the existing component
-      semantics stay untouched. The tint is intentionally saturated enough
-      to be visible, but mixed with the current light/dark base for comfort. */
-   const baseLight = effectiveTheme()!=='dark';
-   const mix = (amount, base) => `color-mix(in srgb, ${accent} ${amount}%, ${base})`;
-   root.setProperty('--screen-bg', baseLight ? mix(7,'#f7fafc') : mix(12,'#263944'));
-   root.setProperty('--screen-bg-top', baseLight ? mix(12,'#ffffff') : mix(18,'#304955'));
-   root.setProperty('--screen-surface', baseLight ? mix(4,'#ffffff') : mix(16,'#344956'));
-   root.setProperty('--screen-surface-2', baseLight ? mix(9,'#f7fafc') : mix(22,'#3c5361'));
-   root.setProperty('--screen-tint',p.tint);
-   root.setProperty('--screen-titlebar',`linear-gradient(135deg, ${accent} 0%, ${p.accent2} 100%)`);
- }
+ root.setProperty('--teal-tint',tint);
+ root.setProperty('--accent-grad',`linear-gradient(135deg, ${accent} 0%, ${accent2} 100%)`);
+ root.setProperty('--screen-bg', bg);
+ root.setProperty('--screen-bg-top', bgTop);
+ root.setProperty('--screen-surface', surface);
+ root.setProperty('--screen-surface-2', surface2);
+ root.setProperty('--screen-tint', tint);
+ root.setProperty('--screen-titlebar',`linear-gradient(135deg, ${accent} 0%, ${accent2} 100%)`);
  root.setProperty('--screen-title-ink',effectiveTheme()==='dark'?'#f2f8fa':'#10242b');
  const c=AppDOMController.getById('screenAccentColor');if(c)AppDOMState.set(c, 'value', accent);
  AppDOMController.queryAll('[data-screen-style]').forEach(b=>AppClassState.toggle(b, 'active',b.getAttribute('data-screen-style')===key));
 }
-function setScreenStyle(key){if(!SCREEN_STYLES[key])return;try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}applyScreenStyle();showToast('تم تطبيق ستايل الشاشات وحفظه.','success');}
+function setScreenStyle(key){
+ if(!SCREEN_STYLES[key])return;
+ try{localStorage.setItem(SCREEN_STYLE_KEY,key);localStorage.removeItem(SCREEN_ACCENT_KEY);}catch(e){}
+ applyScreenStyle();
+ // Direct feedback: "خلي الثيم لما يتغير يبدل معه القائمة الجانبية ... مع
+ // امكانية تغيير لونها لاحقا بعد تطبيق الثيم من الوانها الخاصة بالضبط
+ // والاعدادات" — always overwrites the sidebar to this style's own
+ // recommended color; the existing sidebar-color picker in Settings stays
+ // fully live afterward for a manual override, untouched by this.
+ try{ if(typeof setRecommendedSidebarColor==='function') setRecommendedSidebarColor(SCREEN_STYLE_SIDEBAR[key]||'navy'); }catch(e){}
+ showToast('تم تطبيق ستايل الشاشات وحفظه.','success');
+}
 function setScreenAccent(color){if(!/^#[0-9a-f]{6}$/i.test(color||''))return;try{localStorage.setItem(SCREEN_ACCENT_KEY,color);}catch(e){}applyScreenStyle();}
 applyScreenStyle();
 
@@ -9437,6 +9566,7 @@ const TRANSLATIONS = {
     'سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟':'This employee account will be permanently deleted. Continue?',
     'حذف الحساب':'Delete account',
     'تم حذف حساب الموظف.':'The employee account was deleted.',
+    'لا يمكنك حذف حسابك الحالي أثناء تسجيل الدخول به.':'You cannot delete your own account while you are logged in with it.',
     'اسم المستخدم قصير جدًا.':'Username is too short.',
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Password must be at least 4 characters.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'This username is already in use.',
@@ -9908,6 +10038,7 @@ const TRANSLATIONS = {
     '⏳ نسخة تجريبية — باقي':'⏳ Trial — remaining',
     'يوم':'days',
     '✅ مُفعّل بدون انتهاء':'✅ Activated, never expires',
+    '✅ مُفعّل (عبر الخادم)':'✅ Activated (via server)',
     '⏰ انتهت الصلاحية':'⏰ Licence expired',
     '❌ غير مُفعّل':'❌ Not activated',
     'آخر نسخة احتياطية أخذتها:':'Last backup you took:',
@@ -10165,6 +10296,7 @@ const TRANSLATIONS = {
     'سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟':'Dit medewerkersaccount wordt definitief verwijderd. Doorgaan?',
     'حذف الحساب':'Account verwijderen',
     'تم حذف حساب الموظف.':'Het medewerkersaccount is verwijderd.',
+    'لا يمكنك حذف حسابك الحالي أثناء تسجيل الدخول به.':'U kunt uw eigen account niet verwijderen terwijl u ermee bent aangemeld.',
     'اسم المستخدم قصير جدًا.':'Gebruikersnaam is te kort.',
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Wachtwoord moet minstens 4 tekens bevatten.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'Deze gebruikersnaam is al in gebruik.',
@@ -10633,6 +10765,7 @@ const TRANSLATIONS = {
     '⏳ نسخة تجريبية — باقي':'⏳ Proefversie — nog',
     'يوم':'dagen',
     '✅ مُفعّل بدون انتهاء':'✅ Geactiveerd, verloopt nooit',
+    '✅ مُفعّل (عبر الخادم)':'✅ Geactiveerd (via server)',
     '⏰ انتهت الصلاحية':'⏰ Licentie verlopen',
     '❌ غير مُفعّل':'❌ Niet geactiveerd',
     'آخر نسخة احتياطية أخذتها:':'Laatste back-up die u heeft gemaakt:',
@@ -10902,6 +11035,7 @@ const TRANSLATIONS = {
     'سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟':'Dieses Mitarbeiterkonto wird endgültig gelöscht. Fortfahren?',
     'حذف الحساب':'Konto löschen',
     'تم حذف حساب الموظف.':'Das Mitarbeiterkonto wurde gelöscht.',
+    'لا يمكنك حذف حسابك الحالي أثناء تسجيل الدخول به.':'Sie können Ihr eigenes Konto nicht löschen, während Sie damit angemeldet sind.',
     'اسم المستخدم قصير جدًا.':'Benutzername ist zu kurz.',
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Das Passwort muss mindestens 4 Zeichen lang sein.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'Dieser Benutzername wird bereits verwendet.',
@@ -11370,6 +11504,7 @@ const TRANSLATIONS = {
     '⏳ نسخة تجريبية — باقي':'⏳ Testversion — verbleibend',
     'يوم':'Tage',
     '✅ مُفعّل بدون انتهاء':'✅ Aktiviert, läuft nie ab',
+    '✅ مُفعّل (عبر الخادم)':'✅ Aktiviert (über Server)',
     '⏰ انتهت الصلاحية':'⏰ Lizenz abgelaufen',
     '❌ غير مُفعّل':'❌ Nicht aktiviert',
     'آخر نسخة احتياطية أخذتها:':'Letzte von Ihnen erstellte Sicherung:',
@@ -11639,6 +11774,7 @@ const TRANSLATIONS = {
 'سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟':'Bu personel hesabı kalıcı olarak silinecek. Devam edilsin mi?',
 'حذف الحساب':'Hesabı sil',
 'تم حذف حساب الموظف.':'Personel hesabı silindi.',
+'لا يمكنك حذف حسابك الحالي أثناء تسجيل الدخول به.':'Şu anda oturum açmış olduğunuz kendi hesabınızı silemezsiniz.',
 'اسم المستخدم قصير جدًا.':'Kullanıcı adı çok kısa.',
 'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Şifre en az 4 karakter olmalıdır.',
 'اسم المستخدم هذا مستخدم مسبقًا.':'Bu kullanıcı adı zaten kullanılıyor.',
@@ -12110,6 +12246,7 @@ const TRANSLATIONS = {
 '⏳ نسخة تجريبية — باقي':'⏳ Deneme Sürümü — kalan',
 'يوم':'gün',
 '✅ مُفعّل بدون انتهاء':'✅ Etkinleştirildi, süresiz',
+'✅ مُفعّل (عبر الخادم)':'✅ Etkinleştirildi (sunucu üzerinden)',
 '⏰ انتهت الصلاحية':'⏰ Lisans Süresi Doldu',
 '❌ غير مُفعّل':'❌ Etkinleştirilmedi',
 'آخر نسخة احتياطية أخذتها:':'Aldığınız son yedek:',
@@ -12379,6 +12516,7 @@ const TRANSLATIONS = {
     'سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟':'חשבון העובד הזה יימחק לצמיתות. להמשיך?',
     'حذف الحساب':'מחיקת החשבון',
     'تم حذف حساب الموظف.':'חשבון העובד נמחק.',
+    'لا يمكنك حذف حسابك الحالي أثناء تسجيل الدخول به.':'לא ניתן למחוק את החשבון שלך בזמן שאתה מחובר באמצעותו.',
     'اسم المستخدم قصير جدًا.':'שם המשתמש קצר מדי.',
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'הסיסמה חייבת להכיל 4 תווים לפחות.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'שם המשתמש הזה כבר בשימוש.',
@@ -12850,6 +12988,7 @@ const TRANSLATIONS = {
     '⏳ نسخة تجريبية — باقي':'⏳ גרסת ניסיון — נותרו',
     'يوم':'ימים',
     '✅ مُفعّل بدون انتهاء':'✅ מופעל, ללא תפוגה',
+    '✅ مُفعّل (عبر الخادم)':'✅ מופעל (דרך השרת)',
     '⏰ انتهت الصلاحية':'⏰ הרישיון פג',
     '❌ غير مُفعّل':'❌ לא מופעל',
     'آخر نسخة احتياطية أخذتها:':'הגיבוי האחרון שלקחת:',
@@ -13119,6 +13258,7 @@ const TRANSLATIONS = {
     'سيتم حذف حساب هذا الموظف نهائيًا. هل تريد المتابعة؟':'To konto pracownika zostanie trwale usunięte. Kontynuować?',
     'حذف الحساب':'Usuń konto',
     'تم حذف حساب الموظف.':'Konto pracownika zostało usunięte.',
+    'لا يمكنك حذف حسابك الحالي أثناء تسجيل الدخول به.':'Nie możesz usunąć własnego konta, gdy jesteś na nie zalogowany.',
     'اسم المستخدم قصير جدًا.':'Nazwa użytkownika jest za krótka.',
     'كلمة السر يجب أن تكون 4 أحرف على الأقل.':'Hasło musi mieć co najmniej 4 znaki.',
     'اسم المستخدم هذا مستخدم مسبقًا.':'Ta nazwa użytkownika jest już zajęta.',
@@ -13587,6 +13727,7 @@ const TRANSLATIONS = {
     '⏳ نسخة تجريبية — باقي':'⏳ Wersja próbna — pozostało',
     'يوم':'dni',
     '✅ مُفعّل بدون انتهاء':'✅ Aktywowano, bez terminu ważności',
+    '✅ مُفعّل (عبر الخادم)':'✅ Aktywowany (przez serwer)',
     '⏰ انتهت الصلاحية':'⏰ Licencja wygasła',
     '❌ غير مُفعّل':'❌ Nie aktywowano',
     'آخر نسخة احتياطية أخذتها:':'Ostatnia wykonana kopia zapasowa:',
@@ -14853,6 +14994,11 @@ function lockKeyActivationSubmitBtnHandler(){
       closeLockKeyActivationModal();
       openLockKeyActivationResultModal(true, 'تم تفعيل البرنامج بنجاح', 'تم قبول كود التفعيل بنجاح.', formatLockKeyActivationDuration(expiry));
       try{ refreshActivationScreenState(); }catch(e){}
+      // Direct feedback: opened from Settings' "🔑 إضافة مفتاح" now (see that
+      // button's own comment), Settings itself stays open BEHIND this
+      // modal instead of closing — its own status field must reflect the
+      // new activation immediately, not just on next open.
+      try{ if(typeof refreshLockTabInfo==='function') refreshLockTabInfo(); }catch(e){}
     }else{
       const msg = alreadyExpired
         ? 'انتهت صلاحية هذا المفتاح بالفعل — لا يمكن تفعيل البرنامج به. تواصل مع المطوّر للحصول على مفتاح جديد.'
@@ -16027,28 +16173,43 @@ function licenseRemainingSummaryText(){
   return getActivationStatusMessage();
 }
 function refreshLockTabInfo(){
-  AppDOMState.set(AppDOMController.getById('lockTabDeviceIdText'), 'textContent', currentDeviceId);
+  AppDOMState.set(AppDOMController.getById('settingsDeviceIdText'), 'textContent', currentDeviceId);
   const unameInput = AppDOMController.getById('changeUsernameInput');
   if(unameInput) AppDOMState.set(unameInput, 'value', requiredUsername());
+  // Direct feedback: "نوع الترخيص يبين المدة ايضا جوا الضبط والاعدادات مكان
+  // التفعيل" — getActivationStatusMessage() alone only ever reports
+  // "غير مُفعّل" while a free trial is still running (it has no concept of
+  // trials at all), which reads as alarming/wrong even with real days left.
+  // licenseRemainingSummaryText() is the exact same function "حول البرنامج"
+  // already uses for this (see its own comment above) — reusing it here
+  // instead of a second, hand-rolled trial-aware copy keeps both places
+  // permanently in agreement.
   const statusEl = AppDOMController.getById('lockTabActivationStatusText');
-  const st = getActivationStatusMessage();
+  const st = licenseRemainingSummaryText();
   AppDOMState.set(statusEl, 'textContent', st.text);
   AppDOMStyle.set(statusEl, 'color', st.color);
 }
 
 const addActivationKeyBtnEl=AppDOMController.getById('addActivationKeyBtn');
 if(addActivationKeyBtnEl)AppEventController.on(addActivationKeyBtnEl, 'click',()=>{
+  // Direct feedback: "لو كبست اضافة مفتاح طلع لي تبويبة بنفس المكان واضيف
+  // مفتاح اما اقبل وحدث التفعيل او اعطي رسالة واضحة انو المفتاح منتهي او
+  // غير صالح" — this used to close Settings entirely and force the
+  // full-screen #activationScreen open instead (a jarring "leaves where you
+  // were" jump). Reuses the quick-activation modal already built for the
+  // lock screen (openLockKeyActivationModal(), 05-license-activation.js) —
+  // it is a plain fixed-position, very-high-z-index (99999 vs Settings'
+  // own 500) modal, so it simply layers on top of Settings without closing
+  // it, and already has the exact clear accept/expired/invalid handling
+  // this asks for (see lockKeyActivationSubmitBtnHandler()). Settings
+  // stays open underneath and refreshes its own status text immediately
+  // once the modal reports success (see that handler's own edit).
+  if(typeof openLockKeyActivationModal==='function'){ openLockKeyActivationModal(); return; }
+  // Fallback: openLockKeyActivationModal() should always exist by the time
+  // a real user can click this, but never leave the button silently inert
+  // if script load order is ever disturbed.
   try{refreshActivationScreenState();}catch(e){}
   AppOverlayController.closeIfOpen('settingsOverlay');
-  // BUG FIX: this used to force the screen open with an inline
-  // style="display:flex", which permanently outranked the CSS class this
-  // screen normally shows/hides itself with — so a later successful
-  // activation could no longer close it (see this screen's CSS and the
-  // activationForm submit handler for the other half of this fix). Using
-  // the dedicated 'force-open' class instead means '.activated' can win
-  // again exactly as it always could. The "إغلاق" button only makes sense
-  // here (opened voluntarily while the app is already unlocked) — never
-  // when this screen is the genuine, un-cancellable lock gate.
   if(activationScreenEl){
     AppClassState.remove(activationScreenEl, 'activated');
     AppClassState.add(activationScreenEl, 'force-open');
@@ -23508,26 +23669,62 @@ const TOOTH_DETAIL = {
      base color instead of just tinting everything grey — the classic
      flat-illustration trick for faking a rounded, three-dimensional
      surface without any actual 3D rendering. */
+// Direct follow-up feedback: "بدي الاسنان بإضافة حالة تكون 3d ملونة حديثة"
+// then, after seeing the glossy/glass blue version live: "سوي الاسنان
+// ملونة اقرب للواقع بدي" — back to a REALISTIC natural tooth color
+// (warm ivory-to-white, not the stylized blue glass), but keeping the
+// stronger volumetric shadow/shine depth from that pass (the "3D/modern"
+// half of the request), just recolored warm/neutral so it doesn't clash
+// with a natural enamel tone.
 const TOOTH_GRADIENTS =
   '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
+    /* Direct follow-up: "لون جذر الاسنان والتاج للسن ياخد شكل واقعي ولون
+       واقعي" — a real tooth's root (cementum, dull yellowish-tan) and
+       crown (enamel, bright white) are two visually distinct zones with a
+       real boundary (the cemento-enamel junction) between them, not one
+       smooth blend end-to-end. TOOTH_DETAIL's own "crown meets root" line
+       (e.g. 'inc': M11,44 ... in a 0-78 viewBox) sits at y≈44-47, i.e.
+       ~56-60% down the path — these stops are aligned to that SAME
+       boundary so the color change actually lines up with the drawn
+       anatomy line instead of just being a generic top-to-bottom fade. */
     '<linearGradient id="toothEnamel" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="#c99a5c"/>' +
-      '<stop offset="16%" stop-color="#dcb579"/>' +
-      '<stop offset="36%" stop-color="#ecd3a0"/>' +
-      '<stop offset="56%" stop-color="#f6e8c9"/>' +
-      '<stop offset="78%" stop-color="#fdf8ec"/>' +
+      '<stop offset="0%" stop-color="#c9a876"/>' +
+      '<stop offset="30%" stop-color="#d9bb8d"/>' +
+      '<stop offset="52%" stop-color="#e8cea3"/>' +
+      '<stop offset="58%" stop-color="#fbf3e2"/>' +
+      '<stop offset="66%" stop-color="#ffffff"/>' +
       '<stop offset="100%" stop-color="#ffffff"/>' +
     '</linearGradient>' +
-    '<radialGradient id="toothVolume" cx="30%" cy="22%" r="85%">' +
-      '<stop offset="0%" stop-color="#ffffff" stop-opacity=".9"/>' +
-      '<stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>' +
-      '<stop offset="80%" stop-color="#5c4326" stop-opacity=".22"/>' +
-      '<stop offset="100%" stop-color="#3a2a17" stop-opacity=".4"/>' +
+    '<radialGradient id="toothVolume" cx="28%" cy="20%" r="88%">' +
+      '<stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>' +
+      '<stop offset="38%" stop-color="#ffffff" stop-opacity="0"/>' +
+      '<stop offset="78%" stop-color="#6b4f2e" stop-opacity=".28"/>' +
+      '<stop offset="100%" stop-color="#3a2a17" stop-opacity=".48"/>' +
     '</radialGradient>' +
     '<linearGradient id="toothShine" x1="0" y1="0" x2="1" y2="0">' +
       '<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>' +
-      '<stop offset="45%" stop-color="#ffffff" stop-opacity=".75"/>' +
+      '<stop offset="45%" stop-color="#ffffff" stop-opacity=".85"/>' +
       '<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>' +
+    '</linearGradient>' +
+    /* Direct follow-up: "خلي طريقة العرض و كأنها صورة ملتقطة من فم" — two
+       more realism cues real intraoral photos always show, neither of
+       which a flat single-tooth illustration has on its own: (1) a
+       contact shadow where two teeth actually touch (real teeth are never
+       lit evenly edge-to-edge — the left/right edges fall into shadow
+       against their neighbor), and (2) a touch of translucency right at
+       the crown tip (real enamel is thinnest and slightly see-through
+       there, reading as a cooler, faintly grey-blue edge against the
+       opaque body of the tooth). */
+    '<linearGradient id="toothContact" x1="0" y1="0" x2="1" y2="0">' +
+      '<stop offset="0%" stop-color="#241a10" stop-opacity=".38"/>' +
+      '<stop offset="12%" stop-color="#241a10" stop-opacity="0"/>' +
+      '<stop offset="88%" stop-color="#241a10" stop-opacity="0"/>' +
+      '<stop offset="100%" stop-color="#241a10" stop-opacity=".38"/>' +
+    '</linearGradient>' +
+    '<linearGradient id="toothIncisal" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#243544" stop-opacity="0"/>' +
+      '<stop offset="86%" stop-color="#243544" stop-opacity="0"/>' +
+      '<stop offset="100%" stop-color="#8fa9b8" stop-opacity=".30"/>' +
     '</linearGradient>' +
     Object.keys(TOOTH_PATHS).map(kind =>
       `<clipPath id="toothClip-${kind}"><path d="${TOOTH_PATHS[kind]}"></path></clipPath>`
@@ -23567,6 +23764,8 @@ function buildDentalChart(){
           <g clip-path="url(#toothClip-${kind})">
             <rect class="tooth-volume" x="-15" y="-15" width="70" height="108"></rect>
             <rect class="tooth-shine" x="-15" y="-15" width="70" height="108"></rect>
+            <rect class="tooth-contact" x="0" y="0" width="40" height="78"></rect>
+            <rect class="tooth-incisal" x="0" y="0" width="40" height="78"></rect>
           </g>
           <path class="tooth-detail" d="${TOOTH_DETAIL[kind]}"></path>
         </svg>
@@ -26367,6 +26566,16 @@ async function initDatabase(){
         'مجلد حفظ البيانات (' + (res.dataDir || '') + ') غير متاح حاليًا. ' +
         'وصّل الفلاشة أو مجلد الشبكة ثم أعد تشغيل البرنامج — بياناتك لم تُمس.'
       );
+    }else if(res.status === 'blocked'){
+      // Source-protection audit (2026-09-18): lib/datastore.js's
+      // readDatabase() now refuses outright once this device is explicitly
+      // admin-BLOCKED (see its own comment) — this is the accurate, honest
+      // message for that specific case, matching 05-license-activation.js's
+      // own "🚫 هذا الجهاز محظور" wording, instead of falling into the
+      // generic "file may be corrupt" branch below which would mislead a
+      // genuinely-blocked customer into thinking something broke.
+      applyDatabasePayload({});
+      blockSavingAfterFailedLoad('🚫 هذا الجهاز محظور من الإدارة. بياناتك لم تُمس ولم تُحذف — تواصل مع الدعم الفني.');
     }else{
       applyDatabasePayload({});
       blockSavingAfterFailedLoad('تعذّرت قراءة ملف البيانات (قد يكون مفتوحًا في برنامج آخر أو تالفًا).');
@@ -26904,7 +27113,55 @@ function applyAllStatCardHiddenStates(){
     });
     applyHomeStatGridLayout();
     renderHiddenStatTabs();
+    // Same fix as applyHomeBigCardHiddenStates() below — re-fit after the
+    // hidden-tabs tray's content changes, for consistency (lower risk here
+    // since this tray sits near the top of the page, but not zero).
+    if(typeof fitHomeScreenToViewport === 'function') fitHomeScreenToViewport();
   }catch(e){}
+}
+
+// Direct feedback: "الشاشتين يلي بالرئيسية ... لازم يبين مستطيل باسم
+// الشاشة فقط متل المربعات لما تنخفا - والمستطيل قابل للسحب" — the "bring
+// it back" pill must respond to being DRAGGED, not just clicked (same
+// grab-and-move language used for the stat-card reorder feature just
+// above). Shared by every restore pill — #statsHiddenTabs's small-card
+// pills and each big card's own .home-card-pill-slot alike — since
+// restoring is the only meaningful action either way — dragging the
+// pill any real distance and releasing restores its card, exactly like
+// clicking it does; a plain click (no real movement) still just restores
+// normally. The pill itself lifts/scales while held so the drag reads the
+// same way the stat-card drag does.
+const HIDDEN_PILL_DRAG_THRESHOLD_PX = 10;
+function wireHiddenPillDragRestore(tab, restoreFn){
+  let pressed = false, triggered = false, startX = 0, startY = 0, pointerId = null;
+  AppEventController.on(tab, 'pointerdown', (ev)=>{
+    if(ev.button !== undefined && ev.button !== 0) return;
+    pressed = true; triggered = false;
+    startX = ev.clientX; startY = ev.clientY; pointerId = ev.pointerId;
+    AppDOMStyle.set(tab, 'transition', 'transform .12s ease');
+    AppDOMStyle.set(tab, 'transform', 'scale(1.08)');
+    AppDOMStyle.set(tab, 'z-index', '60');
+    try{ tab.setPointerCapture(pointerId); }catch(e){}
+  });
+  AppEventController.on(tab, 'pointermove', (ev)=>{
+    if(!pressed) return;
+    const dx = ev.clientX - startX, dy = ev.clientY - startY;
+    if(!triggered && Math.hypot(dx, dy) <= HIDDEN_PILL_DRAG_THRESHOLD_PX) return;
+    triggered = true;
+    AppDOMStyle.set(tab, 'transition', 'none');
+    AppDOMStyle.set(tab, 'transform', `translate(${dx}px, ${dy}px) scale(1.08)`);
+  });
+  function release(){
+    if(!pressed) return;
+    pressed = false;
+    try{ if(pointerId != null) tab.releasePointerCapture(pointerId); }catch(e){}
+    if(triggered){ triggered = false; restoreFn(); return; }
+    AppDOMStyle.removeProperty(tab, 'transform');
+    AppDOMStyle.removeProperty(tab, 'transition');
+    AppDOMStyle.removeProperty(tab, 'z-index');
+  }
+  AppEventController.on(tab, 'pointerup', release);
+  AppEventController.on(tab, 'pointercancel', release);
 }
 
 // Rebuilds the pill row from scratch off the CURRENT hidden state — cheap
@@ -26928,10 +27185,12 @@ function renderHiddenStatTabs(){
       const shownLabel = (global.AppLocalization ? global.AppLocalization.t('إظهار المربع', 'إظهار المربع') : 'إظهار المربع');
       AppDOMMutation.setAttribute(tab, 'title', shownLabel);
       AppDOMMutation.setAttribute(tab, 'aria-label', shownLabel + ': ' + label);
-      AppEventController.on(tab, 'click', ()=>{
+      const restore = ()=>{
         setStatCardHidden(card.id, false);
         applyAllStatCardHiddenStates();
-      });
+      };
+      AppEventController.on(tab, 'click', restore);
+      wireHiddenPillDragRestore(tab, restore);
       AppDOMTree.appendChild(wrap, tab);
     });
   }catch(e){}
@@ -26982,7 +27241,9 @@ initStatCardEyeButtons();
    itself can never also trigger that card's navigation.
    ============================================================================ */
 const HOME_STAT_ORDER_KEY = 'homeStatCardOrder_v1';
-const HOME_STAT_REORDER_HOLD_MS = 450;
+// Direct feedback: "قلل زمن الضغط عالمربع لتفعيل وضعية تشغيل تاثيره انو بدي
+// اغير مكانو" — 450ms felt too slow to trigger reorder mode. Cut to 250ms.
+const HOME_STAT_REORDER_HOLD_MS = 250;
 const HOME_STAT_REORDER_MOVE_TOLERANCE_PX = 6;
 
 function getStatCardOrder(){
@@ -27047,11 +27308,25 @@ function initStatCardReordering(){
     }
     function endDrag(){
       if(sourceCard){
-        AppDOMStyle.removeProperty(sourceCard, 'transform');
-        AppDOMStyle.removeProperty(sourceCard, 'box-shadow');
-        AppDOMStyle.removeProperty(sourceCard, 'z-index');
-        AppDOMStyle.removeProperty(sourceCard, 'cursor');
-        AppDOMStyle.removeProperty(sourceCard, 'transition');
+        const releasedCard = sourceCard;
+        // Release the same way it was picked up: an eased snap-back to its
+        // resting position/size instead of an instant jump-cut, so letting
+        // go reads as clearly as grabbing did. z-index stays raised through
+        // the transition so it doesn't duck behind a sibling mid-animation.
+        // REAL BUG FOUND (live pointer-event test): .stats-home .stat's
+        // OWN base rule sets both `transition` and `box-shadow` with
+        // !important (26-home-status-overview.css) specifically so its
+        // hover effect always applies — a plain inline style write can
+        // never beat that, so every transition/box-shadow set here has to
+        // go through setProperty(...,'important') too, not plain .set().
+        AppDOMStyle.setProperty(releasedCard, 'transition', 'transform .18s ease, box-shadow .18s ease', 'important');
+        AppDOMStyle.removeProperty(releasedCard, 'transform');
+        AppDOMStyle.removeProperty(releasedCard, 'box-shadow');
+        AppDOMStyle.removeProperty(releasedCard, 'cursor');
+        setTimeout(()=>{
+          AppDOMStyle.removeProperty(releasedCard, 'z-index');
+          AppDOMStyle.removeProperty(releasedCard, 'transition');
+        }, 200);
       }
       clearDropHighlight();
       armed = false; dragging = false; sourceCard = null; pointerId = null;
@@ -27072,10 +27347,33 @@ function initStatCardReordering(){
         pointerId = ev.pointerId;
         holdTimer = setTimeout(()=>{
           armed = true;
-          AppDOMStyle.set(card, 'transition', 'none');
+          // Direct feedback: "سويلي تاثير توضيحي انو مسكت المربع وبدي غير
+          // مكانو ... لما امسك مربع اعمل عليه تكبير وقفز" — the previous
+          // version only ever applied scale(1.04) once real pointer movement
+          // started, so the moment the long-press itself completed (before
+          // any dragging) gave no feedback at all. This bouncy transition
+          // plays a visible "pop" the instant the hold arms, independent of
+          // movement, so grabbing a still card already reads as "picked up".
+          // REAL BUG FOUND (real mouse input test, not synthetic events —
+          // synthetic dispatchEvent() never triggers real :hover matching,
+          // which is exactly why this was invisible until tested with an
+          // actual Playwright mouse drag): 23-home-screen.css's
+          // `.stats-home .stat:hover{ transform:translateY(-3px)!important; }`
+          // was completely overriding every transform set here the ENTIRE
+          // time the real cursor sat over the card — which is the whole
+          // duration of a real drag. The card never visibly moved past a
+          // static -3px hover-lift; the pop/scale/rotate/translate below
+          // were all silently discarded by the browser's cascade, even
+          // though the inline style attribute itself was set correctly
+          // (confirmed via card.style.transform vs getComputedStyle(card)
+          // .transform disagreeing). Same !important-override requirement
+          // as endDrag() above for transition/box-shadow — now also
+          // required for transform itself.
+          AppDOMStyle.setProperty(card, 'transition', 'transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease', 'important');
           AppDOMStyle.set(card, 'cursor', 'grabbing');
           AppDOMStyle.set(card, 'z-index', '50');
-          AppDOMStyle.set(card, 'box-shadow', '0 14px 32px rgba(0,0,0,.22)');
+          AppDOMStyle.setProperty(card, 'box-shadow', '0 20px 44px rgba(0,0,0,.3)', 'important');
+          AppDOMStyle.setProperty(card, 'transform', 'scale(1.08) rotate(-1.5deg)', 'important');
           try{ card.setPointerCapture(pointerId); }catch(e){}
         }, HOME_STAT_REORDER_HOLD_MS);
       });
@@ -27089,12 +27387,39 @@ function initStatCardReordering(){
           if(Math.hypot(dx, dy) > HOME_STAT_REORDER_MOVE_TOLERANCE_PX) clearHold();
           return;
         }
+        if(!dragging){
+          // First real movement frame: drop the "pop-in" transition so the
+          // card tracks the pointer 1:1 with no lag/spring, while KEEPING
+          // the enlarged scale+tilt from the armed-moment pop — this is the
+          // "و هو ينسحب لازم يبين" part: the card stays fully visible,
+          // clearly enlarged/lifted above its siblings (z-index:50, strong
+          // shadow), for the entire duration of the drag, not just the
+          // instant it was grabbed.
+          AppDOMStyle.setProperty(card, 'transition', 'none', 'important');
+        }
         dragging = true;
         // Visual-only feedback (no layout change, no reparenting — unlike
-        // the big cards' free-drag, these never leave the grid flow).
-        AppDOMStyle.set(card, 'transform', `translate(${dx}px, ${dy}px) scale(1.04)`);
-        const under = document.elementFromPoint(ev.clientX, ev.clientY);
-        const targetCard = AppDOMRelationship.closest(under, '.stats-home .stat');
+        // the big cards' free-drag, these never leave the grid flow). Same
+        // !important requirement as the armed-pop above — the :hover rule
+        // is still active on the card while the real cursor sits over it.
+        AppDOMStyle.setProperty(card, 'transform', `translate(${dx}px, ${dy}px) scale(1.08) rotate(-1.5deg)`, 'important');
+        // REAL BUG FOUND (direct consequence of the transform fix above —
+        // only surfaced with a real mouse, never with the synthetic
+        // pointer-event tests used earlier): now that the dragged card
+        // visually tracks the cursor instead of sitting frozen in place,
+        // it is ALWAYS the topmost element at (ev.clientX, ev.clientY) by
+        // definition — elementFromPoint() therefore always returned the
+        // dragged card itself, never whatever real target sits underneath
+        // it, so a drop could never resolve a target and the swap silently
+        // stopped firing. elementsFromPoint() (plural) returns the whole
+        // z-order stack at that point — walk past the dragged card itself
+        // (and anything inside it) to find the first DIFFERENT stat card.
+        const stack = document.elementsFromPoint(ev.clientX, ev.clientY);
+        let targetCard = null;
+        for(const el of stack){
+          const candidate = AppDOMRelationship.closest(el, '.stats-home .stat');
+          if(candidate && candidate !== card){ targetCard = candidate; break; }
+        }
         if(targetCard !== dropTarget){
           clearDropHighlight();
           if(targetCard && targetCard !== card){
@@ -27157,13 +27482,48 @@ initStatCardReordering();
    stat cards just above already use successfully: display:none removes
    the card from .home-cards-row's flex flow (the OTHER card reflows into
    the freed space as a plain side effect, same as the stat-card grid), and
-   a small named pill appears in #homeCardsHiddenTabs (its own container,
-   separate from the stat cards' #statsHiddenTabs so the two trays are
-   never mixed) — clicking that pill brings the card straight back.
+   a small named pill appears right where the card was — clicking it brings
+   the card straight back.
+
+   ROOT-CAUSE REDESIGN, 2026-09-18 (direct user reports: "لما اخفي الشاشتين
+   خلي يصير مستطيل الشاشة المسكرة بنفس مكانها محل تفتح" — the pill must
+   appear in THIS card's own spot; and, worse, "المربعات بس اخفيها ماعم
+   ترجع تفتح" — hidden SMALL stat cards sometimes could not be brought back
+   at all). This used to be ONE shared tray (#homeCardsHiddenTabs) for both
+   big cards, appended as .home-cards-row's LAST child and made
+   position:absolute so it could hold a pill without pushing anything below
+   it down. Two real, related bugs came from that one shared/absolute tray:
+   (1) it always rendered LAST regardless of which card was actually
+   hidden, so hiding the TOP card ("بيان عام للحالات") put its pill at the
+   BOTTOM of the stack — never "the same place it was displayed" unless
+   BOTH cards happened to be hidden at once; (2) confirmed live via a real
+   CDP hit-test (elementsFromPoint at the exact pixel of a stat card's
+   restore pill): .home-cards-row ITSELF — not just its tray — is a
+   position:relative block that always spans the row's FULL width no
+   matter how narrow its own visible content is, and, being later in DOM
+   order than .stats-home, it paints ABOVE .stats-home's entire stacking
+   context per normal CSS rules. #statsHiddenTabs (the small cards' own
+   tray, .stats-home's child) deliberately floats past .stats-home's own
+   bottom edge into that shared vertical space — so .home-cards-row's
+   invisible full-width box was silently swallowing clicks meant for
+   #statsHiddenTabs's pills, any time the two trays' vertical positions
+   happened to line up (which they always do once .home-cards-row's own
+   content is short — e.g. both big cards hidden). That is why restoring a
+   hidden stat card could silently do nothing: the click never reached the
+   pill at all.
+   FIX: (a) each big card now gets its own dedicated, always-in-flow pill
+   slot immediately after itself in home.html (HOME_BIG_CARD_PILL_SLOT) —
+   no shared tray, so a card's pill is always exactly where that card was,
+   never appended somewhere else; (b) .home-cards-row itself is now
+   pointer-events:none with pointer-events:auto restored on its actual
+   children (26-home-status-overview.css) — its own empty space can never
+   again swallow a click meant for something rendered behind it, regardless
+   of what either side's layout does in the future.
    ============================================================================ */
 const HOME_BIG_CARD_HIDDEN_PREFIX = 'homeBigCardHidden_';
 const HOME_BIG_CARDS = ['homeStatusCard', 'homeEditLogPanel'];
 const HOME_BIG_CARD_LABELS = { homeStatusCard:'بيان عام للحالات', homeEditLogPanel:'آخر العمليات' };
+const HOME_BIG_CARD_PILL_SLOT = { homeStatusCard:'homeStatusCardPillSlot', homeEditLogPanel:'homeEditLogPanelPillSlot' };
 
 function isHomeBigCardHidden(cardId){
   try{ return localStorage.getItem(HOME_BIG_CARD_HIDDEN_PREFIX + cardId) === '1'; }catch(e){ return false; }
@@ -27173,16 +27533,17 @@ function setHomeBigCardHidden(cardId, hidden){
   try{ localStorage.setItem(HOME_BIG_CARD_HIDDEN_PREFIX + cardId, hidden ? '1' : '0'); }catch(e){}
 }
 
-// Rebuilds the pill row from scratch off the CURRENT hidden state — cheap
-// (at most 2 cards) and avoids tracking incremental add/remove separately
-// from applyHomeBigCardHiddenStates()'s own class toggling. Mirrors
-// renderHiddenStatTabs() above exactly.
+// Fills each big card's OWN dedicated slot (see HOME_BIG_CARD_PILL_SLOT) —
+// unlike renderHiddenStatTabs() above, there is no shared tray to rebuild:
+// each of the (fixed, only ever 2) slots is set from scratch independently
+// off that ONE card's current hidden state, so a card's pill always lands
+// in its own original spot regardless of the other card's state.
 function renderHiddenHomeBigCardTabs(){
   try{
-    const wrap = AppDOMController.getById('homeCardsHiddenTabs');
-    if(!wrap) return;
-    AppDOMState.set(wrap, 'innerHTML', '');
     HOME_BIG_CARDS.forEach(id=>{
+      const wrap = AppDOMController.getById(HOME_BIG_CARD_PILL_SLOT[id]);
+      if(!wrap) return;
+      AppDOMState.set(wrap, 'innerHTML', '');
       if(!isHomeBigCardHidden(id)) return;
       const label = HOME_BIG_CARD_LABELS[id] || id;
       const tab = AppDOMController.create('button');
@@ -27194,10 +27555,12 @@ function renderHiddenHomeBigCardTabs(){
       const shownLabel = (global.AppLocalization ? global.AppLocalization.t('إظهار البطاقة', 'إظهار البطاقة') : 'إظهار البطاقة');
       AppDOMMutation.setAttribute(tab, 'title', shownLabel);
       AppDOMMutation.setAttribute(tab, 'aria-label', shownLabel + ': ' + label);
-      AppEventController.on(tab, 'click', ()=>{
+      const restore = ()=>{
         setHomeBigCardHidden(id, false);
         applyHomeBigCardHiddenStates();
-      });
+      };
+      AppEventController.on(tab, 'click', restore);
+      wireHiddenPillDragRestore(tab, restore);
       AppDOMTree.appendChild(wrap, tab);
     });
   }catch(e){}
@@ -27215,6 +27578,17 @@ function applyHomeBigCardHiddenStates(){
       AppClassState.toggle(el, 'home-card-hidden', isHomeBigCardHidden(id));
     });
     renderHiddenHomeBigCardTabs();
+    // REAL BUG FOUND (same investigation as the .home-cards-row
+    // position:relative fix above): the "bring it back" pill is added to
+    // the DOM the instant a card is hidden, but the whole-page shrink-to-
+    // fit zoom (fitHomeScreenToViewport(), which exists specifically so
+    // nothing on this screen ever needs a scrollbar that #mainArea doesn't
+    // actually provide) was never re-run at that moment — only on the
+    // initial render. A newly-appeared pill could land just past the
+    // already-computed fold with no way to reach it. Re-fitting here
+    // guarantees the pill is always inside the visible area, exactly like
+    // every other piece of home-screen content already is.
+    if(typeof fitHomeScreenToViewport === 'function') fitHomeScreenToViewport();
   }catch(e){}
 }
 
@@ -27371,7 +27745,15 @@ function fitHomeScreenToViewport(){
   requestAnimationFrame(()=>{
     if(AppViewState.isHidden(homeView)) return;
     const available = mainArea.clientHeight;
-    const homeNatural = homeView.scrollHeight;
+    let homeNatural = homeView.scrollHeight;
+    // HISTORY (no longer applicable, kept for context): this used to fold
+    // #homeCardsHiddenTabs's real bottom edge into homeNatural by hand,
+    // because that shared tray was position:absolute and therefore
+    // structurally invisible to scrollHeight. The big cards' hidden-state
+    // pills now live in per-card slots (HOME_BIG_CARD_PILL_SLOT,
+    // applyHomeBigCardHiddenStates() below) that are always normal in-flow
+    // elements, so scrollHeight already accounts for them on its own —
+    // no special-case measurement needed any more.
     // .main-area's own top+bottom padding doesn't shrink along with
     // #homeView's zoom, so it has to be subtracted from the budget first —
     // otherwise a short window could still end up needing a scroll by
@@ -33158,6 +33540,17 @@ html[dir='ltr'] .sidebar-btn{transform-origin:left center;}
 .home-cards-row{
   display:flex;
   flex-direction:column;
+  /* HISTORY (no longer applicable): this was position:relative to give the
+     old shared "bring it back" tray (#homeCardsHiddenTabs, position:absolute;
+     top:100%) a positioned ancestor to resolve against. That shared/absolute
+     tray is gone (see applyHomeBigCardHiddenStates() in dashboard-feature.js
+     for the full root-cause redesign) — each big card now gets its own
+     plain in-flow pill slot, so nothing under .home-cards-row needs it to be
+     positioned any more. Left as `static` (the default) intentionally: a
+     positioned block paints ABOVE non-positioned siblings regardless of
+     DOM order, which was exactly what let .home-cards-row's own empty space
+     swallow clicks meant for .stats-home's #statsHiddenTabs tray floating
+     below it — one less thing relying on stacking order to behave. */
   /* Direct feedback: "قلل الفراغ بين الشاشتين شوي يلي عالرئيسية" — the gap
      between "بيان عام للحالات" and "آخر العمليات" themselves (not the
      space above them, already handled separately). 16px -> 10px. Also
@@ -33295,8 +33688,8 @@ html[dir='ltr'] .sidebar-btn{transform-origin:left center;}
 #homeEditLogPanel.card-collapsed .home-editlog-panel-head{ margin-bottom:0 !important; }
 
 /* The actual, currently-used whole-card hide (see the comment above) —
-   #homeCardsHiddenTabs (home.html) is where the "bring it back" pill for
-   whichever card gets this class lives. */
+   each card's own .home-card-pill-slot (home.html), right next to it, is
+   where its "bring it back" pill lives while this class is applied. */
 .home-status-card.home-card-hidden,
 #homeEditLogPanel.home-card-hidden{ display:none !important; }
 
@@ -33900,6 +34293,45 @@ html[dir="ltr"] .stats-home .stat{ padding:15px 15px 14px 66px !important; }
   display:flex; flex-wrap:wrap; gap:8px;
 }
 .stats-hidden-tabs:empty{ display:none; }
+
+/* ROOT-CAUSE REDESIGN, 2026-09-18 (see the matching, longer comment on
+   applyHomeBigCardHiddenStates() in dashboard-feature.js for the full
+   investigation — this is the CSS half of that fix). The two big cards no
+   longer share one absolute-positioned "bring it back" tray at the end of
+   .home-cards-row; each gets its own always-in-flow slot right next to
+   itself instead (home.html: #homeStatusCardPillSlot/#homeEditLogPanelPillSlot).
+   Plain flex items, no absolute positioning needed — a slot simply IS
+   where its card was. */
+.home-card-pill-slot{
+  display:flex; flex-wrap:wrap; gap:8px;
+}
+.home-card-pill-slot:empty{ display:none; }
+
+/* REAL BUG FOUND, confirmed live via CDP hit-test (direct user report:
+   "المربعات بس اخفيها ماعم ترجع تفتح" — hiding a small stat card, its
+   restore pill sometimes did nothing at all when clicked). .home-cards-row
+   is position:relative (needed by makeHomeCardDraggable()'s children) and,
+   being LATER in DOM order than .stats-home, paints ABOVE .stats-home's
+   entire stacking context per normal CSS rules — and that is true across
+   its FULL WIDTH, even the parts with no visible content, because a
+   block's own hit-testable box always spans the width its layout gives it
+   regardless of how narrow its actual children are. #statsHiddenTabs (the
+   small cards' own restore tray, a child of .stats-home) deliberately
+   floats PAST .stats-home's own bottom edge into that shared space below
+   it — so .home-cards-row's own invisible box was silently swallowing
+   clicks meant for a pill inside #statsHiddenTabs, any time the two
+   happened to land on the same row (e.g. once .home-cards-row's visible
+   content is short). .home-cards-row is no longer position:relative
+   itself (see the comment on that declaration above) which already
+   removes the specific trigger found live, but a static block can still
+   sit in front of absolutely-positioned earlier content in other browser
+   engines/future changes — so the actual, durable fix is to take
+   .home-cards-row itself out of hit-testing entirely, and explicitly
+   re-enable it only on its actual children: its own empty space can never
+   again block a click meant for whatever is rendered behind it, regardless
+   of either side's exact layout or positioning scheme. */
+.home-cards-row{ pointer-events:none; }
+.home-cards-row > *{ pointer-events:auto; }
 .stats-hidden-tab{
   display:inline-flex; align-items:center; gap:6px;
   padding:7px 14px; border-radius:999px; cursor:pointer;
@@ -33936,6 +34368,26 @@ html[dir="ltr"] .stats-home .stat{ padding:15px 15px 14px 66px !important; }
   const cardKey='ekhlas_home_card_mode_v2';
   const sidebarColors={navy:1,blue:1,purple:1,green:1,burgundy:1,white:1};
   const cardModes={'solid-hover':1,'white-hover':1};
+  // Direct feedback: "غير شكل الستويش ... يصير سويتش 1 ب بدل 2 جنب بعض" —
+  // one single toggle switch now represents both modes (see settings-
+  // overlay.html's #cardStyleModeToggle), so its own label must always name
+  // whichever mode is currently active.
+  const cardModeLabels={'white-hover':'مربعات بيضاء تتلوّن عند المرور','solid-hover':'مربعات ملوّنة ثابتة مع لمعة عند المرور'};
+  // Direct feedback: "خلي الثيم لما يتغير يبدل معه القائمة الجانبية لكن يكون
+  // لون واضح ليها ... مع امكانية تغيير لونها لاحقا بعد تطبيق الثيم من الوانها
+  // الخاصة بالضبط والاعدادات" — one purpose-built export from this module's
+  // own private scope (sidebarKey/sidebarColors/applySidebar all stay
+  // private otherwise) so setScreenStyle() (02-core-foundation.js) can set a
+  // theme-coordinated sidebar color WITHOUT duplicating this module's own
+  // storage key or validity list. Applying a style always OVERWRITES the
+  // sidebar color to that style's own recommended one — the existing
+  // sidebar-color picker below remains fully live afterward for the user to
+  // manually override again any time, exactly like before.
+  window.setRecommendedSidebarColor=function(key){
+    if(!sidebarColors[key]) return;
+    localStorage.setItem(sidebarKey,key);
+    applySidebar();
+  };
   function applySidebar(){
     const key=(localStorage.getItem(sidebarKey)||'navy');
     const resolved=sidebarColors[key]?key:'navy';
@@ -33945,10 +34397,14 @@ html[dir="ltr"] .stats-home .stat{ padding:15px 15px 14px 66px !important; }
   function applyCards(){
     const key=cardModes[localStorage.getItem(cardKey)]?localStorage.getItem(cardKey):'white-hover';
     document.documentElement.setAttribute('data-card-mode',key);
-    document.querySelectorAll('#cardStyleModePresets .card-style-mode').forEach(b=>{
-      const active=b.getAttribute('data-card-mode')===key;
-      AppClassState.toggle(b, 'active',active);b.setAttribute('aria-checked',active?'true':'false');
-    });
+    const toggle=document.getElementById('cardStyleModeToggle');
+    if(toggle){
+      const on=key==='white-hover';
+      AppClassState.toggle(toggle, 'active', on);
+      toggle.setAttribute('aria-checked', on?'true':'false');
+      const label=document.getElementById('cardStyleModeToggleLabel');
+      if(label) AppDOMState.set(label, 'textContent', cardModeLabels[key]||'');
+    }
   }
   /* Replace the previous broad click handler by intercepting only actual preset cards. */
   AppEventController.on(document, 'click',function(e){
@@ -33961,11 +34417,11 @@ html[dir="ltr"] .stats-home .stat{ padding:15px 15px 14px 66px !important; }
       if(typeof showToast==='function') showToast('تم تغيير لون القائمة الجانبية.','success');
       return;
     }
-    const cm=e.target.closest('#cardStyleModePresets .card-style-mode[data-card-mode]');
+    const cm=e.target.closest('#cardStyleModeToggle');
     if(cm){
       e.preventDefault();e.stopPropagation();
-      const key=cm.getAttribute('data-card-mode');
-      if(!cardModes[key]) return;
+      const current=cardModes[localStorage.getItem(cardKey)]?localStorage.getItem(cardKey):'white-hover';
+      const key=current==='white-hover'?'solid-hover':'white-hover';
       localStorage.setItem(cardKey,key);applyCards();
       if(typeof showToast==='function') showToast(key==='white-hover'?'تم تفعيل المربعات البيضاء التي تتلوّن عند المرور.':'تم تفعيل المربعات الملوّنة الثابتة مع اللمعة عند المرور.','success');
     }

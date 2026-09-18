@@ -5181,7 +5181,14 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
 
               <div class="field">
                 <label>نوع العمل</label>
-                <button type="button" class="btn-ghost" id="addWorkTypeFromCaseBtn" style="width:100%; text-align:center;">➕ إضافة نوع العمل</button>
+                <!-- Direct feedback: "زر ادارة انواع العمل غير اسمو ولونو -
+                     سوي اسمو اضافة مادة العمل" — renamed from "➕ إضافة نوع
+                     العمل" and switched from the neutral .btn-ghost outline
+                     to the app's own solid accent .btn-primary so it reads
+                     as a prominent action, not a quiet secondary one. Same
+                     id/click-wiring untouched (openWorkTypesScreen() in
+                     navigation-payments-calculator-feature.js). -->
+                <button type="button" class="btn-primary" id="addWorkTypeFromCaseBtn" style="width:100%; text-align:center;">➕ إضافة مادة العمل</button>
               </div>
 
               <div class="field">
@@ -6074,7 +6081,15 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
     <h2><span><span class="btn-icon-badge c-doc" aria-hidden="true">🦷</span>اختر نوع العمل</span><button type="button" class="btn-ghost btn-small" id="closeWorkTypeQuickPickBtn">إغلاق</button></h2>
     <div class="muted" id="workTypeQuickPickDesc" style="margin-bottom:14px; font-size:12.5px;">هاد النوع رح يتكرر تلقائيًا على باقي الأسنان يلي رح تختارها لهاي الحالة.</div>
     <div id="workTypeQuickPickList" style="max-height:360px; overflow:auto;"></div>
-    <button type="button" class="btn-ghost btn-small" id="manageWorkTypesFromQuickPickBtn" style="width:100%; margin-top:10px;">⚙ إدارة أنواع العمل — إضافة / تعديل</button>
+    <!-- Direct feedback: "غير لون الزر هاد ليكون واضح انو زر اضافة", then
+         follow-up on the same button: "خليه اوضح انو بضيف الصنف او المادة"
+         — switched from the neutral .btn-ghost outline to the app's solid
+         accent .btn-primary (same treatment as #addWorkTypeFromCaseBtn's
+         own color change), AND led the label with the ➕ add icon/wording
+         instead of ⚙ (a settings/gear icon reads as "manage", not "add")
+         so both the color and the wording now say "add" first. Id/click-
+         wiring untouched. -->
+    <button type="button" class="btn-primary btn-small" id="manageWorkTypesFromQuickPickBtn" style="width:100%; margin-top:10px;">➕ إضافة / تعديل أنواع العمل</button>
   </div>
 </div>
 
@@ -6743,7 +6758,14 @@ body:not(.has-save-problem):not(.has-update-banner):not(.has-minimized-windows) 
       <button type="submit" class="btn-primary btn-small">+ إضافة</button>
     </form>
     <div id="workTypeListBody"></div>
-    <div class="muted" id="workTypeListEmpty" style="display:none;">لا توجد أنواع عمل مضافة بعد</div>
+    <!-- Direct feedback: "اسالني شو انواع العمل لديك مع ذكر مثال للتوضيح
+         عن سوالي" — turned the plain empty-state notice into an actual
+         clarifying question with a concrete example, instead of just
+         stating that the list is empty. Shown whenever the list is
+         genuinely empty (see renderWorkTypeList() in work-types-feature.js),
+         including the very first time this screen is auto-opened from
+         "➕ إضافة مادة العمل" before a case can be created. -->
+    <div class="muted" id="workTypeListEmpty" style="display:none;">ما هي أنواع الأعمال التي تقدّمها بعيادتك/مخبرك؟ أضِف كل نوع بالحقل أعلاه — مثال: تلبيسة زيركون، حشوة، تركيبة أسنان، تقويم.</div>
     <div class="work-types-footer">
       <button type="button" class="btn-primary btn-small" id="workTypeApplyBtn">✔ موافق — تطبيق التغييرات</button>
     </div>
@@ -24054,7 +24076,26 @@ AppEventController.on(AppDOMController.getById('cReceivedDate'), 'change', (e)=>
   AppDOMState.set(AppDOMController.getById('cExpectedDate'), 'value', addDaysToDateStr(AppDOMState.get(e.target, "value"), 0));
 });
 
+// Direct feedback: "خلي شاشة انواع العمل تفتح قدامي اول ما افتح قائمة
+// اضافة حالة فورا" — clarified to: only the FIRST time, only while the
+// work-types list is genuinely empty (never on every open once at least
+// one exists). A case can't be priced without a work type, so redirecting
+// to set that up first — instead of letting the form open with nothing to
+// pick from `#addWorkTypeFromCaseBtn` — is the same "friendly guard"
+// pattern already used just below for technicians (ensureHasEntity()),
+// just pointed at the full Work Types screen instead of a one-field quick
+// prompt, since work types also carry a per-unit price that's worth
+// setting deliberately rather than rushing through a tiny popup.
+function ensureWorkTypesExistBeforeCaseForm(){
+  if(Array.isArray(workTypes) && workTypes.length === 0){
+    openWorkTypesScreen();
+    showToast('أضف نوع عمل واحدًا على الأقل أولًا، ثم أعد فتح "إضافة حالة".', 'error');
+    return false;
+  }
+  return true;
+}
 AppEventController.on(AppDOMController.getById('addCaseBtn'), 'click', ()=>{
+  if(!ensureWorkTypesExistBeforeCaseForm()) return;
   const d = doctors.find(x=>x.id===selectedDoctorId);
   if(!d) return;
   const caseModalTitleEl1 = AppDOMController.getById('caseModalTitle');
@@ -24093,6 +24134,7 @@ AppEventController.on(AppDOMController.getById('addCaseBtn'), 'click', ()=>{
 });
 
 AppEventController.on(AppDOMController.getById('addPatientCaseBtn'), 'click', async ()=>{
+  if(!ensureWorkTypesExistBeforeCaseForm()) return;
   // Friendly guard: a case needs a responsible technician, so offer to add
   // one right here. Doctors and labs are OPTIONAL — never block on them.
   if(!technicians.length){

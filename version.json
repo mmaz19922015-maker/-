@@ -1,6 +1,9 @@
 {
-    "version":  "20.2.2",
-    "notes":  "AL EKHLAS 20.2.2 update",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/5b92e0d78b3239b46e9873a6e18bb634955af0d4/app.html",
-    "sha256":  "fd8ebef4c9bf2730d9eacb006097925f9388992d421b76cb614cec32ddeaf962"
+  "version": "20.3.0",
+  "notes": "AL EKHLAS 20.3.0",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/73ba520de0cbe512119292d788c79ef2aa101365/app.html",
+  "sha256": "9fed2ebf92902b6c64bb5e0bddba3ffe567015c802939cea41e8d4006ca95eb3",
+  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.3.0/AL-EKHLAS-Setup-20.3.0.exe",
+  "installerSha256": "ec002307d72d7ce595542bb7c96b2ac77a185ed5a45e9ac8093c66894f05eb1b",
+  "installerSig": "j/ZlOqK5lo5LUJF6FbUokJpf0MQKkGzq3hhFwb/cC2Y1KHVja85B9FaB8LbD65aHMXi/q+uJ/tAFX85BZrxnxQ=="
 }

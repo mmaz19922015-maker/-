@@ -30100,7 +30100,8 @@ AppEventController.on(document, 'app:screen', (ev)=>{
   'use strict';
   const MIN_SHELL = '20.3.0';
   const GRACE_DAYS = 7;
-  const DOWNLOAD_URL = 'https://github.com/mmaz19922015-maker/-/releases/latest';
+  // The button opens the vendor's WhatsApp chat (the owner sends the installer personally), NOT the GitHub page.
+const WHATSAPP_URL = 'https://wa.me/962787145048?text=' + encodeURIComponent('مرحبًا، أريد النسخة الجديدة من برنامج AL EKHLAS (20.3.0)');
   const SUPPORT_WHATSAPP = '+962787145048';
   const KEY = 'ekhlas_legacy_notice_v1';
   const DAY = 86400000;
@@ -30112,12 +30113,12 @@ AppEventController.on(document, 'app:screen', (ev)=>{
     ['الأيام المتبقية','Days remaining','Verbleibende Tage','Kalan gün','Resterende dagen','ימים שנותרו','Pozostało dni','Jours restants'],
     ['⏰ آخر موعد','⏰ Deadline','⏰ Frist','⏰ Son tarih','⏰ Uiterste datum','⏰ מועד אחרון','⏰ Termin ostateczny','⏰ Date limite'],
     ['بعده: البرنامج سيقفل نهائيًا','After that date the program will be locked permanently','Danach wird das Programm dauerhaft gesperrt','Bu tarihten sonra program kalıcı olarak kilitlenir','Daarna wordt het programma definitief vergrendeld','לאחר מועד זה התוכנה תינעל לצמיתות','Po tym terminie program zostanie trwale zablokowany','Après cette date, le programme sera verrouillé définitivement'],
-    ['الرجاء تحميل النسخة الجديدة من:','Please download the new version from:','Bitte laden Sie die neue Version herunter von:','Lütfen yeni sürümü şuradan indirin:','Download de nieuwe versie via:','אנא הורידו את הגרסה החדשה מ:','Pobierz nową wersję z:','Veuillez télécharger la nouvelle version depuis :'],
+    ['للحصول على النسخة الجديدة تواصل معنا عبر واتساب:','To get the new version, contact us on WhatsApp:','Um die neue Version zu erhalten, kontaktieren Sie uns per WhatsApp:','Yeni sürümü almak için bize WhatsApp’tan ulaşın:','Neem voor de nieuwe versie contact met ons op via WhatsApp:','כדי לקבל את הגרסה החדשה, פנו אלינו בוואטסאפ:','Aby otrzymać nową wersję, skontaktuj się z nami przez WhatsApp:','Pour obtenir la nouvelle version, contactez-nous sur WhatsApp :'],
     ['📱 للمساعدة والاستفسارات:','📱 For help and enquiries:','📱 Für Hilfe und Rückfragen:','📱 Yardım ve sorular için:','📱 Voor hulp en vragen:','📱 לעזרה ושאלות:','📱 W razie pytań i pomocy:','📱 Pour toute aide ou question :'],
     ['واتس','WhatsApp','WhatsApp','WhatsApp','WhatsApp','וואטסאפ','WhatsApp','WhatsApp'],
-    ['⬇️ تحميل النسخة الجديدة','⬇️ Download the new version','⬇️ Neue Version herunterladen','⬇️ Yeni sürümü indir','⬇️ Nieuwe versie downloaden','⬇️ הורדת הגרסה החדשה','⬇️ Pobierz nową wersję','⬇️ Télécharger la nouvelle version'],
+    ['💬 اطلب النسخة الجديدة عبر واتساب','💬 Request the new version on WhatsApp','💬 Neue Version per WhatsApp anfordern','💬 Yeni sürümü WhatsApp’tan isteyin','💬 Vraag de nieuwe versie aan via WhatsApp','💬 בקשו את הגרסה החדשה בוואטסאפ','💬 Poproś o nową wersję przez WhatsApp','💬 Demandez la nouvelle version sur WhatsApp'],
     ['🔒 انتهت المهلة — البرنامج مقفل','🔒 The grace period has ended — the program is locked','🔒 Die Frist ist abgelaufen – das Programm ist gesperrt','🔒 Süre doldu — program kilitli','🔒 De termijn is verstreken — het programma is vergrendeld','🔒 התקופה הסתיימה — התוכנה נעולה','🔒 Termin minął — program jest zablokowany','🔒 Le délai est écoulé — le programme est verrouillé'],
-    ['حمّل النسخة الجديدة وثبّتها للمتابعة.','Download and install the new version to continue.','Laden Sie die neue Version herunter und installieren Sie sie, um fortzufahren.','Devam etmek için yeni sürümü indirip yükleyin.','Download en installeer de nieuwe versie om door te gaan.','הורידו והתקינו את הגרסה החדשה כדי להמשיך.','Pobierz i zainstaluj nową wersję, aby kontynuować.','Téléchargez et installez la nouvelle version pour continuer.'],
+    ['احصل على النسخة الجديدة وثبّتها للمتابعة.','Get the new version and install it to continue.','Beziehen Sie die neue Version und installieren Sie sie, um fortzufahren.','Devam etmek için yeni sürümü edinip yükleyin.','Vraag de nieuwe versie aan en installeer die om door te gaan.','קבלו את הגרסה החדשה והתקינו אותה כדי להמשיך.','Uzyskaj nową wersję i zainstaluj ją, aby kontynuować.','Obtenez la nouvelle version et installez-la pour continuer.'],
     ['بياناتك سليمة ولن تُحذف — تنتقل كما هي إلى النسخة الجديدة.','Your data is safe and will not be deleted — it carries over unchanged to the new version.','Ihre Daten sind sicher und bleiben erhalten – sie werden unverändert in die neue Version übernommen.','Verileriniz güvende ve silinmeyecek — yeni sürüme aynen aktarılır.','Uw gegevens zijn veilig en worden niet verwijderd — ze gaan ongewijzigd mee naar de nieuwe versie.','הנתונים שלכם שלמים ולא יימחקו — הם עוברים כפי שהם לגרסה החדשה.','Twoje dane są bezpieczne i nie zostaną usunięte — przechodzą bez zmian do nowej wersji.','Vos données sont en sécurité et ne seront pas supprimées — elles sont reprises telles quelles dans la nouvelle version.']
   ];
   const LANGS = ['en','de','tr','nl','he','pl','fr'];
@@ -30170,7 +30171,7 @@ AppEventController.on(document, 'app:screen', (ev)=>{
     const box = el('div', { id:'legacyBox' });
     AppDOMTree.appendChild(box, el('h2', null, tl.locked ? T('🔒 انتهت المهلة — البرنامج مقفل') : T('⚠️ تحديث ضروري')));
     if(tl.locked){
-      AppDOMTree.appendChild(box, el('div', { class:'lg-warn' }, T('حمّل النسخة الجديدة وثبّتها للمتابعة.')));
+      AppDOMTree.appendChild(box, el('div', { class:'lg-warn' }, T('احصل على النسخة الجديدة وثبّتها للمتابعة.')));
     }else{
       AppDOMTree.appendChild(box, el('div', { class:'lg-warn' }, T('البرنامج سيقفل نهائيًا بعد انتهاء المهلة')));
       AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('الأيام المتبقية')));
@@ -30181,9 +30182,8 @@ AppEventController.on(document, 'app:screen', (ev)=>{
     catch(e){ dateText = new Date(tl.deadline).toISOString().slice(0, 10); }
     AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('⏰ آخر موعد') + ': ' + dateText));
     if(!tl.locked) AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('بعده: البرنامج سيقفل نهائيًا')));
-    AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('الرجاء تحميل النسخة الجديدة من:')));
-    AppDOMTree.appendChild(box, el('div', { class:'lg-row', dir:'ltr' }, 'GitHub Releases → AL-EKHLAS v' + MIN_SHELL));
-    AppDOMTree.appendChild(box, el('a', { class:'lg-dl', id:'legacyDownload', href:DOWNLOAD_URL, target:'_blank', rel:'noopener' }, T('⬇️ تحميل النسخة الجديدة')));
+    AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('للحصول على النسخة الجديدة تواصل معنا عبر واتساب:')));
+    AppDOMTree.appendChild(box, el('a', { class:'lg-dl', id:'legacyDownload', href:WHATSAPP_URL, target:'_blank', rel:'noopener' }, T('💬 اطلب النسخة الجديدة عبر واتساب')));
     AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('📱 للمساعدة والاستفسارات:')));
     AppDOMTree.appendChild(box, el('div', { class:'lg-row', dir:'ltr' }, T('واتس') + ': ' + SUPPORT_WHATSAPP));
     AppDOMTree.appendChild(box, el('div', { class:'lg-note' }, T('بياناتك سليمة ولن تُحذف — تنتقل كما هي إلى النسخة الجديدة.')));

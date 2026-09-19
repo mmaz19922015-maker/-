@@ -1,9 +1,9 @@
 {
-  "version": "20.3.3",
-  "notes": "AL EKHLAS 20.3.3",
-  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/2534068d3bfb0a40453786a13b498648ccf90b92/app.html",
-  "sha256": "b822d572e321c22f4e4fe970071d54ba72282b895cf36c87b180d5e3fcfcd064",
-  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.3.3/AL-EKHLAS-Setup-20.3.3.exe",
-  "installerSha256": "67ede839d33670b023e4884a5d2994790ad42afa2663a8b54e0ad3f017cf522a",
-  "installerSig": "l1dXbX+6duf/nn8wP9z6BwWJITeqxUVa4Uri1xy2305zlTxBWdpT3jz4kyWixxU9yrOooKNSZgO7UJqofe5xww=="
+  "version": "20.3.4",
+  "notes": "AL EKHLAS 20.3.4",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/1ffb8af6217594819073ae53e6ba46838071f1f2/app.html",
+  "sha256": "f39e6c7361dd0778c3d2fe112f16cbe8356a6232c57042d5f762f8f229d2ede1",
+  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.3.4/AL-EKHLAS-Setup-20.3.4.exe",
+  "installerSha256": "33f8aa5e8e6defbd6dfb7c80ecb4aecc5484f21b4fa111902e99898da1b5025b",
+  "installerSig": "OSXR075Xq/dlJ/cgZZWb3xBt3j4wQms2HM+DtNvq2kFOYqZksOhJO9DpzQdlhe2RRQ/+NcBFtGuvzdkhI0vG2Q=="
 }

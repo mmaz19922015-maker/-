@@ -9251,7 +9251,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '20.3.0';
+const APP_VERSION = '20.3.1';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -30101,7 +30101,7 @@ AppEventController.on(document, 'app:screen', (ev)=>{
   const MIN_SHELL = '20.3.0';
   const GRACE_DAYS = 7;
   // The button opens the vendor's WhatsApp chat (the owner sends the installer personally), NOT the GitHub page.
-const WHATSAPP_URL = 'https://wa.me/962787145048?text=' + encodeURIComponent('مرحبًا، أريد النسخة الجديدة من برنامج AL EKHLAS (20.3.0)');
+const WHATSAPP_URL = 'https://wa.me/962787145048?text=' + encodeURIComponent('السلام عليكم، أحتاج نسخة v20.3.0 الجديدة');
   const SUPPORT_WHATSAPP = '+962787145048';
   const KEY = 'ekhlas_legacy_notice_v1';
   const DAY = 86400000;
@@ -30116,7 +30116,7 @@ const WHATSAPP_URL = 'https://wa.me/962787145048?text=' + encodeURIComponent('م
     ['للحصول على النسخة الجديدة تواصل معنا عبر واتساب:','To get the new version, contact us on WhatsApp:','Um die neue Version zu erhalten, kontaktieren Sie uns per WhatsApp:','Yeni sürümü almak için bize WhatsApp’tan ulaşın:','Neem voor de nieuwe versie contact met ons op via WhatsApp:','כדי לקבל את הגרסה החדשה, פנו אלינו בוואטסאפ:','Aby otrzymać nową wersję, skontaktuj się z nami przez WhatsApp:','Pour obtenir la nouvelle version, contactez-nous sur WhatsApp :'],
     ['📱 للمساعدة والاستفسارات:','📱 For help and enquiries:','📱 Für Hilfe und Rückfragen:','📱 Yardım ve sorular için:','📱 Voor hulp en vragen:','📱 לעזרה ושאלות:','📱 W razie pytań i pomocy:','📱 Pour toute aide ou question :'],
     ['واتس','WhatsApp','WhatsApp','WhatsApp','WhatsApp','וואטסאפ','WhatsApp','WhatsApp'],
-    ['💬 اطلب النسخة الجديدة عبر واتساب','💬 Request the new version on WhatsApp','💬 Neue Version per WhatsApp anfordern','💬 Yeni sürümü WhatsApp’tan isteyin','💬 Vraag de nieuwe versie aan via WhatsApp','💬 בקשו את הגרסה החדשה בוואטסאפ','💬 Poproś o nową wersję przez WhatsApp','💬 Demandez la nouvelle version sur WhatsApp'],
+    ['📱 تواصل عبر WhatsApp','📱 Contact us on WhatsApp','📱 Kontakt über WhatsApp','📱 WhatsApp ile iletişime geçin','📱 Neem contact op via WhatsApp','📱 צרו קשר בוואטסאפ','📱 Skontaktuj się przez WhatsApp','📱 Contactez-nous sur WhatsApp'],
     ['🔒 انتهت المهلة — البرنامج مقفل','🔒 The grace period has ended — the program is locked','🔒 Die Frist ist abgelaufen – das Programm ist gesperrt','🔒 Süre doldu — program kilitli','🔒 De termijn is verstreken — het programma is vergrendeld','🔒 התקופה הסתיימה — התוכנה נעולה','🔒 Termin minął — program jest zablokowany','🔒 Le délai est écoulé — le programme est verrouillé'],
     ['احصل على النسخة الجديدة وثبّتها للمتابعة.','Get the new version and install it to continue.','Beziehen Sie die neue Version und installieren Sie sie, um fortzufahren.','Devam etmek için yeni sürümü edinip yükleyin.','Vraag de nieuwe versie aan en installeer die om door te gaan.','קבלו את הגרסה החדשה והתקינו אותה כדי להמשיך.','Uzyskaj nową wersję i zainstaluj ją, aby kontynuować.','Obtenez la nouvelle version et installez-la pour continuer.'],
     ['بياناتك سليمة ولن تُحذف — تنتقل كما هي إلى النسخة الجديدة.','Your data is safe and will not be deleted — it carries over unchanged to the new version.','Ihre Daten sind sicher und bleiben erhalten – sie werden unverändert in die neue Version übernommen.','Verileriniz güvende ve silinmeyecek — yeni sürüme aynen aktarılır.','Uw gegevens zijn veilig en worden niet verwijderd — ze gaan ongewijzigd mee naar de nieuwe versie.','הנתונים שלכם שלמים ולא יימחקו — הם עוברים כפי שהם לגרסה החדשה.','Twoje dane są bezpieczne i nie zostaną usunięte — przechodzą bez zmian do nowej wersji.','Vos données sont en sécurité et ne seront pas supprimées — elles sont reprises telles quelles dans la nouvelle version.']
@@ -30183,7 +30183,7 @@ const WHATSAPP_URL = 'https://wa.me/962787145048?text=' + encodeURIComponent('م
     AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('⏰ آخر موعد') + ': ' + dateText));
     if(!tl.locked) AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('بعده: البرنامج سيقفل نهائيًا')));
     AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('للحصول على النسخة الجديدة تواصل معنا عبر واتساب:')));
-    AppDOMTree.appendChild(box, el('a', { class:'lg-dl', id:'legacyDownload', href:WHATSAPP_URL, target:'_blank', rel:'noopener' }, T('💬 اطلب النسخة الجديدة عبر واتساب')));
+    AppDOMTree.appendChild(box, el('a', { class:'lg-dl', id:'legacyDownload', href:WHATSAPP_URL, target:'_blank', rel:'noopener' }, T('📱 تواصل عبر WhatsApp')));
     AppDOMTree.appendChild(box, el('div', { class:'lg-row' }, T('📱 للمساعدة والاستفسارات:')));
     AppDOMTree.appendChild(box, el('div', { class:'lg-row', dir:'ltr' }, T('واتس') + ': ' + SUPPORT_WHATSAPP));
     AppDOMTree.appendChild(box, el('div', { class:'lg-note' }, T('بياناتك سليمة ولن تُحذف — تنتقل كما هي إلى النسخة الجديدة.')));

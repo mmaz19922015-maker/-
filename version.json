@@ -1,10 +1,10 @@
 {
-    "version":  "20.3.6",
-    "notes":  "مراجعة جذرية لنظام الترخيص والحظر وحماية الوقت: إصلاح Failed to fetch عند الحظر، BLOCKED يتغلب على أي ترخيص، منع التفعيل أثناء الحظر، تغيير المدة يستبدل الفترة بالكامل، كشف رجوع الساعة.",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/ff7d8ff4581e09b6c8a6858bdf9bebae99516fb5/app.html",
-    "sha256":  "b511c809d589f34dd05862623e075bc852777fc5ced8b49a686cc35d41dc20e1",
-    "sig":  "zz/NXSF+UQsdpcmExTUSxdcRZsttLrpZ2WbXBZ7jYU/WqbXfxsVFhZU+HeuWRLI3nM2zsO1TagFFZ3dFmS6cfg==",
-    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.3.6/AL-EKHLAS-Setup-20.3.6.exe",
-    "installerSha256":  "17a156315c4a385b6db9e72a51ee804e2a1cff8c60928c213b892526834e4050",
-    "installerSig":  "6iURYavL3T8VDkPcP2MlrzqhOgVGGrYIM6HY00+D3EdboUYoXlzYZVE5zKTu+cpQXHv7iPkPSaxsF7spVTGg8A=="
+  "version": "20.3.7",
+  "notes": "AL EKHLAS 20.3.7 update",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
+  "sha256": "96a476a65972009459b90da7acba096bc590f043cd41d52f724719f26106fb2b",
+  "sig": "XLB/w/dOVMilNqiY1i25bK/zoD0szk74wF7lCpg+82vVD2z37SQzVzti+PmRyN4FQXjQJoVNp1rLGE9sHPAWoA==",
+  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.3.7/AL-EKHLAS-Setup-20.3.7.exe",
+  "installerSha256": "deaccc4a05eb70e53af0a4fd3653529dbe98d01c83bdaa6c483a22ed3ee16861",
+  "installerSig": "1wjgY+dJr40Qle7Q7VHm9huh0JryjawpWIWH1edrFIcNd3BJIclLhdqziePI4g/mx54vDNxZt7MvsnXU6RAZzQ=="
 }

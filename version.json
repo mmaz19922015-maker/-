@@ -1,10 +1,10 @@
 {
-  "version": "20.4.2",
-  "notes": "AL EKHLAS 20.4.2 — منحة 25 يومًا لمرة واحدة للأجهزة المنتهية + شاشة إكمال بيانات العيادة الإجبارية + أيقونتا واتساب وتيليجرام + مفتاح الترخيص k2",
-  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-  "sha256": "3cd66f8481b073f250607453029eebb33fc174c0ca08d3f633b103626b634fdd",
-  "sig": "f2jooj7RHANu1eOHaEt/XWWu+018XO7ArTay2tRtpN1V5G0nEPohVeo9/cljpijs9xtDd45T34vXmrw8S6x/9w==",
-  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.2/AL-EKHLAS-Setup-20.4.2.exe",
-  "installerSha256": "566c8d68a68e71a1c549f45f5c17846e54501552d4e092094943a02567de6347",
-  "installerSig": "RTmN4y0LcsZJJLIBEuu0ZOlomLefCUVDRObqP7MpQ1ZmG0cy4JEEeNDmSScWs8i2N9zNIK7dD2pnbPjVU8iJ8Q=="
+    "version":  "20.4.2",
+    "notes":  "AL EKHLAS 20.4.2 — منحة 25 يومًا لمرة واحدة للأجهزة المنتهية + شاشة إكمال بيانات العيادة الإجبارية + أيقونتا واتساب وتيليجرام + مفتاح الترخيص k2",
+    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/3a73d8d3a5446ab486471cf9847fbaaa52861b5a/app.html",
+    "sha256":  "3cd66f8481b073f250607453029eebb33fc174c0ca08d3f633b103626b634fdd",
+    "sig":  "f2jooj7RHANu1eOHaEt/XWWu+018XO7ArTay2tRtpN1V5G0nEPohVeo9/cljpijs9xtDd45T34vXmrw8S6x/9w==",
+    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.2/AL-EKHLAS-Setup-20.4.2.exe",
+    "installerSha256":  "566c8d68a68e71a1c549f45f5c17846e54501552d4e092094943a02567de6347",
+    "installerSig":  "RTmN4y0LcsZJJLIBEuu0ZOlomLefCUVDRObqP7MpQ1ZmG0cy4JEEeNDmSScWs8i2N9zNIK7dD2pnbPjVU8iJ8Q=="
 }

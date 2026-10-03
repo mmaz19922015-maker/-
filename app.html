@@ -5857,6 +5857,14 @@ body:not(.has-minimized-windows) .app-shell{
            rest, and switches to a pulsing dark red once there's something
            unread — see .app-topbar-icon-btn#deliveryNotifBtn / .has-alert /
            @keyframes notifBellPulse, toggled from updateNotifBadges(). -->
+      <!-- WhatsApp / Telegram (owner 2026-10-03): their OFFICIAL marks (Simple Icons, CC0 — inline: offline, CSP 'self'), white on the brand colour;
+           wired by U-008 (deferred — ui-core/features/messaging-shortcuts-feature.js: a click says «coming soon») -->
+      <button type="button" class="app-topbar-icon-btn tb tb-whatsapp" id="topbarWhatsappBtn" title="واتساب" aria-label="واتساب">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </button>
+      <button type="button" class="app-topbar-icon-btn tb tb-telegram" id="topbarTelegramBtn" title="تيليجرام" aria-label="تيليجرام">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </button>
       <button type="button" class="app-topbar-icon-btn tb tb-bell" id="deliveryNotifBtn">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="tb-bellbody"><path d="M12 3.2c-3 0-5.2 2.3-5.2 5.6 0 4-1.5 5.4-2.1 6.1-.5.6-.1 1.5.7 1.5h13.2c.8 0 1.2-.9.7-1.5-.6-.7-2.1-2.1-2.1-6.1 0-3.3-2.2-5.6-5.2-5.6Z" fill="currentColor" fill-opacity=".22"/><path d="M9.8 19.5a2.3 2.3 0 0 0 4.4 0"/></g></svg>
         <span class="notif-badge" id="deliveryNotifBadge">0</span>
@@ -10437,7 +10445,7 @@ AppEventController.on(AppDOMController.getById('acctLedgerPrintInvoiceBtn'), 'cl
    Keep the displayed/internal version identical and fail closed if the
    activation/trial code cannot establish an unlock state. */
 /* ================== App version ================== */
-const APP_VERSION = '20.4.0';
+const APP_VERSION = '20.4.2';
 
 /* BUG FIX (real, confirmed defect — direct feedback: "ارى الاحجام للشاشات
    في بعض الاجهزة اكبر او اصغر ... اريد رفع الدقة للشاشات لانني اراها بجودة
@@ -36688,6 +36696,42 @@ AppEventController.on(document, 'app:screen', (ev)=>{
 })(window);
 
 </script>
+<!-- SOURCE-JS: src/renderer/ui-core/features/messaging-shortcuts-feature.js -->
+<script data-source="../ui-core/features/messaging-shortcuts-feature.js">
+/* MESSAGING SHORTCUTS — the WhatsApp and Telegram icons in the top bar (owner request 2026-10-03).
+ *
+ * The icons are placed now; what they open is U-008 (docs/ENGINEERING-PLAN.md H.U-008, deferred): an inner tab with the
+ * owner's own WhatsApp Web / Telegram Web, a real PDF of the document, the person's chat opened from its context. Until
+ * then a click says plainly that the feature is coming — it never opens a browser, a window or a website.
+ */
+(function(global){
+  'use strict';
+
+  // [ar, en, de, tr, nl, he, pl, fr]
+  const ROWS = [
+    ['واتساب','WhatsApp','WhatsApp','WhatsApp','WhatsApp','וואטסאפ','WhatsApp','WhatsApp'],
+    ['تيليجرام','Telegram','Telegram','Telegram','Telegram','טלגרם','Telegram','Telegram'],
+    ['قريبًا: إرسال الفواتير والكشوف عبر واتساب من داخل البرنامج.','Coming soon: send invoices and statements via WhatsApp from inside the program.','Demnächst: Rechnungen und Auszüge per WhatsApp direkt aus dem Programm senden.','Yakında: faturaları ve ekstreleri programın içinden WhatsApp ile gönderin.','Binnenkort: facturen en overzichten via WhatsApp vanuit het programma versturen.','בקרוב: שליחת חשבוניות ודוחות בוואטסאפ מתוך התוכנה.','Wkrótce: wysyłanie faktur i zestawień przez WhatsApp z poziomu programu.','Bientôt : envoyer factures et relevés par WhatsApp depuis le programme.'],
+    ['قريبًا: إرسال الفواتير والكشوف عبر تيليجرام من داخل البرنامج.','Coming soon: send invoices and statements via Telegram from inside the program.','Demnächst: Rechnungen und Auszüge per Telegram direkt aus dem Programm senden.','Yakında: faturaları ve ekstreleri programın içinden Telegram ile gönderin.','Binnenkort: facturen en overzichten via Telegram vanuit het programma versturen.','בקרוב: שליחת חשבוניות ודוחות בטלגרם מתוך התוכנה.','Wkrótce: wysyłanie faktur i zestawień przez Telegram z poziomu programu.','Bientôt : envoyer factures et relevés par Telegram depuis le programme.'],
+  ];
+  const LANGS = ['en','de','tr','nl','he','pl','fr'];
+  (function merge(){
+    let dicts; try{ dicts = TRANSLATIONS; }catch{ return; }   // no dictionaries (a test without the page): nothing to add
+    LANGS.forEach((code, i)=>{ if(!dicts[code]) dicts[code] = {}; ROWS.forEach(r=>{ dicts[code][r[0]] = r[i+1]; }); });
+    try{ ROWS.forEach(r=> I18N_KEYS.add(r[0])); }catch{ /* no key registry here */ }
+  })();
+  const T = (s)=> (typeof global.tr === 'function' ? global.tr(s) : s);
+
+  const SOON = { topbarWhatsappBtn: 'قريبًا: إرسال الفواتير والكشوف عبر واتساب من داخل البرنامج.', topbarTelegramBtn: 'قريبًا: إرسال الفواتير والكشوف عبر تيليجرام من داخل البرنامج.' };
+  Object.keys(SOON).forEach((id)=>{
+    const b = AppDOMController.getById(id);
+    if(b) AppEventController.on(b, 'click', ()=>{ try{ showToast(T(SOON[id]), 'info'); }catch{ /* no toast host (tests): nothing to say */ } });
+  });
+
+  global.Core.define('UICore.MessagingShortcuts', Object.freeze({ rows: ROWS, ids: Object.keys(SOON) }), 'ui-core/features/messaging-shortcuts-feature.js');
+})(window);
+
+</script>
 <script data-source="../ui-core/features/merge-databases-feature.js">
 /* "🔀 دمج قواعد البيانات" — Settings → Storage & backup.
  *
@@ -42570,6 +42614,8 @@ html[dir='ltr'] .sidebar-btn{transform-origin:left center;}
 
 #appTopbar .app-topbar-icon-btn.tb.tb-calc{     --c1:#6366f1; --c2:#8b5cf6; --glow:99,102,241; }
 #appTopbar .app-topbar-icon-btn.tb.tb-notes{    --c1:#22c55e; --c2:#0d9f6e; --glow:34,197,94; }
+#appTopbar .app-topbar-icon-btn.tb.tb-whatsapp{ --c1:#25d366; --c2:#128c7e; --glow:37,211,102; }   /* WhatsApp (U-008) */
+#appTopbar .app-topbar-icon-btn.tb.tb-telegram{ --c1:#2aabee; --c2:#1d8fd1; --glow:42,171,238; }   /* Telegram (U-008) */
 #appTopbar .app-topbar-icon-btn.tb.tb-help{     --c1:#0ea5e9; --c2:#06b6d4; --glow:14,165,233; }
 #appTopbar .app-topbar-icon-btn.tb.tb-settings{ --c1:#64748b; --c2:#3b82f6; --glow:71,120,205; }
 #appTopbar .app-topbar-icon-btn.tb.tb-lock{     --c1:#fbbf24; --c2:#f59e0b; --glow:245,158,11; }

@@ -1,10 +1,10 @@
 {
-  "version": "20.4.3",
-  "notes": "AL EKHLAS 20.4.3 — رقم الهاتف يقبل + أو 00 ويُحفظ بصيغة واحدة، مع رسالة أوضح بكل اللغات",
-  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-  "sha256": "9ab88b818149336a8d7d8ec28be347fba2fb42c5781a2a804bfa5ed661cc2c38",
-  "sig": "WSSzCKOracAwnalaD9iLZGQqzQ7xkcXVcJ5MUEAoVEfOt0/5uUpMOQM8JQoaSOhnG+4LdNSmNJV9da07QOqLpg==",
-  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.3/AL-EKHLAS-Setup-20.4.3.exe",
-  "installerSha256": "ae7230a3989d3002f35be23ba97686a22b39503c2d7d4bf26c8819ebbc5e10f3",
-  "installerSig": "8ECPvOn30Za78LZNojAY3JRI/RNrC86tw1bl0LHcU18rZsF0oSu9M62OAY/WodBdbKe/ElK83U8G8PD27plPUA=="
+    "version":  "20.4.3",
+    "notes":  "AL EKHLAS 20.4.3 — رقم الهاتف يقبل + أو 00 ويُحفظ بصيغة واحدة، مع رسالة أوضح بكل اللغات",
+    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/e5d574a5d17af50a8ee57bb3b3836ae92b9e3ec2/app.html",
+    "sha256":  "9ab88b818149336a8d7d8ec28be347fba2fb42c5781a2a804bfa5ed661cc2c38",
+    "sig":  "WSSzCKOracAwnalaD9iLZGQqzQ7xkcXVcJ5MUEAoVEfOt0/5uUpMOQM8JQoaSOhnG+4LdNSmNJV9da07QOqLpg==",
+    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.3/AL-EKHLAS-Setup-20.4.3.exe",
+    "installerSha256":  "ae7230a3989d3002f35be23ba97686a22b39503c2d7d4bf26c8819ebbc5e10f3",
+    "installerSig":  "8ECPvOn30Za78LZNojAY3JRI/RNrC86tw1bl0LHcU18rZsF0oSu9M62OAY/WodBdbKe/ElK83U8G8PD27plPUA=="
 }

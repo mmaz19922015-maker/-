@@ -1,10 +1,10 @@
 {
-    "version":  "20.4.2",
-    "notes":  "AL EKHLAS 20.4.2 — منحة 25 يومًا لمرة واحدة للأجهزة المنتهية + شاشة إكمال بيانات العيادة الإجبارية + أيقونتا واتساب وتيليجرام + مفتاح الترخيص k2",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/3a73d8d3a5446ab486471cf9847fbaaa52861b5a/app.html",
-    "sha256":  "3cd66f8481b073f250607453029eebb33fc174c0ca08d3f633b103626b634fdd",
-    "sig":  "f2jooj7RHANu1eOHaEt/XWWu+018XO7ArTay2tRtpN1V5G0nEPohVeo9/cljpijs9xtDd45T34vXmrw8S6x/9w==",
-    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.2/AL-EKHLAS-Setup-20.4.2.exe",
-    "installerSha256":  "566c8d68a68e71a1c549f45f5c17846e54501552d4e092094943a02567de6347",
-    "installerSig":  "RTmN4y0LcsZJJLIBEuu0ZOlomLefCUVDRObqP7MpQ1ZmG0cy4JEEeNDmSScWs8i2N9zNIK7dD2pnbPjVU8iJ8Q=="
+  "version": "20.4.3",
+  "notes": "AL EKHLAS 20.4.3 — رقم الهاتف يقبل + أو 00 ويُحفظ بصيغة واحدة، مع رسالة أوضح بكل اللغات",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
+  "sha256": "9ab88b818149336a8d7d8ec28be347fba2fb42c5781a2a804bfa5ed661cc2c38",
+  "sig": "WSSzCKOracAwnalaD9iLZGQqzQ7xkcXVcJ5MUEAoVEfOt0/5uUpMOQM8JQoaSOhnG+4LdNSmNJV9da07QOqLpg==",
+  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.3/AL-EKHLAS-Setup-20.4.3.exe",
+  "installerSha256": "ae7230a3989d3002f35be23ba97686a22b39503c2d7d4bf26c8819ebbc5e10f3",
+  "installerSig": "8ECPvOn30Za78LZNojAY3JRI/RNrC86tw1bl0LHcU18rZsF0oSu9M62OAY/WodBdbKe/ElK83U8G8PD27plPUA=="
 }

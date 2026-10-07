@@ -1,10 +1,10 @@
 {
-    "version":  "20.4.4",
-    "notes":  "AL EKHLAS 20.4.4 — التحديث يصل ويُثبَّت تلقائيًا للجميع، الواجهة تلائم الشاشة والتكبير، حذف التأثيرات الثقيلة والساعة، تصدير ملف تشخيص للدعم (Ctrl+Shift+D)، والموظف لا يرى المبالغ إلا بإذن",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/078b244899576ad241241ac762488b5b1cb0f6d5/app.html",
-    "sha256":  "879e91571cc8104159788ca4004a6f39af067b015a3cd728a9dc45fe562a63ec",
-    "sig":  "xa9iBS+mdM2kKt3g/118oWO0+pXk0hVwxl04OvBFTEyCUEby9MzY4unJPM24BBUHna0xiz7w4qC5usGyqMt87w==",
-    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.4/AL-EKHLAS-Setup-20.4.4.exe",
-    "installerSha256":  "6556fb7cd9ca49e36e1c0dbd6cb55b66eeb44247c7b86b18f81ccd40366f425d",
-    "installerSig":  "BX9anf4i8Dd/LypIKoAOf7oI3VcCqdW/gyefdNQTIAtPcjipm5Qq4MyRccnfzoNquuG/m5WUbcsYce+feU58Xg=="
+  "version": "20.4.5",
+  "notes": "AL EKHLAS 20.4.5 — التحديث التلقائي يعيد المحاولة كل دقيقة عند تعذّر الوصول لخادم التحديثات (كان كل دقيقة ونصف)",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
+  "sha256": "a8de23f413c291bb069ee2af676214ccfeb0d7dfe2e2fa770e7bef14b57082e5",
+  "sig": "V+FiD5zL+M48L7wjofu6OK0XjBm3QP7HU8Ka+wygnwJd9JBKu70clEY1iDkisXepyXsZCvSnGX/A61wSWwqwhw==",
+  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.5/AL-EKHLAS-Setup-20.4.5.exe",
+  "installerSha256": "6d25e01f71990a8683b850bcd50c80d59b4813d499d5fa4e2de3aba071114dd9",
+  "installerSig": "XbM+T7+/JLLXJuZ0Kj5tvftU0Aa3kgfqliZaOwBbJQATyQ8ItUQWIY3jSPkwWxokWYXUD+8b39lgCqvZGO9oBQ=="
 }

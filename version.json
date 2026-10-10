@@ -1,10 +1,10 @@
 {
-  "version": "20.4.6",
-  "notes": "AL EKHLAS 20.4.6 — مظهر SmileCare، قسم الديون، فاتورة التوريد، وحماية أقوى للبيانات والترخيص",
-  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-  "sha256": "3400faf25827cfc83537db101f9ba02abc7789de389fe63009a551cd3fdbb4cd",
-  "sig": "gJh9hM9cCGlq2NIXtw5qlGp2B27/irWQn4KJyPHO+HsxcDLP0m3LUxXQiRhpSFondoLB1Fx6UKSxdS7rUEVLNQ==",
-  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.6/AL-EKHLAS-Setup-20.4.6.exe",
-  "installerSha256": "d2611b85bded95938281e56127f54a840170975b7f321b09fe545273f8834e86",
-  "installerSig": "Wjc5m0cHwuDAE4ELkUOvEwYvCLn+/VxKH7vvwG+Kg94nU21bxIW+Ss9cacSJqHczzQ9d1EggGDEDnN5mJDX2yw=="
+    "version":  "20.4.6",
+    "notes":  "AL EKHLAS 20.4.6 — مظهر SmileCare، قسم الديون، فاتورة التوريد، وحماية أقوى للبيانات والترخيص",
+    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/45d64202372055b3e81874767acb59bc43ca05a4/app.html",
+    "sha256":  "3400faf25827cfc83537db101f9ba02abc7789de389fe63009a551cd3fdbb4cd",
+    "sig":  "gJh9hM9cCGlq2NIXtw5qlGp2B27/irWQn4KJyPHO+HsxcDLP0m3LUxXQiRhpSFondoLB1Fx6UKSxdS7rUEVLNQ==",
+    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.6/AL-EKHLAS-Setup-20.4.6.exe",
+    "installerSha256":  "d2611b85bded95938281e56127f54a840170975b7f321b09fe545273f8834e86",
+    "installerSig":  "Wjc5m0cHwuDAE4ELkUOvEwYvCLn+/VxKH7vvwG+Kg94nU21bxIW+Ss9cacSJqHczzQ9d1EggGDEDnN5mJDX2yw=="
 }

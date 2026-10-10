@@ -1,10 +1,10 @@
 {
-    "version":  "20.4.5",
-    "notes":  "AL EKHLAS 20.4.5 — التحديث التلقائي يعيد المحاولة كل دقيقة عند تعذّر الوصول لخادم التحديثات (كان كل دقيقة ونصف)",
-    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/5f8d0b55ef0198af06ddd874d79a685ac45ce24c/app.html",
-    "sha256":  "a8de23f413c291bb069ee2af676214ccfeb0d7dfe2e2fa770e7bef14b57082e5",
-    "sig":  "V+FiD5zL+M48L7wjofu6OK0XjBm3QP7HU8Ka+wygnwJd9JBKu70clEY1iDkisXepyXsZCvSnGX/A61wSWwqwhw==",
-    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.5/AL-EKHLAS-Setup-20.4.5.exe",
-    "installerSha256":  "6d25e01f71990a8683b850bcd50c80d59b4813d499d5fa4e2de3aba071114dd9",
-    "installerSig":  "XbM+T7+/JLLXJuZ0Kj5tvftU0Aa3kgfqliZaOwBbJQATyQ8ItUQWIY3jSPkwWxokWYXUD+8b39lgCqvZGO9oBQ=="
+  "version": "20.4.6",
+  "notes": "AL EKHLAS 20.4.6 — مظهر SmileCare، قسم الديون، فاتورة التوريد، وحماية أقوى للبيانات والترخيص",
+  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
+  "sha256": "3400faf25827cfc83537db101f9ba02abc7789de389fe63009a551cd3fdbb4cd",
+  "sig": "gJh9hM9cCGlq2NIXtw5qlGp2B27/irWQn4KJyPHO+HsxcDLP0m3LUxXQiRhpSFondoLB1Fx6UKSxdS7rUEVLNQ==",
+  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v20.4.6/AL-EKHLAS-Setup-20.4.6.exe",
+  "installerSha256": "d2611b85bded95938281e56127f54a840170975b7f321b09fe545273f8834e86",
+  "installerSig": "Wjc5m0cHwuDAE4ELkUOvEwYvCLn+/VxKH7vvwG+Kg94nU21bxIW+Ss9cacSJqHczzQ9d1EggGDEDnN5mJDX2yw=="
 }

@@ -1,10 +1,10 @@
 {
-  "version": "21.0.3",
-  "notes": "AL EKHLAS 21.0.3 update",
-  "rawUrl": "https://raw.githubusercontent.com/mmaz19922015-maker/-/main/app.html",
-  "sha256": "64b63d209a8c9fc488ddc88a4d9f25e859b7abf1aacebbdcbc738a5d5ec7d4fd",
-  "sig": "qqR/hD7rVIh/KaM9cwnzifnoJSNsoRaNKh70erTfGIz4L+FPyWTsYLCxiP+5kShPTLkQfoo/qnQPrZDytYKV/g==",
-  "installerUrl": "https://github.com/mmaz19922015-maker/-/releases/download/v21.0.3/AL-EKHLAS-Setup-21.0.3.exe",
-  "installerSha256": "fd9b2c927b98705c0cd658f8d37edc46ed966b74b9fdec54c5ee91f800a3d9f2",
-  "installerSig": "MyN1xkstsBsd5YFuDsrUxVmpkZBNZJT6uWWwdtIdZdzWlI1PTAuCxkMqGQLsNpV2+IjlGniYSB6mxRmlSTqKOg=="
+    "version":  "21.0.3",
+    "notes":  "AL EKHLAS 21.0.3 update",
+    "rawUrl":  "https://raw.githubusercontent.com/mmaz19922015-maker/-/a7b93dfd21a0b9bc62b9a638e6de1cb54e0f5eaf/app.html",
+    "sha256":  "64b63d209a8c9fc488ddc88a4d9f25e859b7abf1aacebbdcbc738a5d5ec7d4fd",
+    "sig":  "qqR/hD7rVIh/KaM9cwnzifnoJSNsoRaNKh70erTfGIz4L+FPyWTsYLCxiP+5kShPTLkQfoo/qnQPrZDytYKV/g==",
+    "installerUrl":  "https://github.com/mmaz19922015-maker/-/releases/download/v21.0.3/AL-EKHLAS-Setup-21.0.3.exe",
+    "installerSha256":  "fd9b2c927b98705c0cd658f8d37edc46ed966b74b9fdec54c5ee91f800a3d9f2",
+    "installerSig":  "MyN1xkstsBsd5YFuDsrUxVmpkZBNZJT6uWWwdtIdZdzWlI1PTAuCxkMqGQLsNpV2+IjlGniYSB6mxRmlSTqKOg=="
 }
